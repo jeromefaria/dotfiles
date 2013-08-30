@@ -1,0 +1,30 @@
+alias ll="ls -lah"
+alias cl="clear"
+alias home="cd ~/"
+alias sfx="cd ~/Work/SideFX\ Productions/Web"
+alias desk="cd ~/Desktop"
+alias 8xbiz="cd ~/Work/8xbiz"
+alias work="cd ~/Work"
+alias imgopt="open -a "\ImageOptim\"
+alias chrome="open /Applications/Google\ Chrome\ Canary.app --args --allow-file-access-from-files"
+alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
+alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito http://local.8xbiz.com"
+alias webdev="cd ~/Work/WebDev/"
+
+# some cool stuff I grabbed from @lennyjpg at https://github.com/lennyjpg/dotfiles/blob/master/.aliases
+
+# wifi controls
+alias wifi="networksetup -setairportpower en1 on"
+alias nofi="networksetup -setairportpower en1 off"
+
+# hide/show all desktop icons (useful when presenting)
+alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+
+# Empty the Trash on all mounted volumes and the main HDD
+# Also, clear Apple’s System Logs to improve shell startup speed
+alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
+
+# IP addresses
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"

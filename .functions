@@ -1,0 +1,45 @@
+# font cache reset to fix an old bug in chrome
+
+function resetfontcache() {
+  atsutil databases -removeUser;
+  sudo atsutil databases -remove;
+  atsutil server -shutdown;
+  atsutil server -ping;
+}
+
+# run maintenance scripts and purge used memory
+
+function cleanup() {
+  echo "Running periodic scripts...";
+  sudo periodic daily weekly monthly;
+  echo "Periodic scripts done.";
+  echo "Purging memory...";
+  purge;
+  echo "All good and clean!";
+}
+
+# base64 encoding
+
+function enc(){
+  openssl base64 < $1 | tr -d '\n' | pbcopy
+}
+
+# base64 decoding
+
+function dec(){
+  openssl base64 > $1 | tr -d '\n' | pbcopy
+}
+
+# fetch latest version of jquery, before I started using bower...
+
+function getjquery {
+  curl http://code.jquery.com/jquery-latest.min.js > $1
+}
+
+# self update nodejs
+
+function upgradenode {
+  sudo npm cache clean -f;
+  sudo npm install -g n;
+  sudo n stable;
+}
