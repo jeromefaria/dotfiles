@@ -43,3 +43,24 @@ function upgradenode {
   sudo npm install -g n;
   sudo n stable;
 }
+
+# Create a new directory and enter it
+function take() {
+  mkdir $1
+  cd $1 
+}
+
+# Checks for MusicBrainz tag on MusicBrainz Picard
+function brainz(){
+  open -a "Musicbrainz Picard" $1
+}
+
+# Copies and opens in iTunes
+function itunes(){
+  open -a "iTunes" $1
+}
+
+# Convert audio files with Max
+function max(){
+  open -a "Max" $1
+}
