@@ -64,3 +64,13 @@ function itunes(){
 function max(){
   open -a "Max" $1
 }
+
+# Downloads YouTube videos
+function ydl(){
+  youtube-dl -citw $1
+}
+
+# Prints the current directory as a tree representation
+function tree(){
+  find $&;{1:-.} -print | sed -e ’s;[^/]*/;|____;g;s;____|; |;g’
+}
