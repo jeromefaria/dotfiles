@@ -62,10 +62,35 @@ function itunes(){
 
 # Convert audio files with Max
 function max(){
-  open -a "Max" $1
+  open /Applications/Max.app $1
 }
 
 # Downloads YouTube videos
 function ydl(){
   youtube-dl -citw $1
+}
+
+# Open with
+function oa(){
+  open -a $1 $2
+}
+
+# Grab all href links from a webpage
+function grablinks() {
+  curl $1 | grep -o -E 'href="([^"#]+)"' | cut -d'"' -f2
+}
+
+# Start Yeoman server
+function gs() {
+  grunt serve &
+}
+
+# Kill Yeoman server
+function ks() {
+  jobs -l | awk '{print $3}' | xargs kill
+}
+
+# Convert flac to mp3
+function flac2mp3(){
+  for a in *.flac; do < /dev/null ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"; done
 }
