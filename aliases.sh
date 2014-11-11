@@ -7,16 +7,18 @@ alias cl="clear"
 alias home="cd ~/"
 alias desk="cd ~/Desktop"
 alias down="cd ~/Downloads"
+alias docs="cd ~/Documents"
+alias pics="cd ~/Pictures"
 alias work="cd ~/Work"
 alias chrome="open /Applications/Google\ Chrome\ Canary.app --args --allow-file-access-from-files"
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito"
-alias web="cd ~/Work/Development/Web"
-alias cap="cd ~/Work/Development/Web/capstone/symbol3"
+alias web="cd ~/Work/code/Web"
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
-alias symbol3="cd ~/Work/Development/Web/capstone/symbol3/repositories/symbol3-angular"
-alias symbol3="cd ~/Work/Development/Web/maisclinic/test/maisclinic"
+
+# cat files with syntax highlighting
+alias pcat='pygmentize -O style=native -g'
 
 # some cool stuff I grabbed from @lennyjpg at https://github.com/lennyjpg/dotfiles/blob/master/.aliases
 
@@ -36,6 +38,8 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo 
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
 
-alias golfepress="cd ~/Work/Development/Web/golfepress/golfepressdotcom"
-alias watergate="/Users/jeromefaria/Work/Development/Web/capstone/watergate/website/watergateprojectdotcom"
+alias golfepress="cd ~/Work/code/web/golfepress/golfepressdotcom"
+alias watergate="/Users/jeromefaria/Work/code/web/capstone/watergate/website/watergateprojectdotcom"
+alias nicetripmusic="/Users/jeromefaria/Work/code/web/nicetripemusic/nicetripmusicdotcom"
 alias cdir="pwd | pbcopy"
+alias tag="python ~/Work/code/scripts/lastfm/tagger.py ."
