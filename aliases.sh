@@ -20,7 +20,16 @@ alias dropbox="cd ~/Dropbox"
 # cat files with syntax highlighting
 alias pcat='pygmentize -O style=native -g'
 
-# some cool stuff I grabbed from @lennyjpg at https://github.com/lennyjpg/dotfiles/blob/master/.aliases
+# Copy current directory to clipboard
+alias cdir="pwd | pbcopy"
+
+# Run python script to tag mp3 files according to lastfm
+alias tag="python ~/Work/code/scripts/lastfm/tagger.py ."
+
+# Starts a python SimpleHTTPServer on current directory
+alias server="python -m SimpleHTTPServer"
+
+# some stuff I grabbed from @lennyjpg at https://github.com/lennyjpg/dotfiles/blob/master/.aliases
 
 # wifi controls
 alias wifi="networksetup -setairportpower en1 on"
@@ -37,9 +46,3 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
-
-alias golfepress="cd ~/Work/code/web/golfepress/golfepressdotcom"
-alias watergate="/Users/jeromefaria/Work/code/web/capstone/watergate/website/watergateprojectdotcom"
-alias nicetripmusic="/Users/jeromefaria/Work/code/web/nicetripemusic/nicetripmusicdotcom"
-alias cdir="pwd | pbcopy"
-alias tag="python ~/Work/code/scripts/lastfm/tagger.py ."
