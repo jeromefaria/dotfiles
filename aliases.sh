@@ -28,7 +28,7 @@ alias pcat="pygmentize -O style=native -g"
 alias cdir="pwd | tr -d '\n' | pbcopy"
 
 # Run python script to tag mp3 files according to lastfm
-#  alias mp3tag="python ~/Work/code/scripts/lastfm/tagger.py ."
+alias mp3tag="python ~/Work/code/scripts/lastfm/tagger.py ."
 
 # Starts a python SimpleHTTPServer on current directory
 alias server="python -m SimpleHTTPServer"
