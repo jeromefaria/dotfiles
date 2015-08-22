@@ -1,3 +1,4 @@
+# Aliases
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -18,7 +19,6 @@ alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 
 # Reload shell settings
-
 alias reload="source ~/.zshrc"
 
 # cat files with syntax highlighting
