@@ -17,14 +17,18 @@ alias web="cd ~/Work/code/Web"
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 
+# Reload shell settings
+
+alias reload="source ~/.zshrc"
+
 # cat files with syntax highlighting
-alias pcat='pygmentize -O style=native -g'
+alias pcat="pygmentize -O style=native -g"
 
 # Copy current directory to clipboard
-alias cdir="pwd | pbcopy"
+alias cdir="pwd | tr -d '\n' | pbcopy"
 
 # Run python script to tag mp3 files according to lastfm
-alias tag="python ~/Work/code/scripts/lastfm/tagger.py ."
+#  alias mp3tag="python ~/Work/code/scripts/lastfm/tagger.py ."
 
 # Starts a python SimpleHTTPServer on current directory
 alias server="python -m SimpleHTTPServer"

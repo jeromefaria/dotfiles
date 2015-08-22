@@ -90,7 +90,7 @@ function gsd() {
   grunt serve:dist &
 }
 
-# Kill Yeoman server
+# Kill Yeoman server for dist
 function ks() {
   jobs -l | awk '{print $3}' | xargs kill
 }
@@ -103,4 +103,18 @@ function flac2mp3() {
 # Read specific line from file
 function rl() {
   head -$2 $1 | tail -1
+}
+
+# Tag mp3 folder with last.fm
+
+function mp3tag() {
+  ~/Work/code/scripts/lastfm/tagger.py $1
+}
+
+# Create new project directory
+
+function newproj() {
+  mkdir $1
+  mkdir $1/{assets,code,design,documents,research}
+  cd $1
 }
