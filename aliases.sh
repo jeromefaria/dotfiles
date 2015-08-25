@@ -4,6 +4,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ll="ls -lah"
+alias lt="ls -laht"
 alias cl="clear"
 alias home="cd ~/"
 alias desk="cd ~/Desktop"
@@ -32,6 +33,9 @@ alias mp3tag="python ~/Work/code/scripts/lastfm/tagger.py ."
 
 # Starts a python SimpleHTTPServer on current directory
 alias server="python -m SimpleHTTPServer"
+
+# Opens current directory in Path Finder
+alias pf="open -a Path\ Finder $1"
 
 # some stuff I grabbed from @lennyjpg at https://github.com/lennyjpg/dotfiles/blob/master/.aliases
 
