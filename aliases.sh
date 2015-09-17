@@ -15,9 +15,9 @@ alias work="cd ~/Work"
 alias chrome="open /Applications/Google\ Chrome\ Canary.app --args --allow-file-access-from-files"
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito"
-alias web="cd ~/Work/code/Web"
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
+alias drive="cd ~/Google\ Drive"
 
 # Reload shell settings
 alias reload="source ~/.zshrc"

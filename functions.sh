@@ -49,11 +49,6 @@ function brainz(){
   open -a "Musicbrainz Picard" $1
 }
 
-# Copies and opens in iTunes
-function itunes(){
-  open -a "iTunes" $1
-}
-
 # Convert audio files with Max
 function max(){
   open /Applications/Max.app $1
@@ -79,7 +74,7 @@ function gs() {
   grunt serve &
 }
 
-# Start Yeoman server
+# Start Yeoman server with dist
 function gsd() {
   grunt serve:dist &
 }
