@@ -21,6 +21,9 @@ alias drive="cd ~/Google\ Drive"
 alias artica="cd ~/Google\ Drive/Work/artica"
 alias dotfiles="cd ~/dotfiles"
 
+# Runs a simple http server on current directory
+alias serve="http-server"
+
 # Reload shell settings
 alias reload="source ~/.zshrc"
 
