@@ -26,11 +26,6 @@ function dec(){
   openssl base64 > $1 | tr -d '\n' | pbcopy
 }
 
-# Fetch latest version of jquery, before I started using bower...
-function getjquery {
-  curl http://code.jquery.com/jquery-latest.min.js > $1
-}
-
 # Self update nodejs
 function upgradenode {
   sudo npm cache clean -f;

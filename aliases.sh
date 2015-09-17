@@ -18,6 +18,8 @@ alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognit
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
+alias artica="cd ~/Google\ Drive/Work/artica"
+alias dotfiles="cd ~/dotfiles"
 
 # Reload shell settings
 alias reload="source ~/.zshrc"
