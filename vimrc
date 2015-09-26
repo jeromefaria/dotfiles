@@ -1,7 +1,3 @@
-" Previous settings
-syntax on
-set number
-
 " Settings from @josemota vimrc
 
 set nocompatible
@@ -23,20 +19,10 @@ Plugin 'tpope/vim-ragtag'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-surround'
 Plugin 'mattn/emmet-vim'
-"Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'godlygeek/tabular'
 Plugin 'whatyouhide/vim-gotham'
-"Plugin 'kchmck/vim-coffee-script'
-"Plugin 'nono/vim-handlebars'
-"Plugin 'w0ng/vim-hybrid'
-"Plugin 'jceb/vim-orgmode'
-"Plugin 'mustache/vim-mustache-handlebars'
-"Bundle 'tomorrow-theme'
-"Bundle 'vim-yardoc'
-"Bundle 'altercation/vim-colors-solarized'
-"Bundle 'vim-emblem'
 
 call vundle#end()
 
@@ -44,8 +30,6 @@ call vundle#end()
 
 let mapleader = ","
 syntax enable
-"colorscheme gotham
-"set background=dark
 
 " Mappings {{{
 
@@ -89,7 +73,6 @@ set cursorline
 set encoding=utf-8
 set fileencoding=utf-8
 set gdefault
-"set guifont=Fira\ Mono\ 10.5
 set guioptions-=Be
 set guioptions=aAc
 set hlsearch
