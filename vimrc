@@ -102,8 +102,8 @@ au BufRead,BufNewFile *.ru set filetype=ruby
 au BufRead,BufNewFile [vV]agrantfile set filetype=ruby
 
 " Markdown gets auto textwidth
-au Bufread,BufNewFile *.md set filetype=markdown textwidth=79
-au Bufread,BufNewFile *.markdown set textwidth=79
+"au Bufread,BufNewFile *.md set filetype=markdown textwidth=79
+"au Bufread,BufNewFile *.markdown set textwidth=79
 
 " .feature files are Cucumber.
 au Bufread,BufNewFile *.feature set filetype=cucumber
