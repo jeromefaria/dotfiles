@@ -64,21 +64,6 @@ function grab() {
   curl $1 | grep -o -E 'href="([^"#]+)"' | cut -d'"' -f2
 }
 
-# Start Yeoman server
-function gs() {
-  grunt serve &
-}
-
-# Start Yeoman server with dist
-function gsd() {
-  grunt serve:dist &
-}
-
-# Kill Yeoman server for dist
-function ks() {
-  jobs -l | awk '{print $3}' | xargs kill
-}
-
 # Convert flac to mp3
 function flac2mp3() {
   for a in *.flac; do < /dev/null ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"; done
