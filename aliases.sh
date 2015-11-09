@@ -21,6 +21,9 @@ alias drive="cd ~/Google\ Drive"
 alias artica="cd ~/Google\ Drive/Work/artica"
 alias dotfiles="cd ~/dotfiles"
 
+# JSON prettify
+alias prettyjson='python -m json.tool'
+
 # Runs a simple http server on current directory
 alias serve="http-server"
 
