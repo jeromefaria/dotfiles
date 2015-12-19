@@ -21,6 +21,15 @@ alias drive="cd ~/Google\ Drive"
 alias artica="cd ~/Google\ Drive/Work/artica"
 alias dotfiles="cd ~/dotfiles"
 
+# Archive extraction/listing shortcuts
+alias zi="zipinfo"
+alias uz="unzip -o"
+alias ux="unrar x"
+alias ui="unrar l"
+
+# JSON prettify
+alias prettyjson='python -m json.tool'
+
 # Runs a simple http server on current directory
 alias serve="http-server"
 
