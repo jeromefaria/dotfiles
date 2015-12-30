@@ -1,27 +1,37 @@
-# Aliases
+# ALIASES
+
+# Navigation
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias .....="cd ../../../.."
+
+# System
 alias ll="ls -lah"
 alias lt="ls -laht"
 alias cl="clear"
+alias f="find"
+
+# Folders 
 alias home="cd ~/"
 alias desk="cd ~/Desktop"
 alias down="cd ~/Downloads"
 alias docs="cd ~/Documents"
 alias pics="cd ~/Pictures"
 alias work="cd ~/Work"
-alias chrome="open /Applications/Google\ Chrome\ Canary.app --args --allow-file-access-from-files"
-alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
-alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito"
+
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
 alias artica="cd ~/Google\ Drive/Work/artica"
 alias dotfiles="cd ~/dotfiles"
 
-# Archive extraction/listing shortcuts
+# Apps
+alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
+alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito"
+alias pf="open -a Path\ Finder $1"
+
+# Archives
 alias zi="zipinfo"
 alias uz="unzip -o"
 alias ux="unrar x"
@@ -45,11 +55,8 @@ alias cdir="pwd | tr -d '\n' | pbcopy"
 # Run python script to tag mp3 files according to lastfm
 alias mp3tag="python ~/Work/code/scripts/lastfm/tagger.py ."
 
-# Starts a python SimpleHTTPServer on current directory
+# Starts a python SimpleHTTPServer on current directory (deprecated, now using serve to run nodejs http server)
 alias server="python -m SimpleHTTPServer"
-
-# Opens current directory in Path Finder
-alias pf="open -a Path\ Finder $1"
 
 # some stuff I grabbed from @lennyjpg at https://github.com/lennyjpg/dotfiles/blob/master/.aliases
 

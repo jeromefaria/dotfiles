@@ -74,11 +74,6 @@ function rl() {
   head -$2 $1 | tail -1
 }
 
-# Tag mp3 folder with last.fm
-function mp3tag() {
-  ~/Work/code/scripts/lastfm/tagger.py $1
-}
-
 # Create new project directory
 function newproj() {
   mkdir $1
