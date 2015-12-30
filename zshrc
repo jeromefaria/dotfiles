@@ -46,6 +46,7 @@ source $ZSH/oh-my-zsh.sh
 source ~/dotfiles/aliases.sh
 source ~/dotfiles/functions.sh
 source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.oh-my-zsh/t-completion/t-completion.zsh
 
 # Customize to your needs...
 export PATH=/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/ruby/bin
