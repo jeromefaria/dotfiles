@@ -11,6 +11,7 @@ alias ll="ls -lah"
 alias lt="ls -laht"
 alias cl="clear"
 alias f="find"
+alias v="vim"
 
 # Folders 
 alias home="cd ~/"
