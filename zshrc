@@ -72,3 +72,8 @@ export PATH=/usr/local/bin:$PATH
 
 # Z
 . /usr/local/etc/profile.d/z.sh
+
+# Crontab
+export EDITOR=vim
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
