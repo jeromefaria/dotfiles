@@ -24,13 +24,14 @@ alias work="cd ~/Work"
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
-alias artica="cd ~/Google\ Drive/Work/artica"
 alias dotfiles="cd ~/dotfiles"
+alias fractal="cd ~/Work/fractal-labs"
 
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito"
 alias pf="open -a Path\ Finder $1"
+alias iaw="open -a iA\ Writer\ Pro $1"
 
 # Archives
 alias zi="zipinfo"
