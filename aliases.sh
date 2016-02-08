@@ -25,13 +25,20 @@ alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
 alias dotfiles="cd ~/dotfiles"
+alias df="cd ~/dotfiles"
 alias fractal="cd ~/Work/fractal-labs"
 
 # Apps
-alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security"
-alias chromedev="open /Applications/Google\ Chrome\ Canary.app --args --incognito"
+alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
+alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disable-web-security"
+alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias pf="open -a Path\ Finder $1"
 alias iaw="open -a iA\ Writer\ Pro $1"
+alias ws="open -a WebStorm $1"
+alias kdf="git difftool -y -t Kaleidoscope"
+alias vlc="open -a VLC $1"
+alias ta="tmux attach"
+alias vdf="vim ~/dotfiles"
 
 # Archives
 alias zi="zipinfo"
@@ -55,7 +62,7 @@ alias pcat="pygmentize -O style=native -g"
 alias cdir="pwd | tr -d '\n' | pbcopy"
 
 # Run python script to tag mp3 files according to lastfm
-alias mp3tag="python ~/Work/code/scripts/lastfm/tagger.py ."
+alias mp3tag="python ~/Work/2015/code/scripts/lastfm/tagger.py ."
 
 # Starts a python SimpleHTTPServer on current directory (deprecated, now using serve to run nodejs http server)
 alias server="python -m SimpleHTTPServer"
