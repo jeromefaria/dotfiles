@@ -58,8 +58,8 @@ export PATH=/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/ru
 export ANDROID_HOME=/usr/local/opt/android-sdk
 
 # MySQL
-export PATH="/usr/local/mysql/bin:$PATH"
-alias mysql='/Applications/MAMP/Library/bin/mysql'
+# export PATH="/usr/local/mysql/bin:$PATH"
+# alias mysql='/Applications/MAMP/Library/bin/mysql'
 
 # Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -77,3 +77,6 @@ export PATH=/usr/local/bin:$PATH
 export EDITOR=vim
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
+export NVM_DIR="/Volumes/Home/Users/jeromefaria/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
