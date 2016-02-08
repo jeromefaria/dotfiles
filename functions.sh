@@ -80,3 +80,8 @@ function newproj() {
   mkdir $1/{assets,code,design,documents,research}
   cd $1
 }
+
+# Runs a processing project from the command line
+function p5() {
+  processing-java --sketch=$PWD --run
+}
