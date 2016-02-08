@@ -1,19 +1,22 @@
 # dotfiles
 
-Custom shell stuff. Last updated: Tue Sep  1 17:35:58 WEST 2015
+Custom shell stuff. Last updated: Mon Feb  8 14:51:18 WET 2016 
 
-## aliases.sh
+## Aliases
 
 Shortcuts for everyday tasks.
 
-## functions.sh 
+## Functions
 
-Productive boosts.
+Productivity boosts.
 
-## vimrc
+## Tmux
+Custom settings for tmux.
+
+## Vim
 
 Vim settings.
 
-## zshrc
+## ZSH
 
-ZSH settings
+ZSH settings.
