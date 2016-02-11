@@ -37,6 +37,7 @@ alias iaw="open -a iA\ Writer\ Pro $1"
 alias ws="open -a WebStorm $1"
 alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
+alias tx="tmux"
 alias ta="tmux attach"
 alias vdf="vim ~/dotfiles"
 

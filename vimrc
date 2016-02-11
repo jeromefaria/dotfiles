@@ -20,7 +20,6 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-ragtag'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-surround'
-"Plugin 'mattn/emmet-vim'
 Plugin 'honza/vim-snippets'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'godlygeek/tabular'
@@ -65,6 +64,7 @@ let mapleader = ","
 " Insert mode mappings
 inoremap <C-l> <space>=><space>
 inoremap <C-s> <Esc>:w<CR>a
+imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 " Normal mode mappings
 nnoremap <C-s> :w<CR>
@@ -202,6 +202,15 @@ set statusline+=c%c
 set statusline+=,l%l
 set statusline+=/%L\ 
 set laststatus=2
+
+"""""""""""""""""""""""""""""""""""""""
+" Improve Ctrl P performance using Ag
+"""""""""""""""""""""""""""""""""""""""
+
+let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
 
 """""""""""""""""""""""""""""""""""""""
 " Specific configurations
