@@ -100,6 +100,12 @@ vnoremap . :norm.<CR>
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
 
+" Navigate splits
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
 """""""""""""""""""""""""""""""""""""""
 " General settings
 """""""""""""""""""""""""""""""""""""""
@@ -143,6 +149,8 @@ set number
 "colorscheme gotham256
 set lazyredraw
 set ttyfast
+set splitbelow
+set splitright
 
 """""""""""""""""""""""""""""""""""""""
 " Folding
