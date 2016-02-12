@@ -26,7 +26,12 @@ alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
 alias dotfiles="cd ~/dotfiles"
 alias df="cd ~/dotfiles"
-alias fractal="cd ~/Work/fractal-labs"
+
+# Work
+alias fr="cd ~/Work/fractal-labs"
+alias frcode="cd ~/Work/fractal-labs/code"
+alias frdesign="cd ~/Work/fractal-labs/design"
+alias frdocs="cd ~/Work/fractal-labs/documents"
 
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
