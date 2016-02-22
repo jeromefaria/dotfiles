@@ -25,7 +25,6 @@ alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
 alias dotfiles="cd ~/dotfiles"
-alias df="cd ~/dotfiles"
 
 # Work
 alias fr="cd ~/Work/fractal-labs"
