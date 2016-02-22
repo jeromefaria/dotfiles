@@ -29,6 +29,8 @@ Plugin 'rking/ag.vim'
 Plugin 'easymotion/vim-easymotion'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdcommenter'
+"Plugin 'scrooloose/syntastic'
+Plugin 'benmills/vimux'
 
 " language-specific plugins
 Plugin 'mattn/emmet-vim', { 'for': 'html' }
@@ -101,10 +103,14 @@ nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
 
 " Navigate splits
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+" nnoremap <C-J> <C-W><C-J>
+" nnoremap <C-K> <C-W><C-K>
+" nnoremap <C-L> <C-W><C-L>
+" nnoremap <C-H> <C-W><C-H>
+map <silent> <C-h> :call WinMove('h')<cr>
+map <silent> <C-j> :call WinMove('j')<cr>
+map <silent> <C-k> :call WinMove('k')<cr>
+map <silent> <C-l> :call WinMove('l')<cr>
 
 """""""""""""""""""""""""""""""""""""""
 " General settings
@@ -144,9 +150,6 @@ set incsearch
 set smartcase
 set number
 "set relativenumber
-"set background=dark
-"colorscheme material-theme
-"colorscheme gotham256
 set lazyredraw
 set ttyfast
 set splitbelow
@@ -163,25 +166,47 @@ set splitright
 """""""""""""""""""""""""""""""""""""""
 
 ".ru files are Ruby.
-au BufRead,BufNewFile *.ru set filetype=ruby
-au BufRead,BufNewFile [vV]agrantfile set filetype=ruby
+autocmd BufRead,BufNewFile *.ru set filetype=ruby
+autocmd BufRead,BufNewFile [vV]agrantfile set filetype=ruby
 
 " Markdown gets auto textwidth
 "au Bufread,BufNewFile *.md set filetype=markdown textwidth=79
 "au Bufread,BufNewFile *.markdown set textwidth=79
 
 " .feature files are Cucumber.
-au Bufread,BufNewFile *.feature set filetype=cucumber
+autocmd Bufread,BufNewFile *.feature set filetype=cucumber
 
 " .coffee are CoffeScript
-au BufNewFile,BufRead *.coffee set filetype=coffee
+autocmd BufNewFile,BufRead *.coffee set filetype=coffee
 
 " .hbs are Handlebars templates
-au BufNewFile,BufRead *.hbs set filetype=html
+autocmd BufNewFile,BufRead *.hbs set filetype=html
+
+" Reload vimrc when saved
+autocmd BufWritePost vimrc source %
 
 " Statusline
 hi User1 ctermbg=white    ctermfg=black   guibg=#89A1A1 guifg=#002B36
 hi User2 ctermbg=red      ctermfg=white   guibg=#aa0000 guifg=#89a1a1
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Functions
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Window movement shortcuts
+" move to the window in the direction shown, or create a new window
+function! WinMove(key)
+    let t:curwin = winnr()
+    exec "wincmd ".a:key
+    if (t:curwin == winnr())
+        if (match(a:key,'[jk]'))
+            wincmd v
+        else
+            wincmd s
+        endif
+        exec "wincmd ".a:key
+    endif
+endfunction
 
 function! GetCWD()
   return expand(":pwd")
@@ -211,6 +236,21 @@ set statusline+=,l%l
 set statusline+=/%L\ 
 set laststatus=2
 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" close NERDTree after a file is opened
+let g:NERDTreeQuitOnOpen=0
+" show hidden files in NERDTree
+let NERDTreeShowHidden=1
+" remove some files by extension
+" let NERDTreeIgnore = ['\.js.map$']
+" Toggle NERDTree
+" nmap <silent> <leader>k :NERDTreeToggle<cr>
+" expand to the path of the file in the current buffer
+" nmap <silent> <leader>y :NERDTreeFind<cr>
+
 """""""""""""""""""""""""""""""""""""""
 " Improve Ctrl P performance using Ag
 """""""""""""""""""""""""""""""""""""""
@@ -230,3 +270,15 @@ let g:markdown_fenced_languages = ['css', 'erb=eruby', 'javascript', 'js=javascr
 
 syntax enable
 filetype plugin indent on
+
+"""""""""""""""""""""""""""""""""""""""
+" Syntastic noob settings
+"""""""""""""""""""""""""""""""""""""""
+
+" set statusline+=%#warningmsg# 
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
