@@ -10,6 +10,7 @@ alias .....="cd ../../../.."
 alias ll="ls -lah"
 alias lt="ls -laht"
 alias cl="clear"
+alias rf="rm -rf"
 alias f="find"
 alias v="vim"
 
@@ -20,7 +21,6 @@ alias down="cd ~/Downloads"
 alias docs="cd ~/Documents"
 alias pics="cd ~/Pictures"
 alias work="cd ~/Work"
-
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
@@ -36,20 +36,40 @@ alias frdocs="cd ~/Work/fractal-labs/documents"
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disable-web-security"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
+alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias pf="open -a Path\ Finder $1"
 alias iaw="open -a iA\ Writer\ Pro $1"
 alias ws="open -a WebStorm $1"
 alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
-alias tx="tmux"
-alias ta="tmux attach"
 alias vdf="vim ~/dotfiles"
+
+# MySQL
+alias mysqlstart="mysql.server start"
+alias mysqlstop="mysql.server stop"
+
+# Tmux 
+alias tmx="tmux new -s"
+alias tmxa="tmux attach"
+alias tmxl="tmux ls"
+
+# Tmuxinator
+alias mux="tmuxinator"
 
 # Archives
 alias zi="zipinfo"
 alias uz="unzip -o"
 alias ux="unrar x"
 alias ui="unrar l"
+
+# Git 
+alias gdc="git diff --name-only --diff-filter=U"
+alias gstdf="git stash show -p $1"
+
+# Gradle
+alias grdc="gradle clean"
+alias grdb="gradle backend:start"
+alias grdf="gradle frontend:runner:start"
 
 # JSON prettify
 alias prettyjson='python -m json.tool'
@@ -61,13 +81,13 @@ alias serve="http-server"
 alias reload="source ~/.zshrc"
 
 # cat files with syntax highlighting
-alias pcat="pygmentize -O style=native -g"
+alias ccat="pygmentize -O style=native -g"
 
 # Copy current directory to clipboard
 alias cdir="pwd | tr -d '\n' | pbcopy"
 
 # Run python script to tag mp3 files according to lastfm
-alias mp3tag="python ~/Work/2015/code/scripts/lastfm/tagger.py ."
+alias mpt="python ~/Work/2015/code/scripts/lastfm/tagger.py ."
 
 # Starts a python SimpleHTTPServer on current directory (deprecated, now using serve to run nodejs http server)
 alias server="python -m SimpleHTTPServer"
