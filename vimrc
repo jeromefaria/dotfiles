@@ -31,6 +31,15 @@ Plugin 'Valloric/YouCompleteMe'
 Plugin 'scrooloose/nerdcommenter'
 "Plugin 'scrooloose/syntastic'
 Plugin 'benmills/vimux'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-vinegar'
+Plugin 'sjl/gundo.vim'
+Plugin 'vitalk/vim-simple-todo'
+Plugin 'tmux-plugins/vim-tmux'
+Plugin 'edkolev/tmuxline.vim'
+"Plugin 'wincent/command-t'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'christoomey/vim-tmux-navigator'
 
 " language-specific plugins
 Plugin 'mattn/emmet-vim', { 'for': 'html' }
@@ -66,6 +75,9 @@ let mapleader = ","
 " Insert mode mappings
 inoremap <C-l> <space>=><space>
 inoremap <C-s> <Esc>:w<CR>a
+
+" Remap esc
+inoremap jk <esc>
 imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 " Normal mode mappings
@@ -82,11 +94,6 @@ nnoremap <leader>l :ls<CR>:b
 nnoremap <leader>t :CtrlP<CR>
 nnoremap n nzz
 nnoremap N Nzz
-"nnoremap <leader>c :nohl<CR>
-
-" Visual mode mappings
-" vnoremap < <gv
-" vnoremap > >gv
 
 " Indent with Tab and Shift+Tab
 nnoremap <Tab> >>_
@@ -99,18 +106,17 @@ vnoremap <S-Tab> <gv
 vnoremap . :norm.<CR>
 
 " Navigate tabs
-nnoremap <C-Left> :tabprevious<CR>
-nnoremap <C-Right> :tabnext<CR>
+nnoremap H gT
+nnoremap L gt
 
 " Navigate splits
-" nnoremap <C-J> <C-W><C-J>
-" nnoremap <C-K> <C-W><C-K>
-" nnoremap <C-L> <C-W><C-L>
-" nnoremap <C-H> <C-W><C-H>
 map <silent> <C-h> :call WinMove('h')<cr>
 map <silent> <C-j> :call WinMove('j')<cr>
 map <silent> <C-k> :call WinMove('k')<cr>
 map <silent> <C-l> :call WinMove('l')<cr>
+
+" Gundo key
+nnoremap <F5> :GundoToggle<CR>
 
 """""""""""""""""""""""""""""""""""""""
 " General settings
@@ -154,6 +160,7 @@ set lazyredraw
 set ttyfast
 set splitbelow
 set splitright
+set so=8 " set 7 lines to the cursors - when moving vertical
 
 """""""""""""""""""""""""""""""""""""""
 " Folding
