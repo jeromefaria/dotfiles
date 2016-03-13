@@ -71,6 +71,10 @@ alias grdc="gradle clean"
 alias grdb="gradle backend:start"
 alias grdf="gradle frontend:runner:start"
 
+# Grunt
+alias fd="grunt serve -env=frontdev"
+alias fdt="grunt serve -env=frontdev-test"
+
 # JSON prettify
 alias prettyjson='python -m json.tool'
 
