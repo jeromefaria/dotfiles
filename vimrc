@@ -12,7 +12,7 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'mileszs/ack.vim'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes' 
@@ -110,10 +110,10 @@ nnoremap H gT
 nnoremap L gt
 
 " Navigate splits
-map <silent> <C-h> :call WinMove('h')<cr>
-map <silent> <C-j> :call WinMove('j')<cr>
-map <silent> <C-k> :call WinMove('k')<cr>
-map <silent> <C-l> :call WinMove('l')<cr>
+" map <silent> <C-h> :call WinMove('h')<cr>
+" map <silent> <C-j> :call WinMove('j')<cr>
+" map <silent> <C-k> :call WinMove('k')<cr>
+" map <silent> <C-l> :call WinMove('l')<cr>
 
 " Gundo key
 nnoremap <F5> :GundoToggle<CR>
@@ -161,6 +161,10 @@ set ttyfast
 set splitbelow
 set splitright
 set so=8 " set 7 lines to the cursors - when moving vertical
+set nolist wrap linebreak breakat&vim
+
+" Change search highlight color
+highlight Search cterm=NONE ctermfg=black ctermbg=white
 
 """""""""""""""""""""""""""""""""""""""
 " Folding
@@ -289,3 +293,12 @@ filetype plugin indent on
 " let g:syntastic_auto_loc_list = 1
 " let g:syntastic_check_on_open = 1
 " let g:syntastic_check_on_wq = 0
+
+"""""""""""""""""""""""""""""""""""""""
+" Ignore
+"""""""""""""""""""""""""""""""""""""""
+
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip,/.tmp/     " MacOSX/Linux
+
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|tmp)$'
+let g:ctrlp_user_command = 'find %s -type f | egrep -v "(build|bower_components|node_modules|\.tmp|\.sass-cache|\.git|\.idea)"'
