@@ -16,6 +16,12 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # set args= for normal booting
 sudo nvram boot-args="-v"
 
+# Enable selection in QuickLook
+defaults write com.apple.finder QLEnableTextSelection -bool TRUE; killall Finder
+
+# Disable selection in QuickLook
+# defaults delete com.apple.finder QLEnableTextSelection; killall Finder
+
 # Set computer name (as done via System Preferences → Sharing)
 #sudo scutil --set ComputerName "0x6D746873"
 #sudo scutil --set HostName "0x6D746873"
