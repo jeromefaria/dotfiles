@@ -35,6 +35,8 @@ alias frdocs="cd ~/Work/fractal-labs/documents"
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disable-web-security"
+alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir"
+alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security --user-data-dir"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias pf="open -a Path\ Finder $1"
