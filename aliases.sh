@@ -13,6 +13,7 @@ alias cl="clear"
 alias rf="rm -rf"
 alias f="find"
 alias v="vim"
+alias copy="tr -d '\n' | pbcopy"
 
 # Folders 
 alias home="cd ~/"
@@ -31,6 +32,7 @@ alias fr="cd ~/Work/fractal-labs"
 alias frcode="cd ~/Work/fractal-labs/code"
 alias frdesign="cd ~/Work/fractal-labs/design"
 alias frdocs="cd ~/Work/fractal-labs/documents"
+alias cfoapp="/Volumes/Home/Users/jeromefaria/Work/fractal-labs/code/fractal/frontend/src/yo/app"
 
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
@@ -72,6 +74,9 @@ alias gstdf="git stash show -p $1"
 alias grdc="gradle clean"
 alias grdb="gradle backend:start"
 alias grdf="gradle frontend:runner:start"
+
+# Databases 
+alias dbs="mysql.server start && cassandra && ./scripts/platform/osx/start_rabbit.sh"
 
 # Grunt
 alias fd="grunt serve -env=frontdev"
@@ -115,3 +120,6 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+\)\|[a-fA-F0-9:]\+\)' | sed -e 's/inet6* //'"
+
+# Displays weather
+alias weather="curl -4 http://wttr.in"

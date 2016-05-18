@@ -40,6 +40,7 @@ Plugin 'edkolev/tmuxline.vim'
 "Plugin 'wincent/command-t'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'christoomey/vim-tmux-navigator'
+Plugin 'vim-scripts/LustyExplorer'
 
 " language-specific plugins
 Plugin 'mattn/emmet-vim', { 'for': 'html' }
@@ -132,8 +133,8 @@ set fileencoding=utf-8
 set gdefault
 set guioptions-=Be
 set guioptions=aAc
-"set list
-"set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:•
+set list
+set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:•
 set noswapfile
 set shell=/bin/bash
 set showmatch
@@ -161,10 +162,23 @@ set ttyfast
 set splitbelow
 set splitright
 set so=8 " set 7 lines to the cursors - when moving vertical
-set nolist wrap linebreak breakat&vim
+set wrap
+set linebreak
+set breakat&vim
+set hidden
+" Folding
+"set foldcolumn=4
+set foldlevelstart=20
+set foldmethod=indent
+set foldenable
 
 " Change search highlight color
 highlight Search cterm=NONE ctermfg=black ctermbg=white
+" Change tabs and end of line chars olor
+highlight NonText guifg=#333333
+highlight SpecialKey guifg=#333333
+" Change code folding color
+highlight Folded ctermfg=white ctermbg=240
 
 """""""""""""""""""""""""""""""""""""""
 " Folding
