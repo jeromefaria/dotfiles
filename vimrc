@@ -41,6 +41,7 @@ Plugin 'edkolev/tmuxline.vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'vim-scripts/LustyExplorer'
+Plugin 'godlygeek/csapprox'
 
 " language-specific plugins
 Plugin 'mattn/emmet-vim', { 'for': 'html' }
@@ -156,7 +157,7 @@ set ignorecase
 set incsearch
 set smartcase
 set number
-"set relativenumber
+set relativenumber
 set lazyredraw
 set ttyfast
 set splitbelow
@@ -316,3 +317,6 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,/.tmp/     " MacOSX/Linux
 
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|tmp)$'
 let g:ctrlp_user_command = 'find %s -type f | egrep -v "(build|bower_components|node_modules|\.tmp|\.sass-cache|\.git|\.idea)"'
+
+let g:ycm_server_python_interpreter = '/usr/bin/python'
+'
