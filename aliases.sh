@@ -21,18 +21,18 @@ alias desk="cd ~/Desktop"
 alias down="cd ~/Downloads"
 alias docs="cd ~/Documents"
 alias pics="cd ~/Pictures"
-alias work="cd ~/Work"
+alias work="cd /Volumes/System/Users/jeromefaria/Work"
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Google\ Drive"
 alias dotfiles="cd ~/dotfiles"
 
 # Work
-alias fr="cd ~/Work/fractal-labs"
-alias frcode="cd ~/Work/fractal-labs/code"
-alias frdesign="cd ~/Work/fractal-labs/design"
-alias frdocs="cd ~/Work/fractal-labs/documents"
-alias cfoapp="/Volumes/Home/Users/jeromefaria/Work/fractal-labs/code/fractal/frontend/src/yo/app"
+alias fr="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs"
+alias frcode="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs/code"
+alias frdesign="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs/design"
+alias frdocs="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs/documents"
+alias cfoapp="/Volumes/System/Users/jeromefaria/Work/fractal-labs/code/fractal/frontend/src/yo/app"
 
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
@@ -98,7 +98,7 @@ alias ccat="pygmentize -O style=native -g"
 alias cdir="pwd | tr -d '\n' | pbcopy"
 
 # Run python script to tag mp3 files according to lastfm
-alias mpt="python ~/Work/2015/code/scripts/lastfm/tagger.py ."
+alias mpt="python ~/Work/github/mp3tagger/tagger.py $1"
 
 # Starts a python SimpleHTTPServer on current directory (deprecated, now using serve to run nodejs http server)
 alias server="python -m SimpleHTTPServer"
