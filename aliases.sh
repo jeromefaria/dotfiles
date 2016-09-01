@@ -28,11 +28,7 @@ alias drive="cd ~/Google\ Drive"
 alias dotfiles="cd ~/dotfiles"
 
 # Work
-alias fr="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs"
-alias frcode="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs/code"
-alias frdesign="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs/design"
-alias frdocs="cd /Volumes/System/Users/jeromefaria/Work/fractal-labs/documents"
-alias cfoapp="/Volumes/System/Users/jeromefaria/Work/fractal-labs/code/fractal/frontend/src/yo/app"
+alias helpr="/Users/jeromefaria/Work/helpr"
 
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
@@ -69,18 +65,6 @@ alias ui="unrar l"
 # Git 
 alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
-
-# Gradle
-alias grdc="gradle clean"
-alias grdb="gradle backend:start"
-alias grdf="gradle frontend:runner:start"
-
-# Databases 
-alias dbs="mysql.server start && cassandra && ./scripts/platform/osx/start_rabbit.sh"
-
-# Grunt
-alias fd="grunt serve -env=frontdev"
-alias fdt="grunt serve -env=frontdev-test"
 
 # JSON prettify
 alias prettyjson='python -m json.tool'
