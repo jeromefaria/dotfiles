@@ -141,7 +141,11 @@ set shell=/bin/bash
 set showmatch
 set smartindent
 set term=screen-256color
-set ts=2 sts=2 sw=2 expandtab
+"set ts=2 sts=2 sw=2 expandtab
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set noexpandtab
 set novisualbell
 "set winheight=999
 "set winheight=5
