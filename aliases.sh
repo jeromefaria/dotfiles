@@ -36,13 +36,16 @@ alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disa
 alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
 alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
-alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
+alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
 alias pf="open -a Path\ Finder $1"
 alias iaw="open -a iA\ Writer\ Pro $1"
 alias ws="open -a WebStorm $1"
 alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
 alias vdf="vim ~/dotfiles"
+
+# Ionic
+alias is="ionic serve"
 
 # MySQL
 alias mysqlstart="mysql.server start"
@@ -65,6 +68,7 @@ alias ui="unrar l"
 # Git 
 alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
+alias gfl="git-flow"
 
 # JSON prettify
 alias prettyjson='python -m json.tool'
