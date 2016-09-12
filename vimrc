@@ -145,7 +145,8 @@ set term=screen-256color
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set noexpandtab
+"set noexpandtab
+set expandtab
 set novisualbell
 "set winheight=999
 "set winheight=5
@@ -320,7 +321,7 @@ filetype plugin indent on
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip,/.tmp/     " MacOSX/Linux
 
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|tmp)$'
-let g:ctrlp_user_command = 'find %s -type f | egrep -v "(build|bower_components|node_modules|\.tmp|\.sass-cache|\.git|\.idea)"'
+let g:ctrlp_user_command = 'find %s -type f | egrep -v "(build|bower_components|node_modules|\.tmp|\.sass-cache|\.git|\.idea|platforms)"'
 
 let g:ycm_server_python_interpreter = '/usr/bin/python'
 '
