@@ -40,7 +40,7 @@ ZSH_THEME="robbyrussell"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git svn sublime osx encode64 web-search last-working-dir git-flow-completion)
+plugins=(git svn sublime osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 source ~/dotfiles/aliases.sh
@@ -88,3 +88,6 @@ fi
 # Go
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
+# zsh syntax highlighting
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
