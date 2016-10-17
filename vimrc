@@ -1,4 +1,4 @@
-" Based on the settings from @josemota and @nicknisi 
+" Based on the settings from @josemota and @nicknisi
 
 set nocompatible
 filetype on
@@ -42,6 +42,7 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'vim-scripts/LustyExplorer'
 Plugin 'godlygeek/csapprox'
+Plugin 'Shutnik/jshint2.vim'
 
 " language-specific plugins
 Plugin 'mattn/emmet-vim', { 'for': 'html' }
@@ -65,6 +66,12 @@ Plugin 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
 Plugin 'tpope/vim-markdown', { 'for': 'markdown' }
 Plugin 'fatih/vim-go', { 'for': 'go' }
 Plugin 'timcharper/textile.vim', { 'for': 'textile' }
+
+" AngularJS plugins
+Plugin 'burnettk/vim-angular'
+Plugin 'othree/javascript-libraries-syntax.vim'
+Plugin 'matthewsimo/angular-vim-snippets'
+Plugin 'claco/jasmine.vim'
 
 call vundle#end()
 
@@ -177,6 +184,8 @@ set hidden
 set foldlevelstart=20
 set foldmethod=indent
 set foldenable
+" Limit syntax highlight for long lines
+set synmaxcol=250
 
 " Change search highlight color
 highlight Search cterm=NONE ctermfg=black ctermbg=white
@@ -324,4 +333,6 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|tmp)$'
 let g:ctrlp_user_command = 'find %s -type f | egrep -v "(build|bower_components|node_modules|\.tmp|\.sass-cache|\.git|\.idea|platforms)"'
 
 let g:ycm_server_python_interpreter = '/usr/bin/python'
+let g:ycm_server_python_interpreter = '/usr/local/bin/python'
+"let $PATH = '/usr/local/opt/python/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/2.7'.$PATH
 '
