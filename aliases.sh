@@ -45,7 +45,10 @@ alias vlc="open -a VLC $1"
 alias vdf="vim ~/dotfiles"
 
 # Ionic
-alias is="ionic serve"
+alias is="ionic serve -b"
+
+# JSHint
+alias jh="jshint"
 
 # MySQL
 alias mysqlstart="mysql.server start"
