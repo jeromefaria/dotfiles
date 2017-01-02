@@ -14,6 +14,7 @@ alias rf="rm -rf"
 alias f="find"
 alias v="vim"
 alias copy="tr -d '\n' | pbcopy"
+alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 # Folders 
 alias home="cd ~/"
@@ -24,7 +25,7 @@ alias pics="cd ~/Pictures"
 alias work="cd /Volumes/System/Users/jeromefaria/Work"
 alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
-alias drive="cd ~/Google\ Drive"
+alias drive="cd ~/Drive"
 alias dotfiles="cd ~/dotfiles"
 
 # Work
@@ -33,7 +34,8 @@ alias helpr="/Users/jeromefaria/Work/helpr"
 # Apps
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disable-web-security"
-alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
+#alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
+alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --incognito"
 alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
@@ -46,6 +48,12 @@ alias vdf="vim ~/dotfiles"
 
 # Ionic
 alias is="ionic serve -b"
+alias iba="ionic build android"
+alias ira="ionic run android"
+
+# Gulp
+alias gw="gulp watch"
+alias gs="gulp sass"
 
 # JSHint
 alias jh="jshint"
@@ -73,8 +81,16 @@ alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
 alias gfl="git-flow"
 
+# Brew
+alias bu="brew update && brew upgrade"
+
+# Jekyll
+alias jk="jekyll"
+alias jks="jekyll serve"
+alias jkb="jekyll build"
+
 # JSON prettify
-alias prettyjson='python -m json.tool'
+alias json='python -m json.tool'
 
 # Runs a simple http server on current directory
 alias serve="http-server"
