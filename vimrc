@@ -43,6 +43,8 @@ Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'vim-scripts/LustyExplorer'
 Plugin 'godlygeek/csapprox'
 Plugin 'Shutnik/jshint2.vim'
+Plugin 'xolox/vim-session'
+Plugin 'xolox/vim-misc'
 
 " language-specific plugins
 Plugin 'mattn/emmet-vim', { 'for': 'html' }
@@ -186,6 +188,8 @@ set foldmethod=indent
 set foldenable
 " Limit syntax highlight for long lines
 set synmaxcol=250
+" Fuzzy find Vim style
+set path+=**
 
 " Change search highlight color
 highlight Search cterm=NONE ctermfg=black ctermbg=white
