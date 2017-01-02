@@ -40,7 +40,7 @@ ZSH_THEME="robbyrussell"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git svn sublime osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting)
+plugins=(git svn sublime osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
 source ~/dotfiles/aliases.sh
@@ -49,7 +49,7 @@ source ~/.oh-my-zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/.oh-my-zsh/t-completion/t-completion.zsh
 
 # Customize to your needs...
-export PATH=/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/ruby/bin:~/.local/bin
+export PATH=$PATH:/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/ruby/bin:~/.local/bin
 # export PATH='/usr/local/bin:$PATH'
 
 # Android SDK
@@ -91,3 +91,15 @@ export PATH=$PATH:/usr/local/opt/go/libexec/bin
 # zsh syntax highlighting
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# key bindings
+bindkey '^ ' autosuggest-accept
+bindkey -M menuselect '^[[Z' reverse-menu-complete
+
+# Ionic android build fixes
+#export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+#export CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL='http\://services.gradle.org/distributions/gradle-2.14.1-all.zip'
+
+# Ruby Version Manager
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+#export rvmsudo_secure_path=1
