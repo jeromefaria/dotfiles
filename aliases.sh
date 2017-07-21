@@ -90,6 +90,7 @@ alias ui="unrar l"
 alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
 alias gfl="git-flow"
+alias gds="git diff --staged"
 
 # Brew
 alias bu="brew update && brew upgrade"
