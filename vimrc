@@ -368,3 +368,14 @@ let g:ycm_server_python_interpreter = '/usr/bin/python'
 let g:ycm_server_python_interpreter = '/usr/local/bin/python'
 "let $PATH = '/usr/local/opt/python/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/2.7'.$PATH
 '
+
+"""""""""""""""""""""""""""""""""""""""
+" FZF
+"""""""""""""""""""""""""""""""""""""""
+set rtp+=/usr/local/opt/fzf
+" Fuzzy-find with fzf
+map <C-p> :Files<cr>
+nmap <C-p> :Files<cr>
+
+" View commits in fzf
+nmap <Leader>c :Commits<cr>
