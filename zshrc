@@ -63,7 +63,7 @@ export ANDROID_HOME=/usr/local/Caskroom/android-sdk
 # alias mysql='/Applications/MAMP/Library/bin/mysql'
 
 # Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+#export PATH="/usr/local/heroku/bin:$PATH"
 
 # Android SDK
 export PATH=${PATH}:/Applications/Android\ Studio.app/sdk/platform-tools:/Applications/Android\ Studio.app/sdk/tools
@@ -77,8 +77,7 @@ export PATH=/usr/local/bin:$PATH
 # Crontab
 export EDITOR=vim
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-export NVM_DIR="/Volumes/Home/Users/jeromefaria/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Powerline stuff
@@ -91,7 +90,7 @@ export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # zsh syntax highlighting
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/local/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+#source /usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
 
 # key bindings
 bindkey '^ ' autosuggest-accept
@@ -105,6 +104,10 @@ export ANDROID_HOME=/usr/local/share/android-sdk
 # Ruby Version Manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 #export rvmsudo_secure_path=1
+
+# Fix Python version for RTV
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 # FZF
 
