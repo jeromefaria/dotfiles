@@ -47,9 +47,16 @@ alias vlc="open -a VLC $1"
 alias vdf="vim ~/dotfiles"
 
 # Ionic
-alias is="ionic serve -b"
+alias is="ionic serve -b --address localhost"
+# iOS
+alias ipi="ionic prepare ios"
+alias ibi="ionic build ios"
+alias iri="ionic run ios"
+alias iei="ionic emulate ios"
+# Android
 alias iba="ionic build android"
 alias ira="ionic run android"
+alias iea="ionic emulate android"
 
 # Gulp
 alias gw="gulp watch"
