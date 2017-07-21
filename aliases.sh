@@ -92,6 +92,10 @@ alias gstdf="git stash show -p $1"
 alias gfl="git-flow"
 alias gds="git diff --staged"
 
+# FZF
+alias gcob='git checkout $(git branch | fzf)'
+alias fcd='cd $(fzf)'
+
 # Brew
 alias bu="brew update && brew upgrade"
 
