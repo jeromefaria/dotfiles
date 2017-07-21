@@ -99,8 +99,17 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 
 # Ionic android build fixes
 #export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-#export CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL='http\://services.gradle.org/distributions/gradle-2.14.1-all.zip'
+#export ANDROID_HOME=/usr/local/share/android-sdkexport CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL='http\://services.gradle.org/distributions/gradle-2.14.1-all.zip'
+export ANDROID_HOME=/usr/local/share/android-sdk
 
 # Ruby Version Manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 #export rvmsudo_secure_path=1
+
+# FZF
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# zsh interactive cd
+source ~/.oh-my-zsh/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
+export PATH="/usr/local/sbin:$PATH"
