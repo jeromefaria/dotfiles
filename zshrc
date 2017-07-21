@@ -55,7 +55,8 @@ export PATH=$PATH:/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/
 # Android SDK
 # export ANDROID_HOME=/Developer/AndroidSDK
 # export PATH=/Developer/AndroidSDK/platform-tools:/Developer/AndroidSDK/tools:$PATH
-export ANDROID_HOME=/usr/local/opt/android-sdk
+export ANDROID_HOME=/usr/local/Caskroom/android-sdk
+
 
 # MySQL
 # export PATH="/usr/local/mysql/bin:$PATH"
