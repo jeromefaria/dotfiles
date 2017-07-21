@@ -1,6 +1,6 @@
 # dotfiles
 
-Custom shell stuff. Last updated: Mon Feb  8 14:51:18 WET 2016 
+Custom shell stuff. Last updated: Fri Jul 21 11:57:50 WEST 2017
 
 ## Aliases
 
