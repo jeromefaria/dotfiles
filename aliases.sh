@@ -62,6 +62,9 @@ alias iea="ionic emulate android"
 alias gw="gulp watch"
 alias gs="gulp sass"
 
+# Karma
+alias ks="karma start"
+
 # JSHint
 alias jh="jshint"
 
