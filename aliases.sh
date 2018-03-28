@@ -41,7 +41,7 @@ alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --d
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
 alias pf="open -a Path\ Finder $1"
-alias iaw="open -a iA\ Writer\ Pro $1"
+alias iaw="open -a iA\ Writer $1"
 alias ws="open -a WebStorm $1"
 alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
