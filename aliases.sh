@@ -47,6 +47,12 @@ alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
 alias vdf="vim ~/dotfiles"
 
+# Vagrant
+alias vg="vagrant"
+alias vgu="vagrant up"
+alias vgs="vagrant ssh"
+alias vgh="vagrant halt"
+
 # Ionic
 alias is="ionic serve -b --address localhost"
 # iOS
