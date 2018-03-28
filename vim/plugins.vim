@@ -99,6 +99,9 @@ Plug 'vim-scripts/VOoM'
 Plug 'reedes/vim-pencil'
 Plug 'jacekd/vim-iawriter'
 
+"Processing
+Plug 'sophacles/vim-processing'
+
 "call vundle#end()
 
 " Initialize plugin system
