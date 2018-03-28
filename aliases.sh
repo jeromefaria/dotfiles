@@ -27,6 +27,7 @@ alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
 alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Drive"
 alias dotfiles="cd ~/dotfiles"
+alias blog="cd ~/Drive/Work/code/jeromefaria.github.io"
 
 # Work
 alias helpr="/Users/jeromefaria/Work/helpr"
