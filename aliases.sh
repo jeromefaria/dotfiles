@@ -55,15 +55,20 @@ alias vgh="vagrant halt"
 
 # Ionic
 alias is="ionic serve -b --address localhost"
+alias ic="ionic cordova"
+
 # iOS
-alias ipi="ionic prepare ios"
-alias ibi="ionic build ios"
-alias iri="ionic run ios"
-alias iei="ionic emulate ios"
+alias ipi="ionic cordova prepare ios"
+alias ibi="ionic cordova build ios"
+alias iri="ionic cordova run ios"
+alias iril="ionic cordova run ios --lc"
+alias iei="ionic cordova emulate ios"
+
 # Android
-alias iba="ionic build android"
-alias ira="ionic run android"
-alias iea="ionic emulate android"
+alias iba="ionic cordova build android"
+alias ira="ionic cordova run android"
+alias iral="ionic cordova run android --lc"
+alias iea="ionic cordova emulate android"
 
 # Gulp
 alias gw="gulp watch"
