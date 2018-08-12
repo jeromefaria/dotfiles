@@ -117,3 +117,12 @@ export LANG=en_US.UTF-8
 # zsh interactive cd
 source ~/.oh-my-zsh/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
 export PATH="/usr/local/sbin:$PATH"
+
+# Fasd
+eval "$(fasd --init auto)"
+
+# hub mapping for git
+eval "$(hub alias -s)"
+
+fpath=(~/.zsh/completions $fpath)
+autoload -U compinit && compinit
