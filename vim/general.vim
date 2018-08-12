@@ -59,6 +59,7 @@ set foldenable
 set synmaxcol=250
 " Fuzzy find Vim style
 set path+=**
+set shell=/usr/local/bin/zsh
 
 " Change search highlight color
 highlight Search cterm=NONE ctermfg=black ctermbg=white
