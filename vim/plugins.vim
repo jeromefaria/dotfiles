@@ -55,7 +55,7 @@ Plug 'vim-syntastic/syntastic'
 
 " language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
-Plug 'gregsexton/MatchTag', { 'for': 'html' }
+Plug 'Valloric/MatchTagAlways'
 Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'moll/vim-node', { 'for': 'javascript' }
@@ -99,9 +99,11 @@ Plug 'vim-scripts/VOoM'
 Plug 'reedes/vim-pencil'
 Plug 'jacekd/vim-iawriter'
 
-"Processing
+" Processing
 Plug 'sophacles/vim-processing'
 
+" Pair completion
+Plug 'jiangmiao/auto-pairs'
 "call vundle#end()
 
 " Initialize plugin system
