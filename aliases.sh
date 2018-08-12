@@ -11,12 +11,26 @@ alias ll="ls -lah"
 alias lt="ls -laht"
 alias cl="clear"
 alias rf="rm -rf"
-alias f="find"
-alias v="vim"
+#alias f="find"
+#alias v="vim"
 alias copy="tr -d '\n' | pbcopy"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
-# Folders 
+# Fasd
+alias a='fasd -a'        # any
+alias s='fasd -si'       # show / search / select
+alias d='fasd -d'        # directory
+alias f='fasd -f'        # file
+alias sd='fasd -sid'     # interactive directory selection
+alias sf='fasd -sif'     # interactive file selection
+alias z='fasd_cd -d'     # cd, same functionality as j in autojump
+alias zz='fasd_cd -d -i' # cd with interactive selection
+
+alias v='f -e vim' # quick opening files with vim
+alias m='f -e mplayer' # quick opening files with mplayer
+alias o='a -e xdg-open' # quick opening files with xdg-open
+
+# Folders
 alias home="cd ~/"
 alias desk="cd ~/Desktop"
 alias down="cd ~/Downloads"
@@ -28,6 +42,8 @@ alias dropbox="cd ~/Dropbox"
 alias drive="cd ~/Drive"
 alias dotfiles="cd ~/dotfiles"
 alias blog="cd ~/Drive/Work/code/jeromefaria.github.io"
+alias mobile="cd ~/Library/Mobile\ Documents"
+alias icloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
 
 # Work
 alias helpr="/Users/jeromefaria/Work/helpr"
@@ -46,6 +62,7 @@ alias ws="open -a WebStorm $1"
 alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
 alias vdf="vim ~/dotfiles"
+alias grammarly="open -a Grammarly"
 
 # Vagrant
 alias vg="vagrant"
@@ -84,7 +101,7 @@ alias jh="jshint"
 alias mysqlstart="mysql.server start"
 alias mysqlstop="mysql.server stop"
 
-# Tmux 
+# Tmux
 alias tmx="tmux new -s"
 alias tmxa="tmux attach"
 alias tmxl="tmux ls"
@@ -98,7 +115,7 @@ alias uz="unzip -o"
 alias ux="unrar x"
 alias ui="unrar l"
 
-# Git 
+# Git
 alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
 alias gfl="git-flow"
