@@ -95,6 +95,7 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # key bindings
 bindkey '^ ' autosuggest-accept
 bindkey -M menuselect '^[[Z' reverse-menu-complete
+bindkey -M viins 'jj' vi-cmd-mode
 
 # Ionic android build fixes
 #export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
