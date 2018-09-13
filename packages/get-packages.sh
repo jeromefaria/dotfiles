@@ -1,5 +1,5 @@
 #!/bin/bash
-declare -a PACKAGES=(brew gem npm pip);
+declare -a PACKAGES=("brew" "cask" "gem" "npm" "pip");
 clear
 for package in ${PACKAGES[@]}
 do
@@ -7,6 +7,10 @@ do
     "brew")
       echo "Downloading $package package list..."
       brew list > $package.log
+      ;;
+    "cask")
+      echo "Downloading $package package list..."
+      brew cask list > $package.log
       ;;
     "gem")
       echo "Downloading $package package list..."
