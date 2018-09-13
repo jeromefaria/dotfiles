@@ -16,6 +16,16 @@ alias rf="rm -rf"
 alias copy="tr -d '\n' | pbcopy"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
+# Remaps
+alias cat="bat"
+alias ping='prettyping --nolegend'
+alias preview="fzf --preview 'bat --color \"always\" {}'"
+# add support for ctrl+o to open selected file in VS Code
+export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(vim {})+abort'"
+alias top="sudo htop" # alias top and fix high sierra bug
+alias du="ncdu --color dark -rr -x --exclude .giti --exclude node_modules"
+alias help="tldr"
+
 # Fasd
 alias a='fasd -a'        # any
 alias s='fasd -si'       # show / search / select
