@@ -33,6 +33,7 @@ jsonschema
 kitchen
 mailcap-fix
 moviepy
+msgpack
 msgpack-python
 munkres
 musicbrainzngs

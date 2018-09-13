@@ -10,6 +10,7 @@ atool
 autoconf
 automake
 bash-completion
+bat
 bdw-gc
 berkeley-db
 bison
@@ -38,6 +39,7 @@ extract_url
 faac
 faad2
 fasd
+fd
 fdk-aac
 ffmpeg
 fish
@@ -105,6 +107,7 @@ libvorbis
 libvpx
 libvterm
 libyaml
+libzip
 little-cms2
 lua
 lua@5.1
@@ -124,12 +127,14 @@ msmtp
 multimarkdown
 mutt
 mysql
+ncdu
 neovim
 nettle
 newsbeuter
 newsboat
 nmap
 node
+noti
 npth
 openjpeg
 openssl
@@ -146,6 +151,7 @@ pixman
 pkg-config
 poppler
 portaudio
+prettyping
 python
 python3
 python@2
@@ -168,6 +174,7 @@ terminal-notifier
 texi2html
 the_silver_searcher
 thrift
+tldr
 tmux
 tokyo-cabinet
 transmission
