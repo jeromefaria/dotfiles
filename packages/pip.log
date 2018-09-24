@@ -20,7 +20,10 @@ functools32
 future
 futures
 gevent
+gitdb2
+GitPython
 greenlet
+grpcio
 haxor-news
 i3-py
 idna
@@ -43,12 +46,14 @@ numpy
 olefile
 Pillow
 pip
+plyer
 pocket
 powerline-status
 praw
 prawcore
 prompt
 prompt-toolkit
+protobuf
 psutil
 pycparser
 pyfiglet
@@ -65,6 +70,7 @@ selenium
 setuptools
 singledispatch
 six
+smmap2
 style
 tornado
 tqdm

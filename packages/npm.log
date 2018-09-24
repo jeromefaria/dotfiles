@@ -13,6 +13,7 @@ devtools-terminal
 diff-so-fancy
 doctoc
 eslint
+git-open
 gulp
 hpm-cli
 http-server
