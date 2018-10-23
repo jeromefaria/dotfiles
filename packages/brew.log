@@ -18,6 +18,7 @@ bitlbee
 blueutil
 boost
 cairo
+cash-cli
 cassandra
 clang-format
 cmake
@@ -54,6 +55,7 @@ gifsicle
 git
 git-flow
 git-ftp
+git-heatmap
 glib
 gmp
 gnupg
@@ -74,6 +76,7 @@ irssi
 jack
 jemalloc
 jpeg
+jq
 json-c
 json-glib
 lame
@@ -136,6 +139,9 @@ nmap
 node
 noti
 npth
+nspr
+nss
+oniguruma
 openjpeg
 openssl
 openssl@1.1
@@ -174,6 +180,7 @@ terminal-notifier
 texi2html
 the_silver_searcher
 thrift
+tig
 tldr
 tmux
 tokyo-cabinet

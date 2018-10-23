@@ -12,6 +12,7 @@ clarifai
 click
 colorama
 configparser
+cssselect
 decorator
 EasyProcess
 emoji
@@ -25,6 +26,7 @@ GitPython
 greenlet
 grpcio
 haxor-news
+howdoi
 i3-py
 idna
 imageio
@@ -34,6 +36,7 @@ instagram-py
 jellyfish
 jsonschema
 kitchen
+lxml
 mailcap-fix
 moviepy
 msgpack
@@ -60,12 +63,14 @@ pyfiglet
 Pygments
 pylast
 pync
+pyquery
 PySocks
 python-dateutil
 pyuv
 PyVirtualDisplay
 PyYAML
 requests
+requests-cache
 selenium
 setuptools
 singledispatch
