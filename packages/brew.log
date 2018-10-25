@@ -57,11 +57,13 @@ git-flow
 git-ftp
 git-heatmap
 glib
+gmime
 gmp
 gnupg
 gnutls
 go
 gobject-introspection
+gpgme
 gradle
 grip
 hexcurse
@@ -89,6 +91,7 @@ libevent
 libffi
 libgcrypt
 libgpg-error
+libidn
 libidn2
 libksba
 libogg
@@ -112,6 +115,7 @@ libvterm
 libyaml
 libzip
 little-cms2
+lmdb
 lua
 lua@5.1
 luajit
@@ -131,6 +135,7 @@ multimarkdown
 mutt
 mysql
 ncdu
+neomutt
 neovim
 nettle
 newsbeuter
@@ -138,6 +143,7 @@ newsboat
 nmap
 node
 noti
+notmuch
 npth
 nspr
 nss
@@ -157,6 +163,7 @@ pixman
 pkg-config
 poppler
 portaudio
+prettier
 prettyping
 python
 python3
@@ -171,10 +178,12 @@ rtmpdump
 rtv
 ruby
 ruby-build
+s-search
 socat
 sphinx-doc
 sqlite
 tag
+talloc
 task
 terminal-notifier
 texi2html
@@ -198,11 +207,13 @@ weechat
 wget
 wxmac
 x264
+xapian
 xvid
 xz
 yarn
 yasm
 z
+zlib
 zsh
 zsh-history-substring-search
 zsh-syntax-highlighting

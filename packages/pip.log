@@ -23,6 +23,7 @@ futures
 gevent
 gitdb2
 GitPython
+gpg
 greenlet
 grpcio
 haxor-news
@@ -45,6 +46,7 @@ munkres
 musicbrainzngs
 mutagen
 neovim
+notmuch
 numpy
 olefile
 Pillow
