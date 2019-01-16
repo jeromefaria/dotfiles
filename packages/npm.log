@@ -37,6 +37,8 @@ nodemon
 npm
 organize-cli
 phonegap
+prettier
+protractor
 rxjs-tslint
 sass-lint
 sinon
@@ -47,6 +49,7 @@ titanium
 trello-cli
 tsd
 tslint
+typedoc
 typescript
 uncss
 underscore-cli

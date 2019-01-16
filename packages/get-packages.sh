@@ -1,5 +1,5 @@
 #!/bin/bash
-declare -a PACKAGES=("brew" "cask" "gem" "npm" "pip");
+declare -a PACKAGES=("brew" "cask" "gem" "mas" "npm" "pip");
 clear
 for package in ${PACKAGES[@]}
 do
@@ -15,6 +15,10 @@ do
     "gem")
       echo "Downloading $package package list..."
       gem list | cut -d " " -f 1 > $package.log
+      ;;
+    "mas")
+      echo "Downloading $package package list..."
+      mas list | awk '{print $1}' > $package.log
       ;;
     "npm")
       echo "Downloading $package package list..."
