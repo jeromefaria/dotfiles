@@ -50,26 +50,10 @@ source ~/.oh-my-zsh/t-completion/t-completion.zsh
 
 # Customize to your needs...
 export PATH=$PATH:/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/ruby/bin:~/.local/bin
-# export PATH='/usr/local/bin:$PATH'
 
 # Android SDK
-# export ANDROID_HOME=/Developer/AndroidSDK
-# export PATH=/Developer/AndroidSDK/platform-tools:/Developer/AndroidSDK/tools:$PATH
-export ANDROID_HOME=/usr/local/Caskroom/android-sdk
-
-
-# MySQL
-# export PATH="/usr/local/mysql/bin:$PATH"
-# alias mysql='/Applications/MAMP/Library/bin/mysql'
-
-# Added by the Heroku Toolbelt
-#export PATH="/usr/local/heroku/bin:$PATH"
-
-# Android SDK
-export PATH=${PATH}:/Applications/Android\ Studio.app/sdk/platform-tools:/Applications/Android\ Studio.app/sdk/tools
-export JAVA_HOME=$(/usr/libexec/java_home)
-export PATH=${JAVA_HOME}/bin:$PATH
-export PATH=/usr/local/bin:$PATH
+export ANDROID_HOME=/Users/jeromefaria/Library/Android/sdk
+export PATH=$PATH:/Users/jeromefaria/Library/Android/sdk/platform-tools:/Users/jeromefaria/Library/Android/sdk/build-tools/28.0.2:/Users/jeromefaria/Library/Android/sdk/emulator:/Users/jeromefaria/Library/Android/sdk/emulator
 
 # Z
 . /usr/local/etc/profile.d/z.sh
@@ -90,28 +74,21 @@ export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 # zsh syntax highlighting
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-#source /usr/local/opt/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh
 
 # key bindings
 bindkey '^ ' autosuggest-accept
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M viins 'jj' vi-cmd-mode
 
-# Ionic android build fixes
-#export JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
-#export ANDROID_HOME=/usr/local/share/android-sdkexport CORDOVA_ANDROID_GRADLE_DISTRIBUTION_URL='http\://services.gradle.org/distributions/gradle-2.14.1-all.zip'
-export ANDROID_HOME=/usr/local/share/android-sdk
-
 # Ruby Version Manager
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-#export rvmsudo_secure_path=1
+export rvmsudo_secure_path=1
 
 # Fix Python version for RTV
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
 # FZF
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # zsh interactive cd
@@ -123,6 +100,13 @@ eval "$(fasd --init auto)"
 
 # hub mapping for git
 eval "$(hub alias -s)"
+
+# oh my zsh fix
+export ZSH=$HOME/.oh-my-zsh
+
+# Set Neovim as the default editor
+export VISUAL=nvim
+export EDITOR="$VISUAL"
 
 fpath=(~/.zsh/completions $fpath)
 autoload -U compinit && compinit
