@@ -5,9 +5,6 @@ filetype on
 " Plugins
 """""""""""""""""""""""""""""""""""""""
 
-"set rtp+=~/.vim/bundle/Vundle.vim
-"call vundle#begin()
-
 " Specify a directory for plugins (for Neovim: ~/.local/share/nvim/plugged)
 call plug#begin('~/.vim/plugged')
 "call plug#begin('~/.local/share/nvim/plugged')
@@ -20,7 +17,23 @@ Plug 'airblade/vim-gitgutter'
 Plug 'godlygeek/tabular'
 Plug 'rking/ag.vim' "Up for review (deprecated)
 Plug 'easymotion/vim-easymotion'
-Plug 'Valloric/YouCompleteMe'
+"Plug 'Valloric/YouCompleteMe'
+
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+let g:deoplete#enable_at_startup = 1
+
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-vinegar'
@@ -35,6 +48,7 @@ Plug 'junegunn/goyo.vim'
 Plug 'vim-scripts/restore_view.vim'
 Plug 'vim-syntastic/syntastic'
 Plug 'jiangmiao/auto-pairs'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
 " FZF
 Plug 'junegunn/fzf'
@@ -53,8 +67,8 @@ Plug 'edkolev/tmuxline.vim'
 "Snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-Plug 'garbas/vim-snipmate'
-Plug 'honza/vim-snippets'
+"Plug 'garbas/vim-snipmate'
+"Plug 'honza/vim-snippets'
 
 " Language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }

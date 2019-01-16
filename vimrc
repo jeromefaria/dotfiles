@@ -1,7 +1,10 @@
 so ~/dotfiles/vim/plugins.vim
 so ~/dotfiles/vim/mappings.vim
 so ~/dotfiles/vim/general.vim
+so ~/dotfiles/vim/status.vim
+so ~/dotfiles/vim/colours.vim
 so ~/dotfiles/vim/autocmd.vim
 so ~/dotfiles/vim/functions.vim
 so ~/dotfiles/vim/commands.vim
 so ~/dotfiles/vim/misc.vim
+so ~/dotfiles/vim/neovim.vim
