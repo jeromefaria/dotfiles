@@ -1,5 +1,3 @@
-# ALIASES
-
 # Navigation
 alias ..="cd .."
 alias ...="cd ../.."
@@ -9,11 +7,13 @@ alias .....="cd ../../../.."
 # System
 alias ll="ls -lah"
 alias lt="ls -laht"
+alias lls="ls -lS"
 alias cl="clear"
 alias rf="rm -rf"
-#alias f="find"
-#alias v="vim"
+alias df="df -H"
 alias copy="tr -d '\n' | pbcopy"
+alias pbc="pbcopy"
+alias pbp="pbpaste"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
 # Remaps
@@ -23,8 +23,9 @@ alias preview="fzf --preview 'bat --color \"always\" {}'"
 # add support for ctrl+o to open selected file in VS Code
 export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(vim {})+abort'"
 alias top="sudo htop" # alias top and fix high sierra bug
-alias du="ncdu --color dark -rr -x --exclude .giti --exclude node_modules"
+alias du="ncdu --color dark -x --exclude .giti --exclude node_modules"
 alias help="tldr"
+alias vim="nvim"
 
 # Fasd
 alias a='fasd -a'        # any
@@ -35,10 +36,9 @@ alias sd='fasd -sid'     # interactive directory selection
 alias sf='fasd -sif'     # interactive file selection
 alias z='fasd_cd -d'     # cd, same functionality as j in autojump
 alias zz='fasd_cd -d -i' # cd with interactive selection
-
-alias v='f -e vim' # quick opening files with vim
-alias m='f -e mplayer' # quick opening files with mplayer
-alias o='a -e xdg-open' # quick opening files with xdg-open
+alias v='f -e vim'       # quick opening files with vim
+alias m='f -e mplayer'   # quick opening files with mplayer
+alias o='a -e xdg-open'  # quick opening files with xdg-open
 
 # Folders
 alias home="cd ~/"
@@ -46,19 +46,15 @@ alias desk="cd ~/Desktop"
 alias down="cd ~/Downloads"
 alias docs="cd ~/Documents"
 alias pics="cd ~/Pictures"
-alias work="cd /Users/jeromefaria/Work"
-alias music="cd /Volumes/Music/iTunes/iTunes\ Media/Music"
-alias dropbox="cd ~/Dropbox"
-alias drive="cd ~/Drive"
+alias work="cd ~/Work"
+alias drive="cd /Volumes/Drive/Drive"
 alias dotfiles="cd ~/dotfiles"
-alias blog="cd ~/Drive/Work/code/jeromefaria.github.io"
+alias blog="cd ~/Work/jeromefaria.github.io"
 alias mobile="cd ~/Library/Mobile\ Documents"
 alias icloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
+alias helpr="cd ~/Work/helpr"
 
-# Work
-alias helpr="/Users/jeromefaria/Work/helpr"
-
-# Apps
+# Chrome
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disable-web-security"
 #alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
@@ -66,13 +62,14 @@ alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-se
 alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
+
+# Apps
 alias pf="open -a Path\ Finder $1"
 alias iaw="open -a iA\ Writer $1"
-alias ws="open -a WebStorm $1"
-alias kdf="git difftool -y -t Kaleidoscope"
 alias vlc="open -a VLC $1"
 alias vdf="vim ~/dotfiles"
 alias grammarly="open -a Grammarly"
+alias tsm="transmission-remote"
 
 # Vagrant
 alias vg="vagrant"
@@ -104,8 +101,8 @@ alias gs="gulp sass"
 # Karma
 alias ks="karma start"
 
-# JSHint
-alias jh="jshint"
+# Eslint
+alias el="eslint"
 
 # MySQL
 alias mysqlstart="mysql.server start"
@@ -130,6 +127,7 @@ alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
 alias gfl="git-flow"
 alias gds="git diff --staged"
+alias gdb="git fetch -p; for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D $branch; done"
 
 # FZF
 alias gcob='git checkout $(git branch | fzf)'
@@ -152,14 +150,8 @@ alias serve="http-server"
 # Reload shell settings
 alias reload="source ~/.zshrc"
 
-# cat files with syntax highlighting
-alias ccat="pygmentize -O style=native -g"
-
 # Copy current directory to clipboard
 alias cdir="pwd | tr -d '\n' | pbcopy"
-
-# Run python script to tag mp3 files according to lastfm
-alias mpt="python ~/Work/github/mp3tagger/tagger.py $1"
 
 # Starts a python SimpleHTTPServer on current directory (deprecated, now using serve to run nodejs http server)
 alias server="python -m SimpleHTTPServer"
