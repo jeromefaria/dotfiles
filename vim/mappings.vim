@@ -62,3 +62,6 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " Reload buffer
 map <leader><leader>c :checktime<cr>
+
+" Always sets magic mode for search
+nnoremap / /\v

@@ -17,10 +17,10 @@ let NERDTreeShowHidden=1
 " Improve Ctrl P performance using Ag
 """""""""""""""""""""""""""""""""""""""
 
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-endif
+"let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+"if executable('ag')
+  "let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+"endif
 
 """""""""""""""""""""""""""""""""""""""
 " Specific configurations
@@ -171,3 +171,35 @@ setlocal foldmethod=expr
 setlocal foldenable
 setlocal foldlevel=0
 setlocal foldcolumn=0
+
+" Do not autoload sessions
+let g:session_autoload = 'no'
+
+"""""""""""""""""""""""""""""""""""""""
+" Vim Airline theme
+"""""""""""""""""""""""""""""""""""""""
+let g:airline_theme='oceanicnext'
+
+"""""""""""""""""""""""""""""""""""""""
+" Neoplete
+"""""""""""""""""""""""""""""""""""""""
+"
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
