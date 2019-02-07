@@ -17,7 +17,9 @@ Plug 'airblade/vim-gitgutter'
 Plug 'godlygeek/tabular'
 Plug 'rking/ag.vim' "Up for review (deprecated)
 Plug 'easymotion/vim-easymotion'
-"Plug 'Valloric/YouCompleteMe'
+Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
+" For async completion
+Plug 'Shougo/deoplete.nvim'
 
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
@@ -67,8 +69,6 @@ Plug 'edkolev/tmuxline.vim'
 "Snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
-"Plug 'garbas/vim-snipmate'
-"Plug 'honza/vim-snippets'
 
 " Language-specific plugins
 Plug 'mattn/emmet-vim', { 'for': 'html' }
@@ -104,7 +104,6 @@ Plug 'jason0x43/vim-js-indent'
 Plug 'Quramy/vim-dtsm'
 Plug 'mhartington/vim-typings'
 Plug 'Quramy/ng-tsserver'
-Plug 'Quramy/tsuquyomi'
 
 " Colour schemes
 Plug 'flazz/vim-colorschemes'
