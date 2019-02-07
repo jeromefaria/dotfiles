@@ -51,7 +51,8 @@ function max(){
 
 # Downloads YouTube videos
 function ydl(){
-  youtube-dl -citw $1
+  #youtube-dl -citw $1
+  youtube-dl -ciw -o "%(title)s-%(id)s.%(ext)s" $1
 }
 
 # Open with
