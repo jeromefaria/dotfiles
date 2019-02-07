@@ -178,7 +178,12 @@ let g:session_autoload = 'no'
 """""""""""""""""""""""""""""""""""""""
 " Vim Airline theme
 """""""""""""""""""""""""""""""""""""""
-let g:airline_theme='oceanicnext'
+let g:airline_theme = 'oceanicnext'
+
+"""""""""""""""""""""""""""""""""""""""
+" Tmuxline preset
+"""""""""""""""""""""""""""""""""""""""
+let g:tmuxline_preset = 'custom'
 
 """""""""""""""""""""""""""""""""""""""
 " Neoplete
