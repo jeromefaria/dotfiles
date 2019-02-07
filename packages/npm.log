@@ -55,4 +55,5 @@ uncss
 underscore-cli
 vtop
 webpack
+webpack-cli
 yarn
