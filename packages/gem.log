@@ -72,6 +72,7 @@ jekyll-coffeescript
 jekyll-commonmark
 jekyll-commonmark-ghpages
 jekyll-default-layout
+jekyll-docs
 jekyll-feed
 jekyll-gist
 jekyll-github-metadata
