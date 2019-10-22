@@ -39,20 +39,9 @@ function take() {
   cd $1
 }
 
-# Checks for MusicBrainz tag on MusicBrainz Picard
-function brainz(){
-  open -a "Musicbrainz Picard" $1
-}
-
-# Convert audio files with Max
-function max(){
-  open /Applications/Max.app $1
-}
-
 # Downloads YouTube videos
 function ydl(){
-  #youtube-dl -citw $1
-  youtube-dl -ciw -o "%(title)s-%(id)s.%(ext)s" $1
+  youtube-dl -ciw -o "%(title)s.%(ext)s" $1
 }
 
 # Open with
@@ -75,14 +64,13 @@ function rl() {
   head -$2 $1 | tail -1
 }
 
-# Create new project directory
-function newproj() {
-  mkdir $1
-  mkdir $1/{assets,code,design,documents,research}
-  cd $1
-}
-
 # Runs a processing project from the command line
 function p5() {
   processing-java --sketch=$PWD --run
+}
+
+# Clear Finder Go To History
+function clearFinderHistory() {
+  defaults delete com.apple.finder GoToField
+  defaults delete com.apple.finder GoToFieldHistory
 }
