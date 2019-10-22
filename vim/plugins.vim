@@ -115,6 +115,9 @@ Plug 'vim-scripts/VOoM'
 Plug 'reedes/vim-pencil'
 Plug 'jacekd/vim-iawriter'
 
+" Syntax check
+Plug 'dense-analysis/ale'
+
 "call vundle#end()
 
 " Initialize plugin system

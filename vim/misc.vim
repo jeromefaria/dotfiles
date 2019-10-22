@@ -208,3 +208,25 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
+
+"""""""""""""""""""""""""""""""""""""""
+" TypeScript
+"""""""""""""""""""""""""""""""""""""""
+let g:nvim_typescript#diagnosticsEnable = 0
+let g:nvim_typescript#diagnostics_enable = 0
+
+"""""""""""""""""""""""""""""""""""""""
+" ALE
+"""""""""""""""""""""""""""""""""""""""
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\   'typescript': ['tsserver', 'tslint'],
+\}
+
+let g:ale_fixers = {
+\    'javascript': ['eslint'],
+\    'typescript': ['prettier'],
+\    'scss': ['prettier'],
+\    'html': ['prettier']
+\}
+let g:ale_fix_on_save = 0

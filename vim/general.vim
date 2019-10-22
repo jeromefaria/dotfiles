@@ -52,6 +52,7 @@ set wrap
 set linebreak
 set breakat&vim
 set hidden
+set wildignorecase
 
 " Folding
 "set foldcolumn=4
@@ -64,6 +65,9 @@ set synmaxcol=250
 
 " Fuzzy find Vim style
 set path+=**
+
+" Enable spell check
+set spell
 
 """""""""""""""""""""""""""""""""""""""
 " Folding
