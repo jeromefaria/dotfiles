@@ -42,6 +42,7 @@ alias o='a -e xdg-open'  # quick opening files with xdg-open
 
 # Folders
 alias home="cd ~/"
+alias h="cd ~/"
 alias desk="cd ~/Desktop"
 alias down="cd ~/Downloads"
 alias docs="cd ~/Documents"
@@ -52,7 +53,6 @@ alias dotfiles="cd ~/dotfiles"
 alias blog="cd ~/Work/jeromefaria.github.io"
 alias mobile="cd ~/Library/Mobile\ Documents"
 alias icloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
-alias helpr="cd ~/Work/helpr"
 
 # Chrome
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
@@ -78,7 +78,7 @@ alias vgs="vagrant ssh"
 alias vgh="vagrant halt"
 
 # Ionic
-alias is="ionic serve -b --address localhost"
+alias is="ionic serve --no-open"
 alias ic="ionic cordova"
 
 # iOS
@@ -103,6 +103,9 @@ alias ks="karma start"
 
 # Eslint
 alias el="eslint"
+
+# NPM
+alias nr="npm run"
 
 # MySQL
 alias mysqlstart="mysql.server start"
