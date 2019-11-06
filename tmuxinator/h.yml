@@ -1,0 +1,11 @@
+name: helpr
+root: /Users/jeromefaria/Work/helpr/code/helprapp
+windows:
+  - helpr:
+      #layout: 4ea6,231x58,0,0[231x44,0,0,9,231x13,0,45{115x13,0,45,10,115x13,116,45,11}]
+      layout: c4ba,231x57,0,0[231x43,0,0,0,231x13,0,44{76x13,0,44,1,76x13,77,44,2,77x13,154,44,3}]
+      panes:
+        - nvim
+        - cdv http://localhost:8100
+        - ng test
+        - ionic serve --no-open
