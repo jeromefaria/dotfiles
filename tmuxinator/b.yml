@@ -4,6 +4,6 @@ windows:
   - blog:
       layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
       panes:
-        - vim
+        - nvim
         - sleep 5 && open http://localhost:4000 && clear
-        - jks -D
+        - jekyll serve -D
