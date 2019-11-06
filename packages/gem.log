@@ -2,6 +2,7 @@ actionpack
 actionview
 activesupport
 addressable
+algoliasearch
 atomos
 bigdecimal
 buftok
@@ -47,6 +48,7 @@ execjs
 executable-hooks
 faraday
 ffi
+ffi-compiler
 forwardable-extended
 fourflusher
 fuzzy_match
@@ -63,7 +65,9 @@ htmlentities
 http
 http-cookie
 http-form_data
+http-parser
 http_parser.rb
+httpclient
 i18n
 io-console
 jekyll
@@ -105,6 +109,7 @@ jekyll-watch
 jemoji
 json
 kramdown
+kramdown-parser-gfm
 launchy
 liquid
 listen
@@ -143,6 +148,7 @@ rack-test
 rails-dom-testing
 rails-html-sanitizer
 railties
+rainbow
 rake
 rb-fsevent
 rb-inotify
@@ -162,6 +168,8 @@ safe_yaml
 sass
 sass-listen
 sass-rails
+sassc
+sassc-rails
 sawyer
 simple_oauth
 sprockets
