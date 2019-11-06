@@ -8,7 +8,6 @@ browser-sync
 castnow
 clean-css
 cloc
-cordova
 csvtojson
 devtools-terminal
 diff-so-fancy
@@ -22,19 +21,16 @@ how-2
 hpm-cli
 http-server
 ionic
-ios-deploy
 ios-sim
 iron-node
 is-up-cli
 itunes-remote
-jasmine-core
 karma-cli
 karma-jasmine
 mocha
 neovim
 node-gyp
 node-tinypng
-nodemon
 npm
 organize-cli
 phonegap

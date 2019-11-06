@@ -82,6 +82,7 @@ hub
 icu4c
 ilmbase
 imagemagick
+imlib2
 ios-deploy
 irssi
 jack
@@ -125,6 +126,7 @@ libtool
 libunistring
 libusb
 libuv
+libvidstab
 libvo-aacenc
 libvorbis
 libvpx
