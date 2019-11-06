@@ -50,7 +50,7 @@ alias pics="cd ~/Pictures"
 alias work="cd ~/Work"
 alias drive="cd /Volumes/Drive/Drive"
 alias dotfiles="cd ~/dotfiles"
-alias blog="cd ~/Work/jeromefaria.github.io"
+alias blog="cd ~/Work/blog"
 alias mobile="cd ~/Library/Mobile\ Documents"
 alias icloud="cd ~/Library/Mobile\ Documents/com~apple~CloudDocs"
 
