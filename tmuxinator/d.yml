@@ -1,0 +1,9 @@
+name: dscgrm
+root: /Users/jeromefaria/Work/projects/dscgrm
+windows:
+  - development:
+      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
+      panes:
+        - vim
+        - clear
+        - clear
