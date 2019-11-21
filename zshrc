@@ -3,9 +3,6 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="robbyrussell"
 plugins=(git osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew colored-man-pages)
 
-## FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 # ZSH INTERACTIVE CD
 source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
 export PATH="/usr/local/sbin:$PATH"
@@ -51,3 +48,7 @@ export LANG=en_US.UTF-8
 fpath=(~/.zsh/completions $fpath)
 
 autoload -U compinit && compinit
+
+
+## FZF
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
