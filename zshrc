@@ -26,6 +26,7 @@ export PATH=$PATH:/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/
 # export ANDROID_HOME=/Users/jeromefaria/Library/Android/sdk
 # export PATH=$PATH:/Users/jeromefaria/Library/Android/sdk/platform-tools:/Users/jeromefaria/Library/Android/sdk/build-tools/28.0.2:/Users/jeromefaria/Library/Android/sdk/emulator:/Users/jeromefaria/Library/Android/sdk/emulator
 export PATH="/usr/local/opt/node@10/bin:$PATH"
+export HISTCONTROL=ignorespace
 
 # CUSTOM
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
