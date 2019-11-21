@@ -130,7 +130,7 @@ alias gdc="git diff --name-only --diff-filter=U"
 alias gstdf="git stash show -p $1"
 alias gfl="git-flow"
 alias gds="git diff --staged"
-alias gdb="git fetch -p; for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D $branch; done"
+# alias gdb="git fetch -p; for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D $branch; done"
 alias grp="git request-pull"
 
 # FZF
