@@ -1,6 +1,9 @@
 # ZSH settings
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME="robbyrussell"
+DOTFILES=$HOME/dotfiles
+
+# ZSH plugins
 plugins=(git osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew colored-man-pages)
 
 # ZSH INTERACTIVE CD
@@ -9,8 +12,8 @@ export PATH="/usr/local/sbin:$PATH"
 
 # SOURCES
 source $ZSH/oh-my-zsh.sh
-source ~/dotfiles/aliases.sh
-source ~/dotfiles/functions.sh
+source $DOTFILES/aliases.sh
+source $DOTFILES/functions.sh
 
 # EDITOR
 export VISUAL=nvim
@@ -53,3 +56,5 @@ autoload -U compinit && compinit
 
 ## FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source $DOTFILES/linkfire
