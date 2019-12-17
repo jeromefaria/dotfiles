@@ -67,7 +67,7 @@ set synmaxcol=250
 set path+=**
 
 " Enable spell check
-set spell
+" set spell
 
 """""""""""""""""""""""""""""""""""""""
 " Folding
