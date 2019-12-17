@@ -6,4 +6,4 @@ windows:
       panes:
         - nvim
         - sleep 5 && open http://localhost:4000 && clear
-        - jekyll serve -D
+        - bundle exec jekyll serve -D
