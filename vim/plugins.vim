@@ -87,15 +87,16 @@ Plug 'ap/vim-css-color', { 'for': ['css','stylus','scss'] }
 Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
 Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
 Plug 'tpope/vim-markdown', { 'for': 'markdown' }
-Plug 'fatih/vim-go', { 'for': 'go' }
+" Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'timcharper/textile.vim', { 'for': 'textile' }
 Plug 'sophacles/vim-processing', { 'for': 'processing' }
+Plug 'leafoftree/vim-vue-plugin'
 
 " AngularJS plugins
-Plug 'burnettk/vim-angular'
-Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'matthewsimo/angular-vim-snippets'
-Plug 'claco/jasmine.vim'
+" Plug 'burnettk/vim-angular'
+" Plug 'othree/javascript-libraries-syntax.vim'
+" Plug 'matthewsimo/angular-vim-snippets'
+" Plug 'claco/jasmine.vim'
 
 " Typescript
 Plug 'leafgarland/typescript-vim'
