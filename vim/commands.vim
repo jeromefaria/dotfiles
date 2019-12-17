@@ -4,3 +4,4 @@ command StripWhiteSpace %s/\s\+$//gge
 command WordCount !wc %
 command SortInline :call setline(line('.'),join(sort(split(getline('.'))), ' '))
 command BreakLine '<,'>s/, /,\r/gg
+command CleanJSArray silent %s/"// | %s/\v,$// | normal ds[
