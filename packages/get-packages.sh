@@ -22,7 +22,7 @@ do
       ;;
     "npm")
       echo "Downloading $package package list..."
-      npm list -g --depth 0 | cut -d " " -f2 | cut -d "@" -f1 | egrep "[a-z]" > $package.log
+      npm list -g --depth 0 | cut -d " " -f2 | cut -d "@" -f1 | egrep "[a-z]" | egrep -v "UNMET" > $package.log
       ;;
     "pip")
       echo "Downloading $package package list..."
