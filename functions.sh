@@ -74,3 +74,9 @@ function clearFinderHistory() {
   defaults delete com.apple.finder GoToField
   defaults delete com.apple.finder GoToFieldHistory
 }
+
+# Kill and restart Touch Bar
+function restartTouchBar() {
+  sudo pkill "Touch Bar agent";
+  sudo killall "ControlStrip";
+}
