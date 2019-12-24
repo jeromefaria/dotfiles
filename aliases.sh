@@ -30,6 +30,7 @@ alias top="sudo htop" # alias top and fix high sierra bug
 alias du="ncdu --color dark -x --exclude .giti --exclude node_modules"
 alias help="tldr"
 alias vim="nvim"
+alias mutt="neomutt"
 
 # Fasd
 alias a='fasd -a'        # any
