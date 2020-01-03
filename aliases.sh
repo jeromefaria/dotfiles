@@ -205,3 +205,7 @@ alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/La
 
 # Displays weather
 alias weather="curl -4 http://wttr.in"
+
+# Enable aliases to be sudo’ed
+alias sudo='sudo '
+
