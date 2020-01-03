@@ -164,8 +164,8 @@ alias jkb="jekyll build"
 # JSON prettify
 alias json='python -m json.tool'
 
-# Reload shell settings
-alias reload="source ~/.zshrc"
+# Reload the shell (i.e. invoke as a login shell)
+alias reload="exec ${SHELL} -l"
 
 # Copy current directory to clipboard
 alias cdir="pwd | tr -d '\n' | pbcopy"
