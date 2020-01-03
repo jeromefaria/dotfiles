@@ -176,7 +176,10 @@ alias cdir="pwd | tr -d '\n' | pbcopy"
 alias wifi="networksetup -setairportpower en1 on"
 alias nofi="networksetup -setairportpower en1 off"
 
-# hide/show all desktop icons (useful when presenting)
+# Show/hide hidden files in Finder
+alias show="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias hide="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+
 alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
