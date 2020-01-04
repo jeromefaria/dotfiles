@@ -209,3 +209,6 @@ alias weather="curl -4 http://wttr.in"
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
+# Get week number
+alias week='date +%V'
+
