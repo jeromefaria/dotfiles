@@ -231,3 +231,5 @@ alias pumpitup="osascript -e 'set volume output volume 100'"
 # Lock the screen (when going AFK)
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
+# Print each PATH entry on a separate line
+alias path='echo -e ${PATH//:/\\n}'
