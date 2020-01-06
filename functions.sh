@@ -7,13 +7,9 @@ function resetfontcache() {
 }
 
 # Run maintenance scripts and purge used memory
-function cleanup() {
-  echo "Running periodic scripts...";
+function periodic() {
   sudo periodic daily weekly monthly;
-  echo "Periodic scripts done.";
-  echo "Purging memory...";
   purge;
-  echo "All good and clean!";
 }
 
 # Base64 encoding
