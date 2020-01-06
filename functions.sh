@@ -30,9 +30,9 @@ function upgradenode {
 }
 
 # Create a new directory and enter it
-function take() {
-  mkdir $1
-  cd $1
+function mkd() {
+  mkdir -p "$@" && cd "$_";
+}
 }
 
 # Downloads YouTube videos
