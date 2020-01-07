@@ -99,7 +99,7 @@ function ydl(){
 }
 
 # Grab all href links from a webpage
-function grab() {
+function links() {
   curl $1 | grep -o -E 'href="([^"#]+)"' | cut -d'"' -f2
 }
 
