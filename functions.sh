@@ -98,11 +98,6 @@ function ydl(){
   youtube-dl -ciw -o "%(title)s.%(ext)s" $1
 }
 
-# Open with
-function oa(){
-  open -a $1 $2
-}
-
 # Grab all href links from a webpage
 function grab() {
   curl $1 | grep -o -E 'href="([^"#]+)"' | cut -d'"' -f2
