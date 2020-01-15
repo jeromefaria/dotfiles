@@ -233,3 +233,6 @@ alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resource
 
 # Print each PATH entry on a separate line
 alias path='echo -e ${PATH//:/\\n}'
+
+# Remove Xcode device simulator data
+alias cleanXcode="xcrun simctl delete unavailable"
