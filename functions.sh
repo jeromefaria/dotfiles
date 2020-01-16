@@ -129,3 +129,13 @@ function restartTouchBar() {
   sudo pkill "Touch Bar agent";
   sudo killall "ControlStrip";
 }
+
+# Open the Jira ticket for the current branch
+function oj() {
+  if [ -d .git ]
+  then
+    open https://linkfire.atlassian.net/browse$(git branch | egrep "\*" | egrep -o "\/\w+\-\d+")
+  else
+    return 1
+  fi;
+}
