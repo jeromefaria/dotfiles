@@ -236,3 +236,6 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # Remove Xcode device simulator data
 alias cleanXcode="xcrun simctl delete unavailable"
+
+# Open the Jira ticket for the current branch
+alias oj="open https://linkfire.atlassian.net/browse/$(git branch | cut -d " " -f2 | cut -d "/" -f2 | cut -d "_" -f1 | egrep -o "\w+\-\d+")"
