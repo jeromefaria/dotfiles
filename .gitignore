@@ -1,3 +1,4 @@
-*.zip
 *.bkp
+*.zip
+.backup
 linkfire
