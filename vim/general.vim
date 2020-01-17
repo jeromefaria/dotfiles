@@ -69,6 +69,8 @@ set path+=**
 " Enable spell check
 " set spell
 
+set title
+
 """""""""""""""""""""""""""""""""""""""
 " Folding
 """""""""""""""""""""""""""""""""""""""
