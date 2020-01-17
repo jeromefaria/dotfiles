@@ -4,7 +4,7 @@ ZSH_THEME="robbyrussell"
 DOTFILES=$HOME/dotfiles
 
 # ZSH plugins
-plugins=(git osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew colored-man-pages)
+plugins=(git osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew colored-man-pages omz-git)
 
 # ZSH INTERACTIVE CD
 source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
