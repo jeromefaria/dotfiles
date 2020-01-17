@@ -65,3 +65,6 @@ map <leader><leader>c :checktime<cr>
 
 " Always sets magic mode for search
 nnoremap / /\v
+
+" Map <Space> to / (search)
+map <Space> /
