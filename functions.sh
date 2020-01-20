@@ -144,7 +144,17 @@ function oj() {
 function ggd() {
   if [ -d .git ]
   then
-    git show | egrep -i "Date:" | cut -d ":" -f2 -f3 -f4 | egrep -o "(\w|\:|\+)+" | tr "\n" " " | pbcopy
+    g show | awk 'NR==3' | egrep "Date\:" | cut -d " " -f4-9 | tr "\n" " "
+  else
+    return 1
+  fi;
+}
+
+# Remove tracking branches no longer on remote
+function gdb() {
+  if [ -d .git ]
+  then
+    git fetch -p; for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do git branch -D $branch; done
   else
     return 1
   fi;
