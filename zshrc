@@ -57,3 +57,6 @@ autoload -U compinit && compinit
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source $DOTFILES/linkfire
+
+# Initialise Starship
+eval "$(starship init zsh)"
