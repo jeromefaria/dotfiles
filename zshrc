@@ -25,10 +25,9 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M viins 'jj' vi-cmd-mode
 
 # PATHS
-export PATH=$PATH:/usr/local/bin:$PATH:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/opt/ruby/bin:~/.local/bin
-# export ANDROID_HOME=/Users/jeromefaria/Library/Android/sdk
-# export PATH=$PATH:/Users/jeromefaria/Library/Android/sdk/platform-tools:/Users/jeromefaria/Library/Android/sdk/build-tools/28.0.2:/Users/jeromefaria/Library/Android/sdk/emulator:/Users/jeromefaria/Library/Android/sdk/emulator
+export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 export PATH="/usr/local/opt/node@10/bin:$PATH"
+export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
 export HISTCONTROL=ignorespace
 
 # CUSTOM
