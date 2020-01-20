@@ -139,3 +139,13 @@ function oj() {
     return 1
   fi;
 }
+
+# Get the date of the current latest commit
+function ggd() {
+  if [ -d .git ]
+  then
+    git show | egrep -i "Date:" | cut -d ":" -f2 -f3 -f4 | egrep -o "(\w|\:|\+)+" | tr "\n" " " | pbcopy
+  else
+    return 1
+  fi;
+}
