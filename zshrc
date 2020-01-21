@@ -52,11 +52,13 @@ fpath=(~/.zsh/completions $fpath)
 
 autoload -U compinit && compinit
 
-
 ## FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source $DOTFILES/linkfire
+
+# Initialise rbenv
+eval "$(rbenv init -)"
 
 # Initialise Starship
 eval "$(starship init zsh)"
