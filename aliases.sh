@@ -162,8 +162,8 @@ alias fcd='cd $(fzf)'
 
 # Jekyll
 alias jk="jekyll"
-alias jks="jekyll serve"
-alias jkb="jekyll build"
+alias jks="bundle exec jekyll serve"
+alias jkb="bundle exec jekyll build"
 
 # JSON prettify
 alias json='python -m json.tool'
