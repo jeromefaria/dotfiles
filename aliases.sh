@@ -103,6 +103,10 @@ alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"
 # [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
+# Docker
+alias dcu="docker-compose up"
+alias dcd="docker-compose down"
+
 # Vagrant
 alias vg="vagrant"
 alias vgu="vagrant up"
