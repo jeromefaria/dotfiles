@@ -18,6 +18,7 @@ Plug 'godlygeek/tabular'
 Plug 'rking/ag.vim' "Up for review (deprecated)
 Plug 'easymotion/vim-easymotion'
 Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
+
 " For async completion
 Plug 'Shougo/deoplete.nvim'
 
@@ -51,6 +52,7 @@ Plug 'vim-scripts/restore_view.vim'
 Plug 'vim-syntastic/syntastic'
 Plug 'jiangmiao/auto-pairs'
 Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'cespare/vim-toml'
 
 " FZF
 Plug 'junegunn/fzf'
