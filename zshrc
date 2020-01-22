@@ -1,3 +1,9 @@
+# Variables
+export DOTFILES="$HOME/dotfiles"
+export DRIVE="/Volumes/Drive/Drive"
+export MOBILE="$HOME/Library/Mobile\ Documents"
+export WORK="$HOME/Work"
+
 # ZSH settings
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""

@@ -1,9 +1,3 @@
-# Variables
-DOTFILES="$HOME/dotfiles"
-DRIVE="/Volumes/Drive/Drive"
-MOBILE="$HOME/Library/Mobile\ Documents"
-WORK="$HOME/Work"
-
 # Navigation
 alias ..="cd .."
 alias ...="cd ../.."
