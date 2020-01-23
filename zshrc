@@ -68,3 +68,5 @@ eval "$(rbenv init -)"
 
 # Initialise Starship
 eval "$(starship init zsh)"
+
+source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
