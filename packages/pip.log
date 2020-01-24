@@ -12,6 +12,7 @@ click
 colorama
 configparser
 cssselect
+csv2vcf
 decorator
 EasyProcess
 emoji
@@ -26,7 +27,6 @@ googleapis-common-protos
 gpg
 greenlet
 grpcio
-haxor-news
 howdoi
 i3-py
 idna
@@ -86,6 +86,7 @@ style
 tornado
 tqdm
 trollius
+tuir
 twitter
 Unidecode
 update
