@@ -9,12 +9,15 @@ google-backup-and-sync
 google-chrome
 google-chrome-canary
 grammarly
+hyper
 hyperdock
 hyperswitch
 iterm2
 karabiner-elements
 mailmate
 megasync
+microsoft-edge
+microsoft-edge-dev
 musicbrainz-picard
 opera
 opera-developer
@@ -29,7 +32,7 @@ skype
 slack
 spectacle
 spotify
-transmission
+tor-browser
 vagrant
 vimr
 virtualbox
@@ -37,4 +40,5 @@ visual-studio-code
 vlc
 whatsapp
 xquartz
+zeplin
 zoomus
