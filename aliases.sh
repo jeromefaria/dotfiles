@@ -54,6 +54,7 @@ alias du="ncdu --color dark -x --exclude .giti --exclude node_modules"
 alias help="tldr"
 alias vim="nvim"
 alias mutt="neomutt"
+alias rtv="tuir"
 
 # Fasd
 alias a='fasd -a'        # any
