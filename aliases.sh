@@ -55,6 +55,7 @@ alias help="tldr"
 alias vim="nvim"
 alias mutt="neomutt"
 alias rtv="tuir"
+alias cloc="tokei"
 
 # Fasd
 alias a='fasd -a'        # any
