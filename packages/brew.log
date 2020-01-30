@@ -1,4 +1,3 @@
-ack
 adns
 aircrack-ng
 ant
@@ -22,16 +21,15 @@ cairo
 cash-cli
 cassandra
 clang-format
-cloc
 cmake
 cmatrix
 cmus
+composer
 coreutils
 cscope
 ctags
 curl
 cython
-dex2jar
 docbook
 docbook-xsl
 docker
@@ -50,7 +48,6 @@ fd
 fdk-aac
 fdupes
 ffmpeg
-fish
 flac
 fontconfig
 fontforge
