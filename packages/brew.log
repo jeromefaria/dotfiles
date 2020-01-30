@@ -3,7 +3,6 @@ aircrack-ng
 ant
 aom
 aria2
-asciidoctor
 aspell
 atool
 autoconf
@@ -31,9 +30,7 @@ ctags
 curl
 cython
 docbook
-docbook-xsl
 docker
-doxygen
 elinks
 emacs
 erlang
@@ -50,7 +47,6 @@ fdupes
 ffmpeg
 flac
 fontconfig
-fontforge
 freetype
 frei0r
 fribidi
@@ -63,7 +59,6 @@ giflib
 gifsicle
 git
 git-flow
-git-ftp
 git-heatmap
 glib
 gmime
@@ -71,7 +66,6 @@ gmp
 gnupg
 gnutls
 go
-gobject-introspection
 gpgme
 gradle
 graphite2
@@ -173,8 +167,6 @@ ncurses
 neomutt
 neovim
 nettle
-newsbeuter
-newsboat
 nmap
 nnn
 node
@@ -213,7 +205,6 @@ python3
 python@2
 python@3.8
 qt
-rabbitmq
 ranger
 rbenv
 readline
@@ -238,7 +229,6 @@ shared-mime-info
 snappy
 socat
 speex
-sphinx-doc
 sqlite
 starship
 stow
