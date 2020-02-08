@@ -159,3 +159,9 @@ function gdb() {
     return 1
   fi;
 }
+
+
+# Get app version
+function appver() {
+  plutil -p /Applications/$1.app/Contents/Info.plist | egrep -i CFBundleShortVersionString | awk '{print $3}' 
+}
