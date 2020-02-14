@@ -101,6 +101,7 @@ alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v exten
 
 # Docker
 alias dcu="docker-compose up"
+alias dcud="docker-compose up -d"
 alias dcd="docker-compose down"
 alias dcs="docker-compose stop"
 
