@@ -1,0 +1,7 @@
+# vim: filetype=neomuttrc
+source $DOTFILES/mutt/settings
+source $DOTFILES/mutt/bindings
+source $DOTFILES/mutt/colours
+source $DOTFILES/mutt/accounts/1-personal.muttrc
+macro index,pager i1 '<sync-mailbox><enter-command>source $DOTFILES/mutt/accounts/1-personal.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to jerome.faria@gmail.com"
+macro index,pager i2 '<sync-mailbox><enter-command>source $DOTFILES/mutt/accounts/2-linkfire.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to jtf@linkfire.com"
