@@ -1,0 +1,71 @@
+# vim: filetype=neomuttrc
+
+# muttrc file for account personal
+set realname = "Jerome Faria"
+set from = "jerome.faria@gmail.com"
+alias me Jerome Faria <jerome.faria@gmail.com>
+set folder = "imaps://jerome.faria@gmail.com@imap.gmail.com:993"
+set imap_user = "jerome.faria@gmail.com"
+set header_cache = ~/.mutt/personal/headers
+set message_cachedir = ~/.mutt/personal/bodies
+set certificate_file = ~/.mutt/certificates
+set imap_pass = "`pass mutt-wizard-personal`"
+set smtp_url = "smtp://jerome.faria@smtp.gmail.com:587/"
+set smtp_authenticators = "gssapi:login"
+set smtp_pass = "`pass mutt-wizard-personal`"
+
+set mbox_type = Maildir
+set ssl_starttls = yes
+set ssl_force_tls = yes
+
+bind index,pager gg noop
+bind index,pager g noop
+bind index,pager M noop
+bind index,pager C noop
+bind index gg first-entry
+unmailboxes *
+
+set spoolfile = "+INBOX"
+set record = "+[Gmail].Sent\ Mail"
+set postponed = "+[Gmail].Drafts"
+set trash = "+[Gmail].Trash"
+
+mailboxes "+INBOX" \
+          "+[Gmail]/All\ Mail" \
+          "+[Gmail]/Drafts" \
+          "+[Gmail]/Sent Mail" \
+          "+[Gmail]/Spam" \
+          "+[Gmail]/Trash" \
+
+macro index,pager gi "<change-folder>=INBOX<enter>" "go to inbox"
+macro index,pager Mi ";<save-message>=INBOX<enter>" "move mail to inbox"
+macro index,pager Ci ";<copy-message>=INBOX<enter>" "copy mail to inbox"
+macro index,pager ga "<change-folder>=[Gmail].All\ Mail<enter>" "go to archive"
+macro index,pager Ma ";<save-message>=[Gmail].All\ Mail<enter>" "move mail to archive"
+macro index,pager Ca ";<copy-message>=[Gmail].All\ Mail<enter>" "copy mail to archive"
+macro index,pager gd "<change-folder>=[Gmail].Drafts<enter>" "go to drafts"
+macro index,pager Md ";<save-message>=[Gmail].Drafts<enter>" "move mail to drafts"
+macro index,pager Cd ";<copy-message>=[Gmail].Drafts<enter>" "copy mail to drafts"
+macro index,pager gs "<change-folder>=[Gmail].Sent\ Mail<enter>" "go to sent"
+macro index,pager Ms ";<save-message>=[Gmail].Sent\ Mail<enter>" "move mail to sent"
+macro index,pager Cs ";<copy-message>=[Gmail].Sent\ Mail<enter>" "copy mail to sent"
+macro index,pager gS "<change-folder>=[Gmail].Spam<enter>" "go to spam"
+macro index,pager MS ";<save-message>=[Gmail].Spam<enter>" "move mail to spam"
+macro index,pager CS ";<copy-message>=[Gmail].Spam<enter>" "copy mail to spam"
+
+# Compose View Options
+set realname = "Jerome Faria"        # who am i?
+set envelope_from                    # which from?
+set sig_dashes                       # dashes before sig
+set edit_headers                     # show headers when composing
+set fast_reply                       # skip to compose when replying
+set askcc                            # ask for CC:
+set fcc_attach                       # save attachments with the body
+unset mime_forward                   # forward attachments as part of body
+set forward_format = "Fwd: %s"       # format of subject when forwarding
+set forward_decode                   # decode when forwarding
+set attribution = "On %d, %n wrote:" # format of quoting header
+set reply_to                         # reply to Reply to: field
+set reverse_name                     # reply as whomever it was to
+set include                          # include message in replies
+set forward_quote                    # include message in forwards
