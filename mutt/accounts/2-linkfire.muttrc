@@ -30,23 +30,28 @@ set record = "+[Gmail].Sent\ Mail"
 set postponed = "+[Gmail].Drafts"
 set trash = "+[Gmail].Trash"
 
-mailboxes =[Gmail].Spam =[Gmail].Archive =INBOX =[Gmail].Bin =[Gmail].Important =[Gmail].Drafts =Notes =[Gmail].Starred =[Gmail].Sent\ Mail
+mailboxes "+INBOX" \
+          "+[Gmail]/All\ Mail" \
+          "+[Gmail]/Drafts" \
+          "+[Gmail]/Sent Mail" \
+          "+[Gmail]/Spam" \
+          "+[Gmail]/Trash" \
 
 macro index,pager gi "<change-folder>=INBOX<enter>" "go to inbox"
 macro index,pager Mi ";<save-message>=INBOX<enter>" "move mail to inbox"
 macro index,pager Ci ";<copy-message>=INBOX<enter>" "copy mail to inbox"
-macro index,pager gs "<change-folder>=[Gmail].Sent\ Mail<enter>" "go to sent"
-macro index,pager Ms ";<save-message>=[Gmail].Sent\ Mail<enter>" "move mail to sent"
-macro index,pager Cs ";<copy-message>=[Gmail].Sent\ Mail<enter>" "copy mail to sent"
+macro index,pager ga "<change-folder>=[Gmail].All\ Mail<enter>" "go to archive"
+macro index,pager Ma ";<save-message>=[Gmail].All\ Mail<enter>" "move mail to archive"
+macro index,pager Ca ";<copy-message>=[Gmail].All\ Mail<enter>" "copy mail to archive"
 macro index,pager gd "<change-folder>=[Gmail].Drafts<enter>" "go to drafts"
 macro index,pager Md ";<save-message>=[Gmail].Drafts<enter>" "move mail to drafts"
 macro index,pager Cd ";<copy-message>=[Gmail].Drafts<enter>" "copy mail to drafts"
+macro index,pager gs "<change-folder>=[Gmail].Sent\ Mail<enter>" "go to sent"
+macro index,pager Ms ";<save-message>=[Gmail].Sent\ Mail<enter>" "move mail to sent"
+macro index,pager Cs ";<copy-message>=[Gmail].Sent\ Mail<enter>" "copy mail to sent"
 macro index,pager gS "<change-folder>=[Gmail].Spam<enter>" "go to spam"
 macro index,pager MS ";<save-message>=[Gmail].Spam<enter>" "move mail to spam"
 macro index,pager CS ";<copy-message>=[Gmail].Spam<enter>" "copy mail to spam"
-macro index,pager ga "<change-folder>=[Gmail].Archive<enter>" "go to archive"
-macro index,pager Ma ";<save-message>=[Gmail].Archive<enter>" "move mail to archive"
-macro index,pager Ca ";<copy-message>=[Gmail].Archive<enter>" "copy mail to archive"
 
 # Compose View Options
 set realname = "Jerome Faria"        # who am i?
