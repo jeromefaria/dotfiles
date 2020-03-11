@@ -1,3 +1,4 @@
+abook
 adns
 aircrack-ng
 ant
@@ -7,6 +8,7 @@ aspell
 atool
 autoconf
 automake
+awscli
 bash-completion
 bat
 bdw-gc
@@ -24,11 +26,13 @@ cmake
 cmatrix
 cmus
 composer
+contacts
 coreutils
 cscope
 ctags
 curl
 cython
+dark-mode
 docbook
 docker
 elinks
@@ -52,6 +56,7 @@ frei0r
 fribidi
 fzf
 gdbm
+gdrive
 genact
 gettext
 ghi
@@ -63,6 +68,7 @@ git-heatmap
 glib
 gmime
 gmp
+gnu-getopt
 gnupg
 gnutls
 go
@@ -84,6 +90,7 @@ imagemagick
 imlib2
 ios-deploy
 irssi
+isync
 jack
 jdupes
 jemalloc
@@ -179,6 +186,7 @@ nss
 oniguruma
 opencore-amr
 openexr
+openjdk
 openjpeg
 openssl
 openssl@1.1
@@ -188,6 +196,7 @@ p11-kit
 p7zip
 pango
 par
+pass
 pcre
 pcre2
 perl
@@ -204,6 +213,7 @@ python
 python3
 python@2
 python@3.8
+qrencode
 qt
 ranger
 rbenv
