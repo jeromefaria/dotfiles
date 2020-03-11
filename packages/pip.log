@@ -50,6 +50,7 @@ musicbrainzngs
 mutagen
 neovim
 numpy
+offlineimap
 olefile
 Pillow
 pip
