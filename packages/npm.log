@@ -21,6 +21,7 @@ ios-sim
 iron-node
 is-up-cli
 itunes-remote
+jira-cl
 karma-cli
 karma-jasmine
 mocha
@@ -45,5 +46,4 @@ tslint
 typedoc
 uncss
 vtop
-webpack-cli
 wikit
