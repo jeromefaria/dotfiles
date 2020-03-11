@@ -9,6 +9,7 @@ windows:
       panes:
         - nvim
   - blog:
+      pre: cd ~/Work/blog
       layout: main-horizontal
       panes:
         - nvim
