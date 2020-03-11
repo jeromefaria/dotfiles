@@ -1,5 +1,9 @@
 1password
+abstract
+balenaetcher
+brave-browser
 chromedriver
+chromium
 docker
 firefox
 firefox-developer-edition
@@ -14,6 +18,7 @@ hyperdock
 hyperswitch
 iterm2
 karabiner-elements
+lastfm
 mailmate
 megasync
 microsoft-edge
@@ -22,6 +27,7 @@ musicbrainz-picard
 opera
 opera-developer
 origami-studio
+pluralsight
 postman
 processing
 robo-3t
@@ -32,11 +38,13 @@ skype
 slack
 spectacle
 spotify
+telegram
 tor-browser
 vagrant
 vimr
 virtualbox
 visual-studio-code
+vivaldi
 vlc
 whatsapp
 xquartz
