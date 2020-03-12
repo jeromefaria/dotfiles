@@ -8,22 +8,9 @@ windows:
       pre: cd ~/dotfiles
       panes:
         - nvim
-  - blog:
-      pre: cd ~/Work/blog
-      layout: main-horizontal
-      panes:
-        - nvim
-        - sleep 5 && open http://localhost:4000 && clear
-        - bundle exec jekyll serve -D
   - email:
       panes:
         - clear
   - transfer:
       panes:
         - clear
-  - reddit:
-      panes:
-        - rtv
-  - twitter:
-      panes:
-        - t timeline
