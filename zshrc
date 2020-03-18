@@ -1,5 +1,6 @@
 # Variables
 export DOTFILES="$HOME/dotfiles"
+export ARCHIVE="/Volumes/Archive"
 export DRIVE="/Volumes/Drive/Drive"
 export MOBILE="$HOME/Library/Mobile\ Documents"
 export WORK="$HOME/Work"
