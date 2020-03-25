@@ -92,7 +92,7 @@ Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 " Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'timcharper/textile.vim', { 'for': 'textile' }
 Plug 'sophacles/vim-processing', { 'for': 'processing' }
-Plug 'leafoftree/vim-vue-plugin'
+Plug 'posva/vim-vue'
 
 " AngularJS plugins
 " Plug 'burnettk/vim-angular'
