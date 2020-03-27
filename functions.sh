@@ -165,3 +165,16 @@ function gdb() {
 function appver() {
   plutil -p /Applications/$1.app/Contents/Info.plist | egrep -i CFBundleShortVersionString | awk '{print $3}' 
 }
+
+# Path to Spotifyd plist file
+SPOTIFYD="/Library/LaunchDaemons/rustlang.spotifyd.plist"
+
+# Start spotifyd daemon
+function startspotifyd() {
+  sudo launchctl load -w $SPOTIFYD && sudo launchctl start $SPOTIFYD
+}
+
+# Stop spotifyd daemon
+function stopspotifyd() {
+  sudo launchctl unload -w $SPOTIFYD && sudo launchctl stop $SPOTIFYD
+}
