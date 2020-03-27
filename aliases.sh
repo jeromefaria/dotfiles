@@ -85,6 +85,7 @@ alias blog="cd $WORK/blog"
 alias mobile="cd $MOBILE"
 alias icloud="cd $MOBILE/com~apple~CloudDocs"
 alias tmp="cd /private/tmp"
+alias vol="ls /Volumes"
 
 # Google Chrome
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
