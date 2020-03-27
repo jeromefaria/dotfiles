@@ -242,3 +242,6 @@ alias path='echo -e ${PATH//:/\\n}'
 
 # Remove Xcode device simulator data
 alias cleanXcode="xcrun simctl delete unavailable"
+
+# Verify all mounted volumes
+alias verifyvolumes="for v in /Volumes/*; do m disk verify volume $v; done"
