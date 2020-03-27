@@ -245,3 +245,6 @@ alias cleanXcode="xcrun simctl delete unavailable"
 
 # Verify all mounted volumes
 alias verifyvolumes="for v in /Volumes/*; do m disk verify volume $v; done"
+
+# Repair all mounted volumes
+alias repairvolumes="for v in /Volumes/*; do m disk repair volume $v; done"
