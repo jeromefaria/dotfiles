@@ -28,7 +28,7 @@ windows:
       panes:
         - nvim
         - clear
-        - server
+        - npm run start
   - AssetLab.GUI:
       layout: main-horizontal
       pre: cd ~/Work/linkfire/src/AssetLab.GUI/
