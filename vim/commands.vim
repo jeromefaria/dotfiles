@@ -7,3 +7,5 @@ command BreakLine '<,'>s/, /,\r/gg
 command CleanJSArray silent %s/"// | %s/\v,$// | normal ds[
 command MD set filetype=markdown
 command JS set filetype=javascript
+command Docs cd ~/Documents
+command LFdocs cd ~/Work/linkfire/doc
