@@ -17,3 +17,6 @@ windows:
   - music:
       panes:
         - spt
+  - reddit:
+      panes:
+        - tuir
