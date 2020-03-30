@@ -14,3 +14,6 @@ windows:
   - transfer:
       panes:
         - clear
+  - music:
+      panes:
+        - spt
