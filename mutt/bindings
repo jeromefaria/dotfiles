@@ -58,3 +58,9 @@ bind index,pager B sidebar-toggle-visible
 
 bind compose P postpone-message
 bind index P recall-message
+
+# Pager
+bind pager gg top
+bind pager G bottom
+bind pager D delete-message
+bind pager U undelete-message
