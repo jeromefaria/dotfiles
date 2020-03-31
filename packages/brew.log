@@ -33,6 +33,7 @@ ctags
 curl
 cython
 dark-mode
+dbus
 docbook
 docker
 elinks
@@ -109,6 +110,7 @@ libbluray
 libcaca
 libcue
 libde265
+libebml
 libevent
 libffi
 libgcrypt
@@ -118,6 +120,8 @@ libiconv
 libidn
 libidn2
 libksba
+libmagic
+libmatroska
 libogg
 libomp
 libpng
@@ -161,6 +165,7 @@ mdp
 media-info
 midnight-commander
 mkvalidator
+mkvtoolnix
 moreutils
 mp4v2
 mplayer
@@ -239,6 +244,8 @@ shared-mime-info
 snappy
 socat
 speex
+spicetify-cli
+spotify-tui
 sqlite
 starship
 stow
