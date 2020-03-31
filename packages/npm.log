@@ -46,4 +46,7 @@ tslint
 typedoc
 uncss
 vtop
+webpack
+webpack-cli
+webpack-dev-server
 wikit
