@@ -104,6 +104,7 @@ naught
 net-pop
 net-smtp
 net-telnet
+nokogiri
 oauth
 observer
 octokit
