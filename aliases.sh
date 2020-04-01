@@ -7,9 +7,11 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # System
-alias ll="ls -lah"
-alias lt="ls -laht"
-alias lls="ls -lS"
+alias l="exa"
+alias ll="exa -lh --git"
+alias la="exa -lah --git"
+alias lt="exa -lah-s=date --git"
+alias lls="ls -ls=size --git"
 alias cl="clear"
 alias rf="rm -rf"
 alias df="df -H"
