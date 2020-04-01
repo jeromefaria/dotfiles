@@ -15,13 +15,6 @@ windows:
         - nvim
         - clear
         - clear
-  - lnkfi.re:
-      layout: main-horizontal
-      pre: cd ~/Work/linkfire/src/lnkfi.re/
-      panes:
-        - nvim
-        - clear
-        - clear
   - AdButler.AdUnits:
       layout: main-horizontal
       pre: cd ~/Work/linkfire/src/AdButler.AdUnits/
