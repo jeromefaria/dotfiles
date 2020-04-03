@@ -8,7 +8,6 @@ castnow
 clean-css
 csvtojson
 devtools-terminal
-diff-so-fancy
 diff2html-cli
 doctoc
 ember-cli
@@ -24,6 +23,7 @@ itunes-remote
 jira-cl
 karma-cli
 karma-jasmine
+md-fileserver
 mocha
 neovim
 node-gyp
@@ -46,7 +46,5 @@ tslint
 typedoc
 uncss
 vtop
-webpack
-webpack-cli
 webpack-dev-server
 wikit
