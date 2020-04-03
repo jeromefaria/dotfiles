@@ -2,6 +2,7 @@
 abstract
 adobe-acrobat-reader
 alt-tab
+android-studio
 balenaetcher
 brave-browser
 chromedriver
@@ -9,6 +10,7 @@ chromium
 docker
 firefox
 firefox-developer-edition
+flume
 gimp
 github
 google-backup-and-sync
@@ -19,6 +21,7 @@ hyper
 hyperdock
 hyperswitch
 iterm2
+jitsi
 karabiner-elements
 lastfm
 mailmate
@@ -39,6 +42,7 @@ sequel-pro
 sketch
 skype
 slack
+soundflower
 spectacle
 spotify
 telegram
