@@ -20,6 +20,7 @@ domain_name
 dotenv
 em-websocket
 equalizer
+erubis
 etc
 ethon
 eventmachine
@@ -130,6 +131,7 @@ rexml
 rouge
 rss
 ruby-enum
+rubygems-update
 rubyzip
 safe_yaml
 sass
@@ -147,6 +149,7 @@ test-unit
 thor
 thread_safe
 timeout
+tmuxinator
 tracer
 twitter
 typhoeus
@@ -156,6 +159,7 @@ unf_ext
 unicode-display_width
 uri
 webrick
+xdg
 xmlrpc
 yaml
 zeitwerk
