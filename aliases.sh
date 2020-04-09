@@ -49,6 +49,7 @@ alias rtv="tuir"
 alias cloc="tokei"
 alias ls="exa"
 alias sed="sd"
+alias trash="trash -F"
 
 # Fasd
 alias a='fasd -a'        # any
