@@ -197,3 +197,8 @@ function svg2css() {
 function sync() {
   rsync -rzHPX --append-verify --remove-source-files $1 $2
 }
+
+# Generate a random number between interval
+function randNum() {
+  echo $(($1 + RANDOM % $2))
+}
