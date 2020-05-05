@@ -183,3 +183,12 @@ function startspotifyd() {
 function stopspotifyd() {
   sudo launchctl unload -w $SPOTIFYD && sudo launchctl stop $SPOTIFYD
 }
+
+# Optimise and inline svg icons. Output to stdout. Pipe into $EDITOR to clean up.
+function svg2css() {
+  svgo * 1>/dev/null 1>/dev/null
+  for i in *
+  do
+    echo ."${i%.*} {\n  background-image: url('data:image/svg+xml;base64,$(\cat $i | encode64)');\n}\n"
+  done
+}
