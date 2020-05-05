@@ -192,3 +192,8 @@ function svg2css() {
     echo ."${i%.*} {\n  background-image: url('data:image/svg+xml;base64,$(\cat $i | encode64)');\n}\n"
   done
 }
+
+# rsync a file/folder to a new location and removes the origin once finished
+function sync() {
+  rsync -rzHPX --append-verify --remove-source-files $1 $2
+}
