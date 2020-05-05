@@ -108,6 +108,11 @@ function flac2mp3() {
   for a in *.flac; do < /dev/null ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"; done
 }
 
+# Convert flac to alac
+function flac2alac() {
+  for a in *.flac; do < /dev/null ffmpeg -i "$a" -vn -c:a alac "${a[@]/%flac/m4a}"; done
+}
+
 # Read specific line from file
 function rl() {
   head -$2 $1 | tail -1
