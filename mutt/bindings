@@ -18,7 +18,6 @@ bind pager j next-line
 bind pager k previous-line
 bind pager l view-attachments
 bind index \CD purge-message
-bind index U undelete-message
 bind index L limit
 bind index h noop
 bind index l display-message
