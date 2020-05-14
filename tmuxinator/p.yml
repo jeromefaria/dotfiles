@@ -2,6 +2,7 @@ name: Personal
 root: ~/
 windows:
   - files:
+      pre: cd ~
       panes:
         - ranger
   - dotfiles:
@@ -9,14 +10,18 @@ windows:
       panes:
         - nvim
   - email:
+      pre: cd ~
       panes:
         - clear
   - transfer:
+      pre: cd ~
       panes:
         - clear
   - music:
+      pre: cd ~
       panes:
         - spt
   - reddit:
+      pre: cd ~
       panes:
         - tuir
