@@ -36,6 +36,8 @@ export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 export PATH="/usr/local/opt/node@10/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
 export HISTCONTROL=ignorespace
+export ANDROID_SDK=$HOME/Library/Android/sdk
+export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
 
 # CUSTOM
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
