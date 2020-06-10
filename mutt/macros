@@ -10,4 +10,5 @@ macro index,pager i2 '<sync-mailbox><enter-command>source $DOTFILES/mutt/account
 
 macro index <f1> '<enter-command>source ~/dotfiles/mutt/muttrc<enter>' "Configuration reloaded!"
 macro index <f2> '<limit>~N<enter>'
-macro index <f3> '<limit>(github|confluence|jira)<enter>'
+macro index <f3> '<limit>~F<enter>'
+macro index <f4> '<limit>(confluence|github|jira)<enter>'
