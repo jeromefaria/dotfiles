@@ -21,7 +21,8 @@ windows:
       pre: cd ~
       panes:
         - spt
-  - reddit:
+  - connect:
       pre: cd ~
       panes:
         - tuir
+        - t timeline
