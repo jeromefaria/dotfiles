@@ -22,9 +22,9 @@ color index_author black red "~D"
 color index_subject black red "~D"
 
 # Flagged mail is highlighted:
-color index yellow default "~F"
-color index_author yellow default "~F"
-color index_subject yellow default "~F"
+color index brightyellow default "~F"
+color index_author brightyellow default "~F"
+color index_subject brightyellow default "~F"
 
 # Other colors and aesthetic settings:
 mono bold bold
