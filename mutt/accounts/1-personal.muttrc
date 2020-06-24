@@ -26,9 +26,9 @@ bind index gg first-entry
 unmailboxes *
 
 set spoolfile = "+INBOX"
-set record = "+[Gmail].Sent\ Mail"
-set postponed = "+[Gmail].Drafts"
-set trash = "+[Gmail].Trash"
+set record = "+[Gmail]/Sent\ Mail"
+set postponed = "+[Gmail]/Drafts"
+set trash = "+[Gmail]/Trash"
 
 mailboxes "+INBOX" \
           "+[Gmail]/All\ Mail" \
