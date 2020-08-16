@@ -8,23 +8,30 @@ windows:
         - nvim
         - clear
         - clear
-  - Redirector2:
-      layout: main-horizontal
-      pre: cd ~/Work/linkfire/src/Redirector/
-      panes:
-        - nvim
-        - clear
-        - clear
   - AdButler.AdUnits:
       layout: main-horizontal
       pre: cd ~/Work/linkfire/src/AdButler.AdUnits/
       panes:
         - nvim
         - clear
-        - npm run start
+        - clear
   - AssetLab.GUI:
       layout: main-horizontal
       pre: cd ~/Work/linkfire/src/AssetLab.GUI/
+      panes:
+        - nvim
+        - clear
+        - clear
+  - AdCreation:
+      layout: main-horizontal
+      pre: cd ~/Work/linkfire/src/AdCreation/
+      panes:
+        - nvim
+        - clear
+        - clear
+  - ChannelPartners:
+      layout: main-horizontal
+      pre: cd ~/Work/linkfire/src/ChannelPartners/
       panes:
         - nvim
         - clear
