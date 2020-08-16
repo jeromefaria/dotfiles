@@ -1,6 +1,7 @@
 # Variables
-export DOTFILES="$HOME/dotfiles"
 export ARCHIVE="/Volumes/Archive"
+export DOTFILES="$HOME/dotfiles"
+export DOWNLOADS="$HOME/Downloads"
 export DRIVE="/Volumes/Drive/Drive"
 export MOBILE="$HOME/Library/Mobile\ Documents"
 export WORK="$HOME/Work"
@@ -8,7 +9,6 @@ export WORK="$HOME/Work"
 # ZSH settings
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
-DOTFILES=$HOME/dotfiles
 
 # ZSH plugins
 plugins=(git osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew colored-man-pages omz-git)
