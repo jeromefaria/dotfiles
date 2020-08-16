@@ -50,6 +50,7 @@ alias cloc="tokei"
 alias ls="exa"
 alias sed="sd"
 alias trash="trash -F"
+alias dm="dark-mode"
 
 # Fasd
 alias a='fasd -a'        # any
@@ -100,6 +101,7 @@ alias dcu="docker-compose up"
 alias dcud="docker-compose up -d"
 alias dcd="docker-compose down"
 alias dcs="docker-compose stop"
+alias dcb="docker-compose build"
 
 # Vagrant
 alias vg="vagrant"
