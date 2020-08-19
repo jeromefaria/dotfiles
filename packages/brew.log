@@ -55,6 +55,7 @@ fdk-aac
 fdupes
 ffmpeg
 flac
+fmt
 fontconfig
 fontforge
 freetype
@@ -80,6 +81,7 @@ gnu-getopt
 gnupg
 gnutls
 go
+gobject-introspection
 gpgme
 gradle
 graphite2
@@ -104,6 +106,7 @@ jdupes
 jemalloc
 jpeg
 jq
+jsdoc3
 json-c
 json-glib
 lame
@@ -175,6 +178,7 @@ mas
 mdp
 media-info
 midnight-commander
+mkdocs
 mkvalidator
 mkvtoolnix
 moreutils
@@ -194,6 +198,7 @@ neovim
 nettle
 nmap
 nnn
+node
 node@10
 noti
 notmuch
@@ -205,7 +210,6 @@ opencore-amr
 openexr
 openjdk
 openjpeg
-openssl
 openssl@1.1
 optipng
 opus
