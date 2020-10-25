@@ -10,7 +10,7 @@ set header_cache = ~/.mutt/personal/headers
 set message_cachedir = ~/.mutt/personal/bodies
 set certificate_file = ~/.mutt/certificates
 set imap_pass = "`pass mutt-wizard-personal`"
-set smtp_url = "smtp://jerome.faria@smtp.gmail.com:587/"
+set smtp_url = "smtps://jerome.faria@smtp.gmail.com:465/"
 set smtp_authenticators = "gssapi:login"
 set smtp_pass = "`pass mutt-wizard-personal`"
 
