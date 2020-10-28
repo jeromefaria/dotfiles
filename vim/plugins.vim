@@ -18,6 +18,7 @@ Plug 'godlygeek/tabular'
 Plug 'rking/ag.vim' "Up for review (deprecated)
 Plug 'easymotion/vim-easymotion'
 Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
+Plug 'stsewd/fzf-checkout.vim'
 
 " For async completion
 Plug 'Shougo/deoplete.nvim'

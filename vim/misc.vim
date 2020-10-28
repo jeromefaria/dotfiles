@@ -80,6 +80,10 @@ nmap <C-p> :Files<cr>
 " View commits in fzf
 nmap <Leader>c :Commits<cr>
 
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
+nnoremap <leader>gc :GCheckout<CR>
+
 
 """""""""""""""""""""""""""""""""""""""
 " Limelight
