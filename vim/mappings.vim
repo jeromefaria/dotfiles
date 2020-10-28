@@ -10,7 +10,6 @@ inoremap <C-s> <Esc>:w<CR>a
 
 " Remap esc
 inoremap jk <esc>
-imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 " Normal mode mappings
 nnoremap <C-s> :w<CR>

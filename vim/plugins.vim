@@ -73,7 +73,6 @@ Plug 'MarcWeber/vim-addon-mw-utils'
 Plug 'tomtom/tlib_vim'
 
 " Language-specific plugins
-Plug 'mattn/emmet-vim', { 'for': 'html' }
 Plug 'Valloric/MatchTagAlways'
 Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
