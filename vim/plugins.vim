@@ -9,22 +9,8 @@ filetype on
 call plug#begin('~/.vim/plugged')
 "call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'scrooloose/nerdtree'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-ragtag' "Up for review
-Plug 'airblade/vim-gitgutter'
-Plug 'godlygeek/tabular'
-Plug 'rking/ag.vim' "Up for review (deprecated)
-Plug 'easymotion/vim-easymotion'
-Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
-Plug 'stsewd/fzf-checkout.vim'
-
-" For async completion
+" Async completion
 Plug 'Shougo/deoplete.nvim'
-
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -33,31 +19,22 @@ else
   Plug 'roxma/nvim-yarp'
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
+
 let g:deoplete#enable_at_startup = 1
 
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+" Syntax check
+Plug 'dense-analysis/ale'
 
-Plug 'scrooloose/nerdcommenter'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-vinegar'
-Plug 'sjl/gundo.vim'
-Plug 'vitalk/vim-simple-todo'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'godlygeek/csapprox' "Up for review
-Plug 'xolox/vim-session'
-Plug 'xolox/vim-misc'
-Plug 'junegunn/limelight.vim'
-Plug 'junegunn/goyo.vim'
-Plug 'vim-scripts/restore_view.vim'
-Plug 'vim-syntastic/syntastic'
-Plug 'jiangmiao/auto-pairs'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'cespare/vim-toml'
+" Snippets
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'Shougo/neosnippet.vim'
+Plug 'tomtom/tlib_vim'
 
 " FZF
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
+Plug 'stsewd/fzf-checkout.vim'
 
 " Tmux
 Plug 'benmills/vimux'
@@ -69,44 +46,35 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
 
-"Snippets
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'tomtom/tlib_vim'
-
-" Language-specific plugins
-Plug 'Valloric/MatchTagAlways'
-Plug 'othree/html5.vim', { 'for': 'html' }
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
-Plug 'moll/vim-node', { 'for': 'javascript' }
-Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
-Plug 'mxw/vim-jsx', { 'for': 'jsx' }
-Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'Shougo/vimproc.vim', { 'do': 'make' }
-Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
-Plug 'wavded/vim-stylus', { 'for': ['stylus', 'markdown'] }
-Plug 'ap/vim-css-color', { 'for': ['css','stylus','scss'] }
-Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
-Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
-Plug 'tpope/vim-markdown', { 'for': 'markdown' }
-" Plug 'fatih/vim-go', { 'for': 'go' }
-Plug 'timcharper/textile.vim', { 'for': 'textile' }
-Plug 'sophacles/vim-processing', { 'for': 'processing' }
-Plug 'posva/vim-vue'
-
-" AngularJS plugins
-" Plug 'burnettk/vim-angular'
-" Plug 'othree/javascript-libraries-syntax.vim'
-" Plug 'matthewsimo/angular-vim-snippets'
-" Plug 'claco/jasmine.vim'
-
-" Typescript
-Plug 'leafgarland/typescript-vim'
+" Javascript
 Plug 'Quramy/vim-js-pretty-template'
 Plug 'jason0x43/vim-js-indent'
+Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+
+" Typescript
 Plug 'Quramy/vim-dtsm'
+Plug 'leafgarland/typescript-vim'
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 Plug 'mhartington/vim-typings'
-Plug 'Quramy/ng-tsserver'
+
+" CSS / SCSS
+Plug 'ap/vim-css-color', { 'for': ['css','stylus','scss'] }
+Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
+Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
+
+" Language-specific plugins
+Plug 'MaxMEllon/vim-jsx-pretty', { 'for': 'jsx' }
+Plug 'cespare/vim-toml'
+Plug 'elzr/vim-json', { 'for': 'json' }
+" Plug 'fatih/vim-go', { 'for': 'go' }
+Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
+Plug 'moll/vim-node', { 'for': 'javascript' }
+Plug 'othree/html5.vim', { 'for': 'html' }
+Plug 'posva/vim-vue'
+Plug 'sophacles/vim-processing', { 'for': 'processing' }
+Plug 'tpope/vim-markdown', { 'for': 'markdown' }
 
 " Colour schemes
 Plug 'flazz/vim-colorschemes'
@@ -114,12 +82,34 @@ Plug 'whatyouhide/vim-gotham'
 Plug 'mhartington/oceanic-next'
 
 " Writing
-Plug 'vim-scripts/VOoM'
-Plug 'reedes/vim-pencil'
 Plug 'jacekd/vim-iawriter'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
+Plug 'reedes/vim-pencil'
+Plug 'vim-scripts/VOoM'
 
-" Syntax check
-Plug 'dense-analysis/ale'
+" Misc
+Plug 'Valloric/MatchTagAlways'
+Plug 'airblade/vim-gitgutter'
+Plug 'easymotion/vim-easymotion'
+Plug 'godlygeek/tabular'
+Plug 'jiangmiao/auto-pairs'
+Plug 'mg979/vim-visual-multi'
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'sjl/gundo.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-ragtag' " Up for review
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-vinegar'
+Plug 'vim-scripts/restore_view.vim'
+Plug 'vim-syntastic/syntastic' " Up for review
+Plug 'vitalk/vim-simple-todo'
+Plug 'xolox/vim-misc' " Up for review
+Plug 'xolox/vim-session'
+
 
 "call vundle#end()
 
