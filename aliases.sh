@@ -245,3 +245,12 @@ alias verifyvolumes="for v in /Volumes/*; do m disk verify volume $v; done"
 
 # Repair all mounted volumes
 alias repairvolumes="for v in /Volumes/*; do m disk repair volume $v; done"
+
+# Encode to ROT13
+alias rot13="tr 'A-Za-z' 'N-ZA-Mn-za-m'"
+
+# Encode to ROT5
+alias rot5="tr '0-9' '5-90-4'"
+
+# ROT13 for letters and ROT5 for numbers
+alias rotten="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m5-90-4'"
