@@ -21,10 +21,14 @@ export PATH="/usr/local/sbin:$PATH"
 source $ZSH/oh-my-zsh.sh
 source $DOTFILES/aliases.sh
 source $DOTFILES/functions.sh
+source $DOTFILES/linkfire
 
 # EDITOR
 export VISUAL=nvim
 export EDITOR="$VISUAL"
+
+# HISTORY
+export HISTCONTROL=ignorespace
 
 # BINDINGS
 bindkey '^ ' autosuggest-accept
@@ -35,7 +39,6 @@ bindkey -M viins 'jj' vi-cmd-mode
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 export PATH="/usr/local/opt/node@10/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
-export HISTCONTROL=ignorespace
 export ANDROID_SDK=$HOME/Library/Android/sdk
 export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
 
@@ -63,8 +66,6 @@ autoload -U compinit && compinit
 
 ## FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-source $DOTFILES/linkfire
 
 # Initialise rbenv
 eval "$(rbenv init -)"
