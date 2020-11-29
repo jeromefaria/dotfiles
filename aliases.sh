@@ -20,16 +20,6 @@ alias pbc="pbcopy"
 alias pbp="pbpaste"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 
-# Detect which `ls` flavor is in use
-
-# List all files colorized in long format
-
-# List all files colorized in long format, excluding . and ..
-
-# List only directories
-
-# Always use color output for `ls`
-
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
 alias grep='grep --color=auto'
