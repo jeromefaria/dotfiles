@@ -93,11 +93,6 @@ function tre() {
   tree -aC -I '.git|node_modules|bower_components' --dirsfirst "$@" | less -FRNX;
 }
 
-# Downloads YouTube videos
-function ydl(){
-  youtube-dl -ciw -o "%(title)s.%(ext)s" $1
-}
-
 # Grab all href links from a webpage
 function links() {
   curl $1 | grep -o -E 'href="([^"#]+)"' | cut -d'"' -f2
