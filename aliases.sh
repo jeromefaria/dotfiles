@@ -41,12 +41,15 @@ alias ls="exa"
 alias sed="sd"
 alias trash="trash -F"
 alias dm="dark-mode"
+alias ydl="youtube-dl"
+alias hd=hdiutil
 
 # Fasd
 alias a='fasd -a'        # any
 alias s='fasd -si'       # show / search / select
 alias d='fasd -d'        # directory
 alias f='fasd -f'        # file
+# alias sd='fasd -sid'     # interactive directory selection
 alias sf='fasd -sif'     # interactive file selection
 alias z='fasd_cd -d'     # cd, same functionality as j in autojump
 alias zz='fasd_cd -d -i' # cd with interactive selection
@@ -206,7 +209,7 @@ alias sudo='sudo '
 alias week='date +%V'
 
 # Get macOS Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && tldr --update && sudo youtube-dl -U'
+alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && tldr --update && sudo youtube-dl -U'
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
