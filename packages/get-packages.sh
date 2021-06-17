@@ -11,7 +11,7 @@ do
       ;;
     "cask")
       echo "Downloading $package package list..."
-      brew cask list > "$package.log"
+      brew list --cask > "$package.log"
       ;;
     "gem")
       echo "Downloading $package package list..."
@@ -23,11 +23,11 @@ do
       ;;
     "npm")
       echo "Downloading $package package list..."
-      npm list -g --depth 0 | cut -d " " -f2 | cut -d "@" -f1 | egrep "[a-z]" | egrep -v "UNMET" | tail -n +2 > $package.log
+      npm list -g --depth 0 2>/dev/null | cut -d " " -f2 | cut -d "@" -f1 | egrep "[a-z]" | egrep -v "UNMET" | tail -n +2 > $package.log
       ;;
     "pip")
       echo "Downloading $package package list..."
-      pip list | cut -d " " -f 1 | egrep "[a-z]" | tail -n +2 > $package.log
+      pip3 list | cut -d " " -f 1 | egrep "[a-z]" | tail -n +2 > $package.log
       ;;
   esac
 done
