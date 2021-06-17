@@ -15,6 +15,7 @@ date
 dbm
 delegate
 did_you_mean
+digest
 dnsruby
 domain_name
 dotenv
@@ -26,6 +27,11 @@ ethon
 eventmachine
 execjs
 faraday
+faraday-em_http
+faraday-em_synchrony
+faraday-excon
+faraday-net_http
+faraday-net_http_persistent
 fcntl
 ffi
 ffi-compiler
@@ -48,6 +54,7 @@ http-parser
 http_parser.rb
 i18n
 io-console
+io-wait
 ipaddr
 irb
 jekyll
@@ -92,6 +99,7 @@ kramdown-parser-gfm
 launchy
 liquid
 listen
+llhttp-ffi
 logger
 matrix
 memoizable
@@ -102,7 +110,9 @@ minitest
 multipart-post
 mutex_m
 naught
+net-ftp
 net-pop
+net-protocol
 net-smtp
 net-telnet
 nokogiri
@@ -131,6 +141,7 @@ rexml
 rouge
 rss
 ruby-enum
+ruby2_keywords
 rubygems-update
 rubyzip
 safe_yaml
@@ -149,6 +160,7 @@ terminal-table
 test-unit
 thor
 thread_safe
+time
 timeout
 tmuxinator
 tracer
