@@ -197,3 +197,8 @@ function sync() {
 function randNum() {
   echo $(($1 + RANDOM % $2))
 }
+
+# Read magnet id from aria2 files
+function getmagnet() {
+  python3 /Users/jeromefaria/Work/github/aria-control-file-parser/aria2_to_magnet.py $1
+}
