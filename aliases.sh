@@ -92,11 +92,11 @@ alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
 
 # Docker
-alias dcu="docker-compose up"
-alias dcud="docker-compose up -d"
-alias dcd="docker-compose down"
-alias dcs="docker-compose stop"
-alias dcb="docker-compose build"
+alias dcu="docker compose up"
+alias dcud="docker compose up -d"
+alias dcd="docker compose down"
+alias dcs="docker compose stop"
+alias dcb="docker compose build"
 
 # Vagrant
 alias vg="vagrant"
