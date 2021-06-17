@@ -1,4 +1,5 @@
 1password
+ableton-live-suite
 abstract
 adobe-acrobat-reader
 alt-tab
@@ -8,6 +9,7 @@ balenaetcher
 chromedriver
 chromium
 docker
+figma
 firefox
 firefox-developer-edition
 flume
@@ -29,6 +31,7 @@ megasync
 microsoft-auto-update
 microsoft-edge
 microsoft-edge-dev
+miro
 mkvtoolnix
 musicbrainz-picard
 opera
@@ -41,7 +44,6 @@ robo-3t
 safari-technology-preview
 sequel-pro
 signal
-sketch
 skype
 slack
 soundflower
@@ -50,11 +52,11 @@ spotify
 surfshark
 tor-browser
 vagrant
+vcv-rack
 vimr
 virtualbox
 visual-studio-code
 vlc
 whatsapp
 xquartz
-zeplin
-zoomus
+zoom
