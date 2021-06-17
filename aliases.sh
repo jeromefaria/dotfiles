@@ -209,7 +209,7 @@ alias sudo='sudo '
 alias week='date +%V'
 
 # Get macOS Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && tldr --update && sudo youtube-dl -U'
+alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && tldr --update && omz update'
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
