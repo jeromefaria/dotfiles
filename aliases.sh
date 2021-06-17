@@ -247,3 +247,6 @@ alias rot5="tr '0-9' '5-90-4'"
 
 # ROT13 for letters and ROT5 for numbers
 alias rotten="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m5-90-4'"
+
+# Restart GPG agent
+alias gpgrestart="gpgconf --kill gpg-agent"
