@@ -8,31 +8,18 @@ windows:
         - nvim
         - clear
         - clear
-  - AdButler.AdUnits:
-      layout: main-horizontal
-      pre: cd ~/Work/linkfire/src/AdButler.AdUnits/
-      panes:
-        - nvim
-        - clear
-        - clear
-  - AssetLab.GUI:
-      layout: main-horizontal
-      pre: cd ~/Work/linkfire/src/AssetLab.GUI/
-      panes:
-        - nvim
-        - clear
-        - clear
-  - AdCreation:
-      layout: main-horizontal
-      pre: cd ~/Work/linkfire/src/AdCreation/
+  - AdUnits:
+      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
+      pre: cd ~/Work/linkfire/src/AdUnits/
       panes:
         - nvim
         - clear
         - clear
   - ChannelPartners:
-      layout: main-horizontal
+      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
       pre: cd ~/Work/linkfire/src/ChannelPartners/
       panes:
         - nvim
+        - clear
         - clear
         - clear
