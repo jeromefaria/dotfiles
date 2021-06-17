@@ -3,26 +3,23 @@ root: ~/
 windows:
   - files:
       pre: cd ~
+      layout: even-vertical
       panes:
         - ranger
+        - clear
   - dotfiles:
       pre: cd ~/dotfiles
+      layout: 5d11,212x58,0,0[212x39,0,0,16,212x18,0,40,24]
       panes:
         - nvim
+        - clear
   - email:
       pre: cd ~
       panes:
         - clear
   - transfer:
       pre: cd ~
+      layout: even-vertical
       panes:
         - clear
-  - music:
-      pre: cd ~
-      panes:
-        - spt
-  - connect:
-      pre: cd ~
-      panes:
-        - tuir
-        - t timeline
+        - clear
