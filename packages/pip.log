@@ -1,8 +1,8 @@
 arrow
+asn1crypto
 backports-abc
 backports.ssl-match-hostname
 beautifulsoup4
-beets
 bzr
 certifi
 cffi
@@ -11,6 +11,7 @@ clarifai
 click
 colorama
 configparser
+cryptography
 cssselect
 csv2vcf
 decorator
@@ -34,9 +35,8 @@ idna
 imageio
 instagram-livestream-downloader
 instagram-private-api
-instagram-py
-instapy
 instapy-chromedriver
+ipaddress
 jellyfish
 jsonschema
 kitchen
@@ -53,6 +53,7 @@ neovim
 numpy
 offlineimap
 olefile
+packaging
 Pillow
 pip
 plyer
@@ -70,6 +71,8 @@ Pygments
 pylast
 pync
 pynvim
+pyOpenSSL
+pyparsing
 pyquery
 PySocks
 python-dateutil
@@ -97,4 +100,5 @@ urllib3
 wcwidth
 websocket
 websocket-client
+wells
 wheel
