@@ -30,8 +30,10 @@ faraday
 faraday-em_http
 faraday-em_synchrony
 faraday-excon
+faraday-httpclient
 faraday-net_http
 faraday-net_http_persistent
+faraday-patron
 fcntl
 ffi
 ffi-compiler
