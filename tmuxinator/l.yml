@@ -1,9 +1,9 @@
 name: Linkfire
 root: ~/Work/linkfire/
 windows:
-  - Redirector3:
-      layout: main-horizontal
-      pre: cd ~/Work/linkfire/src/Redirector3/
+  - AdMate:
+      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
+      pre: cd ~/Work/linkfire/src/AdMate/
       panes:
         - nvim
         - clear
@@ -16,10 +16,24 @@ windows:
         - clear
         - clear
   - ChannelPartners:
-      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
+      layout: 9507,255x67,0,0[255x54,0,0,9,255x12,0,55{84x12,0,55,14,84x12,85,55,15,85x12,170,55,16}]
       pre: cd ~/Work/linkfire/src/ChannelPartners/
       panes:
         - nvim
         - clear
+        - clear
+        - clear
+  - PartnerPoint:
+      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
+      pre: cd ~/Work/linkfire/src/ChannelPartnersOnboarding/
+      panes:
+        - nvim
+        - clear
+        - clear
+  - AssetLab.GUI:
+      layout: main-horizontal
+      pre: cd ~/Work/linkfire/src/AssetLab.GUI/
+      panes:
+        - nvim
         - clear
         - clear
