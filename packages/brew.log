@@ -42,7 +42,6 @@ dbus
 diff-so-fancy
 docbook
 docbook-xsl
-docker
 double-conversion
 elinks
 emacs
@@ -60,6 +59,7 @@ fdupes
 ffmpeg
 flac
 fmt
+folly
 fontconfig
 fontforge
 freetype
@@ -71,6 +71,7 @@ gdbm
 gdrive
 genact
 gettext
+gflags
 gh
 ghostscript
 giflib
@@ -80,6 +81,7 @@ git-delta
 git-flow
 git-heatmap
 glib
+glog
 gmime
 gmp
 gnu-getopt
@@ -194,6 +196,7 @@ lua@5.1
 luajit
 luajit-openresty
 luarocks
+luv
 lynx
 lz4
 lzlib
@@ -346,6 +349,7 @@ vapoursynth
 vifm
 vim
 w3m
+watchman
 webkit2png
 webp
 webpack
@@ -381,11 +385,13 @@ appcleaner
 balenaetcher
 chromedriver
 chromium
+discord
 docker
 figma
 firefox
 firefox-developer-edition
 flume
+font-awesome-terminal-fonts
 gimp
 github
 google-backup-and-sync
