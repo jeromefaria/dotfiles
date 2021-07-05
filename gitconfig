@@ -1,5 +1,8 @@
 # vim: filetype=gitconfig
 
+[user]
+  name = Jerome Faria
+  email = jerome.faria@gmail.com
 [color]
   ui = true
 [mergetool]
@@ -28,6 +31,8 @@
   required = true
 [github]
   user = jeromefaria
+[ghi]
+  token = !security find-internet-password -a jeromefaria -s github.com -l 'ghi token' -w
 [pull]
   rebase = false
 [pager]
