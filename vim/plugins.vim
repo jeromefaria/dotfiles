@@ -20,10 +20,8 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-let g:deoplete#enable_at_startup = 1
 
 " Syntax check
-Plug 'dense-analysis/ale'
 
 " Snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -48,8 +46,6 @@ Plug 'edkolev/tmuxline.vim'
 
 " Javascript
 Plug 'Quramy/vim-js-pretty-template'
-Plug 'jason0x43/vim-js-indent'
-Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 
 " Typescript
