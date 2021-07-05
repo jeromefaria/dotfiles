@@ -17,6 +17,7 @@ protobuf
 pycparser
 pynvim
 pyparsing
+pywatchman
 PyYAML
 setuptools
 six
