@@ -8,8 +8,11 @@ appcleaner
 balenaetcher
 chromedriver
 chromium
+cleanmymac
+cycling74-max
 discord
 docker
+epic-games
 figma
 firefox
 firefox-developer-edition
@@ -17,9 +20,9 @@ flume
 font-awesome-terminal-fonts
 gimp
 github
-google-backup-and-sync
 google-chrome
 google-chrome-canary
+google-drive
 grammarly
 hyper
 hyperdock
@@ -36,6 +39,8 @@ microsoft-edge-dev
 miro
 mkvtoolnix
 musicbrainz-picard
+notion
+numi
 opera
 opera-developer
 origami-studio
@@ -54,7 +59,6 @@ spotify
 surfshark
 tor-browser
 vagrant
-vcv-rack
 vimr
 virtualbox
 visual-studio-code
