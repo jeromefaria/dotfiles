@@ -1,4 +1,3 @@
-acs
 alloy
 angular-cli
 bars
@@ -46,5 +45,4 @@ tslint
 typedoc
 uncss
 vtop
-webpack-dev-server
 wikit
