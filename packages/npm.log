@@ -23,6 +23,7 @@ jira-cl
 karma-cli
 karma-jasmine
 md-fileserver
+md-server
 mocha
 neovim
 node-gyp
