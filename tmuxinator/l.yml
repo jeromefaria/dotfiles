@@ -15,6 +15,9 @@ windows:
         - nvim
         - clear
         - clear
+  - AssetLab.GUI:
+      layout: main-horizontal
+      pre: cd ~/Work/linkfire/src/AssetLab.GUI/
       panes:
         - nvim
         - clear
