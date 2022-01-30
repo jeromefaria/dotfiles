@@ -12,7 +12,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
 
 # ZSH plugins
-plugins=(git osx encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew omz-git)
+plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew omz-git)
 
 # ZSH INTERACTIVE CD
 source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
@@ -42,7 +42,9 @@ bindkey -M viins 'jj' vi-cmd-mode
 # PATHS
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 
-export PATH="/usr/local/opt/node@10/bin:$PATH"
+export PATH="/usr/local/opt/node@14/bin:$PATH"
+
+# export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 
 
@@ -78,3 +80,5 @@ eval "$(rbenv init -)"
 eval "$(starship init zsh)"
 
 source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
