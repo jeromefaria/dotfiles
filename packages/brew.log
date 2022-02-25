@@ -59,10 +59,14 @@ extract_url
 faac
 faad2
 fasd
+fb303
+fbthrift
 fd
 fdk-aac
 fdupes
 ffmpeg
+ffmpeg@4
+fizz
 flac
 fmt
 folly
@@ -109,6 +113,7 @@ highlight
 htop
 htop-osx
 http-server
+httpd
 httpie
 hub
 hunspell
@@ -143,15 +148,18 @@ libarchive
 libass
 libassuan
 libav
+libavif
 libb2
 libbluray
 libcaca
+libcbor
 libcue
 libde265
 libebml
 libev
 libevent
 libffi
+libfido2
 libgcrypt
 libgpg-error
 libheif
@@ -318,6 +326,7 @@ rtmpdump
 rubberband
 ruby
 ruby-build
+ruby@3.0
 rust
 s-lang
 s-search
@@ -374,6 +383,7 @@ vapoursynth
 vifm
 vim
 w3m
+wangle
 watchman
 webkit2png
 webp
@@ -407,7 +417,6 @@ ableton-live-suite
 adobe-acrobat-reader
 alt-tab
 android-studio
-appcleaner
 balenaetcher
 chromedriver
 chromium
@@ -433,7 +442,6 @@ iterm2
 jitsi
 karabiner-elements
 lastfm
-mailmate
 megasync
 microsoft-auto-update
 microsoft-edge
@@ -457,7 +465,6 @@ skype
 slack
 soundflower
 spectacle
-spotify
 surfshark
 tor-browser
 vagrant
