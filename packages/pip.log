@@ -17,6 +17,8 @@ cryptography
 decorator
 dogpile.cache
 enzyme
+ffmpeg-normalize
+ffmpeg-progress-yield
 gpg
 greenlet
 guessit
@@ -54,6 +56,7 @@ sortedcontainers
 soupsieve
 stevedore
 subliminal
+tqdm
 trio
 trio-websocket
 Unidecode
