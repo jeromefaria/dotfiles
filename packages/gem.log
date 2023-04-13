@@ -50,6 +50,8 @@ geokit
 getoptlong
 github-pages
 github-pages-health-check
+google-protobuf
+hashie
 html-pipeline
 htmlentities
 http
@@ -125,6 +127,7 @@ net-smtp
 net-telnet
 nokogiri
 oauth
+oauth-tty
 observer
 octokit
 open3
@@ -155,6 +158,7 @@ rubygems-update
 rubyzip
 safe_yaml
 sass
+sass-embedded
 sass-listen
 sassc
 sawyer
@@ -162,6 +166,7 @@ sdbm
 simple_oauth
 simpleidn
 singleton
+snaky_hash
 stringio
 strscan
 t
@@ -174,12 +179,14 @@ timeout
 tmuxinator
 tracer
 twitter
+twurl
 typhoeus
 tzinfo
 unf
 unf_ext
 unicode-display_width
 uri
+version_gem
 webrick
 xdg
 xmlrpc
