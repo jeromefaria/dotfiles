@@ -1,12 +1,11 @@
 alloy
-angular-cli
 bars
 bower
 browser-sync
 castnow
 clean-css
+cordova
 csvtojson
-devtools-terminal
 diff2html-cli
 doctoc
 ember-cli
@@ -16,9 +15,9 @@ how-2
 hpm-cli
 ionic
 ios-sim
-iron-node
 is-up-cli
 itunes-remote
+jasmine-core
 jira-cl
 karma-cli
 karma-jasmine
@@ -44,6 +43,7 @@ trello-cli
 tsd
 tslint
 typedoc
+typescript
 uncss
 vtop
 wikit
