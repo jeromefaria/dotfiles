@@ -12,7 +12,6 @@ chromium
 cleanmymac
 cycling74-max
 discord
-docker
 dropbox
 duckduckgo
 firefox
@@ -25,7 +24,6 @@ google-chrome-canary
 google-drive
 grammarly
 hyper
-hyperswitch
 ilok-license-manager
 iterm2
 jitsi
@@ -36,7 +34,6 @@ megasync
 microsoft-auto-update
 microsoft-edge
 microsoft-edge-dev
-mkvtoolnix
 musicbrainz-picard
 numi
 obs
@@ -44,6 +41,7 @@ opera
 opera-developer
 postman
 processing
+rectangle
 robo-3t
 safari-technology-preview
 sequel-pro
@@ -57,7 +55,6 @@ sysex-librarian
 tor-browser
 vagrant
 vimr
-virtualbox
 visual-studio-code
 vlc
 whatsapp
