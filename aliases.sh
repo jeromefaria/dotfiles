@@ -35,7 +35,6 @@ alias du="ncdu --color dark -x --exclude .giti --exclude node_modules"
 alias help="tldr"
 alias vim="nvim"
 alias mutt="neomutt"
-alias rtv="tuir"
 alias cloc="tokei"
 alias ls="exa"
 alias sed="sd"
@@ -76,6 +75,9 @@ alias mobile="cd $MOBILE"
 alias icloud="cd $MOBILE/com~apple~CloudDocs"
 alias tmp="cd /private/tmp"
 alias vol="ls /Volumes"
+alias shared="cd $DRIVE/Shared"
+alias portable="cd $PORTABLE"
+alias projects="cd $PROJECTS"
 
 # Google Chrome
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
