@@ -1,4 +1,5 @@
 1password
+1password-cli
 ableton-live-suite
 adobe-acrobat-reader
 alt-tab
@@ -7,6 +8,7 @@ balenaetcher
 blackhole-16ch
 blackhole-2ch
 blackhole-64ch
+blender
 chromedriver
 chromium
 cleanmymac
@@ -15,16 +17,21 @@ db-browser-for-sqlite
 discord
 dropbox
 duckduckgo
+elektron-transfer
 firefox
 firefox-developer-edition
 font-awesome-terminal-fonts
+font-sf-mono
+font-sf-mono-for-powerline
 gimp
 github
 google-chrome-canary
 google-drive
 grammarly
 hyper
+iina
 ilok-license-manager
+inkscape
 iterm2
 izotope-product-portal
 jitsi
@@ -43,6 +50,7 @@ opera
 opera-developer
 postman
 processing
+rar
 rectangle-pro
 robo-3t
 sequel-pro
