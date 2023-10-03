@@ -31,7 +31,7 @@ alias cat="bat"
 alias ping='prettyping --nolegend'
 alias preview="fzf --preview 'bat --color \"always\" {}'"
 alias top="sudo htop" # alias top and fix high sierra bug
-alias du="ncdu --color dark -x --exclude .giti --exclude node_modules"
+alias du="ncdu -x --exclude .giti --exclude node_modules"
 alias help="tldr"
 alias vim="nvim"
 alias mutt="neomutt"
@@ -39,9 +39,11 @@ alias cloc="tokei"
 alias ls="exa"
 alias sed="sd"
 alias trash="trash -F"
+alias tvf="trash -vF"
 alias dm="dark-mode"
 alias ydl="youtube-dl"
 alias hd=hdiutil
+alias find=fd
 
 # Fasd
 alias a='fasd -a'        # any
@@ -89,6 +91,7 @@ alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-se
 alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
+alias chromectrl="/Users/jeromefaria/Work/github/chrome-control/chrome.js"
 
 # Kill all the tabs in Chrome to free up memory
 # [C] explained: http://www.commandlinefu.com/commands/view/402/exclude-grep-from-your-grepped-output-of-ps-alias-included-in-description
@@ -212,7 +215,8 @@ alias sudo='sudo '
 alias week='date +%V'
 
 # Get macOS Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
-alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
+# alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
+alias update='sudo -v && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
@@ -253,3 +257,9 @@ alias rotten="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m5-90-4'"
 
 # Restart GPG agent
 alias gpgrestart="gpgconf --kill gpg-agent"
+
+# TODO
+alias a2m="python3 ~/Work/github/aria-control-file-parser/aria2_to_magnet.py"
+alias rbg="sqlite3 ~/Documents/rarbg_db.sqlite"
+alias bmp="beet -c ~/.config/beets/config-mp3.yaml"
+alias mus="musikcube"
