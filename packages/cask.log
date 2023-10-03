@@ -12,7 +12,6 @@ blender
 chromedriver
 chromium
 cleanmymac
-cycling74-max
 db-browser-for-sqlite
 discord
 dropbox
@@ -20,6 +19,7 @@ duckduckgo
 elektron-transfer
 firefox
 firefox-developer-edition
+flacon
 font-awesome-terminal-fonts
 font-sf-mono
 font-sf-mono-for-powerline
@@ -42,6 +42,7 @@ megasync
 microsoft-auto-update
 microsoft-edge
 microsoft-edge-dev
+microsoft-teams
 musicbrainz-picard
 native-access
 numi
@@ -62,12 +63,13 @@ spectacle
 spitfire-audio
 spotify
 sysex-librarian
+tidal
 tor-browser
 transmission
 vagrant
 vimr
 visual-studio-code
 vlc
-whatsapp
+whatsapp-legacy
 xquartz
 zoom
