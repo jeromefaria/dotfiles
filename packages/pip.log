@@ -1,4 +1,5 @@
 anyio
+audioread
 beautifulsoup4
 beets
 certifi
@@ -17,6 +18,8 @@ httpx
 idna
 jellyfish
 kitchen
+Markdown
+MarkupSafe
 mediafile
 msgpack
 munkres
@@ -26,8 +29,10 @@ neovim
 notmuch
 notmuch2
 oauthlib
+packaging
 pip
 protobuf
+pyacoustid
 pycairo
 pycparser
 Pygments
