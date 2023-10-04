@@ -4,10 +4,12 @@ export AUDIO="/Volumes/External/Audio"
 export DOTFILES="$HOME/dotfiles"
 export DOWNLOADS="$HOME/Downloads"
 export DRIVE="/Volumes/Drive"
+export EXTERNAL="/Volumes/External"
 export MOBILE="$HOME/Library/Mobile\ Documents"
 export PORTABLE="/Volumes/Portable"
 export PROJECTS="/Volumes/External/Audio/Projects"
 export SHARED="$DRIVE/Shared"
+export VIDEO="/Volumes/External/Video"
 export WORK="$HOME/Work"
 
 # ZSH settings
@@ -25,7 +27,6 @@ export PATH="/usr/local/sbin:$PATH"
 source $ZSH/oh-my-zsh.sh
 source $DOTFILES/aliases.sh
 source $DOTFILES/functions.sh
-source $DOTFILES/linkfire
 
 # EDITOR
 export VISUAL=nvim
@@ -45,11 +46,15 @@ bindkey -M viins 'jj' vi-cmd-mode
 # PATHS
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 
+# export PATH="/usr/local/opt/node@10/bin:$PATH"
+# export PATH="/usr/local/opt/node@12/bin:$PATH"
 export PATH="/usr/local/opt/node@14/bin:$PATH"
 
 # export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 
+# export ANDROID_SDK=$HOME/Library/Android/sdk
+# export PATH=$ANDROID_SDK/emulator:$ANDROID_SDK/tools:$PATH
 
 # CUSTOM
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
@@ -76,6 +81,10 @@ autoload -U compinit && compinit
 ## FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# export FZF_DEFAULT_COMMAND="fd . $HOME"
+# export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# export FZF_ALT_C_COMMAND="fd -t d . $HOME"
+
 # Initialise rbenv
 eval "$(rbenv init -)"
 
@@ -85,3 +94,15 @@ eval "$(starship init zsh)"
 source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
+eval $(thefuck --alias)
+
+# Supress Ruby warnings
+export RUBYOPT=-W0
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# 1Password CLI integration
+OP_BIOMETRIC_UNLOCK_ENABLED=true
+
+# BEETS ENV VARIABLE
+BEETSDIR=~/.config/beets/
