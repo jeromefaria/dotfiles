@@ -10,6 +10,7 @@ inoremap <C-s> <Esc>:w<CR>a
 
 " Remap esc
 inoremap jk <esc>
+" imap <expr> <tab> emmet#expandAbbrIntelligent("\<tab>")
 
 " Normal mode mappings
 nnoremap <C-s> :w<CR>
@@ -25,6 +26,7 @@ nnoremap <leader><space> :noh<CR>
 nnoremap <leader>l :BLines<CR>
 nnoremap <leader>b :Buffers<CR>
 nnoremap <leader>t :FZF<CR>
+nnoremap <leader>f :Rg<CR>
 nnoremap n nzz
 nnoremap N Nzz
 
