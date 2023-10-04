@@ -1,3 +1,8 @@
+# add_newline = false
+
+# [package]
+# disabled = true
+
 [nodejs]
 disabled = true
 
