@@ -22,4 +22,8 @@ windows:
       layout: even-vertical
       panes:
         - clear
-        - clear
+        - nicotine
+  - music:
+      pre: cd ~
+      panes:
+        - musikcube
