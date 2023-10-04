@@ -20,8 +20,10 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
+" let g:deoplete#enable_at_startup = 1
 
 " Syntax check
+" Plug 'dense-analysis/ale'
 
 " Snippets
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -46,6 +48,8 @@ Plug 'edkolev/tmuxline.vim'
 
 " Javascript
 Plug 'Quramy/vim-js-pretty-template'
+" Plug 'jason0x43/vim-js-indent'
+" Plug 'jelera/vim-javascript-syntax', { 'for': 'javascript' }
 Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 
 " Typescript
@@ -61,11 +65,13 @@ Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
 Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
 
 " Language-specific plugins
+" Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'MaxMEllon/vim-jsx-pretty', { 'for': 'jsx' }
 Plug 'cespare/vim-toml'
 Plug 'elzr/vim-json', { 'for': 'json' }
 " Plug 'fatih/vim-go', { 'for': 'go' }
 Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
+" Plug 'mattn/emmet-vim', { 'for': 'html' }
 Plug 'moll/vim-node', { 'for': 'javascript' }
 Plug 'othree/html5.vim', { 'for': 'html' }
 Plug 'posva/vim-vue'
@@ -105,7 +111,9 @@ Plug 'vim-syntastic/syntastic' " Up for review
 Plug 'vitalk/vim-simple-todo'
 Plug 'xolox/vim-misc' " Up for review
 Plug 'xolox/vim-session'
+" Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
+Plug 'alvan/vim-closetag'
 
 "call vundle#end()
 
