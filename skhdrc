@@ -123,6 +123,11 @@
 # increase window size
 # shift + alt - a : yabai -m window --resize left:-20:0
 # shift + alt - w : yabai -m window --resize top:0:-20
+ctrl + alt - h : yabai -m window --resize left:-20:0
+ctrl + alt - l : yabai -m window --resize left:20:0
+ctrl + alt - k : yabai -m window --resize top:0:-20
+ctrl + alt - j : yabai -m window --resize top:0:20
+ctrl + alt - 0 : yabai -m space --balance
 
 # decrease window size
 # shift + cmd - s : yabai -m window --resize bottom:0:-20
@@ -159,3 +164,12 @@ ctrl + shift  - l : yabai -m window --swap east
 
 ## toggle window fullscreen zoom
 ctrl + shift - f : yabai -m window --toggle zoom-fullscreen
+
+# increase window size
+ctrl + alt - h : yabai -m window --resize left:-20:0
+ctrl + alt - l : yabai -m window --resize left:20:0
+ctrl + alt - k : yabai -m window --resize top:0:-20
+ctrl + alt - j : yabai -m window --resize top:0:20
+
+# balance size of windows
+ctrl + alt - 0 : yabai -m space --balance
