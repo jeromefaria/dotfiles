@@ -260,6 +260,7 @@ alias gpgrestart="gpgconf --kill gpg-agent"
 
 # TODO
 alias a2m="python3 ~/Work/github/aria-control-file-parser/aria2_to_magnet.py"
-alias rbg="sqlite3 ~/Documents/rarbg_db.sqlite"
+alias rbg="sqlite3 ~/Movies/rarbg_db.sqlite"
 alias bmp="beet -c ~/.config/beets/config-mp3.yaml"
 alias mus="musikcube"
+alias b="beet"
