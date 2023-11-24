@@ -2,15 +2,13 @@ anyio
 audioread
 beautifulsoup4
 beets
+Brotli
 certifi
 cffi
 charset-normalizer
 confuse
 decorator
 docutils
-gpg
-gpg
-gpg
 greenlet
 h11
 httpcore
@@ -26,8 +24,6 @@ munkres
 musicbrainzngs
 mutagen
 neovim
-notmuch
-notmuch2
 oauthlib
 packaging
 pip
