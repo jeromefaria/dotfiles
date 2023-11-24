@@ -6,10 +6,10 @@ alt-tab
 arc
 audacity
 balenaetcher
+bartender
 blackhole-16ch
 blackhole-2ch
 blackhole-64ch
-blender
 chromedriver
 chromium
 cleanmymac
@@ -24,11 +24,13 @@ flacon
 font-awesome-terminal-fonts
 font-sf-mono
 font-sf-mono-for-powerline
+font-symbols-only-nerd-font
 gimp
 github
 google-chrome-canary
 google-drive
 grammarly
+grammarly-desktop
 hyper
 iina
 ilok-license-manager
@@ -39,6 +41,7 @@ jitsi
 karabiner-elements
 lastfm
 linearmouse
+marta
 megasync
 microsoft-auto-update
 microsoft-edge
@@ -48,6 +51,7 @@ musicbrainz-picard
 native-access
 numi
 obs
+obsidian
 opera
 opera-developer
 postman
@@ -61,6 +65,7 @@ signal
 skype
 slack
 soundflower
+spacedrive
 spectacle
 spitfire-audio
 spotify
@@ -72,6 +77,7 @@ vagrant
 vimr
 visual-studio-code
 vlc
-whatsapp-legacy
+warp
+whatsapp
 xquartz
 zoom
