@@ -80,6 +80,7 @@ alias vol="ls /Volumes"
 alias shared="cd $DRIVE/Shared"
 alias portable="cd $PORTABLE"
 alias projects="cd $PROJECTS"
+alias external="cd $EXTERNAL"
 
 # Google Chrome
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
