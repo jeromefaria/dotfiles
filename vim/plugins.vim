@@ -97,7 +97,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mg979/vim-visual-multi'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'sjl/gundo.vim'
@@ -114,6 +114,15 @@ Plug 'xolox/vim-session'
 " Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
 
 Plug 'alvan/vim-closetag'
+
+" TREX
+Plug 'yaegassy/coc-volar'
+Plug 'pmizio/typescript-tools.nvim'
+Plug 'MunifTanjim/eslint.nvim'
+Plug 'windwp/nvim-ts-autotag'
+Plug 'jparise/vim-graphql'
+Plug 'nvim-neotest/neotest'
+Plug 'MunifTanjim/prettier.nvim'
 
 "call vundle#end()
 
