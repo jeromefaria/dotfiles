@@ -48,7 +48,8 @@ export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 
 # export PATH="/usr/local/opt/node@10/bin:$PATH"
 # export PATH="/usr/local/opt/node@12/bin:$PATH"
-export PATH="/usr/local/opt/node@14/bin:$PATH"
+# export PATH="/usr/local/opt/node@14/bin:$PATH"
+export PATH="/usr/local/opt/node@20/bin:$PATH"
 
 # export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
@@ -106,3 +107,19 @@ OP_BIOMETRIC_UNLOCK_ENABLED=true
 
 # BEETS ENV VARIABLE
 BEETSDIR=~/.config/beets/
+
+# Warp Terminal settings for ZSH
+printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
+
+# cyrus-sasl homebrew version to fix neomutt
+export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
+
+# Load Angular CLI autocompletion.
+source <(ng completion script)
+
+# NVM configuration
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# Day One CLI
+export DAYONE_APP_PATH="/Applications/Day One.app"
