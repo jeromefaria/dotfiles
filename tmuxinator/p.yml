@@ -5,7 +5,7 @@ windows:
       pre: cd ~
       layout: even-vertical
       panes:
-        - ranger
+        - yazi
         - clear
   - dotfiles:
       pre: cd ~/dotfiles
@@ -16,7 +16,7 @@ windows:
   - email:
       pre: cd ~
       panes:
-        - clear
+        - neomutt
   - transfer:
       pre: cd ~
       layout: even-vertical
