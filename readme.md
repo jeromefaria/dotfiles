@@ -1,2 +1,19 @@
 # dotfiles
-Last updated: Fri Nov 24 11:37:12 WET 2023
+Last updated: Tue Jul 16 12:37:26 WEST 2024
+
+## aliases
+## aria2
+## functions
+## gitconfig
+## macos
+## mpv
+## msmtprc
+## mutt
+## osx
+## packages
+## spotifyd
+## starship
+## tmux
+## tmuxinator
+## vim
+## zsh
