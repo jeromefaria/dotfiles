@@ -8,3 +8,4 @@ so ~/dotfiles/vim/functions.vim
 so ~/dotfiles/vim/commands.vim
 so ~/dotfiles/vim/misc.vim
 so ~/dotfiles/vim/neovim.vim
+so ~/dotfiles/vim/init.lua

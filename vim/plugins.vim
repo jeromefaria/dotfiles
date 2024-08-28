@@ -97,7 +97,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mg979/vim-visual-multi'
-" Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'sjl/gundo.vim'
@@ -122,7 +122,12 @@ Plug 'MunifTanjim/eslint.nvim'
 Plug 'windwp/nvim-ts-autotag'
 Plug 'jparise/vim-graphql'
 Plug 'nvim-neotest/neotest'
-Plug 'MunifTanjim/prettier.nvim'
+" Plug 'MunifTanjim/prettier.nvim'
+
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
+Plug 'neovim/nvim-lspconfig'
+Plug 'nvim-lua/plenary.nvim'
 
 "call vundle#end()
 
