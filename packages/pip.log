@@ -1,4 +1,5 @@
 cffi
+cryptography
 gpg
 meson
 notmuch
@@ -13,6 +14,5 @@ pycparser
 PyGObject
 pywatchman
 PyYAML
-setuptools
 six
 wheel
