@@ -7,6 +7,7 @@ aircrack-ng
 alac
 ant
 aom
+appstream
 apr
 apr-util
 argon2
@@ -46,7 +47,7 @@ cmocka
 cmus
 composer
 coreutils
-corrosion
+cryptography
 cscope
 ctags
 cuetools
@@ -57,6 +58,7 @@ dark-mode
 dav1d
 dbus
 diff-so-fancy
+diffutils
 docbook
 docbook-xsl
 docker
@@ -74,6 +76,7 @@ exa
 exiftool
 expat
 extract_url
+eza
 faac
 faad2
 fasd
@@ -178,6 +181,7 @@ krb5
 lame
 leptonica
 lf
+libadwaita
 libao
 libarchive
 libass
@@ -198,6 +202,7 @@ libffi
 libfido2
 libgcrypt
 libgit2
+libgit2@1.7
 libgpg-error
 libheif
 libiconv
@@ -269,6 +274,7 @@ libxi
 libxls
 libxlsxwriter
 libxml2
+libxmlb
 libxrender
 libxtst
 libyaml
@@ -336,7 +342,6 @@ nlohmann-json
 nmap
 nnn
 node
-node@14
 node@20
 noti
 notmuch
@@ -389,9 +394,7 @@ pycparser
 pygobject3
 python-certifi
 python-gdbm@3.11
-python-gdbm@3.12
 python-packaging
-python-setuptools
 python@3.10
 python@3.11
 python@3.12
@@ -421,6 +424,7 @@ sc-im
 sd
 sdl12-compat
 sdl2
+sevenzip
 shaderc
 shared-mime-info
 shntool
@@ -589,6 +593,7 @@ rar
 rectangle-pro
 robo-3t
 sequel-pro
+softube-central
 spacedrive
 spitfire-audio
 steam
