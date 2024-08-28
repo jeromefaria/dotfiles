@@ -1,5 +1,5 @@
 # dotfiles
-Last updated: Tue Jul 16 12:37:26 WEST 2024
+Last updated: Wed Aug 28 10:52:04 WEST 2024
 
 ## aliases
 ## aria2
