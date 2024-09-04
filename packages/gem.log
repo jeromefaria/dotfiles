@@ -14,7 +14,6 @@ drb
 english
 erb
 error_highlight
-erubi
 etc
 fcntl
 fiddle
@@ -76,16 +75,13 @@ syntax_suggest
 syslog
 tempfile
 test-unit
-thor
 time
 timeout
 tmpdir
-tmuxinator
 tsort
 typeprof
 un
 uri
 weakref
-xdg
 yaml
 zlib
