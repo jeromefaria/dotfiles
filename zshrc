@@ -19,7 +19,7 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
 
 # ZSH plugins
-plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting vi-mode zsh-autosuggestions git-open brew omz-git)
+plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting zsh-autosuggestions git-open brew omz-git zsh-vi-mode)
 
 # ZSH INTERACTIVE CD
 source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
@@ -44,6 +44,11 @@ export HISTCONTROL=ignorespace
 bindkey '^ ' autosuggest-accept
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M viins 'jj' vi-cmd-mode
+
+export ZVM_VI_ESCAPE_BINDKEY=jk
+ZVM_CURSOR_STYLE_ENABLED=false
+zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
+zvm_after_init_commands+=('[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh')
 
 # PATHS
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
