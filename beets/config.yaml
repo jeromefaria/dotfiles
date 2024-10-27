@@ -1,6 +1,6 @@
-library: /Volumes/External/Music/FLAC.db
+library: /Volumes/Media/Music/FLAC.db
 # library: /Users/jeromefaria/Documents/Beets/FLAC.db
-directory: /Volumes/External/Music/FLAC
+directory: /Volumes/Media/Music/FLAC
 
 import:
     write: yes

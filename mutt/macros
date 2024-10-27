@@ -10,4 +10,6 @@ macro index,pager i1 '<sync-mailbox><enter-command>source $DOTFILES/mutt/account
 macro index <f1> '<enter-command>source ~/dotfiles/mutt/muttrc<enter>' "Configuration reloaded!"
 macro index <f2> '<limit>~N<enter>'
 macro index <f3> '<limit>~F<enter>'
-macro index <f4> '<limit>(confluence|github|jira)<enter>'
+macro index <f4> '<limit>(edp|epal|meo|vodafone|activobank|autoridade tributária e aduaneira|sandra peixeiro|castelogest)<enter>'
+macro index <f5> '<limit>(order|encomenda|#)<enter>'
+macro index <f6> '<limit>paypal<enter>'

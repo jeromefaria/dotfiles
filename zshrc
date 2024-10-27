@@ -1,17 +1,17 @@
 # Volumes
 export ARCHIVE="/Volumes/Archive"
-export DRIVE="/Volumes/Drive"
-export EXTERNAL="/Volumes/Audio"
+export AUDIO="/Volumes/Audio"
+export MEDIA="/Volumes/Media"
 export PORTABLE="/Volumes/Portable"
+export VIDEO="/Volumes/Audio"
 
 # Folders
-export AUDIO="$EXTERNAL/Audio"
+export DRIVE="$ARCHIVE/Drive"
 export DOTFILES="$HOME/dotfiles"
 export DOWNLOADS="$HOME/Downloads"
 export MOBILE="$HOME/Library/Mobile\ Documents"
-export PROJECTS="$EXTERNAL/Audio/Projects"
+export PROJECTS="$AUDIO/Audio/Projects"
 export SHARED="$DRIVE/Shared"
-export VIDEO="$EXTERNAL/Video"
 export WORK="$HOME/Work"
 
 # ZSH settings

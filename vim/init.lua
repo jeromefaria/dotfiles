@@ -1,10 +1,10 @@
 require('mason').setup()
 require('mason-lspconfig').setup({
-  ensure_installed = { 'tsserver' }
+  ensure_installed = { 'ts_ls' }
 })
 
 local lspconfig = require('lspconfig')
-lspconfig.tsserver.setup({})
+lspconfig.ts_ls.setup({})
 
 require("typescript-tools").setup {
   settings = {

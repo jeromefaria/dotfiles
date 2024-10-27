@@ -56,8 +56,6 @@ Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
 Plug 'Quramy/vim-dtsm'
 Plug 'leafgarland/typescript-vim'
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
-Plug 'mhartington/vim-typings'
 
 " CSS / SCSS
 Plug 'ap/vim-css-color', { 'for': ['css','stylus','scss'] }
