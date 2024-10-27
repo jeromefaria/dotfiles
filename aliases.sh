@@ -19,6 +19,7 @@ alias copy="tr -d '\n' | pbcopy"
 alias pbc="pbcopy"
 alias pbp="pbpaste"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
+alias o="open"
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
@@ -88,7 +89,7 @@ alias canary='/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Ch
 alias chromeunsafe="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security"
 alias chromedev="open /Applications/Google\ Chrome.app --args --incognito --disable-web-security"
 #alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
-alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir --incognito"
+alias cdv="open /Applications/Google\ Chrome\ Canary.app --args --disable-web-security --user-data-dir=\"/tmp/chrome_dev\" --incognito"
 alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --disable-web-security --user-data-dir --auto-open-devtools-for-tabs"
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
@@ -265,3 +266,4 @@ alias rbg="sqlite3 ~/Movies/rarbg_db.sqlite"
 alias bmp="beet -c ~/.config/beets/config-mp3.yaml"
 alias mus="musikcube"
 alias b="beet"
+alias sb="seamless bootstrap --all --clean"
