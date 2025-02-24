@@ -1,7 +1,12 @@
+certifi
 cffi
-cryptography
+gpg
 meson
+notmuch
+notmuch2
 numpy
+openvino
+openvino-telemetry
 packaging
 pip
 pycairo
