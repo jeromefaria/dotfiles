@@ -22,7 +22,7 @@ windows:
       layout: even-vertical
       panes:
         - clear
-        - nicotine
+        - clear
   - music:
       pre: cd ~
       panes:

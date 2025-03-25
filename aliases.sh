@@ -20,6 +20,7 @@ alias pbc="pbcopy"
 alias pbp="pbpaste"
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
 alias o="open"
+alias so="source"
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
@@ -43,8 +44,8 @@ alias trash="trash -F"
 alias tvf="trash -vF"
 alias dm="dark-mode"
 alias ydl="youtube-dl"
-alias hd=hdiutil
-alias find=fd
+alias hd="hdiutil"
+alias find="fd"
 
 # Fasd
 alias a='fasd -a'        # any
@@ -82,6 +83,7 @@ alias shared="cd $DRIVE/Shared"
 alias portable="cd $PORTABLE"
 alias projects="cd $PROJECTS"
 alias external="cd $EXTERNAL"
+alias media="cd $MEDIA"
 
 # Google Chrome
 alias chrome='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
@@ -105,29 +107,6 @@ alias dcud="docker compose up -d"
 alias dcd="docker compose down"
 alias dcs="docker compose stop"
 alias dcb="docker compose build"
-
-# Vagrant
-alias vg="vagrant"
-alias vgu="vagrant up"
-alias vgs="vagrant ssh"
-alias vgh="vagrant halt"
-
-# Ionic
-alias is="ionic serve --no-open"
-alias ic="ionic cordova"
-
-# iOS
-alias ipi="ionic cordova prepare ios"
-alias ibi="ionic cordova build ios"
-alias iri="ionic cordova run ios"
-alias iril="ionic cordova run ios --lc"
-alias iei="ionic cordova emulate ios"
-
-# Android
-alias iba="ionic cordova build android"
-alias ira="ionic cordova run android"
-alias iral="ionic cordova run android --lc"
-alias iea="ionic cordova emulate android"
 
 # MySQL
 alias mysqlstart="mysql.server start"
@@ -218,7 +197,7 @@ alias week='date +%V'
 
 # Get macOS Software Updates, and update installed Ruby gems, Homebrew, npm, and their installed packages
 # alias update='sudo softwareupdate -i -a && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
-alias update='sudo -v && mas upgrade && brew update && brew upgrade && brew upgrade --cask && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
+alias update='sudo -v && mas upgrade && brew update && brew upgrade --formulae && brew cu -ay && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
 
 # Trim new lines and copy to clipboard
 alias c="tr -d '\n' | pbcopy"
@@ -266,4 +245,5 @@ alias rbg="sqlite3 ~/Movies/rarbg_db.sqlite"
 alias bmp="beet -c ~/.config/beets/config-mp3.yaml"
 alias mus="musikcube"
 alias b="beet"
+alias checktransferlogs="cat /tmp/*.log|rg 'Download complete: /Volumes'"
 alias sb="seamless bootstrap --all --clean"
