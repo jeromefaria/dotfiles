@@ -56,7 +56,7 @@ export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 # export PATH="/usr/local/opt/node@10/bin:$PATH"
 # export PATH="/usr/local/opt/node@12/bin:$PATH"
 # export PATH="/usr/local/opt/node@14/bin:$PATH"
-export PATH="/usr/local/opt/node@20/bin:$PATH"
+export PATH="/usr/local/opt/node@22/bin:$PATH"
 
 # export PATH="/usr/local/opt/ruby/bin:~/.gem/ruby/2.6.0/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
@@ -127,3 +127,43 @@ export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
 
 # Day One CLI
 export DAYONE_APP_PATH="/Applications/Day One.app"
+# fnm fast node manager
+eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
+
+##########
+# HISTORY
+##########
+
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+
+# Immediately append to history file:
+setopt INC_APPEND_HISTORY
+
+# Record timestamp in history:
+setopt EXTENDED_HISTORY
+
+# Expire duplicate entries first when trimming history:
+setopt HIST_EXPIRE_DUPS_FIRST
+
+# Dont record an entry that was just recorded again:
+setopt HIST_IGNORE_DUPS
+
+# Delete old recorded entry if new entry is a duplicate:
+setopt HIST_IGNORE_ALL_DUPS
+
+# Do not display a line previously found:
+setopt HIST_FIND_NO_DUPS
+
+# Dont record an entry starting with a space:
+setopt HIST_IGNORE_SPACE
+
+# Dont write duplicate entries in the history file:
+setopt HIST_SAVE_NO_DUPS
+
+# Share history between all sessions:
+setopt SHARE_HISTORY
+
+# Execute commands using history (e.g.: using !$) immediatel:
+unsetopt HIST_VERIFY
