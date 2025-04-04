@@ -13,17 +13,17 @@ windows:
       panes:
         - nvim
         - clear
-  - email:
-      pre: cd ~
-      panes:
-        - neomutt
-  - transfer:
-      pre: cd ~
-      layout: even-vertical
-      panes:
-        - clear
-        - nicotine
-  - music:
-      pre: cd ~
-      panes:
-        - musikcube
+#   - email:
+#       pre: cd ~
+#       panes:
+#         - neomutt
+#   - transfer:
+#       pre: cd ~
+#       layout: even-vertical
+#       panes:
+#         - clear
+#         - nicotine
+#   - music:
+#       pre: cd ~
+#       panes:
+#         - musikcube

@@ -72,7 +72,8 @@ let g:ycm_server_python_interpreter = '/usr/local/bin/python'
 """""""""""""""""""""""""""""""""""""""
 " FZF
 """""""""""""""""""""""""""""""""""""""
-set rtp+=/usr/local/opt/fzf
+" set rtp+=/usr/local/opt/fzf
+set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 " Fuzzy-find with fzf
 map <C-p> :Files<cr>
 nmap <C-p> :Files<cr>
@@ -182,12 +183,12 @@ let g:session_autoload = 'no'
 """""""""""""""""""""""""""""""""""""""
 " Vim Airline theme
 """""""""""""""""""""""""""""""""""""""
-let g:airline_theme = 'oceanicnext'
+" let g:airline_theme = 'oceanicnext'
 
 """""""""""""""""""""""""""""""""""""""
 " Tmuxline preset
 """""""""""""""""""""""""""""""""""""""
-let g:tmuxline_preset = 'custom'
+" let g:tmuxline_preset = 'custom'
 
 """""""""""""""""""""""""""""""""""""""
 " Neoplete
@@ -265,3 +266,8 @@ endfunction
 " vim-vue
 """""""""""""""""""""""""""""""""""""""
 let g:vue_pre_processors = 'detect_on_enter'
+
+"""""""""""""""""""""""""""""""""""""""
+" pathogen
+"""""""""""""""""""""""""""""""""""""""
+" execute pathogen#infect()

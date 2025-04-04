@@ -14,12 +14,16 @@ export PROJECTS="$AUDIO/Audio/Projects"
 export SHARED="$DRIVE/Shared"
 export WORK="$HOME/Work"
 
+# Use curlrc to bypass certificate on WSL
+export HOMEBREW_CURLRC=1
+
 # ZSH settings
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
 
 # ZSH plugins
-plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting zsh-autosuggestions git-open brew omz-git zsh-vi-mode)
+# plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting zsh-autosuggestions git-open brew omz-git zsh-vi-mode)
+plugins=(git ubuntu encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting zsh-autosuggestions git-open zsh-vi-mode)
 
 # ZSH INTERACTIVE CD
 source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
@@ -41,6 +45,7 @@ export MANPAGER='nvim +Man!'
 export HISTCONTROL=ignorespace
 
 # BINDINGS
+bindkey -v
 bindkey '^ ' autosuggest-accept
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M viins 'jj' vi-cmd-mode
@@ -68,7 +73,7 @@ export PATH="/usr/local/opt/ruby/bin:$PATH"
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 ## FASD
-eval "$(fasd --init auto)"
+# eval "$(fasd --init auto)"
 
 ## HUB
 eval "$(hub alias -s)"
@@ -79,8 +84,8 @@ if [[ -r ~/.local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.z
 fi
 
 ## RTV
-export LC_ALL=en_US.UTF-8
-export LANG=en_US.UTF-8
+# export LC_ALL=en_US.UTF-8
+# export LANG=en_US.UTF-8
 
 fpath=(~/.zsh/completions $fpath)
 
@@ -99,7 +104,7 @@ eval "$(rbenv init -)"
 # Initialise Starship
 eval "$(starship init zsh)"
 
-source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
+# source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
@@ -107,7 +112,7 @@ eval $(thefuck --alias)
 
 # Supress Ruby warnings
 export RUBYOPT=-W0
-eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # 1Password CLI integration
 OP_BIOMETRIC_UNLOCK_ENABLED=true
