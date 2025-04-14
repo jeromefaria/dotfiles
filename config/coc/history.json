@@ -1,0 +1,29 @@
+{
+  "lists": {
+    "%2FUsers%2Fjeromefaria%2FWork%2Flinkfire%2Fsrc%2FAssetLab": {
+      "GUI": [
+        "exte",
+        "snipp"
+      ]
+    },
+    "%2FUsers%2Fjeromefaria%2FWork%2Flinkfire%2Fsrc%2FAdCreation": [
+      "ex"
+    ],
+    "%2FUsers%2Fjeromefaria": [
+      "ex"
+    ]
+  },
+  "extensions": {
+    "%2FUsers%2Fjeromefaria%2FWork%2Flinkfire%2Fsrc%2FAdCreation": [
+      "markdo",
+      "markd",
+      "markdon",
+      "marjk",
+      "mark"
+    ],
+    "%2FUsers%2Fjeromefaria": [
+      "markdo",
+      "mark"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+# add_newline = false
+
+# [package]
+# disabled = true
+
+[nodejs]
+disabled = true
+
+[php]
+disabled = true
+
+[aws]
+disabled = true

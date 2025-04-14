@@ -1,0 +1,20 @@
+clear -l
+add ~/Soulseek Downloads/complete/
+set output_plugin=coreaudio
+set output_plugin=oss
+help
+q
+quit
+qa
+add ~/Drive/Downloads/TOOL DISCOGRAPHY FLAC CD/
+add 
+clear
+man
+set output_plugin=jack
+filter 
+dele
+d
+add ~/Music/Library/
+?
+add ~/Music/Tool/
+Q

@@ -1,0 +1,7 @@
+{
+  "extension": {
+    "coc-markdownlint": {
+      "disabled": true
+    }
+  }
+}
