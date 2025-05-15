@@ -68,7 +68,7 @@ export PATH="/usr/local/opt/ruby/bin:$PATH"
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 ## FASD
-eval "$(fasd --init auto)"
+# eval "$(fasd --init auto)"
 
 ## HUB
 eval "$(hub alias -s)"
@@ -99,7 +99,7 @@ eval "$(rbenv init -)"
 # Initialise Starship
 eval "$(starship init zsh)"
 
-source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
+# source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 
@@ -167,3 +167,6 @@ setopt SHARE_HISTORY
 
 # Execute commands using history (e.g.: using !$) immediatel:
 unsetopt HIST_VERIFY
+
+# Set up fzf key bindings and fuzzy completion
+source <(fzf --zsh)
