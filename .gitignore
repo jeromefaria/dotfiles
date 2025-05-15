@@ -1,3 +1,4 @@
 *.bkp
 *.zip
 .backup
+./config/musikcube/*.txt
