@@ -12,12 +12,13 @@ set encoding=utf-8
 set fileencoding=utf-8
 set gdefault
 set guioptions-=Be
-set guioptions=aAc
+" set guioptions=aAc
 set list
 set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:•
 set noswapfile
 "set shell=/bin/bash
-set shell=/usr/local/bin/zsh
+set shell=/opt/homebrew/bin/zsh
+
 set showmatch
 set smartindent
 "set term=screen-256color

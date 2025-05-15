@@ -1,4 +1,4 @@
-set nocompatible
+" setnocompatible
 filetype on
 
 """""""""""""""""""""""""""""""""""""""
@@ -10,16 +10,13 @@ call plug#begin('~/.vim/plugged')
 "call plug#begin('~/.local/share/nvim/plugged')
 
 " Async completion
-Plug 'Shougo/deoplete.nvim'
-
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
-
+" if has('nvim')
+  " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" else
+  " Plug 'Shougo/deoplete.nvim'
+  " Plug 'roxma/nvim-yarp'
+  " Plug 'roxma/vim-hug-neovim-rpc'
+" endif
 " let g:deoplete#enable_at_startup = 1
 
 " Syntax check
@@ -32,7 +29,7 @@ Plug 'Shougo/neosnippet.vim'
 Plug 'tomtom/tlib_vim'
 
 " FZF
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'stsewd/fzf-checkout.vim'
 
@@ -89,7 +86,7 @@ Plug 'reedes/vim-pencil'
 Plug 'vim-scripts/VOoM'
 
 " Misc
-Plug 'Valloric/MatchTagAlways'
+" Plug 'Valloric/MatchTagAlways'
 Plug 'airblade/vim-gitgutter'
 Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular'
@@ -105,7 +102,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'vim-scripts/restore_view.vim'
-Plug 'vim-syntastic/syntastic' " Up for review
+" Plug 'vim-syntastic/syntastic' " Up for review
 Plug 'vitalk/vim-simple-todo'
 Plug 'xolox/vim-misc' " Up for review
 Plug 'xolox/vim-session'
@@ -125,6 +122,7 @@ Plug 'nvim-neotest/neotest'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'prabirshrestha/vim-lsp'
 Plug 'nvim-lua/plenary.nvim'
 
 "call vundle#end()

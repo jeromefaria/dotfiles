@@ -45,10 +45,10 @@ nnoremap H gT
 nnoremap L gt
 
 " Navigate splits
-" map <silent> <C-h> :call WinMove('h')<cr>
-" map <silent> <C-j> :call WinMove('j')<cr>
-" map <silent> <C-k> :call WinMove('k')<cr>
-" map <silent> <C-l> :call WinMove('l')<cr>
+map <silent> <C-h> :call WinMove('h')<cr>
+map <silent> <C-j> :call WinMove('j')<cr>
+map <silent> <C-k> :call WinMove('k')<cr>
+map <silent> <C-l> :call WinMove('l')<cr>
 
 " Gundo key
 nnoremap <F5> :GundoToggle<CR>
