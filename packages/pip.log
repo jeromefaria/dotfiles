@@ -1,8 +1,9 @@
 certifi
 cffi
 gpg
+greenlet
 meson
-notmuch
+msgpack
 notmuch2
 numpy
 openvino
@@ -12,6 +13,7 @@ pip
 pycairo
 pycparser
 PyGObject
+pynvim
 pywatchman
 six
 wheel
