@@ -12,7 +12,6 @@ set encoding=utf-8
 set fileencoding=utf-8
 set gdefault
 set guioptions-=Be
-set guioptions=aAc
 set list
 set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:•
 set noswapfile
