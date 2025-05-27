@@ -3,7 +3,7 @@ export ARCHIVE="/Volumes/Archive"
 export AUDIO="/Volumes/Audio"
 export MEDIA="/Volumes/Media"
 export PORTABLE="/Volumes/Portable"
-export VIDEO="/Volumes/Audio"
+export VIDEO="/Volumes/Video"
 
 # Folders
 export DRIVE="$ARCHIVE/Drive"
