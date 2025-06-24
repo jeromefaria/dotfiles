@@ -8,7 +8,7 @@ alias -- -="cd -"
 
 # System
 alias afk="/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend"
-alias cd="z"
+# alias cd="z"
 alias cl="clear"
 alias copy="tr -d '\n' | pbcopy"
 alias df="df -H"
