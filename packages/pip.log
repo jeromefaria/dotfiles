@@ -2,7 +2,6 @@ certifi
 cffi
 gpg
 meson
-notmuch
 notmuch2
 numpy
 openvino
@@ -13,5 +12,6 @@ pycairo
 pycparser
 PyGObject
 pywatchman
+setuptools
 six
 wheel
