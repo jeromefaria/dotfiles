@@ -1,3 +1,8 @@
 *.bkp
 *.zip
 .backup
+node_modules
+
+config/nvim/bundle/
+config/nvim/plugged/
+config/nvim/pack/nvim/start
