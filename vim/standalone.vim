@@ -33,6 +33,8 @@ Plug 'tomtom/tlib_vim'
 "Plug 'junegunn/fzf.vim'
 "Plug 'stsewd/fzf-checkout.vim'
 
+Plug 'ctrlpvim/ctrlp.vim'
+
 " Tmux
 "Plug 'benmills/vimux'
 "Plug 'tmux-plugins/vim-tmux'
