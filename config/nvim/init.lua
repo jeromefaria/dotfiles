@@ -1,1 +1,1 @@
-../../neovim/init.lua
+../../editors/neovim/init.lua
