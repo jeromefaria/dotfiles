@@ -1,0 +1,12 @@
+# Full Profile
+# Everything - complete system setup
+
+base
+dev
+music
+browsers
+security
+communication
+productivity
+media
+utilities

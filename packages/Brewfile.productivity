@@ -1,0 +1,40 @@
+# Productivity & Personal Tools
+# Task management, note-taking, file sync, and utilities
+
+# Task & Project Management
+mas "Things", id: 904280696
+mas "Fantastical", id: 975937182
+
+# Note-Taking & Documentation
+mas "Craft", id: 1487937127
+
+# Cloud Storage & Sync
+cask "dropbox"
+cask "google-drive"
+cask "megasync"
+
+# Writing & Text Tools
+cask "grammarly"
+mas "LittleIpsum", id: 405772121      # Lorem ipsum generator
+mas "Nisus Thesaurus", id: 471448642
+mas "WordService", id: 899972312
+
+# iWork Suite
+mas "Keynote", id: 409183694
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+
+# File Management
+brew "atool"             # Archive tool wrapper
+brew "fdupes"            # Find duplicates
+brew "jdupes"            # Better fdupes
+brew "ncdu"              # Disk usage analyzer
+brew "tag"               # File tagging
+
+# Terminal Utilities
+brew "cash-cli"          # Currency conversion
+cask "numi"              # Calculator
+
+# Productivity Scripts
+brew "par"               # Paragraph reformatter
+brew "moreutils", link: false
