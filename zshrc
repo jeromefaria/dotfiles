@@ -74,9 +74,8 @@ eval "$(fasd --init auto)"
 eval "$(hub alias -s)"
 
 ## POWERLINE
-if [[ -r ~/.local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh ]]; then
-  source ~/.local/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
-fi
+# Removed deprecated Python 2.7 reference
+# Powerline is now handled by Starship prompt (see below)
 
 ## RTV
 export LC_ALL=en_US.UTF-8
