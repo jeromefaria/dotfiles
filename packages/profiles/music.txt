@@ -1,0 +1,7 @@
+# Music Production Profile
+# Music creation and audio tools
+
+base
+music
+media
+utilities

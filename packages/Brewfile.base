@@ -1,0 +1,41 @@
+# Base/Essential Packages
+# Core tools needed on any macOS system
+
+# Essential taps
+tap "homebrew/bundle"
+tap "homebrew/core"
+tap "homebrew/services"
+
+# Version control
+brew "git"
+brew "gh"
+brew "tig"
+
+# Shell and completion
+brew "zsh"
+brew "bash-completion"
+
+# Core utilities
+brew "coreutils"
+brew "curl"
+brew "wget"
+brew "rsync"
+brew "tree"
+brew "rename"
+
+# Essential tools
+brew "mas"              # Mac App Store CLI
+brew "stow"            # Symlink farm manager for dotfiles
+brew "trash"           # Safe rm alternative
+brew "terminal-notifier"
+
+# Compression
+brew "unrar"
+brew "p7zip"
+
+# Modern CLI replacements
+brew "bat"             # Better cat
+brew "fd"              # Better find
+brew "ripgrep"         # Better grep
+brew "fzf"             # Fuzzy finder
+brew "z"               # Directory jumper

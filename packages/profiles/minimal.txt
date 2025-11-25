@@ -1,0 +1,4 @@
+# Minimal Profile
+# Essential tools only
+
+base
