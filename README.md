@@ -225,7 +225,6 @@ Add plugins to the appropriate file in `editors/neovim/lua/plugins/`. Lazy.nvim 
 - **Vi-mode** with `jj` and `jk` as escape sequences
 - **FZF integration** for fuzzy finding files and history
 - **Syntax highlighting** and autosuggestions
-- **FASD** for frecent directory navigation
 - **Git completion** and shortcuts
 
 ### macOS Optimizations

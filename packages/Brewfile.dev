@@ -63,7 +63,6 @@ brew "http-server"
 brew "hyperfine"        # Benchmarking
 brew "tokei"            # Code statistics
 brew "watchman"         # File watching
-brew "fasd"             # Quick file access
 brew "broot"            # Directory navigator
 
 # Containers & Virtualization
