@@ -2,7 +2,7 @@
 
 Personal dotfiles for macOS development environment.
 
-**Last updated:** Tue Mar 25 12:47:41 WET 2025
+**Last updated:** Mon Nov 25 2025
 
 ## 📋 Contents
 
@@ -26,11 +26,29 @@ Personal dotfiles for macOS development environment.
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
+git clone https://github.com/jeromefaria/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
-# Run the installation script (coming soon)
+# Run the installation script
 ./install.sh
+```
+
+The installation script will:
+- Check for Homebrew and install if needed
+- Install Oh My Zsh and plugins
+- Install Vim-plug (for Vim only, Neovim uses lazy.nvim)
+- Install Tmux Plugin Manager (TPM)
+- Create symlinks for all configuration files
+- Optionally install packages from Brewfile
+- Optionally apply macOS system settings
+- Set ZSH as default shell
+
+### Uninstallation
+
+To remove all dotfile symlinks (your dotfiles repository remains unchanged):
+
+```bash
+./uninstall.sh
 ```
 
 ## 📦 Package Management
@@ -63,6 +81,15 @@ This will export lists of installed packages to:
 
 ## 🛠 Configuration Files
 
+### Repository Structure
+
+- **Root Level** - Shell configurations and main dotfiles (zshrc, vimrc, tmux.conf, gitconfig)
+- **`config/`** - XDG-compliant application configurations (see `config/README.md`)
+- **`vim/`** - Vim-specific configuration (separate from Neovim)
+- **`neovim/`** - Neovim configuration with lazy.nvim
+- **`packages/`** - Package management files (see `packages/README.md`)
+- **`docs/`** - Documentation and analysis files
+
 ### Shell (ZSH)
 
 - **`zshrc`** - Main ZSH configuration
@@ -85,13 +112,20 @@ This will export lists of installed packages to:
 
 ### Editor (Vim/Neovim)
 
-- **`vimrc`** - Main Vim configuration entry point
-- **`vim/plugins.vim`** - Plugin definitions using vim-plug
-  - LSP support (Mason, nvim-lspconfig)
-  - FZF integration
-  - Syntax highlighting for multiple languages
-  - Git integration
-  - Tmux integration
+**Note:** Vim and Neovim configurations are kept separate to support systems without Neovim.
+
+- **Vim Configuration** (for systems without Neovim)
+  - **`vimrc`** - Main Vim configuration entry point
+  - **`vim/plugins.vim`** - Plugin definitions using vim-plug
+  - **`vim/`** - Modular configuration files
+
+- **Neovim Configuration** (modern setup)
+  - **`neovim/init.lua`** - Neovim entry point
+  - **`neovim/lua/`** - Lua-based configuration
+  - **`config/nvim/`** - XDG location (symlinks to neovim/)
+  - Uses **lazy.nvim** for plugin management (auto-installs on first launch)
+  - LSP support with native Neovim LSP client
+  - Modern plugin ecosystem
 
 ### Terminal Multiplexer
 
@@ -112,9 +146,16 @@ This will export lists of installed packages to:
 
 ### Prompt
 
-- **`starship.toml`** - Starship prompt configuration
+- **`config/starship.toml`** - Starship prompt configuration
   - Minimal configuration
   - Disabled modules for cleaner output
+
+### XDG-Compliant Configurations
+
+The `config/` directory contains application configurations following the XDG Base Directory Specification. Includes configurations for:
+- Aria2, Bat, Beets, GitHub CLI, Mutt, Musikcube, ncmpcpp, Neofetch, Ranger, SKHD, Tmuxinator, Yabai, Yarn, and more
+
+See `config/README.md` for detailed information about each configuration.
 
 ## 🔧 Tools & Dependencies
 
@@ -159,15 +200,19 @@ function myfunction() {
 }
 ```
 
-### Installing Additional Vim Plugins
+### Installing Additional Plugins
 
+**For Vim:**
 Edit `vim/plugins.vim` and add plugins using vim-plug syntax:
 
 ```vim
 Plug 'author/plugin-name'
 ```
 
-Then run `:PlugInstall` in Vim/Neovim.
+Then run `:PlugInstall` in Vim.
+
+**For Neovim:**
+Add plugins to the appropriate file in `neovim/lua/plugins/`. Lazy.nvim will automatically install them on next launch.
 
 ## 🔍 Key Features
 
@@ -211,7 +256,9 @@ This is a personal dotfiles repository, but feel free to:
 
 ## 📄 License
 
-Feel free to use and modify as needed.
+MIT License - See [LICENSE](LICENSE) file for details.
+
+Feel free to use, modify, and distribute as needed.
 
 ## 🙏 Acknowledgments
 
