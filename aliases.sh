@@ -207,7 +207,7 @@ alias c="tr -d '\n' | pbcopy"
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
 # URL-encode strings
-alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
+alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]));"'
 
 # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"
