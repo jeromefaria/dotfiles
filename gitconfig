@@ -20,7 +20,7 @@
   type = cat-file -t
   dump = cat-file -p
 [push]
-  default = matching
+  default = current
 [core]
   excludesfile = ~/.gitignore_global
   pager = diff-so-fancy | less --tabs=4 -RFX
