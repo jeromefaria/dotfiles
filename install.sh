@@ -131,12 +131,12 @@ install_oh_my_zsh() {
   fi
 }
 
-# Install Vim Plug
+# Install Vim Plug (for Vim only, not Neovim)
 install_vim_plug() {
   print_header "Installing Vim Plug"
 
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
-    print_info "Installing vim-plug..."
+    print_info "Installing vim-plug for Vim..."
     curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     print_success "vim-plug installed"
@@ -144,15 +144,7 @@ install_vim_plug() {
     print_success "vim-plug is already installed"
   fi
 
-  # Install Neovim version
-  if [ ! -f "$HOME/.local/share/nvim/site/autoload/plug.vim" ]; then
-    print_info "Installing vim-plug for Neovim..."
-    curl -fLo "$HOME/.local/share/nvim/site/autoload/plug.vim" --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    print_success "vim-plug for Neovim installed"
-  else
-    print_success "vim-plug for Neovim is already installed"
-  fi
+  print_info "Neovim uses lazy.nvim (no manual installation required)"
 }
 
 # Install Tmux Plugin Manager
@@ -186,11 +178,11 @@ link_dotfiles() {
   fi
   create_symlink "$DOTFILES_DIR/vim" "$HOME/.vim/config"
 
-  # Neovim config
-  if [ ! -d "$HOME/.config/nvim" ]; then
-    mkdir -p "$HOME/.config/nvim"
+  # Neovim config (modern lazy.nvim setup)
+  if [ ! -d "$HOME/.config" ]; then
+    mkdir -p "$HOME/.config"
   fi
-  create_symlink "$DOTFILES_DIR/vimrc" "$HOME/.config/nvim/init.vim"
+  create_symlink "$DOTFILES_DIR/neovim" "$HOME/.config/nvim"
 
   # Starship config
   if [ ! -d "$HOME/.config" ]; then
@@ -283,9 +275,10 @@ main() {
   echo -e "\n${GREEN}✨ Your dotfiles have been installed successfully!${NC}\n"
   echo -e "Next steps:"
   echo -e "  1. Restart your terminal"
-  echo -e "  2. Run ${BLUE}:PlugInstall${NC} in Vim/Neovim to install plugins"
-  echo -e "  3. Open tmux and press ${BLUE}prefix + I${NC} to install tmux plugins"
-  echo -e "  4. Enjoy your new environment! 🚀\n"
+  echo -e "  2. For Vim: Run ${BLUE}:PlugInstall${NC} to install plugins"
+  echo -e "  3. For Neovim: Plugins will auto-install with ${BLUE}lazy.nvim${NC} on first launch"
+  echo -e "  4. Open tmux and press ${BLUE}prefix + I${NC} to install tmux plugins"
+  echo -e "  5. Enjoy your new environment! 🚀\n"
 }
 
 # Run main installation
