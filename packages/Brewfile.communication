@@ -1,0 +1,35 @@
+# Communication & Messaging
+# Chat apps, email clients, and video conferencing
+
+# Team Communication
+cask "slack"
+cask "discord"
+mas "Jira", id: 1475897096
+
+# Personal Messaging
+cask "signal"
+cask "whatsapp"
+mas "Telegram", id: 747648890
+
+# Video Conferencing
+cask "zoom"
+cask "skype"
+cask "jitsi"
+
+# Email Clients (Terminal)
+brew "abook"             # Address book
+brew "isync"             # IMAP sync
+brew "msmtp"             # SMTP client
+brew "mutt"              # Email client
+brew "neomutt"           # Modern mutt
+brew "notmuch"           # Email indexer
+brew "urlview"           # Extract URLs
+brew "extract_url"
+
+# IRC/Chat (Terminal)
+brew "irssi"             # IRC client
+brew "weechat"           # Chat client
+brew "bitlbee"           # IM to IRC gateway
+
+# Communication utilities
+brew "dbus"

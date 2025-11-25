@@ -1,0 +1,60 @@
+# Media Tools
+# Video/audio players, converters, editors, and downloaders
+
+tap "yt-dlp/taps"
+
+# Video Players
+cask "vlc"
+cask "obs"                       # OBS Studio for streaming/recording
+mas "iMovie", id: 408981434
+
+# Video Processing & Tools
+brew "ffmpeg"                    # Video/audio converter
+brew "libav"                     # Audio/video library
+brew "yt-dlp"                    # YouTube downloader
+brew "yt-dlp/taps/yt-dlp"
+
+# Video Analysis & Validation
+brew "media-info"
+brew "mkvalidator"
+brew "mkvtoolnix", link: false
+cask "mkvtoolnix"
+
+# Image Processing
+brew "imagemagick"
+brew "gifsicle"                  # GIF optimizer
+brew "optipng"                   # PNG optimizer
+cask "gimp"
+
+# Screen Capture & Mirroring
+brew "webkit2png"                # Screenshot websites
+mas "Mirror for Samsung TV", id: 1107644799
+
+# Terminal Media
+brew "libcaca"                   # ASCII graphics
+brew "cmatrix"                   # Matrix effect
+brew "genact"                    # Fake activity
+brew "hexcurse"                  # Hex editor with ncurses
+
+# Media Libraries
+brew "little-cms2", link: false  # Color management
+brew "libogg"
+brew "libvorbis"
+brew "pango"                     # Text rendering
+brew "rtmpdump"                  # RTMP streaming
+brew "yasm"                      # Assembler for media codecs
+brew "poppler"                   # PDF rendering
+brew "docbook"
+
+# Text/Document Viewers
+brew "elinks"                    # Text browser
+brew "lynx"                      # Text browser
+brew "w3m"                       # Text browser
+brew "unrtf"                     # RTF converter
+brew "texi2html"                 # Texinfo to HTML
+
+# Presentation Tools
+brew "mdp"                       # Markdown presentations
+
+# Utilities
+cask "balenaetcher"              # USB/SD card writer

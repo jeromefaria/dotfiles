@@ -1,0 +1,9 @@
+# Custom Profile Example
+# Create your own combinations by listing categories
+
+# Example: Personal machine with light development
+base
+dev
+communication
+productivity
+browsers

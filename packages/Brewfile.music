@@ -1,0 +1,40 @@
+# Music Production & Audio Packages
+# DAWs, audio tools, music libraries, and streaming
+
+# Music Production DAWs & Tools
+tap "rigellute/tap"
+tap "khanhas/tap"
+
+cask "ableton-live-suite"
+cask "cycling74-max"           # Max/MSP
+cask "audacity"                # Audio editor
+cask "processing"              # Creative coding
+
+# Music Libraries & Tagging
+brew "exiftool"
+cask "musicbrainz-picard"      # Music tagger
+
+# Audio Routing & Drivers
+cask "blackhole-2ch"           # Virtual audio driver
+cask "blackhole-16ch"
+cask "blackhole-64ch"
+cask "ilok-license-manager"    # Plugin license manager
+cask "sysex-librarian"         # MIDI sysex utility
+
+# Music Players & Streaming
+brew "cmus"                    # Terminal music player
+brew "mplayer"
+brew "mpv"
+brew "spotify-tui", restart_service: true
+brew "rigellute/tap/spotify-tui"
+cask "spotify"
+cask "lastfm"
+
+# Audio Processing
+brew "portaudio"
+brew "alac"                    # Apple Lossless codec
+brew "libvo-aacenc"
+
+# Music Apps
+mas "Audulus 3", id: 1031667826
+mas "GarageBand", id: 682658836
