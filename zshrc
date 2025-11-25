@@ -92,10 +92,10 @@ export RUBYOPT=-W0
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # 1Password CLI integration
-OP_BIOMETRIC_UNLOCK_ENABLED=true
+export OP_BIOMETRIC_UNLOCK_ENABLED=true
 
 # BEETS ENV VARIABLE
-BEETSDIR=~/.config/beets/
+export BEETSDIR="$HOME/.config/beets/"
 
 # Warp Terminal settings for ZSH
 printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
