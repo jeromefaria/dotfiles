@@ -1,0 +1,31 @@
+# Web Browsers
+# For testing, development, and browsing
+
+tap "homebrew/cask-versions"
+
+# Chrome Family
+cask "google-chrome"
+cask "google-chrome-canary"
+cask "chromium"
+
+# Firefox Family
+cask "firefox"
+cask "firefox-developer-edition"
+
+# Safari
+cask "safari-technology-preview"
+
+# Edge Family
+cask "microsoft-edge"
+cask "microsoft-edge-dev"
+
+# Opera Family
+cask "opera"
+cask "opera-developer"
+
+# Privacy Browsers
+cask "duckduckgo"
+cask "tor-browser"
+
+# Browser Extensions
+mas "Vimari", id: 1480933944     # Vim for Safari
