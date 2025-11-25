@@ -1,1 +1,1 @@
-/Users/jeromefaria/dotfiles/neovim/init.lua
+../../neovim/init.lua
