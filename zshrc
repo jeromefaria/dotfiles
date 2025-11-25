@@ -98,7 +98,9 @@ export OP_BIOMETRIC_UNLOCK_ENABLED=true
 export BEETSDIR="$HOME/.config/beets/"
 
 # Warp Terminal settings for ZSH
-printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
+if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
+  printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
+fi
 
 # cyrus-sasl homebrew version to fix neomutt
 export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
