@@ -6,6 +6,9 @@ local opts = { noremap = true, silent = true }
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Remap escape in insert mode
+keymap.set("i", "jk", "<Esc>", opts)
+
 -- Better window navigation
 keymap.set("n", "<C-h>", "<C-w>h", opts)
 keymap.set("n", "<C-j>", "<C-w>j", opts)
