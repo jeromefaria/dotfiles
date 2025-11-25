@@ -1,112 +1,208 @@
+" ============================================================================
+" Vim Plugins Configuration (vim-plug)
+" Vim 8.0+ only - Neovim uses separate configuration
+" ============================================================================
+
 set nocompatible
 filetype on
 
-"""""""""""""""""""""""""""""""""""""""
-" Plugins
-"""""""""""""""""""""""""""""""""""""""
-
-" Specify a directory for plugins (for Neovim: ~/.local/share/nvim/plugged)
+" Specify plugin directory
 call plug#begin('~/.vim/plugged')
-"call plug#begin('~/.local/share/nvim/plugged')
 
-" Async completion
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" ============================================================================
+" Completion & Snippets
+" ============================================================================
+
+" YouCompleteMe or COC for completion (choose one)
+" Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
 " Snippets
-Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'Shougo/neosnippet.vim'
-Plug 'tomtom/tlib_vim'
+Plug 'honza/vim-snippets'
+
+" ============================================================================
+" Fuzzy Finder & Navigation
+" ============================================================================
 
 " FZF
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'stsewd/fzf-checkout.vim'
 
-" Tmux
+" File explorer
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+
+" Easy motion
+Plug 'easymotion/vim-easymotion'
+
+" ============================================================================
+" Git Integration
+" ============================================================================
+
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+" ============================================================================
+" Tmux Integration
+" ============================================================================
+
 Plug 'benmills/vimux'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'christoomey/vim-tmux-navigator'
 
-" Airline / Tmuxline
+" ============================================================================
+" UI & Status Line
+" ============================================================================
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'edkolev/tmuxline.vim'
 
-" Javascript
-Plug 'Quramy/vim-js-pretty-template'
-Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+" ============================================================================
+" Language Support
+" ============================================================================
 
-" Typescript
-Plug 'Quramy/vim-dtsm'
+" JavaScript & TypeScript
+Plug 'pangloss/vim-javascript', { 'for': 'javascript' }
+Plug 'MaxMEllon/vim-jsx-pretty', { 'for': ['jsx', 'javascript'] }
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+Plug 'Quramy/vim-js-pretty-template'
 
 " CSS / SCSS
 Plug 'ap/vim-css-color', { 'for': ['css','stylus','scss'] }
 Plug 'cakebaker/scss-syntax.vim', { 'for': 'scss' }
 Plug 'hail2u/vim-css3-syntax', { 'for': 'css' }
 
-" Language-specific plugins
-Plug 'MaxMEllon/vim-jsx-pretty', { 'for': 'jsx' }
-Plug 'cespare/vim-toml'
-Plug 'elzr/vim-json', { 'for': 'json' }
-Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
-Plug 'moll/vim-node', { 'for': 'javascript' }
+" HTML
 Plug 'othree/html5.vim', { 'for': 'html' }
-Plug 'posva/vim-vue'
-Plug 'sophacles/vim-processing', { 'for': 'processing' }
-Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+Plug 'alvan/vim-closetag'
+Plug 'Valloric/MatchTagAlways'
 
-" Colour schemes
+" Vue
+Plug 'posva/vim-vue'
+
+" JSON
+Plug 'elzr/vim-json', { 'for': 'json' }
+
+" Markdown
+Plug 'tpope/vim-markdown', { 'for': 'markdown' }
+Plug 'itspriddle/vim-marked', { 'for': 'markdown', 'on': 'MarkedOpen' }
+
+" GraphQL
+Plug 'jparise/vim-graphql'
+
+" TOML
+Plug 'cespare/vim-toml'
+
+" Processing
+Plug 'sophacles/vim-processing', { 'for': 'processing' }
+
+" Node.js
+Plug 'moll/vim-node', { 'for': 'javascript' }
+
+" ============================================================================
+" Editing Enhancements
+" ============================================================================
+
+" Auto pairs
+Plug 'jiangmiao/auto-pairs'
+
+" Surround
+Plug 'tpope/vim-surround'
+
+" Repeat
+Plug 'tpope/vim-repeat'
+
+" Commentary
+Plug 'scrooloose/nerdcommenter'
+
+" Multiple cursors
+Plug 'mg979/vim-visual-multi'
+
+" Tabular alignment
+Plug 'godlygeek/tabular'
+
+" Todo
+Plug 'vitalk/vim-simple-todo'
+
+" Formatting
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+" ============================================================================
+" Color Schemes
+" ============================================================================
+
 Plug 'flazz/vim-colorschemes'
 Plug 'whatyouhide/vim-gotham'
 Plug 'mhartington/oceanic-next'
+Plug 'morhetz/gruvbox'
 
-" Writing
-Plug 'jacekd/vim-iawriter'
+" ============================================================================
+" Writing & Focus
+" ============================================================================
+
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
-Plug 'vim-scripts/VOoM'
+Plug 'jacekd/vim-iawriter'
 
-" Misc
-Plug 'Valloric/MatchTagAlways'
-Plug 'airblade/vim-gitgutter'
-Plug 'easymotion/vim-easymotion'
-Plug 'godlygeek/tabular'
-Plug 'jiangmiao/auto-pairs'
-Plug 'mg979/vim-visual-multi'
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
+" ============================================================================
+" Utilities
+" ============================================================================
+
+" Undo tree
 Plug 'sjl/gundo.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-vinegar'
-Plug 'vim-scripts/restore_view.vim'
-Plug 'vitalk/vim-simple-todo'
+
+" Session management
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
-Plug 'alvan/vim-closetag'
 
-" LSP and Modern Development Tools
-Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'yaegassy/coc-volar'
-Plug 'pmizio/typescript-tools.nvim'
-Plug 'MunifTanjim/eslint.nvim'
-Plug 'windwp/nvim-ts-autotag'
-Plug 'jparise/vim-graphql'
-Plug 'nvim-neotest/neotest'
+" Restore view
+Plug 'vim-scripts/restore_view.vim'
+
+" Vinegar (file navigation)
+Plug 'tpope/vim-vinegar'
+
+" Outline viewer
+Plug 'vim-scripts/VOoM'
 
 " Initialize plugin system
 call plug#end()
+
+" ============================================================================
+" Plugin Settings
+" ============================================================================
+
+" COC extensions
+let g:coc_global_extensions = [
+  \ 'coc-tsserver',
+  \ 'coc-json',
+  \ 'coc-html',
+  \ 'coc-css',
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-snippets',
+  \ ]
+
+" NERDTree settings
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\.git$', '\.DS_Store$', 'node_modules']
+
+" Airline settings
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+
+" Session settings
+let g:session_autosave = 'no'
+let g:session_autoload = 'no'
+
+" FZF settings
+let g:fzf_layout = { 'down': '40%' }
+
+" Prettier settings
+let g:prettier#autoformat = 0
+let g:prettier#exec_cmd_async = 1
+
+" Close tag settings
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.tsx,*.vue'

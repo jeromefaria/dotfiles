@@ -216,8 +216,9 @@ endif
 """""""""""""""""""""""""""""""""""""""
 " TypeScript
 """""""""""""""""""""""""""""""""""""""
-let g:nvim_typescript#diagnosticsEnable = 0
-let g:nvim_typescript#diagnostics_enable = 0
+" Note: nvim_typescript is Neovim-specific - disabled for Vim
+" let g:nvim_typescript#diagnosticsEnable = 0
+" let g:nvim_typescript#diagnostics_enable = 0
 
 """""""""""""""""""""""""""""""""""""""
 " ALE
