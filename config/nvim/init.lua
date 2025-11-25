@@ -1,0 +1,1 @@
+../../editors/neovim/init.lua

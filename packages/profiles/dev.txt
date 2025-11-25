@@ -1,0 +1,7 @@
+# Developer Profile
+# Software development environment
+
+base
+dev
+browsers
+utilities
