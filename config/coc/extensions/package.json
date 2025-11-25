@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "coc-css": ">=1.2.4",
+    "coc-eslint": ">=1.3.0",
+    "coc-fzf-preview": ">=0.4.11",
+    "coc-git": ">=1.8.4",
+    "coc-html": ">=1.2.4",
+    "coc-json": ">=1.2.6",
+    "coc-markdownlint": ">=1.5.0",
+    "coc-prettier": ">=1.1.17",
+    "coc-sh": ">=0.5.1",
+    "coc-snippets": ">=2.1.28",
+    "coc-stylelint": ">=1.1.0",
+    "coc-tsserver": ">=1.5.5",
+    "coc-vetur": ">=1.1.13",
+    "coc-yaml": ">=1.0.5"
+  },
+  "disabled": [
+    "coc-markdownlint"
+  ],
+  "locked": []
+}
