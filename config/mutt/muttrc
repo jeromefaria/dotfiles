@@ -1,1 +1,6 @@
-/Users/jeromefaria/dotfiles/mutt/muttrc
+# vim: filetype=neomuttrc
+source $DOTFILES/mutt/settings
+source $DOTFILES/mutt/bindings
+source $DOTFILES/mutt/macros
+source $DOTFILES/mutt/colours
+source $DOTFILES/mutt/accounts/1-personal.muttrc
