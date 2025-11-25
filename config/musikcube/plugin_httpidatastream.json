@@ -1,0 +1,7 @@
+{
+  "chunk_size_bytes": 131072,
+  "connection_timeout_seconds": 15,
+  "max_cache_files": 35,
+  "precache_buffer_size_bytes": 524288,
+  "read_timeout_seconds": 30
+}
