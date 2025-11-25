@@ -27,8 +27,8 @@ export PATH="/usr/local/sbin:$PATH"
 
 # SOURCES
 source $ZSH/oh-my-zsh.sh
-source $DOTFILES/aliases.sh
-source $DOTFILES/functions.sh
+source $DOTFILES/shell/aliases.sh
+source $DOTFILES/shell/functions.sh
 
 # EDITOR
 export VISUAL=nvim
