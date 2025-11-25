@@ -1,0 +1,38 @@
+client
+dev tun
+proto udp
+remote cvpn-endpoint-03201d4444ca0afe5.prod.clientvpn.eu-west-1.amazonaws.com 443
+remote-random-hostname
+resolv-retry infinite
+nobind
+cipher AES-256-GCM
+verb 3
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIDZjCCAk4CCQDnnkYcwG0dfjANBgkqhkiG9w0BAQsFADB1MQswCQYDVQQGEwJE
+SzETMBEGA1UEBwwKQ29wZW5oYWdlbjERMA8GA1UECgwITGlua2ZpcmUxHjAcBgNV
+BAMMFXZwbi5pbnRyYS5saW5rZmlyZS5jbzEeMBwGCSqGSIb3DQEJARYPaXRAbGlu
+a2ZpcmUuY29tMB4XDTIxMDMxOTEzMDE1OFoXDTI0MDMxODEzMDE1OFowdTELMAkG
+A1UEBhMCREsxEzARBgNVBAcMCkNvcGVuaGFnZW4xETAPBgNVBAoMCExpbmtmaXJl
+MR4wHAYDVQQDDBV2cG4uaW50cmEubGlua2ZpcmUuY28xHjAcBgkqhkiG9w0BCQEW
+D2l0QGxpbmtmaXJlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+AM3g2KVd9pg1VujYQg+7012SnMCS9a93s3uYDcOYDADe2tAR+wsXL1MnKcEpLAKf
+YvDgU5Qjzu9RNRrQhr9hB2RLpby25Mbm2bhbeskeitwn53xcqDmy1s/KxkMN53WW
+cpnzehGIoFIq2RYtzrNT7eYRTueO+NaiejKEyZEGMNmMU9SfHiZCR9wUfzEpNMHv
+fMQ+9j0Pm2ggkoezmQXaPluUXCuZujgVrl5r3K3miqJ+6YUE2TyxcqC3L1UXHaE+
+HxCz3erCGQOVJL7iQAtiTRn+cL1kQpTljbBGfYx2MM/+IwIc+FbhusTTqURJuoay
+PNu20I94de33D+VRk6pZjTUCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAny531CAG
+zEYY+98xupxmzSosSEDin4FC4Qk0c4/pRGsAdOOAGZEmzUy2QNXHLBJwETDdMyKe
+qbPsyFbtII/y65NAgDb+fUCWnTQEp5LRA6j74RE3PWlrofs4Tx1HOtAvsLB/2aCT
+46rpph55frARM6zYvomrz0SH+5i9UsD49TzMeQdbzLHG6bs43pcf32hIDuLiLmCB
+FMo3uI4rH0AowMge6cgonJzJoPj+GoVlmjsRt1PP5WdOXQk3GG18XC8IGcYG6Ozj
+cGXVqO0lMFOR0NDm58bj4vReNy5H4KcQsird18QGYN0/otfp1FMTh0OVETdPrG+B
+9C/cxQuXJm/WZA==
+-----END CERTIFICATE-----
+
+</ca>
+
+auth-user-pass
+auth-retry interact
+auth-nocache
+reneg-sec 0
