@@ -70,9 +70,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 ## FASD
 eval "$(fasd --init auto)"
 
-## HUB
-eval "$(hub alias -s)"
-
 ## POWERLINE
 # Removed deprecated Python 2.7 reference
 # Powerline is now handled by Starship prompt (see below)
