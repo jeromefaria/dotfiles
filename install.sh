@@ -166,29 +166,55 @@ link_dotfiles() {
 
   create_backup_dir
 
-  # Main dotfiles
+  # Main dotfiles (root level shell and editor configs)
   create_symlink "$DOTFILES_DIR/zshrc" "$HOME/.zshrc"
   create_symlink "$DOTFILES_DIR/vimrc" "$HOME/.vimrc"
   create_symlink "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
   create_symlink "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
 
-  # Vim directory
+  # Vim directory (separate from Neovim for systems without Neovim)
   if [ ! -d "$HOME/.vim" ]; then
     mkdir -p "$HOME/.vim"
   fi
   create_symlink "$DOTFILES_DIR/vim" "$HOME/.vim/config"
 
-  # Neovim config (modern lazy.nvim setup)
+  # Create .config directory if it doesn't exist
   if [ ! -d "$HOME/.config" ]; then
     mkdir -p "$HOME/.config"
   fi
-  create_symlink "$DOTFILES_DIR/neovim" "$HOME/.config/nvim"
 
-  # Starship config
-  if [ ! -d "$HOME/.config" ]; then
-    mkdir -p "$HOME/.config"
-  fi
-  create_symlink "$DOTFILES_DIR/starship.toml" "$HOME/.config/starship.toml"
+  # XDG-compliant configs - symlink individual directories from config/
+  print_info "Linking XDG-compliant configurations..."
+
+  # Symlink each config directory/file individually
+  local config_items=(
+    "nvim"
+    "starship.toml"
+    "aria2"
+    "bat"
+    "beets"
+    "gh"
+    "mpv"
+    "mutt"
+    "musikcube"
+    "ncmpcpp"
+    "neofetch"
+    "ranger"
+    "skhd"
+    "tmuxinator"
+    "yabai"
+    "yarn"
+  )
+
+  for item in "${config_items[@]}"; do
+    local source="$DOTFILES_DIR/config/$item"
+    local target="$HOME/.config/$item"
+
+    # Only create symlink if source exists
+    if [ -e "$source" ] || [ -L "$source" ]; then
+      create_symlink "$source" "$target"
+    fi
+  done
 
   print_success "All dotfiles linked successfully"
 }
