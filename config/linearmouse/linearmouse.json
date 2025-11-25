@@ -1,0 +1,37 @@
+{
+  "$schema" : "https:\/\/schema.linearmouse.app\/0.7.7",
+  "schemes" : [
+    {
+      "buttons" : {
+        "universalBackForward" : false
+      },
+      "if" : {
+        "device" : {
+          "productName" : "Expert Wireless TB",
+          "productID" : "0x8019",
+          "category" : "mouse",
+          "vendorID" : "0x47d"
+        }
+      },
+      "pointer" : {
+        "speed" : 0.2
+      },
+      "scrolling" : {
+        "reverse" : {
+          "horizontal" : true
+        },
+        "speed" : {
+          "vertical" : 14.58
+        },
+        "modifiers" : {
+          "command" : {
+            "type" : "none"
+          },
+          "shift" : {
+            "type" : "none"
+          }
+        }
+      }
+    }
+  ]
+}

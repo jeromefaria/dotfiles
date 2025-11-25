@@ -3,6 +3,63 @@
 .backup
 node_modules
 
+# Sensitive credentials and tokens
+config/nicotine/config
+config/nicotine/config.old
+config/tuir/refresh-token
+config/op/config
+config/AWSVPNClient/Preferences
+config/gh/hosts.yml
+
+# Session and history files
+config/**/history.json
+config/**/history.log
+config/**/*history*
+config/**/list_history.dat
+config/**/userstate.cbor
+
+# Databases
+config/**/*.db
+config/**/*.db-*
+config/**/*.mdb/
+
+# Cache and state files
+config/**/cache
+config/**/*cache*
+config/**/*.pickle
+config/**/autosave
+
+# Package dependencies
+config/**/node_modules/
+config/yarn/global/node_modules/
+
+# JSON schema caches
+config/coc/extensions/coc-json-data/json-schema-cache/
+
+# Runtime/temporary files
+config/**/*.log
+config/**/memos.json
+config/**/mru
+config/**/snippets-mru
+config/AWSVPNClient/OpenVpnConfigs/current_connection.txt
+
+# Application state
+config/musikcube/*.txt
+config/musikcube/session.json
+config/musikcube/playback.json
+config/musikcube/1/
+config/nvim/sessions/
+config/MusicBrainz/.Picard.ini.synclock
+
+# Large/unnecessary directories
+config/AWSVPNClient/logs/
+config/musikcube/1/thumbs/
 config/nvim/bundle/
-config/nvim/plugged/
 config/nvim/pack/nvim/start
+config/nvim/plugged/
+config/nvim/view/
+config/raycast/extensions
+config/iterm2/AppSupport
+
+# Specific token files
+config/beets/discogs_token.json

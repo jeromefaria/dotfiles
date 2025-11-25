@@ -1,0 +1,11 @@
+github.com:
+    user: YOUR_GITHUB_USERNAME
+    users:
+        YOUR_GITHUB_USERNAME: {}
+    git_protocol: ssh
+# Add other git hosts as needed:
+# other-git-host.com:
+#     git_protocol: ssh
+#     users:
+#         YOUR_USERNAME:
+#     user: YOUR_USERNAME
