@@ -47,8 +47,7 @@ opt.writebackup = false -- Disable backup before write
 opt.undofile = true -- Enable persistent undo
 
 -- Folding
-opt.foldmethod = "expr" -- Use expression for folding
-opt.foldexpr = "nvim_treesitter#foldexpr()" -- Use treesitter for folding
+opt.foldmethod = "indent" -- Use indent for folding (treesitter will override this when loaded)
 opt.foldenable = false -- Don't fold by default
 
 -- Wildmenu

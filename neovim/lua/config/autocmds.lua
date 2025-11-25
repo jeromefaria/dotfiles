@@ -32,12 +32,15 @@ vim.api.nvim_create_autocmd("BufReadPost", {
   end,
 })
 
--- Auto-format on save for specific filetypes
+-- Auto-format on save for specific filetypes (only if LSP is attached)
 vim.api.nvim_create_autocmd("BufWritePre", {
   group = vim.api.nvim_create_augroup("auto_format", { clear = true }),
   pattern = { "*.lua", "*.js", "*.ts", "*.jsx", "*.tsx", "*.json", "*.md" },
   callback = function()
-    vim.lsp.buf.format({ async = false })
+    -- Only format if LSP client is attached to buffer
+    if #vim.lsp.get_active_clients({ bufnr = 0 }) > 0 then
+      vim.lsp.buf.format({ async = false })
+    end
   end,
 })
 
