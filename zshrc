@@ -120,13 +120,10 @@ printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
 # cyrus-sasl homebrew version to fix neomutt
 export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
 
-# NVM configuration
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
 # Day One CLI
 export DAYONE_APP_PATH="/Applications/Day One.app"
-# fnm fast node manager
+
+# fnm fast node manager (using fnm instead of nvm for better performance)
 eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
 
 ##########
