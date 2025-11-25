@@ -1,0 +1,17 @@
+# Security & Network Tools
+# For security testing, network analysis, and password management
+
+# Password Management
+brew "pass"              # Unix password manager
+cask "1password"
+
+# Network Analysis & Testing
+brew "nmap"              # Port scanner
+brew "aircrack-ng"       # Wireless security
+brew "socat"             # Network relay
+brew "tor"               # Anonymity network
+
+# Encryption & Security
+brew "gnutls"
+brew "libgpg-error"
+brew "unbound"           # DNS resolver
