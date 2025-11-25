@@ -1,13 +1,19 @@
 *.bkp
 *.zip
+*.log
 .backup
 node_modules
+.DS_Store
+
+# Claude Code directories
+.claude/
 
 # Sensitive credentials and tokens
 config/nicotine/config
 config/nicotine/config.old
 config/tuir/refresh-token
 config/op/config
+config/hub
 config/AWSVPNClient/Preferences
 config/gh/hosts.yml
 

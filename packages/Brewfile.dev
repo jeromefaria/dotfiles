@@ -1,0 +1,139 @@
+# Software Development Packages
+# Languages, frameworks, tools, and editors for development
+
+# Development taps
+tap "github/gh"
+tap "neovim/neovim"
+tap "jez/formulae"
+
+# Programming Languages & Runtimes
+brew "python@3.7"
+brew "python@3.8"
+brew "python@3.9"
+brew "python@3.11"
+brew "ruby"
+brew "node", link: false
+brew "go"
+brew "rust"
+brew "erlang"
+brew "php"
+
+# Language Version Managers
+brew "rbenv"
+
+# Package Managers & Build Tools
+brew "yarn"
+brew "npm"
+brew "composer"         # PHP
+brew "luarocks"         # Lua
+brew "gradle"           # Java/Android
+brew "ant"              # Java
+
+# Build Systems & Tools
+brew "cmake"
+brew "autoconf"
+brew "automake"
+brew "libtool"
+brew "pkg-config"
+brew "gcc"
+brew "clang-format"
+brew "bison"
+
+# Editors & IDEs
+brew "neovim"
+brew "vim"
+brew "macvim", link: false
+cask "visual-studio-code"
+cask "vimr"
+
+# Code Quality & Formatting
+brew "eslint", link: false
+brew "prettier", link: false
+brew "typescript"
+
+# Development Utilities
+brew "git-flow"
+brew "git-delta"        # Better git diff
+brew "diff-so-fancy"
+brew "ctags"
+brew "cscope"
+brew "jq"               # JSON processor
+brew "httpie"           # HTTP client
+brew "http-server"
+brew "hyperfine"        # Benchmarking
+brew "tokei"            # Code statistics
+brew "watchman"         # File watching
+brew "broot"            # Directory navigator
+
+# Containers & Virtualization
+brew "docker", link: false
+cask "docker"
+cask "vagrant"
+cask "virtualbox"
+
+# Databases & Data Tools
+brew "mysql"
+brew "cassandra"
+cask "sequel-pro"
+cask "robo-3t"          # MongoDB GUI
+
+# Cloud & DevOps
+brew "awscli"
+cask "postman"
+
+# Documentation
+brew "jsdoc3"
+brew "mkdocs"
+brew "grip"             # GitHub README preview
+brew "multimarkdown"
+
+# Terminal & Multiplexing
+tap "tmux/tmux", "https://github.com/tmux/tmux"
+brew "tmux"
+brew "tmuxinator"
+brew "reattach-to-user-namespace"
+cask "iterm2"
+cask "hyper"
+
+# Mobile Development
+brew "ios-deploy"
+cask "chromedriver"
+
+# File Managers (Terminal)
+brew "ranger"
+brew "vifm"
+brew "lf"
+brew "nnn"
+brew "midnight-commander"
+
+# Development Libraries
+brew "gettext"
+brew "gdbm"
+brew "pcre2"
+brew "glib"
+brew "libssh"
+brew "libssh2"
+brew "libevent"
+brew "libuv"
+brew "libvterm"
+brew "libtermkey"
+brew "unibilium"
+brew "msgpack"
+brew "utf8proc"
+brew "json-c"
+brew "json-glib"
+brew "bdw-gc"
+brew "boost"
+brew "unixodbc"
+brew "krb5"
+brew "thrift"
+
+# Git utilities
+brew "jez/formulae/git-heatmap"
+
+# Productivity CLI
+brew "tldr"             # Simplified man pages
+brew "thefuck"          # Command corrector
+brew "noti"             # Trigger notifications
+brew "task"             # Task manager
+brew "starship"         # Shell prompt

@@ -1,0 +1,55 @@
+# System Utilities
+# macOS system tools, window managers, and enhancements
+
+tap "homebrew/cask-fonts"
+tap "delphinus/sfmono-square"
+
+# Window Management
+cask "spectacle"                 # Window manager
+cask "alt-tab"                   # Windows-style alt-tab
+cask "hyperswitch"               # Window switcher
+cask "linearmouse"               # Mouse acceleration
+
+# Input Management
+cask "karabiner-elements"        # Keyboard customization
+
+# System Maintenance
+cask "cleanmymac"
+
+# System Information & Monitoring
+brew "htop"                      # Process viewer
+brew "blueutil"                  # Bluetooth control
+brew "m-cli"                     # macOS CLI
+brew "dark-mode"                 # Dark mode toggle
+brew "aspell"                    # Spell checker
+
+# Fonts
+cask "font-awesome-terminal-fonts"
+
+# Network Tools
+brew "aria2"                     # Download utility
+brew "gdrive"                    # Google Drive CLI
+brew "prettyping"                # Better ping
+brew "speedtest-cli"
+
+# Microsoft
+cask "microsoft-auto-update"
+
+# Spreadsheet (Terminal)
+brew "sc-im"                     # Spreadsheet calculator
+
+# Miscellaneous Utilities
+brew "highlight", link: false
+brew "lzlib"                     # Compression library
+brew "s-search"                  # Web search from terminal
+brew "sd"                        # Find & replace
+brew "picard-tools"              # Genomics tools
+brew "tokyo-cabinet"             # Database library
+brew "xmlrpc-c"                  # XML-RPC library
+brew "libsigc++"                 # C++ signal library
+
+# X11
+cask "xquartz"
+
+# GitHub Desktop
+cask "github"
