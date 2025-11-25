@@ -48,7 +48,6 @@ bindkey -M viins 'jj' vi-cmd-mode
 export ZVM_VI_ESCAPE_BINDKEY=jk
 ZVM_CURSOR_STYLE_ENABLED=false
 zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
-zvm_after_init_commands+=('[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh')
 
 # PATHS
 export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
