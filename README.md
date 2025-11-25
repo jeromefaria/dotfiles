@@ -30,7 +30,7 @@ git clone https://github.com/jeromefaria/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
 # Run the installation script
-./install.sh
+./scripts/install.sh
 ```
 
 The installation script will:
@@ -48,7 +48,7 @@ The installation script will:
 To remove all dotfile symlinks (your dotfiles repository remains unchanged):
 
 ```bash
-./uninstall.sh
+./scripts/uninstall.sh
 ```
 
 ## 📦 Package Management
@@ -83,29 +83,33 @@ This will export lists of installed packages to:
 
 ### Repository Structure
 
-- **Root Level** - Shell configurations and main dotfiles (zshrc, vimrc, tmux.conf, gitconfig)
+- **`shell/`** - ZSH configuration (zshrc, aliases.sh, functions.sh)
+- **`editors/`** - Editor configurations
+  - **`vim/`** - Vim configuration (separate from Neovim)
+  - **`neovim/`** - Neovim configuration with lazy.nvim
+- **`terminal/`** - Terminal multiplexer configuration (tmux.conf, tmuxinator/)
+- **`git/`** - Git configuration (gitconfig)
 - **`config/`** - XDG-compliant application configurations (see `config/README.md`)
-- **`vim/`** - Vim-specific configuration (separate from Neovim)
-- **`neovim/`** - Neovim configuration with lazy.nvim
 - **`packages/`** - Package management files (see `packages/README.md`)
+- **`scripts/`** - Installation and setup scripts (install.sh, uninstall.sh, macos-setup.sh)
 - **`docs/`** - Documentation and analysis files
 
 ### Shell (ZSH)
 
-- **`zshrc`** - Main ZSH configuration
+- **`shell/zshrc`** - Main ZSH configuration
   - Oh My Zsh integration
   - Custom plugins (syntax highlighting, autosuggestions, vi-mode)
   - FNM (Fast Node Manager) for Node.js version management
   - Starship prompt
   - Custom key bindings
 
-- **`aliases.sh`** - Shell aliases
+- **`shell/aliases.sh`** - Shell aliases
   - Navigation shortcuts
   - Modern tool replacements (eza, bat, fd, ripgrep)
   - Git aliases
   - macOS-specific utilities
 
-- **`functions.sh`** - Custom shell functions
+- **`shell/functions.sh`** - Custom shell functions
   - HTTP server utilities
   - File operations
   - Development helpers
@@ -115,29 +119,30 @@ This will export lists of installed packages to:
 **Note:** Vim and Neovim configurations are kept separate to support systems without Neovim.
 
 - **Vim Configuration** (for systems without Neovim)
-  - **`vimrc`** - Main Vim configuration entry point
-  - **`vim/plugins.vim`** - Plugin definitions using vim-plug
-  - **`vim/`** - Modular configuration files
+  - **`editors/vim/vimrc`** - Main Vim configuration entry point
+  - **`editors/vim/plugins.vim`** - Plugin definitions using vim-plug
+  - **`editors/vim/`** - Modular configuration files
 
 - **Neovim Configuration** (modern setup)
-  - **`neovim/init.lua`** - Neovim entry point
-  - **`neovim/lua/`** - Lua-based configuration
-  - **`config/nvim/`** - XDG location (symlinks to neovim/)
+  - **`editors/neovim/init.lua`** - Neovim entry point
+  - **`editors/neovim/lua/`** - Lua-based configuration
+  - **`config/nvim/`** - XDG location (symlinks to editors/neovim/)
   - Uses **lazy.nvim** for plugin management (auto-installs on first launch)
   - LSP support with native Neovim LSP client
   - Modern plugin ecosystem
 
 ### Terminal Multiplexer
 
-- **`tmux.conf`** - Tmux configuration
+- **`terminal/tmux.conf`** - Tmux configuration
   - Custom prefix key (F12)
   - Vi-mode keybindings
   - Plugin management with TPM
   - Vim/Tmux navigator integration
+- **`terminal/tmuxinator/`** - Tmuxinator session configurations
 
 ### Git
 
-- **`gitconfig`** - Git configuration
+- **`git/gitconfig`** - Git configuration
   - Custom aliases (co, ci, st, br)
   - Pretty log format
   - Git LFS support
@@ -184,7 +189,7 @@ See `config/README.md` for detailed information about each configuration.
 
 ### Adding Custom Aliases
 
-Edit `aliases.sh` and add your aliases:
+Edit `shell/aliases.sh` and add your aliases:
 
 ```bash
 alias myalias="command"
@@ -192,7 +197,7 @@ alias myalias="command"
 
 ### Adding Custom Functions
 
-Edit `functions.sh` and add your functions:
+Edit `shell/functions.sh` and add your functions:
 
 ```bash
 function myfunction() {
@@ -203,7 +208,7 @@ function myfunction() {
 ### Installing Additional Plugins
 
 **For Vim:**
-Edit `vim/plugins.vim` and add plugins using vim-plug syntax:
+Edit `editors/vim/plugins.vim` and add plugins using vim-plug syntax:
 
 ```vim
 Plug 'author/plugin-name'
@@ -212,7 +217,7 @@ Plug 'author/plugin-name'
 Then run `:PlugInstall` in Vim.
 
 **For Neovim:**
-Add plugins to the appropriate file in `neovim/lua/plugins/`. Lazy.nvim will automatically install them on next launch.
+Add plugins to the appropriate file in `editors/neovim/lua/plugins/`. Lazy.nvim will automatically install them on next launch.
 
 ## 🔍 Key Features
 
@@ -242,7 +247,7 @@ Add plugins to the appropriate file in `neovim/lua/plugins/`. Lazy.nvim will aut
 Run the macOS configuration script to apply system preferences:
 
 ```bash
-./osx
+./scripts/macos-setup.sh
 ```
 
 **Warning:** Review the script before running. Some settings may require a logout/restart.

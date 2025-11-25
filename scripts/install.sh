@@ -166,17 +166,17 @@ link_dotfiles() {
 
   create_backup_dir
 
-  # Main dotfiles (root level shell and editor configs)
-  create_symlink "$DOTFILES_DIR/zshrc" "$HOME/.zshrc"
-  create_symlink "$DOTFILES_DIR/vimrc" "$HOME/.vimrc"
-  create_symlink "$DOTFILES_DIR/tmux.conf" "$HOME/.tmux.conf"
-  create_symlink "$DOTFILES_DIR/gitconfig" "$HOME/.gitconfig"
+  # Main dotfiles (organized by category)
+  create_symlink "$DOTFILES_DIR/shell/zshrc" "$HOME/.zshrc"
+  create_symlink "$DOTFILES_DIR/editors/vim/vimrc" "$HOME/.vimrc"
+  create_symlink "$DOTFILES_DIR/terminal/tmux.conf" "$HOME/.tmux.conf"
+  create_symlink "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 
   # Vim directory (separate from Neovim for systems without Neovim)
   if [ ! -d "$HOME/.vim" ]; then
     mkdir -p "$HOME/.vim"
   fi
-  create_symlink "$DOTFILES_DIR/vim" "$HOME/.vim/config"
+  create_symlink "$DOTFILES_DIR/editors/vim" "$HOME/.vim/config"
 
   # Create .config directory if it doesn't exist
   if [ ! -d "$HOME/.config" ]; then
@@ -242,12 +242,12 @@ apply_macos_settings() {
   read -p "Do you want to apply macOS system settings? (y/N) " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_warning "This will modify system settings. Review $DOTFILES_DIR/osx before proceeding."
+    print_warning "This will modify system settings. Review $DOTFILES_DIR/scripts/macos-setup.sh before proceeding."
     read -p "Continue? (y/N) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
       print_info "Applying macOS settings..."
-      bash "$DOTFILES_DIR/osx"
+      bash "$DOTFILES_DIR/scripts/macos-setup.sh"
       print_success "macOS settings applied"
       print_warning "Some changes may require a logout or restart"
     fi
