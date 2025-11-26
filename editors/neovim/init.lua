@@ -9,6 +9,7 @@ vim.g.maplocalleader = " "
 -- Load core configuration (doesn't depend on plugins)
 require("config.options")
 require("config.keymaps")
+require("config.commands")
 
 -- Bootstrap and load lazy.nvim with plugins
 require("config.lazy")
