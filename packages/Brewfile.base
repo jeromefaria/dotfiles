@@ -2,9 +2,7 @@
 # Core tools needed on any macOS system
 
 # Essential taps
-tap "homebrew/bundle"
-tap "homebrew/core"
-tap "homebrew/services"
+tap "buo/cask-upgrade"  # brew cu command for cask upgrades
 
 # Version control
 brew "git"
@@ -30,12 +28,20 @@ brew "trash"           # Safe rm alternative
 brew "terminal-notifier"
 
 # Compression
-brew "unrar"
+brew "sevenzip"        # 7z support (replaces p7zip)
+brew "unar"            # Universal unarchiver (replaces unrar)
 brew "p7zip"
 
 # Modern CLI replacements
 brew "bat"             # Better cat
+brew "eza"             # Better ls (replaces exa)
 brew "fd"              # Better find
 brew "ripgrep"         # Better grep
 brew "fzf"             # Fuzzy finder
-brew "z"               # Directory jumper
+brew "zoxide"          # Better z (replaces fasd/z)
+brew "atuin"           # Shell history sync and search
+brew "duf"             # Better df
+
+# GNU utilities
+brew "gnu-sed"
+brew "gnu-getopt"
