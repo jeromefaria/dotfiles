@@ -56,3 +56,9 @@ bind pager gg top
 bind pager G bottom
 bind pager D delete-message
 bind pager U undelete-message
+
+# Additional useful bindings
+bind index,pager @ compose-to-sender
+bind index,pager N search-opposite
+bind pager <up> previous-line
+bind pager <down> next-line

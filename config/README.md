@@ -10,7 +10,6 @@ Each subdirectory represents a different application or tool:
 - **bat/** - Bat (cat replacement) syntax highlighting theme
 - **beets/** - Beets music library manager configuration
 - **gh/** - GitHub CLI configuration
-- **mutt/** - Mutt email client configuration
 - **musikcube/** - Musikcube terminal music player settings
 - **ncmpcpp/** - NCurses Music Player Client (Plus Plus) configuration
 - **neofetch/** - Neofetch system information tool config

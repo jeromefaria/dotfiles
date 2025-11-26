@@ -1,6 +1,0 @@
-# vim: filetype=neomuttrc
-source $DOTFILES/config/mutt/settings
-source $DOTFILES/config/mutt/bindings
-source $DOTFILES/config/mutt/macros
-source $DOTFILES/config/mutt/colours
-source $DOTFILES/config/mutt/accounts/1-personal.muttrc
