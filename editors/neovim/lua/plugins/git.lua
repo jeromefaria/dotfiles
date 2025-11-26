@@ -51,10 +51,10 @@ return {
     "tpope/vim-fugitive",
     cmd = { "Git", "G", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Ggrep" },
     keys = {
-      { "<leader>gs", "<cmd>Git<cr>", desc = "Git Status" },
+      { "<leader>gs", "<cmd>Git<cr>",        desc = "Git Status" },
       { "<leader>gc", "<cmd>Git commit<cr>", desc = "Git Commit" },
-      { "<leader>gp", "<cmd>Git push<cr>", desc = "Git Push" },
-      { "<leader>gl", "<cmd>Git pull<cr>", desc = "Git Pull" },
+      { "<leader>gp", "<cmd>Git push<cr>",   desc = "Git Push" },
+      { "<leader>gl", "<cmd>Git pull<cr>",   desc = "Git Pull" },
     },
   },
 
@@ -72,7 +72,7 @@ return {
       "nvim-lua/plenary.nvim",
     },
     keys = {
-      { "<leader>gg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
     },
   },
 }
