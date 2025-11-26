@@ -37,3 +37,12 @@
   rebase = true
 [pager]
   diff = diff-so-fancy | less --tabs=4 -RFXS --pattern '^(Date|added|deleted|modified): '
+
+# Machine-specific overrides
+# Create ~/.gitconfig.local for machine-specific settings (not tracked in git)
+# Example use cases:
+#   - Work email: [user] email = work@company.com
+#   - Different signing key: [user] signingkey = ABCD1234
+#   - Custom aliases: [alias] custom = !custom-script
+[include]
+  path = ~/.gitconfig.local

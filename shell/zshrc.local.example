@@ -1,0 +1,61 @@
+#!/usr/bin/env zsh
+# ============================================================================
+# Machine-Specific ZSH Configuration
+# ============================================================================
+# This file is a template for machine-specific ZSH configuration.
+# Copy this to ~/.zshrc.local (which is NOT tracked in git) and customize.
+#
+# Copy command:
+#   cp ~/dotfiles/shell/zshrc.local.example ~/.zshrc.local
+#
+# Then edit ~/.zshrc.local with your machine-specific settings.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Example: Work-specific settings
+# ----------------------------------------------------------------------------
+# export WORK_ENV=true
+# export COMPANY_PROXY="http://proxy.company.com:8080"
+# export PATH="/opt/company/bin:$PATH"
+
+# ----------------------------------------------------------------------------
+# Example: Custom aliases
+# ----------------------------------------------------------------------------
+# alias vpn-connect="sudo openvpn --config ~/work.ovpn"
+# alias work-ssh="ssh user@work-server.company.com"
+# alias deploy="./deploy.sh --env=production"
+
+# ----------------------------------------------------------------------------
+# Example: Custom functions
+# ----------------------------------------------------------------------------
+# work_meeting() {
+#   open "https://meet.company.com/$1"
+# }
+
+# ----------------------------------------------------------------------------
+# Example: Different prompt or theme
+# ----------------------------------------------------------------------------
+# export ZSH_THEME="agnoster"  # Override default theme
+
+# ----------------------------------------------------------------------------
+# Example: Additional environment variables
+# ----------------------------------------------------------------------------
+# export AWS_PROFILE="work"
+# export DOCKER_HOST="tcp://docker.local:2375"
+# export KUBECONFIG="~/.kube/work-config"
+
+# ----------------------------------------------------------------------------
+# Example: Machine-specific paths
+# ----------------------------------------------------------------------------
+# export PATH="$HOME/work/bin:$PATH"
+# export GOPATH="$HOME/work/go"
+
+# ----------------------------------------------------------------------------
+# Example: Source additional configs
+# ----------------------------------------------------------------------------
+# [ -f ~/.work_secrets ] && source ~/.work_secrets
+# [ -f ~/.company_functions ] && source ~/.company_functions
+
+# ============================================================================
+# Add your machine-specific configuration below
+# ============================================================================

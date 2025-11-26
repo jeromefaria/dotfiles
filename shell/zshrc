@@ -156,3 +156,15 @@ setopt SHARE_HISTORY
 
 # Execute commands using history (e.g.: using !$) immediatel:
 unsetopt HIST_VERIFY
+
+# ============================================================================
+# Machine-Specific Overrides
+# ============================================================================
+# Load machine-specific configuration if it exists
+# This allows customization per-machine without modifying the main config
+# Example: Work-specific aliases, different paths, custom functions, etc.
+#
+# Create ~/.zshrc.local with machine-specific settings (not tracked in git)
+if [ -f "$HOME/.zshrc.local" ]; then
+  source "$HOME/.zshrc.local"
+fi
