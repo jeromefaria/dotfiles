@@ -5,9 +5,16 @@
 #
 # This script automates the installation and configuration of dotfiles.
 # It creates backups of existing files and symlinks dotfiles to the home directory.
+#
+# Features:
+# - Automatic error handling and rollback on failure
+# - Idempotent (safe to run multiple times)
+# - Non-interactive mode support (--yes flag)
+# - Comprehensive dependency checking
+# - Integration with health-check.sh
 ################################################################################
 
-set -e
+set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
 
 # Colors for output
 RED='\033[0;31m'
@@ -19,6 +26,16 @@ NC='\033[0m' # No Color
 # Configuration
 DOTFILES_DIR="$HOME/dotfiles"
 BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
+
+# Command-line flags
+INTERACTIVE=true
+SKIP_PACKAGES=false
+SKIP_MACOS=false
+DRY_RUN=false
+
+# Error tracking
+INSTALLATION_FAILED=false
+CURRENT_STEP=""
 
 # Print colored output
 print_info() {
@@ -41,6 +58,104 @@ print_header() {
   echo -e "\n${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo -e "${BLUE}  $1${NC}"
   echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
+}
+
+# Error handler
+on_error() {
+  local line_number=$1
+  INSTALLATION_FAILED=true
+
+  print_error "Installation failed at line $line_number during: $CURRENT_STEP"
+
+  if [ -d "$BACKUP_DIR" ] && [ "$(ls -A "$BACKUP_DIR" 2>/dev/null)" ]; then
+    print_warning "A backup was created at: $BACKUP_DIR"
+    print_info "To restore your previous configuration, run:"
+    print_info "  ./scripts/restore.sh --backup $BACKUP_DIR"
+  fi
+
+  echo -e "\n${RED}Installation incomplete. Please review the error above.${NC}\n"
+  exit 1
+}
+
+# Set trap for error handling
+trap 'on_error $LINENO' ERR INT TERM
+
+# Parse command-line arguments
+parse_args() {
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -y|--yes)
+        INTERACTIVE=false
+        shift
+        ;;
+      --skip-packages)
+        SKIP_PACKAGES=true
+        shift
+        ;;
+      --skip-macos)
+        SKIP_MACOS=true
+        shift
+        ;;
+      --dry-run)
+        DRY_RUN=true
+        shift
+        ;;
+      -h|--help)
+        show_help
+        exit 0
+        ;;
+      *)
+        print_error "Unknown option: $1"
+        show_help
+        exit 1
+        ;;
+    esac
+  done
+}
+
+# Show help message
+show_help() {
+  cat <<EOF
+Dotfiles Installation Script
+
+Usage: $0 [OPTIONS]
+
+Options:
+  -y, --yes             Non-interactive mode (answer yes to all prompts)
+  --skip-packages       Skip Homebrew package installation
+  --skip-macos          Skip macOS system settings
+  --dry-run             Show what would be done without making changes
+  -h, --help            Show this help message
+
+Examples:
+  $0                    # Interactive installation
+  $0 --yes              # Automated installation
+  $0 --skip-packages    # Install without packages
+  $0 --yes --skip-macos # Automated, skip macOS settings
+
+EOF
+}
+
+# Check required commands
+check_required_commands() {
+  CURRENT_STEP="Checking required commands"
+
+  local required=(git curl zsh)
+  local missing=()
+
+  for cmd in "${required[@]}"; do
+    if ! command -v "$cmd" &> /dev/null; then
+      missing+=("$cmd")
+    fi
+  done
+
+  if [ ${#missing[@]} -gt 0 ]; then
+    print_error "Missing required commands: ${missing[*]}"
+    print_info "Please install these commands and try again"
+    exit 1
+  fi
+
+  print_success "All required commands available"
 }
 
 # Check if running on macOS
@@ -86,23 +201,38 @@ backup_file() {
   return 1
 }
 
-# Create symlink
+# Create symlink (idempotent)
 create_symlink() {
   local source=$1
   local target=$2
+  local target_name=$(basename "$target")
 
-  # Remove existing symlink or file
+  # Check if symlink already points to correct location (idempotent)
+  if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
+    print_success "Already linked: $target_name"
+    return 0
+  fi
+
+  # Dry run mode
+  if [ "$DRY_RUN" = true ]; then
+    print_info "[DRY RUN] Would link: $target_name → $source"
+    return 0
+  fi
+
+  # Backup and remove existing file/symlink
   if [ -e "$target" ] || [ -L "$target" ]; then
     backup_file "$target"
     rm -rf "$target"
   fi
 
+  # Create the symlink
   ln -s "$source" "$target"
-  print_success "Linked: $(basename "$target")"
+  print_success "Linked: $target_name"
 }
 
 # Install Oh My Zsh
 install_oh_my_zsh() {
+  CURRENT_STEP="Installing Oh My Zsh"
   print_header "Installing Oh My Zsh"
 
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -133,6 +263,7 @@ install_oh_my_zsh() {
 
 # Install Vim Plug (for Vim only, not Neovim)
 install_vim_plug() {
+  CURRENT_STEP="Installing Vim Plug"
   print_header "Installing Vim Plug"
 
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
@@ -149,6 +280,7 @@ install_vim_plug() {
 
 # Install Tmux Plugin Manager
 install_tpm() {
+  CURRENT_STEP="Installing Tmux Plugin Manager"
   print_header "Installing Tmux Plugin Manager"
 
   if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
@@ -162,6 +294,7 @@ install_tpm() {
 
 # Link dotfiles
 link_dotfiles() {
+  CURRENT_STEP="Linking dotfiles"
   print_header "Linking Dotfiles"
 
   create_backup_dir
@@ -225,15 +358,37 @@ link_dotfiles() {
 
 # Install packages from Brewfile
 install_packages() {
+  CURRENT_STEP="Installing packages"
+
+  if [ "$SKIP_PACKAGES" = true ]; then
+    print_info "Skipping package installation (--skip-packages flag)"
+    return 0
+  fi
+
   print_header "Installing Packages"
 
-  read -p "Do you want to install packages from Brewfile? (y/N) " -n 1 -r
-  echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_info "Installing Homebrew packages..."
-    cd "$DOTFILES_DIR/packages"
-    brew bundle install
-    print_success "Packages installed"
+  local install_packages=false
+
+  if [ "$INTERACTIVE" = false ]; then
+    install_packages=true
+    print_info "Installing packages automatically (--yes flag)"
+  else
+    read -p "Do you want to install packages from Brewfile? (y/N) " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      install_packages=true
+    fi
+  fi
+
+  if [ "$install_packages" = true ]; then
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would install Homebrew packages from Brewfile"
+    else
+      print_info "Installing Homebrew packages..."
+      cd "$DOTFILES_DIR/packages"
+      brew bundle install
+      print_success "Packages installed"
+    fi
   else
     print_info "Skipping package installation"
   fi
@@ -241,15 +396,38 @@ install_packages() {
 
 # Apply macOS settings
 apply_macos_settings() {
+  CURRENT_STEP="Applying macOS settings"
+
+  if [ "$SKIP_MACOS" = true ]; then
+    print_info "Skipping macOS settings (--skip-macos flag)"
+    return 0
+  fi
+
   print_header "macOS System Settings"
 
-  read -p "Do you want to apply macOS system settings? (y/N) " -n 1 -r
-  echo
-  if [[ $REPLY =~ ^[Yy]$ ]]; then
-    print_warning "This will modify system settings. Review $DOTFILES_DIR/scripts/macos-setup.sh before proceeding."
-    read -p "Continue? (y/N) " -n 1 -r
+  local apply_settings=false
+
+  if [ "$INTERACTIVE" = false ]; then
+    apply_settings=true
+    print_warning "Applying macOS settings automatically (--yes flag)"
+    print_warning "This will modify system settings"
+  else
+    read -p "Do you want to apply macOS system settings? (y/N) " -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+      print_warning "This will modify system settings. Review $DOTFILES_DIR/scripts/macos-setup.sh before proceeding."
+      read -p "Continue? (y/N) " -n 1 -r
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        apply_settings=true
+      fi
+    fi
+  fi
+
+  if [ "$apply_settings" = true ]; then
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would apply macOS system settings"
+    else
       print_info "Applying macOS settings..."
       bash "$DOTFILES_DIR/scripts/macos-setup.sh"
       print_success "macOS settings applied"
@@ -262,6 +440,7 @@ apply_macos_settings() {
 
 # Set ZSH as default shell
 set_zsh_shell() {
+  CURRENT_STEP="Setting ZSH as default shell"
   print_header "Setting Default Shell"
 
   if [ "$SHELL" != "$(which zsh)" ]; then
@@ -274,8 +453,28 @@ set_zsh_shell() {
   fi
 }
 
+# Run health check
+run_health_check() {
+  CURRENT_STEP="Running health check"
+
+  print_header "Verifying Installation"
+
+  if [ -f "$DOTFILES_DIR/scripts/health-check.sh" ]; then
+    if bash "$DOTFILES_DIR/scripts/health-check.sh"; then
+      print_success "Health check passed!"
+    else
+      print_warning "Health check found some issues. Review output above."
+    fi
+  else
+    print_warning "Health check script not found. Skipping verification."
+  fi
+}
+
 # Main installation flow
 main() {
+  # Parse command-line arguments
+  parse_args "$@"
+
   clear
 
   echo -e "${BLUE}"
@@ -286,7 +485,18 @@ main() {
   echo "╚═══════════════════════════════════════════════════════════╝"
   echo -e "${NC}\n"
 
+  if [ "$DRY_RUN" = true ]; then
+    print_warning "DRY RUN MODE - No changes will be made"
+    echo
+  fi
+
+  if [ "$INTERACTIVE" = false ]; then
+    print_info "Running in non-interactive mode (--yes flag)"
+    echo
+  fi
+
   check_os
+  check_required_commands
   check_homebrew
   install_oh_my_zsh
   install_vim_plug
@@ -296,20 +506,31 @@ main() {
   apply_macos_settings
   set_zsh_shell
 
-  print_header "Installation Complete!"
-
-  if [ -d "$BACKUP_DIR" ] && [ "$(ls -A "$BACKUP_DIR")" ]; then
-    print_info "Backups saved to: $BACKUP_DIR"
+  # Run health check if not in dry-run mode
+  if [ "$DRY_RUN" = false ]; then
+    run_health_check
   fi
 
-  echo -e "\n${GREEN}✨ Your dotfiles have been installed successfully!${NC}\n"
-  echo -e "Next steps:"
-  echo -e "  1. Restart your terminal"
-  echo -e "  2. For Vim: Run ${BLUE}:PlugInstall${NC} to install plugins"
-  echo -e "  3. For Neovim: Plugins will auto-install with ${BLUE}lazy.nvim${NC} on first launch"
-  echo -e "  4. Open tmux and press ${BLUE}prefix + I${NC} to install tmux plugins"
-  echo -e "  5. Enjoy your new environment! 🚀\n"
+  print_header "Installation Complete!"
+
+  if [ -d "$BACKUP_DIR" ] && [ "$(ls -A "$BACKUP_DIR" 2>/dev/null)" ]; then
+    print_info "Backups saved to: $BACKUP_DIR"
+    print_info "To restore, run: ./scripts/restore.sh --backup $BACKUP_DIR"
+  fi
+
+  if [ "$DRY_RUN" = true ]; then
+    echo -e "\n${BLUE}✨ Dry run complete! No changes were made.${NC}\n"
+    echo -e "Run without ${BLUE}--dry-run${NC} to apply changes.\n"
+  else
+    echo -e "\n${GREEN}✨ Your dotfiles have been installed successfully!${NC}\n"
+    echo -e "Next steps:"
+    echo -e "  1. Restart your terminal"
+    echo -e "  2. For Vim: Run ${BLUE}:PlugInstall${NC} to install plugins"
+    echo -e "  3. For Neovim: Plugins will auto-install with ${BLUE}lazy.nvim${NC} on first launch"
+    echo -e "  4. Open tmux and press ${BLUE}prefix + I${NC} to install tmux plugins"
+    echo -e "  5. Enjoy your new environment! 🚀\n"
+  fi
 }
 
 # Run main installation
-main
+main "$@"
