@@ -27,7 +27,7 @@ alias jks="bundle exec jekyll serve"
 alias jkb="bundle exec jekyll build"
 
 # Node.js / NPM system update
-alias update='sudo -v && mas upgrade && brew update && brew upgrade --formulae && brew cu -ay && brew cleanup && sudo npm install -g npm && sudo npm update -g && gem update --system && gem update && gem cleanup && omz update && tldr --update'
+# Now implemented as a function in shell/functions/dev.sh
 
 # Project-specific (consider moving to project-local config)
 alias sb="seamless bootstrap --all --clean"
