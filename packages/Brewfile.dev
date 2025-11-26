@@ -129,6 +129,7 @@ brew "krb5"
 brew "thrift"
 
 # Git utilities
+brew "lazygit"          # Terminal UI for git
 brew "jez/formulae/git-heatmap"
 
 # Productivity CLI
