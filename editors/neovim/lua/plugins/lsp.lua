@@ -1,73 +1,129 @@
 -- LSP Configuration
 
 return {
+  -- Mason: LSP installer (must be loaded first)
+  {
+    "williamboman/mason.nvim",
+    cmd = "Mason",
+    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+    build = ":MasonUpdate",
+    opts = {
+      ui = {
+        border = "rounded",
+        icons = {
+          package_installed = "✓",
+          package_pending = "➜",
+          package_uninstalled = "✗",
+        },
+      },
+    },
+    config = function(_, opts)
+      require("mason").setup(opts)
+    end,
+  },
+
+  -- Mason LSP config (must be loaded before lspconfig)
+  {
+    "williamboman/mason-lspconfig.nvim",
+    dependencies = { "williamboman/mason.nvim" },
+    config = function()
+      require("mason-lspconfig").setup({
+        -- Only include servers that install without issues
+        ensure_installed = {
+          "lua_ls",
+          "ts_ls",
+          "pyright",
+        },
+        -- This will automatically install LSP servers when you open relevant files
+        automatic_installation = true,
+      })
+    end,
+  },
+
   -- LSP Configuration
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
-      "mason.nvim",
+      "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       "hrsh7th/cmp-nvim-lsp",
     },
     config = function()
+      -- Suppress lspconfig deprecation warning until v3.0.0 migration
+      local notify = vim.notify
+      vim.notify = function(msg, ...)
+        if msg:match("lspconfig.*deprecated") then
+          return
+        end
+        notify(msg, ...)
+      end
+
       -- Setup capabilities for autocompletion
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      local lspconfig = require("lspconfig")
+      -- Default config for all LSP servers
+      local default_config = {
+        capabilities = capabilities,
+      }
 
       -- Configure language servers
       local servers = {
-        "lua_ls",
-        "tsserver",
-        "eslint",
-        "jsonls",
-        "html",
-        "cssls",
-        "tailwindcss",
-        "pyright",
-        "bashls",
-        "yamlls",
-        "volar",
-      }
-
-      for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup({
-          capabilities = capabilities,
-        })
-      end
-
-      -- Lua LSP specific settings
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { "vim" },
-            },
-            workspace = {
-              library = {
-                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                [vim.fn.stdpath("config") .. "/lua"] = true,
+        lua_ls = {
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { "vim" },
+              },
+              workspace = {
+                library = {
+                  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                  [vim.fn.stdpath("config") .. "/lua"] = true,
+                },
               },
             },
           },
         },
-      })
-
-      -- TypeScript specific settings
-      lspconfig.tsserver.setup({
-        capabilities = capabilities,
-        settings = {
-          typescript = {
-            inlayHints = {
-              includeInlayParameterNameHints = "all",
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayVariableTypeHints = true,
+        ts_ls = {
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+              },
             },
           },
         },
-      })
+        eslint = {},
+        jsonls = {},
+        html = {},
+        cssls = {},
+        tailwindcss = {},
+        pyright = {},
+        bashls = {},
+        yamlls = {},
+        volar = {},
+      }
+
+      -- Setup each server (only if available)
+      local lspconfig = require("lspconfig")
+      local util = require("lspconfig.util")
+
+      for server, config in pairs(servers) do
+        -- Use pcall to safely check if the server config exists
+        local ok, server_def = pcall(function()
+          return lspconfig[server]
+        end)
+
+        if ok and server_def then
+          local server_config = vim.tbl_deep_extend("force", default_config, config)
+          server_def.setup(server_config)
+        end
+      end
+
+      -- Restore original vim.notify
+      vim.notify = notify
 
       -- Configure diagnostic signs
       local signs = {
@@ -98,56 +154,6 @@ return {
         },
       })
     end,
-  },
-
-  -- Mason: LSP installer
-  {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
-    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
-    build = ":MasonUpdate",
-    opts = {
-      ensure_installed = {
-        "stylua",
-        "shfmt",
-        "prettier",
-        "eslint_d",
-      },
-    },
-    config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      local function ensure_installed()
-        for _, tool in ipairs(opts.ensure_installed) do
-          local p = mr.get_package(tool)
-          if not p:is_installed() then
-            p:install()
-          end
-        end
-      end
-      if mr.refresh then
-        mr.refresh(ensure_installed)
-      else
-        ensure_installed()
-      end
-    end,
-  },
-
-  -- Mason LSP config
-  {
-    "williamboman/mason-lspconfig.nvim",
-    opts = {
-      ensure_installed = {
-        "lua_ls",
-        "tsserver",
-        "eslint",
-        "html",
-        "cssls",
-        "jsonls",
-        "pyright",
-        "bashls",
-      },
-    },
   },
 
   -- Autocompletion
