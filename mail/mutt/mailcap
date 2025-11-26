@@ -1,0 +1,16 @@
+text/plain; $EDITOR %s ;
+text/html; openfile %s ; nametemplate=%s.html
+text/html; lynx -assume_charset=%{charset} -display_charset=utf-8 -dump %s; nametemplate=%s.html; copiousoutput;
+text/csv; sc-im %s ; copiousoutput
+text/markdown; glow -s dark %s ; copiousoutput
+text/calendar; khal import %s ; copiousoutput
+image/*; openfile %s ;
+video/*; setsid mpv --quiet %s &; copiousoutput
+application/pdf; openfile %s ;
+application/pgp-encrypted; gpg -d '%s'; copiousoutput;
+application/vnd.ms-excel; sc-im %s ; copiousoutput
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; sc-im %s ; copiousoutput
+application/vnd.oasis.opendocument.spreadsheet; sc-im %s ; copiousoutput
+application/json; jq -C . %s | less -R ; copiousoutput
+application/x-yaml; bat --style=plain --color=always %s ; copiousoutput
+text/x-yaml; bat --style=plain --color=always %s ; copiousoutput

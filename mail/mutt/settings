@@ -1,0 +1,51 @@
+# vim: filetype=neomuttrc
+set mailcap_path = $DOTFILES/mail/mutt/mailcap
+set date_format="%d/%m/%y %H:%M"
+set pager_format="%d/%m/%y %H:%M"
+set sort = 'reverse-date'
+set smtp_authenticators = 'gssapi:login'
+set rfc2047_parameters = yes
+set sleep_time = 0             # Pause 0 seconds for informational messages
+set markers = no               # Disables the `+` displayed at line wraps
+set mark_old = no              # Unread mail stay unread until read
+set mime_forward = yes         # attachments are forwarded with mail
+set wait_key = no              # mutt won't ask "press key to continue"
+set fast_reply                 # skip to compose when replying
+set fcc_attach                 # save attachments with the body
+set forward_format = "Fwd: %s" # format of subject when forwarding
+set forward_quote              # include message in forwards
+set reverse_name               # reply as whomever it was to
+set include                    # include message in replies
+set mail_check = 60            # to avoid lags using IMAP with some email providers (yahoo for example)
+set timeout = 30               # automatically show new mesages
+auto_view text/html            # automatically show html (mailcap uses w3m)
+auto_view application/pgp-encrypted
+alternative_order text/plain text/enriched text/html
+
+# Security & Connection Settings
+set imap_keepalive = 300       # Keep IMAP connection alive
+set imap_idle = yes            # Use IMAP IDLE for real-time notifications
+set ssl_verify_dates = yes     # Verify SSL certificate dates
+set ssl_verify_host = yes      # Verify SSL certificate host
+
+# Performance Optimization
+set message_cache_clean = yes  # Automatically clean up message cache
+set net_inc = 5                # Show progress every 5 messages during network operations
+
+# Usability Improvements
+set pager_stop = yes           # Don't jump to next message at end of current message
+set pager_index_lines = 10     # Show 10 index lines while viewing message
+set menu_scroll = yes          # Scroll line by line instead of page by page
+set collapse_unread = no       # Don't collapse threads with unread messages
+set collapse_flagged = no      # Don't collapse threads with flagged messages
+
+# Compose & Reply Enhancements
+set abort_nosubject = ask-yes  # Ask before sending without subject
+set editor = "nvim +/^$ ++1"   # Start editor at first blank line (message body)
+set text_flowed = yes          # Enable format=flowed for better text wrapping
+set reflow_text = yes          # Reflow text when viewing
+
+# Format & Display Customizations
+set index_format = "%4C %Z %{%b %d} %-15.15L (%?l?%4l&%4c?) %s"
+set status_format = "-%r-Mutt: %f [Msgs:%?M?%M/?%m%?n? New:%n?%?o? Old:%o?%?d? Del:%d?%?F? Flag:%F?%?t? Tag:%t?%?p? Post:%p?%?b? Inc:%b?%?l? %l?]---(%s/%S)-%>-(%P)---"
+set attach_format = "%u%D%I %t%4n %T%.40d%> [%.7m/%.10M, %.6e%?C?, %C?, %s] "
