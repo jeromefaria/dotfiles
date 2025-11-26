@@ -27,8 +27,16 @@ export PATH="/usr/local/sbin:$PATH"
 
 # SOURCES
 source $ZSH/oh-my-zsh.sh
-source $DOTFILES/shell/aliases.sh
-source $DOTFILES/shell/functions.sh
+
+# Load modular aliases
+for alias_file in $DOTFILES/shell/aliases/*.sh; do
+  source "$alias_file"
+done
+
+# Load modular functions
+for func_file in $DOTFILES/shell/functions/*.sh; do
+  source "$func_file"
+done
 
 # EDITOR
 export VISUAL=nvim
@@ -107,6 +115,9 @@ export DAYONE_APP_PATH="/Applications/Day One.app"
 
 # fnm fast node manager (using fnm instead of nvm for better performance)
 eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
+
+# zoxide - smarter cd command
+eval "$(zoxide init zsh)"
 
 ##########
 # HISTORY
