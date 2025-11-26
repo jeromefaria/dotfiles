@@ -143,6 +143,12 @@ echo 'alias myalias="mycommand"' >> aliases/mycategory.sh
 ### Media Conversion
 - `flac2mp3` - Convert all FLAC files to MP3
 - `flac2alac` - Convert all FLAC files to ALAC
+- `update-music-plugins [options]` - Update music production plugin managers
+  - `--all` - Run all available plugin managers (default)
+  - `--native` - Run Native Access only
+  - `--izotope` - Run iZotope Product Portal only
+  - `--output` - Run Output Hub only
+  - `--list` - List all available plugin managers
 
 ### macOS Utilities
 - `resetfontcache` - Fix Chrome font rendering issues
