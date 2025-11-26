@@ -2,7 +2,7 @@
 
 Personal dotfiles for macOS development environment.
 
-**Last updated:** Mon Nov 25 2025
+**Last updated:** Tue Nov 26 2024
 
 ## 📋 Contents
 
@@ -16,13 +16,35 @@ Personal dotfiles for macOS development environment.
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### One-Liner Installation (Recommended)
 
-- macOS (tested on recent versions)
-- [Homebrew](https://brew.sh/)
-- Xcode Command Line Tools: `xcode-select --install`
+Bootstrap a new macOS system with one command:
 
-### Installation
+```bash
+curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts/bootstrap.sh | bash
+```
+
+**What it does:**
+- Checks system requirements (macOS, git, curl, zsh)
+- Clones dotfiles repository to `~/dotfiles`
+- Runs installation script automatically
+- Handles existing installations gracefully
+
+**Options:**
+```bash
+# Custom installation directory
+curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts/bootstrap.sh | bash -s -- --dir ~/my-dotfiles
+
+# Custom repository
+curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts/bootstrap.sh | bash -s -- --repo https://github.com/user/dotfiles
+
+# Custom branch
+curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts/bootstrap.sh | bash -s -- --branch develop
+```
+
+### Manual Installation
+
+If you prefer manual control:
 
 ```bash
 # Clone the repository
@@ -33,6 +55,12 @@ cd ~/dotfiles
 ./scripts/install.sh
 ```
 
+### Prerequisites
+
+- macOS (tested on macOS Sonoma and later)
+- Xcode Command Line Tools: `xcode-select --install`
+- [Homebrew](https://brew.sh/) (installed automatically if missing)
+
 The installation script will:
 - Check for Homebrew and install if needed
 - Install Oh My Zsh and plugins
@@ -42,6 +70,41 @@ The installation script will:
 - Optionally install packages from Brewfile
 - Optionally apply macOS system settings
 - Set ZSH as default shell
+
+### Backup & Restore
+
+The installation script automatically creates timestamped backups of existing configuration files.
+
+**Restore from backup:**
+```bash
+# List available backups
+./scripts/restore.sh --list
+
+# Restore from latest backup
+./scripts/restore.sh --latest
+
+# Preview changes without applying
+./scripts/restore.sh --latest --dry-run
+
+# Restore from specific backup
+./scripts/restore.sh --backup ~/.dotfiles-backup-TIMESTAMP
+```
+
+**Backup location:** `~/.dotfiles-backup-YYYYMMDD-HHMMSS/`
+
+### Health Check
+
+Verify installation integrity:
+
+```bash
+./scripts/health-check.sh
+```
+
+Checks:
+- All symlinks point to correct locations
+- Required tools are installed
+- Plugin managers are present
+- No broken symlinks
 
 ### Uninstallation
 
@@ -78,6 +141,41 @@ This will export lists of installed packages to:
 - `mas.log` - Mac App Store apps
 - `npm.log` - NPM global packages
 - `pip.log` - Python packages
+
+## 📚 Documentation
+
+Comprehensive documentation available for all major configurations:
+
+### Complete Guides (with keybindings, parameters, and examples)
+
+| Tool | Documentation | Lines | Coverage |
+|------|---------------|-------|----------|
+| **Shell (ZSH)** | [shell/README.md](shell/README.md) | 200+ | ⭐⭐⭐⭐⭐ |
+| **Neovim** | [editors/neovim/README.md](editors/neovim/README.md) | 600+ | ⭐⭐⭐⭐⭐ |
+| **Git** | [git/README.md](git/README.md) | 400+ | ⭐⭐⭐⭐⭐ |
+| **Tmux & Tmuxinator** | [terminal/README.md](terminal/README.md) | 700+ | ⭐⭐⭐⭐⭐ |
+| **Neomutt (Email)** | [mail/mutt/README.md](mail/mutt/README.md) | 140+ | ⭐⭐⭐⭐⭐ |
+| **Beets (Music)** | [config/beets/README.md](config/beets/README.md) | 880+ | ⭐⭐⭐⭐⭐ |
+| **Yazi (File Manager)** | [config/yazi/README.md](config/yazi/README.md) | 770+ | ⭐⭐⭐⭐⭐ |
+| **SKHD (Hotkeys)** | [config/skhd/README.md](config/skhd/README.md) | 244+ | ⭐⭐⭐⭐⭐ |
+| **Yabai (Window Manager)** | [config/yabai/README.md](config/yabai/README.md) | 418+ | ⭐⭐⭐⭐⭐ |
+
+### Reference Documentation
+
+| Document | Purpose |
+|----------|---------|
+| [CONFIGURATION-INDEX.md](CONFIGURATION-INDEX.md) | Master catalog of all 50+ configurations |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and component integration |
+| [docs/INSTALLATION-IMPROVEMENTS.md](docs/INSTALLATION-IMPROVEMENTS.md) | Installation script analysis and roadmap |
+| [docs/MACHINE-SPECIFIC-OVERRIDES.md](docs/MACHINE-SPECIFIC-OVERRIDES.md) | Per-machine customization guide |
+
+**Documentation coverage:** 60% of configurations (30+ of 50+ files)
+
+**Quick starts:**
+- **Neovim keybindings**: `<Space>ff` (find files), `gd` (go to definition), `<Space>ca` (code actions)
+- **Tmux prefix**: `F12` (mapped to Caps Lock), seamless Vim navigation with `Ctrl+hjkl`
+- **Yazi navigation**: Vim-style `hjkl`, `<Space>` to select, `y`/`x`/`p` for copy/cut/paste
+- **Git aliases**: `git co` (checkout), `git hist` (pretty log), `git st` (status)
 
 ## 🛠 Configuration Files
 
