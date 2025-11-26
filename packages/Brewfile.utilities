@@ -2,12 +2,15 @@
 # macOS system tools, window managers, and enhancements
 
 tap "homebrew/cask-fonts"
-tap "delphinus/sfmono-square"
+tap "koekeishiya/formulae"
+tap "nikitabobko/aerospace"
 
 # Window Management
-cask "spectacle"                 # Window manager
+brew "koekeishiya/formulae/skhd"  # Hotkey daemon
+cask "aerospace"                 # Tiling window manager
+cask "rectangle-pro"             # Window manager (replaces spectacle)
+cask "kindavim"                  # System-wide vim bindings
 cask "alt-tab"                   # Windows-style alt-tab
-cask "hyperswitch"               # Window switcher
 cask "linearmouse"               # Mouse acceleration
 
 # Input Management
@@ -15,6 +18,7 @@ cask "karabiner-elements"        # Keyboard customization
 
 # System Maintenance
 cask "cleanmymac"
+cask "bartender"                 # Menu bar manager
 
 # System Information & Monitoring
 brew "htop"                      # Process viewer
@@ -22,6 +26,7 @@ brew "blueutil"                  # Bluetooth control
 brew "m-cli"                     # macOS CLI
 brew "dark-mode"                 # Dark mode toggle
 brew "aspell"                    # Spell checker
+brew "macos-term-size"           # Terminal size detection
 
 # Fonts
 cask "font-awesome-terminal-fonts"

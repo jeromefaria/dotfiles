@@ -6,7 +6,11 @@ mas "Things", id: 904280696
 mas "Fantastical", id: 975937182
 
 # Note-Taking & Documentation
+cask "obsidian"          # Knowledge base
+cask "raindropio"        # Bookmark manager
+cask "tagspaces"         # File tagging system
 mas "Craft", id: 1487937127
+mas "iA Writer", id: 775737590
 
 # Cloud Storage & Sync
 cask "dropbox"
@@ -14,7 +18,7 @@ cask "google-drive"
 cask "megasync"
 
 # Writing & Text Tools
-cask "grammarly"
+cask "grammarly-desktop"  # Grammar checker
 mas "LittleIpsum", id: 405772121      # Lorem ipsum generator
 mas "Nisus Thesaurus", id: 471448642
 mas "WordService", id: 899972312
@@ -32,8 +36,12 @@ brew "ncdu"              # Disk usage analyzer
 brew "tag"               # File tagging
 
 # Terminal Utilities
+tap "nikolaeu/numi"
 brew "cash-cli"          # Currency conversion
-cask "numi"              # Calculator
+brew "nikolaeu/numi/numi-cli"
+cask "rar"               # RAR archive support
+cask "marta"             # Dual-pane file manager
+mas "TestFlight", id: 899247664
 
 # Productivity Scripts
 brew "par"               # Paragraph reformatter
