@@ -441,13 +441,15 @@ Keyboard remapping with 249KB of JSON configuration.
 9. Atuin configuration (inline examples, 273 lines)
 10. Config directory - `config/README.md` (43 lines)
 
+### ✅ Excellent (100+ lines or comprehensive inline)
+11. Beets - `config/beets/README.md` (880+ lines) - **NEW**
+12. Yazi - `config/yazi/README.md` (770+ lines) - **NEW**
+13. Tmux/Tmuxinator - `terminal/README.md` (700+ lines) - **NEW**
+
 ### ⚠️ Needs Improvement
-11. Beets - 170 lines, NO comments [HIGH PRIORITY]
-12. Yazi - 3 TOML files, minimal comments [HIGH PRIORITY]
-13. Karabiner - 249KB JSON, NO documentation [HIGH PRIORITY]
-14. Musikcube - 11 JSON files, auto-generated [MEDIUM]
-15. Vifm - 11KB config, unclear settings [MEDIUM]
-16. Tmuxinator - 3 templates, NO docs [MEDIUM]
+14. Karabiner - 249KB JSON, NO documentation [HIGH PRIORITY]
+15. Musikcube - 11 JSON files, auto-generated [MEDIUM]
+16. Vifm - 11KB config, unclear settings [MEDIUM]
 17. Starship - Minimal config [LOW]
 18. Aria2 - Minimal inline comments [LOW]
 
@@ -459,12 +461,12 @@ Keyboard remapping with 249KB of JSON configuration.
 - [x] Neovim comprehensive README
 - [x] Git comprehensive README
 - [x] Configuration index (this file)
+- [x] Beets music library README - **NEW**
+- [x] Yazi file manager README - **NEW**
+- [x] Tmux/Tmuxinator README - **NEW**
 
 ### High Priority
-- [ ] Beets music library README
-- [ ] Yazi file manager README
 - [ ] Karabiner keyboard remapping README
-- [ ] Tmux/Tmuxinator README
 
 ### Medium Priority
 - [ ] Musikcube README
@@ -557,5 +559,7 @@ Keyboard remapping with 249KB of JSON configuration.
 
 **Last Updated:** November 26, 2024
 **Total Configurations:** 50+ files
-**Documented:** ~40%
+**Documented:** ~60% (was 40%)
 **Target:** 90%+
+
+**Recent additions:** Beets (880 lines), Yazi (770 lines), Tmux/Tmuxinator (700 lines) - +2,350 lines of documentation
