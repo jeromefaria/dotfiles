@@ -2,15 +2,16 @@
 # DAWs, audio tools, music libraries, and streaming
 
 # Music Production DAWs & Tools
-tap "rigellute/tap"
-tap "khanhas/tap"
-
 cask "ableton-live-suite"
 cask "cycling74-max"           # Max/MSP
 cask "audacity"                # Audio editor
 cask "processing"              # Creative coding
+cask "musescore"               # Music notation
 
 # Music Libraries & Tagging
+brew "beets"                   # Music library manager
+brew "cuetools"                # Cue sheet utilities
+brew "shntool"                 # WAVE processing
 brew "exiftool"
 cask "musicbrainz-picard"      # Music tagger
 
@@ -21,14 +22,25 @@ cask "blackhole-64ch"
 cask "ilok-license-manager"    # Plugin license manager
 cask "sysex-librarian"         # MIDI sysex utility
 
+# Plugin Managers & Installers
+cask "arturia-software-center"
+cask "native-access"
+cask "izotope-product-portal"
+cask "softube-central"
+cask "spitfire-audio"
+cask "soundtoys"
+cask "fabfilter-pro-q"
+cask "elektron-overbridge"
+cask "elektron-transfer"
+
 # Music Players & Streaming
 brew "cmus"                    # Terminal music player
-brew "mplayer"
-brew "mpv"
-brew "spotify-tui", restart_service: true
-brew "rigellute/tap/spotify-tui"
+brew "mpd"                     # Music Player Daemon
+brew "musikcube"               # Terminal music player
+brew "nicotine-plus"           # Soulseek client
 cask "spotify"
 cask "lastfm"
+cask "tidal"
 
 # Audio Processing
 brew "portaudio"
