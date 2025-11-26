@@ -59,3 +59,7 @@ opt.hidden = true -- Enable background buffers
 opt.history = 1000 -- Command history size
 opt.spell = false -- Disable spell checking by default
 opt.title = true -- Set terminal title
+
+-- Disable providers we don't use
+vim.g.loaded_perl_provider = 0 -- Disable Perl provider
+vim.g.loaded_ruby_provider = 0 -- Disable Ruby provider

@@ -71,22 +71,22 @@ keymap.set("n", "<leader>fs", ":Telescope git_status<CR>", opts)
 
 -- LSP keymaps (set when LSP attaches)
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-  callback = function(ev)
-    local bufopts = { noremap = true, silent = true, buffer = ev.buf }
-    keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
-    keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-    keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
-    keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
-    keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
-    keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
-    keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-    keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
-    keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
-    keymap.set("n", "<leader>f", function()
-      vim.lsp.buf.format({ async = true })
-    end, bufopts)
-  end,
+	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	callback = function(ev)
+		local bufopts = { noremap = true, silent = true, buffer = ev.buf }
+		keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
+		keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
+		keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+		keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
+		keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
+		keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
+		keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
+		keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+		keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+		keymap.set("n", "<leader>f", function()
+			vim.lsp.buf.format({ async = true })
+		end, bufopts)
+	end,
 })
 
 -- Diagnostic keymaps

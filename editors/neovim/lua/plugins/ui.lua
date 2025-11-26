@@ -101,6 +101,8 @@ return {
   -- Notification manager
   {
     "rcarriga/nvim-notify",
+    lazy = false,
+    priority = 900,
     keys = {
       {
         "<leader>un",
@@ -119,8 +121,10 @@ return {
         return math.floor(vim.o.columns * 0.75)
       end,
     },
-    init = function()
-      vim.notify = require("notify")
+    config = function(_, opts)
+      local notify = require("notify")
+      notify.setup(opts)
+      vim.notify = notify
     end,
   },
 
@@ -178,5 +182,15 @@ return {
   {
     "leafOfTree/vim-matchtag",
     ft = { "html", "xml", "jsx", "tsx", "vue" },
+  },
+
+  -- Mini modules
+  {
+    "echasnovski/mini.nvim",
+    version = false,
+    config = function()
+      -- You can configure mini modules here if needed
+      -- require('mini.icons').setup()
+    end,
   },
 }
