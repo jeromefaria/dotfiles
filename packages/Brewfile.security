@@ -5,11 +5,15 @@
 brew "pass"              # Unix password manager
 cask "1password"
 
+# VPN
+cask "nordvpn"
+
 # Network Analysis & Testing
 brew "nmap"              # Port scanner
 brew "aircrack-ng"       # Wireless security
 brew "socat"             # Network relay
 brew "tor"               # Anonymity network
+brew "adns"              # Async DNS resolver
 
 # Encryption & Security
 brew "gnutls"

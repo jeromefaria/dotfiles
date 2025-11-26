@@ -3,6 +3,10 @@
 
 tap "homebrew/cask-versions"
 
+# Modern Browsers
+cask "arc"               # Arc browser
+cask "sigmaos"           # SigmaOS browser
+
 # Chrome Family
 cask "google-chrome"
 cask "google-chrome-canary"
