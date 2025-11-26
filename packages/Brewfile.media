@@ -1,23 +1,23 @@
 # Media Tools
 # Video/audio players, converters, editors, and downloaders
 
-tap "yt-dlp/taps"
-
 # Video Players
+cask "iina"                      # Modern media player
 cask "vlc"
 cask "obs"                       # OBS Studio for streaming/recording
+cask "plex-media-server"         # Media server
 mas "iMovie", id: 408981434
 
 # Video Processing & Tools
 brew "ffmpeg"                    # Video/audio converter
-brew "libav"                     # Audio/video library
+brew "ffmpeg@4"                  # FFmpeg 4.x (for compatibility)
+brew "handbrake"                 # Video transcoder
 brew "yt-dlp"                    # YouTube downloader
-brew "yt-dlp/taps/yt-dlp"
+cask "jdownloader"               # Download manager
 
 # Video Analysis & Validation
 brew "media-info"
 brew "mkvalidator"
-brew "mkvtoolnix", link: false
 cask "mkvtoolnix"
 
 # Image Processing
@@ -25,6 +25,13 @@ brew "imagemagick"
 brew "gifsicle"                  # GIF optimizer
 brew "optipng"                   # PNG optimizer
 cask "gimp"
+cask "adobe-dng-converter"       # RAW photo converter
+mas "Darkroom", id: 0
+mas "Pixelmator Pro", id: 1289583905
+
+# Creative Apps
+cask "blender"                   # 3D modeling
+cask "touchdesigner"             # Visual programming
 
 # Screen Capture & Mirroring
 brew "webkit2png"                # Screenshot websites
@@ -47,7 +54,6 @@ brew "poppler"                   # PDF rendering
 brew "docbook"
 
 # Text/Document Viewers
-brew "elinks"                    # Text browser
 brew "lynx"                      # Text browser
 brew "w3m"                       # Text browser
 brew "unrtf"                     # RTF converter
@@ -58,3 +64,10 @@ brew "mdp"                       # Markdown presentations
 
 # Utilities
 cask "balenaetcher"              # USB/SD card writer
+cask "raspberry-pi-imager"       # Raspberry Pi imager
+cask "wacom-tablet"              # Wacom tablet driver
+cask "displaylink"               # DisplayLink driver
+cask "sony-ps-remote-play"       # PS Remote Play
+cask "steam"                     # Gaming platform
+cask "db-browser-for-sqlite"     # SQLite browser
+cask "flacon"                    # Audio file splitter
