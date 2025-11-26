@@ -50,3 +50,16 @@ function flac2alac() {
 
   echo "Converted $count file(s)"
 }
+
+# Update music production plugin managers
+# Usage: update-music-plugins [--native] [--izotope] [--output] etc.
+function update-music-plugins() {
+  local script="$HOME/dotfiles/scripts/update-music-plugins.sh"
+
+  if [[ ! -f "$script" ]]; then
+    echo "Error: update-music-plugins.sh not found at $script"
+    return 1
+  fi
+
+  "$script" "$@"
+}
