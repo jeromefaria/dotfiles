@@ -1,16 +1,9 @@
 # Software Development Packages
 # Languages, frameworks, tools, and editors for development
 
-# Development taps
-tap "github/gh"
-tap "neovim/neovim"
-tap "jez/formulae"
-
 # Programming Languages & Runtimes
-brew "python@3.7"
-brew "python@3.8"
-brew "python@3.9"
 brew "python@3.11"
+brew "python@3.12"
 brew "ruby"
 brew "node", link: false
 brew "go"
@@ -20,14 +13,18 @@ brew "php"
 
 # Language Version Managers
 brew "rbenv"
+brew "fnm"              # Fast Node Manager
+brew "nvm"              # Node Version Manager
 
 # Package Managers & Build Tools
+brew "pnpm"             # Fast, disk-efficient npm
 brew "yarn"
 brew "npm"
 brew "composer"         # PHP
 brew "luarocks"         # Lua
 brew "gradle"           # Java/Android
 brew "ant"              # Java
+brew "pipx"             # Install Python apps in isolated environments
 
 # Build Systems & Tools
 brew "cmake"
@@ -42,9 +39,12 @@ brew "bison"
 # Editors & IDEs
 brew "neovim"
 brew "vim"
-brew "macvim", link: false
+brew "emacs"
 cask "visual-studio-code"
-cask "vimr"
+cask "cursor"           # AI-powered VS Code fork
+cask "zed"              # High-performance editor
+cask "claude-code"      # Claude AI code editor
+cask "ghostty"          # Modern terminal emulator
 
 # Code Quality & Formatting
 brew "eslint", link: false
@@ -100,6 +100,7 @@ brew "ios-deploy"
 cask "chromedriver"
 
 # File Managers (Terminal)
+brew "yazi"             # Modern file manager with preview
 brew "ranger"
 brew "vifm"
 brew "lf"
