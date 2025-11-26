@@ -1,0 +1,6 @@
+# vim: filetype=neomuttrc
+source $DOTFILES/mail/mutt/settings
+source $DOTFILES/mail/mutt/bindings
+source $DOTFILES/mail/mutt/macros
+source $DOTFILES/mail/mutt/colours
+source $DOTFILES/mail/mutt/accounts/1-personal.muttrc
