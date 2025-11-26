@@ -1,0 +1,69 @@
+# ============================================================================
+# Machine-Specific Git Configuration
+# ============================================================================
+# This file is a template for machine-specific Git configuration.
+# Copy this to ~/.gitconfig.local (which is NOT tracked in git) and customize.
+#
+# Copy command:
+#   cp ~/dotfiles/git/gitconfig.local.example ~/.gitconfig.local
+#
+# Then edit ~/.gitconfig.local with your machine-specific settings.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Example: Work email address
+# ----------------------------------------------------------------------------
+# [user]
+#   email = firstname.lastname@company.com
+
+# ----------------------------------------------------------------------------
+# Example: GPG signing key
+# ----------------------------------------------------------------------------
+# [user]
+#   signingkey = ABCD1234EFGH5678
+
+# [commit]
+#   gpgsign = true
+
+# ----------------------------------------------------------------------------
+# Example: Work-specific aliases
+# ----------------------------------------------------------------------------
+# [alias]
+#   work-log = log --author="firstname.lastname@company.com"
+#   deploy = !git push origin main && trigger-deployment.sh
+
+# ----------------------------------------------------------------------------
+# Example: Conditional includes based on directory
+# ----------------------------------------------------------------------------
+# Use different configs for work vs personal repositories
+#
+# [includeIf "gitdir:~/work/"]
+#   path = ~/.gitconfig.work
+#
+# [includeIf "gitdir:~/personal/"]
+#   path = ~/.gitconfig.personal
+
+# ----------------------------------------------------------------------------
+# Example: Custom merge tool
+# ----------------------------------------------------------------------------
+# [merge]
+#   tool = kdiff3
+#
+# [mergetool "kdiff3"]
+#   path = /usr/local/bin/kdiff3
+
+# ----------------------------------------------------------------------------
+# Example: Custom diff tool
+# ----------------------------------------------------------------------------
+# [diff]
+#   tool = vimdiff
+
+# ----------------------------------------------------------------------------
+# Example: URL rewrites for private repositories
+# ----------------------------------------------------------------------------
+# [url "git@github.company.com:"]
+#   insteadOf = https://github.company.com/
+
+# ============================================================================
+# Add your machine-specific configuration below
+# ============================================================================
