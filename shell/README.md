@@ -132,6 +132,13 @@ echo 'alias myalias="mycommand"' >> aliases/mycategory.sh
 - `server [port]` - Start HTTP server (default: 8000)
 - `phpserver [port]` - Start PHP server (default: 4000)
 - `gdb` - Remove git branches deleted from remote
+- `update [options]` - Update all system package managers and tools
+  - `--skip-brew` - Skip Homebrew updates
+  - `--skip-npm` - Skip npm updates
+  - `--skip-gems` - Skip Ruby gem updates
+  - `--skip-mas` - Skip Mac App Store updates
+  - `--skip-omz` - Skip Oh My Zsh updates
+  - `--skip-tldr` - Skip tldr updates
 
 ### Media Conversion
 - `flac2mp3` - Convert all FLAC files to MP3

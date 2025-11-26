@@ -110,3 +110,207 @@ function svg2css() {
     fi
   done
 }
+
+# Update all system package managers and tools
+# Usage: update [options]
+#   -h, --help          Show help message
+#   -s, --skip-brew     Skip Homebrew updates
+#   -n, --skip-npm      Skip npm updates
+#   -g, --skip-gems     Skip Ruby gem updates
+#   -m, --skip-mas      Skip Mac App Store updates
+#   -o, --skip-omz      Skip Oh My Zsh updates
+#   -t, --skip-tldr     Skip tldr updates
+#   -y, --yes           Skip confirmations (auto-yes)
+function update() {
+  local skip_brew=false
+  local skip_npm=false
+  local skip_gems=false
+  local skip_mas=false
+  local skip_omz=false
+  local skip_tldr=false
+  local auto_yes=false
+
+  # Parse command-line arguments
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -h|--help)
+        echo "Update all system package managers and tools"
+        echo ""
+        echo "Usage: update [options]"
+        echo ""
+        echo "Options:"
+        echo "  -h, --help          Show this help message"
+        echo "  -s, --skip-brew     Skip Homebrew updates"
+        echo "  -n, --skip-npm      Skip npm updates"
+        echo "  -g, --skip-gems     Skip Ruby gem updates"
+        echo "  -m, --skip-mas      Skip Mac App Store updates"
+        echo "  -o, --skip-omz      Skip Oh My Zsh updates"
+        echo "  -t, --skip-tldr     Skip tldr updates"
+        echo "  -y, --yes           Skip confirmations (auto-yes)"
+        return 0
+        ;;
+      -s|--skip-brew)
+        skip_brew=true
+        shift
+        ;;
+      -n|--skip-npm)
+        skip_npm=true
+        shift
+        ;;
+      -g|--skip-gems)
+        skip_gems=true
+        shift
+        ;;
+      -m|--skip-mas)
+        skip_mas=true
+        shift
+        ;;
+      -o|--skip-omz)
+        skip_omz=true
+        shift
+        ;;
+      -t|--skip-tldr)
+        skip_tldr=true
+        shift
+        ;;
+      -y|--yes)
+        auto_yes=true
+        shift
+        ;;
+      *)
+        echo "Unknown option: $1"
+        echo "Run 'update --help' for usage information"
+        return 1
+        ;;
+    esac
+  done
+
+  echo "=== System Update ==="
+  echo ""
+
+  # Refresh sudo timestamp
+  echo "→ Refreshing sudo credentials..."
+  sudo -v
+
+  # Mac App Store
+  if [[ "$skip_mas" == false ]] && command -v mas &> /dev/null; then
+    echo ""
+    echo "→ Updating Mac App Store apps..."
+    if mas upgrade; then
+      echo "✓ Mac App Store apps updated"
+    else
+      echo "✗ Mac App Store update failed (exit code: $?)"
+    fi
+  fi
+
+  # Homebrew
+  if [[ "$skip_brew" == false ]] && command -v brew &> /dev/null; then
+    echo ""
+    echo "→ Updating Homebrew..."
+    if brew update; then
+      echo "✓ Homebrew updated"
+    else
+      echo "✗ Homebrew update failed (exit code: $?)"
+    fi
+
+    echo ""
+    echo "→ Upgrading Homebrew formulae..."
+    if brew upgrade --formulae; then
+      echo "✓ Formulae upgraded"
+    else
+      echo "✗ Formulae upgrade failed (exit code: $?)"
+    fi
+
+    echo ""
+    echo "→ Upgrading Homebrew casks..."
+    if command -v brew-cu &> /dev/null || brew tap | grep -q "buo/cask-upgrade"; then
+      if brew cu -ay; then
+        echo "✓ Casks upgraded"
+      else
+        echo "✗ Cask upgrade failed (exit code: $?)"
+      fi
+    else
+      echo "ℹ Skipping cask upgrade (brew-cu not available)"
+      echo "  Install with: brew tap buo/cask-upgrade"
+    fi
+
+    echo ""
+    echo "→ Cleaning up Homebrew..."
+    if brew cleanup; then
+      echo "✓ Homebrew cleaned up"
+    else
+      echo "✗ Homebrew cleanup failed (exit code: $?)"
+    fi
+  fi
+
+  # npm
+  if [[ "$skip_npm" == false ]] && command -v npm &> /dev/null; then
+    echo ""
+    echo "→ Updating npm itself..."
+    if sudo npm install -g npm; then
+      echo "✓ npm updated"
+    else
+      echo "✗ npm update failed (exit code: $?)"
+    fi
+
+    echo ""
+    echo "→ Updating global npm packages..."
+    if sudo npm update -g; then
+      echo "✓ Global npm packages updated"
+    else
+      echo "✗ Global npm packages update failed (exit code: $?)"
+    fi
+  fi
+
+  # Ruby gems
+  if [[ "$skip_gems" == false ]] && command -v gem &> /dev/null; then
+    echo ""
+    echo "→ Updating RubyGems system..."
+    if gem update --system; then
+      echo "✓ RubyGems system updated"
+    else
+      echo "✗ RubyGems system update failed (exit code: $?)"
+    fi
+
+    echo ""
+    echo "→ Updating gems..."
+    if gem update; then
+      echo "✓ Gems updated"
+    else
+      echo "✗ Gem update failed (exit code: $?)"
+    fi
+
+    echo ""
+    echo "→ Cleaning up old gems..."
+    if gem cleanup; then
+      echo "✓ Gems cleaned up"
+    else
+      echo "✗ Gem cleanup failed (exit code: $?)"
+    fi
+  fi
+
+  # Oh My Zsh
+  if [[ "$skip_omz" == false ]] && [[ -d "$HOME/.oh-my-zsh" ]]; then
+    echo ""
+    echo "→ Updating Oh My Zsh..."
+    if omz update; then
+      echo "✓ Oh My Zsh updated"
+    else
+      echo "✗ Oh My Zsh update failed (exit code: $?)"
+    fi
+  fi
+
+  # tldr
+  if [[ "$skip_tldr" == false ]] && command -v tldr &> /dev/null; then
+    echo ""
+    echo "→ Updating tldr pages..."
+    if tldr --update; then
+      echo "✓ tldr pages updated"
+    else
+      echo "✗ tldr update failed (exit code: $?)"
+    fi
+  fi
+
+  echo ""
+  echo "=== Update Complete ==="
+}
