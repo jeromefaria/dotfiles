@@ -195,7 +195,6 @@ link_dotfiles() {
     "beets"
     "gh"
     "mpv"
-    "mutt"
     "musikcube"
     "ncmpcpp"
     "neofetch"
@@ -215,6 +214,11 @@ link_dotfiles() {
       create_symlink "$source" "$target"
     fi
   done
+
+  # Handle mail configuration separately (moved to mail/ directory)
+  if [ -e "$DOTFILES_DIR/mail/mutt" ]; then
+    create_symlink "$DOTFILES_DIR/mail/mutt" "$HOME/.config/neomutt"
+  fi
 
   print_success "All dotfiles linked successfully"
 }
