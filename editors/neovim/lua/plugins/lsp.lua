@@ -26,39 +26,8 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
+    lazy = false,
     config = function()
-      require("mason-lspconfig").setup({
-        -- Only include servers that install without issues
-        ensure_installed = {
-          "lua_ls",
-          "ts_ls",
-          "pyright",
-        },
-        -- This will automatically install LSP servers when you open relevant files
-        automatic_installation = true,
-      })
-    end,
-  },
-
-  -- LSP Configuration
-  {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",
-    },
-    config = function()
-      -- Suppress lspconfig deprecation warning until v3.0.0 migration
-      local notify = vim.notify
-      vim.notify = function(msg, ...)
-        if msg:match("lspconfig.*deprecated") then
-          return
-        end
-        notify(msg, ...)
-      end
-
       -- Setup capabilities for autocompletion
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
@@ -106,24 +75,53 @@ return {
         volar = {},
       }
 
-      -- Setup each server (only if available)
-      local lspconfig = require("lspconfig")
-      local util = require("lspconfig.util")
+      require("mason-lspconfig").setup({
+        -- Only include servers that install without issues
+        ensure_installed = {
+          "lua_ls",
+          "ts_ls",
+          "pyright",
+        },
+        -- This will automatically install LSP servers when you open relevant files
+        automatic_installation = true,
+        -- Setup handlers right here in the same config
+        handlers = {
+          -- Default handler for all servers
+          function(server_name)
+            local lspconfig = require("lspconfig")
+            local server_config = vim.tbl_deep_extend("force", default_config, servers[server_name] or {})
+            lspconfig[server_name].setup(server_config)
+          end,
+        },
+      })
+    end,
+  },
 
-      for server, config in pairs(servers) do
-        -- Use pcall to safely check if the server config exists
-        local ok, server_def = pcall(function()
-          return lspconfig[server]
-        end)
-
-        if ok and server_def then
-          local server_config = vim.tbl_deep_extend("force", default_config, config)
-          server_def.setup(server_config)
+  -- LSP Configuration
+  {
+    "neovim/nvim-lspconfig",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+      "hrsh7th/cmp-nvim-lsp",
+    },
+    config = function()
+      -- Suppress lspconfig deprecation warning until v3.0.0 migration
+      local notify = vim.notify
+      vim.notify = function(msg, ...)
+        if msg:match("lspconfig.*deprecated") then
+          return
         end
+        notify(msg, ...)
       end
 
-      -- Restore original vim.notify
-      vim.notify = notify
+      -- Restore original vim.notify after a delay
+      vim.defer_fn(function()
+        vim.notify = notify
+      end, 1000)
+
+      -- Note: Server setup is now handled by mason-lspconfig handlers above
 
       -- Configure diagnostic signs
       local signs = {
