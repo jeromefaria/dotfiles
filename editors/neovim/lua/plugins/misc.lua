@@ -75,31 +75,27 @@ return {
       vim.o.timeoutlen = 300
     end,
     opts = {
+      preset = "modern",
       plugins = { spelling = true },
-      defaults = {
+      spec = {
         mode = { "n", "v" },
-        ["g"] = { name = "+goto" },
-        ["gs"] = { name = "+surround" },
-        ["]"] = { name = "+next" },
-        ["["] = { name = "+prev" },
-        ["<leader>b"] = { name = "+buffer" },
-        ["<leader>c"] = { name = "+code" },
-        ["<leader>f"] = { name = "+file/find" },
-        ["<leader>g"] = { name = "+git" },
-        ["<leader>h"] = { name = "+git hunk" },
-        ["<leader>q"] = { name = "+quit/session" },
-        ["<leader>s"] = { name = "+split" },
-        ["<leader>t"] = { name = "+terminal/todo" },
-        ["<leader>u"] = { name = "+ui" },
-        ["<leader>w"] = { name = "+write" },
-        ["<leader>x"] = { name = "+diagnostics/quickfix" },
+        { "g", group = "goto" },
+        { "gs", group = "surround" },
+        { "]", group = "next" },
+        { "[", group = "prev" },
+        { "<leader>b", group = "buffer" },
+        { "<leader>c", group = "code" },
+        { "<leader>f", group = "file/find" },
+        { "<leader>g", group = "git" },
+        { "<leader>h", group = "git hunk" },
+        { "<leader>q", group = "quit/session" },
+        { "<leader>s", group = "split" },
+        { "<leader>t", group = "terminal/todo" },
+        { "<leader>u", group = "ui" },
+        { "<leader>w", group = "write" },
+        { "<leader>x", group = "diagnostics/quickfix" },
       },
     },
-    config = function(_, opts)
-      local wk = require("which-key")
-      wk.setup(opts)
-      wk.register(opts.defaults)
-    end,
   },
 
   -- Plenary - lua utilities
