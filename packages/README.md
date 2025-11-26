@@ -57,58 +57,74 @@ Essential tools for any macOS system:
 - Version control: git, gh
 - Shell: zsh, bash-completion
 - Core utilities: coreutils, curl, wget, tree
-- Modern CLI tools: bat, fd, ripgrep, fzf
+- Modern CLI tools: bat, eza, fd, ripgrep, fzf, zoxide, atuin, duf
+- Compression: sevenzip, unar
+- GNU utilities: gnu-sed, gnu-getopt
 
 ### dev
 Software development environment:
-- Languages: Python, Ruby, Node, Go, Rust, PHP, Erlang
-- Editors: Neovim, Vim, VS Code
-- Tools: Docker, tmux, httpie, jq
+- Languages: Python 3.11/3.12, Ruby, Node, Go, Rust, PHP, Erlang, Deno
+- Version managers: fnm, nvm, rbenv
+- Package managers: pnpm, npm, yarn, pipx
+- Editors: Neovim, Vim, Emacs, VS Code, Cursor, Zed, Claude Code, Ghostty
+- File managers: Yazi, Ranger, Vifm
+- Tools: Docker, tmux, httpie, jq, lazygit
 - Databases: MySQL, Cassandra
 
 ### music
 Music production and audio tools:
-- DAWs: Ableton Live, Cycling74 Max, Audacity
+- DAWs: Ableton Live, Cycling74 Max, Audacity, MuseScore
 - Audio routing: BlackHole
-- Music players: Spotify, cmus
-- Music libraries: MusicBrainz Picard
+- Music players: Spotify, Tidal, musikcube, mpd, cmus
+- Plugin managers: Native Access, Arturia, iZotope, Spitfire, Soundtoys
+- Music libraries: Beets, MusicBrainz Picard, cuetools, shntool
+- P2P: Nicotine Plus
 
 ### browsers
 Web browsers for testing and development:
+- Modern: Arc, SigmaOS
 - Chrome, Firefox, Safari, Edge, Opera
 - Developer editions and technology previews
 - Privacy browsers: DuckDuckGo, Tor
 
 ### security
 Security and network analysis:
-- Tools: nmap, aircrack-ng, tor
+- VPN: NordVPN
+- Tools: nmap, aircrack-ng, tor, adns
 - Password management: pass, 1Password
 
 ### communication
 Messaging and collaboration:
-- Team: Slack, Discord, Zoom
+- Team: Slack, Discord, Zoom, Microsoft Teams, Beeper
 - Personal: Signal, WhatsApp, Telegram
+- AI: ChatGPT, Perplexity
 - Email: mutt, neomutt, notmuch
 
 ### productivity
 Personal productivity applications:
 - Task management: Things, Fantastical
-- Notes: Craft
+- Notes: Craft, Obsidian, Raindrop.io, TagSpaces, iA Writer
 - Cloud storage: Dropbox, Google Drive
+- Writing: Grammarly Desktop
+- Tools: RAR, Marta, Numi
 - iWork suite: Keynote, Numbers, Pages
 
 ### media
 Media tools and players:
-- Players: VLC, MPV
-- Processing: ffmpeg, imagemagick
+- Players: IINA, VLC, Plex Media Server
+- Processing: ffmpeg, ffmpeg@4, handbrake, imagemagick
 - Recording: OBS Studio
+- Creative: Blender, TouchDesigner
+- Photo: Adobe DNG Converter, Darkroom, Pixelmator Pro
+- Utilities: jDownloader, Raspberry Pi Imager, Wacom, DisplayLink
+- Gaming: Steam, PS Remote Play
 - Editors: GIMP
 
 ### utilities
 macOS system utilities:
-- Window management: Spectacle, Alt-Tab
+- Window management: Aerospace, Rectangle Pro, KindaVim, SKHD, Alt-Tab
 - Input: Karabiner Elements
-- System tools: htop, cleanmymac
+- System tools: htop, Bartender, cleanmymac, macos-term-size
 
 ## Profiles
 
