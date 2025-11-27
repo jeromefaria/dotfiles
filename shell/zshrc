@@ -1,17 +1,48 @@
-# Volumes
-export ARCHIVE="/Volumes/Archive"
-export AUDIO="/Volumes/Audio"
-export MEDIA="/Volumes/Media"
-export PORTABLE="/Volumes/Portable"
-export VIDEO="/Volumes/Video"
+# ============================================================================
+# Platform Detection
+# ============================================================================
+# Detect the current platform for conditional configuration loading
+# Supported: macos, linux, windows (WSL/Cygwin)
 
-# Folders
-export DRIVE="$ARCHIVE/Drive"
+DOTFILES_PLATFORM="unknown"
+case "$(uname -s)" in
+  Darwin)
+    DOTFILES_PLATFORM="macos"
+    ;;
+  Linux)
+    # Check for WSL
+    if grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null; then
+      DOTFILES_PLATFORM="wsl"
+    else
+      DOTFILES_PLATFORM="linux"
+    fi
+    ;;
+  MINGW*|MSYS*|CYGWIN*)
+    DOTFILES_PLATFORM="windows"
+    ;;
+esac
+export DOTFILES_PLATFORM
+
+# ============================================================================
+# Platform-Specific: macOS Volumes (only on macOS)
+# ============================================================================
+if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  export ARCHIVE="/Volumes/Archive"
+  export AUDIO="/Volumes/Audio"
+  export MEDIA="/Volumes/Media"
+  export PORTABLE="/Volumes/Portable"
+  export VIDEO="/Volumes/Video"
+  export DRIVE="$ARCHIVE/Drive"
+  export MOBILE="$HOME/Library/Mobile\ Documents"
+  export PROJECTS="$AUDIO/Audio/Projects"
+  export SHARED="$DRIVE/Shared"
+fi
+
+# ============================================================================
+# Cross-Platform Folders
+# ============================================================================
 export DOTFILES="$HOME/dotfiles"
 export DOWNLOADS="$HOME/Downloads"
-export MOBILE="$HOME/Library/Mobile\ Documents"
-export PROJECTS="$AUDIO/Audio/Projects"
-export SHARED="$DRIVE/Shared"
 export WORK="$HOME/Work"
 
 # ZSH settings
@@ -28,13 +59,30 @@ export PATH="/usr/local/sbin:$PATH"
 # SOURCES
 source $ZSH/oh-my-zsh.sh
 
-# Load modular aliases
+# Load modular aliases (platform-aware)
+# Skip macOS-specific files on non-macOS platforms
 for alias_file in $DOTFILES/shell/aliases/*.sh; do
+  local filename=$(basename "$alias_file")
+  # Skip platform-specific files on wrong platforms
+  if [[ "$filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+    continue
+  fi
+  if [[ "$filename" == "chrome.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+    continue
+  fi
+  if [[ "$filename" == "folders.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+    continue
+  fi
   source "$alias_file"
 done
 
-# Load modular functions
+# Load modular functions (platform-aware)
 for func_file in $DOTFILES/shell/functions/*.sh; do
+  local filename=$(basename "$func_file")
+  # Skip macOS-specific functions on non-macOS platforms
+  if [[ "$filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+    continue
+  fi
   source "$func_file"
 done
 
@@ -62,8 +110,10 @@ export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
 export PATH="/usr/local/opt/node@22/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 
-# CUSTOM
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+# iTerm2 integration (macOS only)
+if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+fi
 
 ## POWERLINE
 # Removed deprecated Python 2.7 reference
@@ -80,44 +130,84 @@ autoload -U compinit && compinit
 ## FZF
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Initialise rbenv
-eval "$(rbenv init -)"
+# ============================================================================
+# Tool Initialization (Platform-Aware)
+# ============================================================================
 
-# Initialise Starship
-eval "$(starship init zsh)"
+# Initialise rbenv (if available)
+if command -v rbenv &>/dev/null; then
+  eval "$(rbenv init -)"
+fi
 
-source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
+# Initialise Starship (cross-platform)
+if command -v starship &>/dev/null; then
+  eval "$(starship init zsh)"
+fi
 
-eval $(thefuck --alias)
+# Broot launcher (macOS-specific path)
+if [[ "$DOTFILES_PLATFORM" == "macos" && -f "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br" ]]; then
+  source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
+elif [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
+  source $HOME/.config/broot/launcher/bash/br
+fi
+
+# Volta (cross-platform)
+if [[ -d "$HOME/.volta" ]]; then
+  export VOLTA_HOME="$HOME/.volta"
+  export PATH="$VOLTA_HOME/bin:$PATH"
+fi
+
+# thefuck (if available)
+if command -v thefuck &>/dev/null; then
+  eval $(thefuck --alias)
+fi
 
 # Supress Ruby warnings
 export RUBYOPT=-W0
-eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# 1Password CLI integration
-export OP_BIOMETRIC_UNLOCK_ENABLED=true
+# Homebrew (macOS only)
+if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  if [[ -f "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -f "/usr/local/bin/brew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
+
+# 1Password CLI integration (if available)
+if command -v op &>/dev/null; then
+  export OP_BIOMETRIC_UNLOCK_ENABLED=true
+fi
 
 # BEETS ENV VARIABLE
-export BEETSDIR="$HOME/.config/beets/"
+if [[ -d "$HOME/.config/beets" ]]; then
+  export BEETSDIR="$HOME/.config/beets/"
+fi
 
-# Warp Terminal settings for ZSH
-if [[ $TERM_PROGRAM == "WarpTerminal" ]]; then
+# Warp Terminal settings for ZSH (macOS)
+if [[ "$DOTFILES_PLATFORM" == "macos" && "$TERM_PROGRAM" == "WarpTerminal" ]]; then
   printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
 fi
 
-# cyrus-sasl homebrew version to fix neomutt
-export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
+# cyrus-sasl homebrew version to fix neomutt (macOS only)
+if [[ "$DOTFILES_PLATFORM" == "macos" && -d "/opt/homebrew/opt/cyrus-sasl/sbin" ]]; then
+  export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
+fi
 
-# Day One CLI
-export DAYONE_APP_PATH="/Applications/Day One.app"
+# Day One CLI (macOS only)
+if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  export DAYONE_APP_PATH="/Applications/Day One.app"
+fi
 
-# fnm fast node manager (using fnm instead of nvm for better performance)
-eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
+# fnm fast node manager (cross-platform)
+if command -v fnm &>/dev/null; then
+  eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
+fi
 
-# zoxide - smarter cd command
-eval "$(zoxide init zsh)"
+# zoxide - smarter cd command (cross-platform)
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init zsh)"
+fi
 
 ##########
 # HISTORY
