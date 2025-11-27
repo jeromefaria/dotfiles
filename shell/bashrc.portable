@@ -1,0 +1,731 @@
+#!/bin/bash
+# ============================================================================
+# Portable Bash Configuration for Restricted Environments
+# Compatible with: Git Bash (Windows), Linux, macOS
+#
+# This configuration is designed for environments where:
+# - You cannot install tools via package managers (no admin rights)
+# - Only basic Unix tools are available (git-bash on Windows)
+# - No fzf, ripgrep, eza, bat, or other modern CLI tools
+# - Node.js/npm IS typically available (front-end dev environment)
+#
+# Features enabled when Node.js is available:
+# - npm/npx aliases and shortcuts
+# - JSON formatting via Node.js
+# - Package.json script helpers
+#
+# Usage:
+#   Source this file from your .bashrc:
+#   [ -f ~/dotfiles/shell/bashrc.portable ] && source ~/dotfiles/shell/bashrc.portable
+#
+#   Or symlink it:
+#   ln -s ~/dotfiles/shell/bashrc.portable ~/.bashrc
+# ============================================================================
+
+# ============================================================================
+# Platform Detection
+# ============================================================================
+
+DOTFILES_PLATFORM="unknown"
+case "$(uname -s)" in
+  Darwin)
+    DOTFILES_PLATFORM="macos"
+    ;;
+  Linux)
+    DOTFILES_PLATFORM="linux"
+    ;;
+  MINGW*|MSYS*|CYGWIN*)
+    DOTFILES_PLATFORM="windows"
+    ;;
+esac
+
+export DOTFILES_PLATFORM
+
+# ============================================================================
+# Node.js Detection
+# ============================================================================
+
+HAS_NODE=false
+HAS_NPM=false
+if command -v node &>/dev/null; then
+  HAS_NODE=true
+fi
+if command -v npm &>/dev/null; then
+  HAS_NPM=true
+fi
+export HAS_NODE HAS_NPM
+
+# ============================================================================
+# Environment Variables
+# ============================================================================
+
+export DOTFILES="${DOTFILES:-$HOME/dotfiles}"
+export EDITOR="${EDITOR:-vim}"
+export VISUAL="$EDITOR"
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
+# History settings
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend
+
+# ============================================================================
+# Path Configuration
+# ============================================================================
+
+# Add common paths (will be ignored if they don't exist)
+for dir in "$HOME/.local/bin" "$HOME/bin" "/usr/local/bin"; do
+  [[ -d "$dir" && ":$PATH:" != *":$dir:"* ]] && PATH="$dir:$PATH"
+done
+export PATH
+
+# ============================================================================
+# Shell Options
+# ============================================================================
+
+# Check window size after each command
+shopt -s checkwinsize
+
+# Extended globbing
+shopt -s extglob
+
+# Case-insensitive globbing
+shopt -s nocaseglob
+
+# Autocorrect typos in path names when using cd
+shopt -s cdspell
+
+# ============================================================================
+# Prompt Configuration
+# ============================================================================
+
+# Git branch in prompt (if git is available)
+__git_branch() {
+  git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+
+# Simple but informative prompt with git branch
+# Format: [user@host:directory (branch)]$
+if [[ "$DOTFILES_PLATFORM" == "windows" ]]; then
+  # Git Bash typically has MSYSTEM set
+  PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[33m\]$(__git_branch)\[\033[00m\]\$ '
+else
+  PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[33m\]$(__git_branch)\[\033[00m\]\$ '
+fi
+
+# ============================================================================
+# Navigation Aliases
+# ============================================================================
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias -- -="cd -"
+
+# ============================================================================
+# System Operations
+# ============================================================================
+
+alias cl="clear"
+alias reload="exec \${SHELL} -l"
+alias path='echo -e ${PATH//:/\\n}'
+alias sudo='sudo '
+
+# ============================================================================
+# File Listing (works everywhere)
+# ============================================================================
+
+# Use colors if supported
+if ls --color=auto &>/dev/null; then
+  # GNU ls (Linux, Git Bash)
+  alias ls="ls --color=auto"
+  alias ll="ls -lh --color=auto"
+  alias la="ls -lah --color=auto"
+  alias l="ls --color=auto"
+elif ls -G &>/dev/null; then
+  # BSD ls (macOS)
+  alias ls="ls -G"
+  alias ll="ls -lhG"
+  alias la="ls -lahG"
+  alias l="ls -G"
+else
+  alias ll="ls -lh"
+  alias la="ls -lah"
+  alias l="ls"
+fi
+
+# ============================================================================
+# Clipboard Operations (Platform-specific)
+# ============================================================================
+
+if [[ "$DOTFILES_PLATFORM" == "windows" ]]; then
+  # Git Bash on Windows
+  alias pbc="clip"
+  alias pbp="powershell.exe -Command Get-Clipboard"
+  alias copy="tr -d '\n' | clip"
+  alias cdir="pwd | tr -d '\n' | clip"
+elif [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  # macOS
+  alias pbc="pbcopy"
+  alias pbp="pbpaste"
+  alias copy="tr -d '\n' | pbcopy"
+  alias cdir="pwd | tr -d '\n' | pbcopy"
+elif command -v xclip &>/dev/null; then
+  # Linux with xclip
+  alias pbc="xclip -selection clipboard"
+  alias pbp="xclip -selection clipboard -o"
+  alias copy="tr -d '\n' | xclip -selection clipboard"
+  alias cdir="pwd | tr -d '\n' | xclip -selection clipboard"
+elif command -v xsel &>/dev/null; then
+  # Linux with xsel
+  alias pbc="xsel --clipboard --input"
+  alias pbp="xsel --clipboard --output"
+  alias copy="tr -d '\n' | xsel --clipboard --input"
+  alias cdir="pwd | tr -d '\n' | xsel --clipboard --input"
+fi
+
+# ============================================================================
+# File Operations (Platform-specific)
+# ============================================================================
+
+if [[ "$DOTFILES_PLATFORM" == "windows" ]]; then
+  alias o="start"
+  alias open="start"
+elif [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  alias o="open"
+elif command -v xdg-open &>/dev/null; then
+  alias o="xdg-open"
+  alias open="xdg-open"
+fi
+
+# ============================================================================
+# Grep with Colors
+# ============================================================================
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# ============================================================================
+# Git Aliases (fully portable)
+# ============================================================================
+
+alias g="git"
+alias ga="git add"
+alias gaa="git add --all"
+alias gb="git branch"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gcan="git commit --amend --no-edit"
+alias gco="git checkout"
+alias gd="git diff"
+alias gds="git diff --staged"
+alias gdc="git diff --name-only --diff-filter=U"
+alias gf="git fetch"
+alias gl="git log --oneline"
+alias glo="git log --oneline --decorate --graph"
+alias gp="git push"
+alias gpl="git pull"
+alias grp="git request-pull"
+alias gs="git status"
+alias gss="git status -s"
+alias gst="git stash"
+alias gstl="git stash list"
+alias gstp="git stash pop"
+alias gstdf="git stash show -p"
+
+# ============================================================================
+# Node.js / npm Aliases (if available)
+# ============================================================================
+
+if [[ "$HAS_NPM" == "true" ]]; then
+  # npm shortcuts
+  alias ni="npm install"
+  alias nid="npm install --save-dev"
+  alias nig="npm install -g"
+  alias nu="npm uninstall"
+  alias nug="npm uninstall -g"
+  alias nup="npm update"
+  alias nls="npm list --depth=0"
+  alias nlsg="npm list -g --depth=0"
+  alias nout="npm outdated"
+
+  # npm run shortcuts
+  alias nr="npm run"
+  alias nrs="npm run start"
+  alias nrd="npm run dev"
+  alias nrb="npm run build"
+  alias nrt="npm run test"
+  alias nrl="npm run lint"
+  alias nrf="npm run format"
+
+  # npx shortcuts
+  alias npx="npx --yes"
+fi
+
+# ============================================================================
+# Docker Aliases (if docker is available)
+# ============================================================================
+
+if command -v docker &>/dev/null; then
+  alias dcu="docker compose up"
+  alias dcud="docker compose up -d"
+  alias dcd="docker compose down"
+  alias dcs="docker compose stop"
+  alias dcb="docker compose build"
+fi
+
+# ============================================================================
+# Tmux Aliases (if tmux is available)
+# ============================================================================
+
+if command -v tmux &>/dev/null; then
+  alias tmx="tmux new -s"
+  alias tmxa="tmux attach"
+  alias tmxl="tmux ls"
+fi
+
+# ============================================================================
+# Encoding Utilities
+# ============================================================================
+
+alias rot13="tr 'A-Za-z' 'N-ZA-Mn-za-m'"
+alias rot5="tr '0-9' '5-90-4'"
+alias rotten="tr 'A-Za-z0-9' 'N-ZA-Mn-za-m5-90-4'"
+
+# URL encode (requires Python)
+if command -v python3 &>/dev/null; then
+  alias urlencode='python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]));"'
+elif command -v python &>/dev/null; then
+  alias urlencode='python -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]));"'
+fi
+
+# JSON formatting (prefer Node.js, fallback to Python)
+if [[ "$HAS_NODE" == "true" ]]; then
+  alias json='node -e "process.stdin.on(\"data\",d=>console.log(JSON.stringify(JSON.parse(d),null,2)))"'
+elif command -v python3 &>/dev/null; then
+  alias json='python3 -m json.tool'
+elif command -v python &>/dev/null; then
+  alias json='python -m json.tool'
+fi
+
+# ============================================================================
+# Date/Time
+# ============================================================================
+
+alias week='date +%V'
+alias now='date +"%Y-%m-%d %H:%M:%S"'
+alias today='date +"%Y-%m-%d"'
+
+# ============================================================================
+# Archive Operations
+# ============================================================================
+
+alias zi="zipinfo"
+alias uz="unzip -o"
+
+# ============================================================================
+# Weather (requires curl)
+# ============================================================================
+
+if command -v curl &>/dev/null; then
+  alias weather="curl -4 http://wttr.in"
+fi
+
+# ============================================================================
+# Portable Functions
+# ============================================================================
+
+# Create a new directory and enter it
+mkd() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: mkd <directory_name>"
+    return 1
+  fi
+  mkdir -p "$@" && cd "$_"
+}
+
+# Determine size of a file or total size of a directory
+fs() {
+  if du -b /dev/null &>/dev/null; then
+    local arg=-sbh
+  else
+    local arg=-sh
+  fi
+  if [[ -n "$*" ]]; then
+    du $arg -- "$@"
+  else
+    du $arg .[^.]* ./* 2>/dev/null
+  fi
+}
+
+# Base64 encoding (outputs to stdout - platform independent)
+enc() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: enc <file>"
+    return 1
+  fi
+  if [[ ! -f "$1" ]]; then
+    echo "Error: File '$1' not found"
+    return 1
+  fi
+  if command -v openssl &>/dev/null; then
+    openssl base64 -in "$1" | tr -d '\n'
+  elif command -v base64 &>/dev/null; then
+    base64 "$1" | tr -d '\n'
+  else
+    echo "Error: No base64 encoder available"
+    return 1
+  fi
+  echo ""
+}
+
+# Base64 decoding from stdin to file
+dec() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: echo 'base64string' | dec <output_file>"
+    return 1
+  fi
+  if command -v openssl &>/dev/null; then
+    openssl base64 -d > "$1"
+  elif command -v base64 &>/dev/null; then
+    base64 -d > "$1"
+  else
+    echo "Error: No base64 decoder available"
+    return 1
+  fi
+  echo "Decoded and saved to $1"
+}
+
+# Create a data URL from a file
+dataurl() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: dataurl <file>"
+    return 1
+  fi
+  if [[ ! -f "$1" ]]; then
+    echo "Error: File '$1' not found"
+    return 1
+  fi
+  local mimeType
+  mimeType=$(file -b --mime-type "$1" 2>/dev/null || echo "application/octet-stream")
+  if [[ $mimeType == text/* ]]; then
+    mimeType="${mimeType};charset=utf-8"
+  fi
+  local encoded
+  if command -v openssl &>/dev/null; then
+    encoded=$(openssl base64 -in "$1" | tr -d '\n')
+  elif command -v base64 &>/dev/null; then
+    encoded=$(base64 "$1" | tr -d '\n')
+  else
+    echo "Error: No base64 encoder available"
+    return 1
+  fi
+  echo "data:${mimeType};base64,${encoded}"
+}
+
+# Read specific line from file
+rl() {
+  if [[ -z "$1" || -z "$2" ]]; then
+    echo "Usage: rl <file> <line_number>"
+    return 1
+  fi
+  if [[ ! -f "$1" ]]; then
+    echo "Error: File '$1' not found"
+    return 1
+  fi
+  head -"$2" "$1" | tail -1
+}
+
+# Grab all href links from a webpage
+links() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: links <url>"
+    return 1
+  fi
+  if ! command -v curl &>/dev/null; then
+    echo "Error: curl not available"
+    return 1
+  fi
+  curl -s "$1" | grep -o -E 'href="([^"#]+)"' | cut -d'"' -f2
+}
+
+# Generate a random number between min and max
+randNum() {
+  if [[ -z "$1" || -z "$2" ]]; then
+    echo "Usage: randNum <min> <max>"
+    return 1
+  fi
+  echo $(($1 + RANDOM % ($2 - $1 + 1)))
+}
+
+# Start an HTTP server from a directory (requires Python)
+server() {
+  local port="${1:-8000}"
+  echo "Starting HTTP server on port $port..."
+  echo "Press Ctrl+C to stop"
+
+  # Open in browser (platform-specific)
+  if [[ "$DOTFILES_PLATFORM" == "windows" ]]; then
+    start "http://localhost:${port}/" &
+  elif [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+    sleep 1 && open "http://localhost:${port}/" &
+  elif command -v xdg-open &>/dev/null; then
+    sleep 1 && xdg-open "http://localhost:${port}/" &
+  fi
+
+  if command -v python3 &>/dev/null; then
+    python3 -m http.server "$port"
+  elif command -v python &>/dev/null; then
+    python -m SimpleHTTPServer "$port"
+  else
+    echo "Error: Python not available"
+    return 1
+  fi
+}
+
+# Get the date of the current latest commit
+ggd() {
+  if [[ ! -d .git ]] && ! git rev-parse --git-dir &>/dev/null; then
+    echo "Error: Not in a git repository"
+    return 1
+  fi
+  git show | awk 'NR==3' | grep "Date:" | cut -d " " -f4-9 | tr "\n" " "
+  echo ""
+}
+
+# Remove tracking branches no longer on remote
+gdb() {
+  if [[ ! -d .git ]] && ! git rev-parse --git-dir &>/dev/null; then
+    echo "Error: Not in a git repository"
+    return 1
+  fi
+  git fetch -p
+  local branches
+  branches=$(git branch -vv | grep ': gone]' | awk '{print $1}')
+  if [[ -z "$branches" ]]; then
+    echo "No stale branches to remove"
+    return 0
+  fi
+  echo "Removing stale branches:"
+  for branch in $branches; do
+    echo "  - $branch"
+    git branch -D "$branch"
+  done
+}
+
+# Extract various archive formats
+extract() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: extract <file>"
+    return 1
+  fi
+  if [[ ! -f "$1" ]]; then
+    echo "Error: '$1' is not a valid file"
+    return 1
+  fi
+  case "$1" in
+    *.tar.bz2) tar xjf "$1" ;;
+    *.tar.gz)  tar xzf "$1" ;;
+    *.tar.xz)  tar xJf "$1" ;;
+    *.bz2)     bunzip2 "$1" ;;
+    *.rar)
+      if command -v unrar &>/dev/null; then
+        unrar x "$1"
+      else
+        echo "Error: unrar not available"
+        return 1
+      fi
+      ;;
+    *.gz)      gunzip "$1" ;;
+    *.tar)     tar xf "$1" ;;
+    *.tbz2)    tar xjf "$1" ;;
+    *.tgz)     tar xzf "$1" ;;
+    *.zip)     unzip "$1" ;;
+    *.Z)       uncompress "$1" ;;
+    *.7z)
+      if command -v 7z &>/dev/null; then
+        7z x "$1"
+      else
+        echo "Error: 7z not available"
+        return 1
+      fi
+      ;;
+    *)         echo "Error: '$1' cannot be extracted via extract()" ;;
+  esac
+}
+
+# Quick find (uses basic find, not fd)
+qf() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: qf <filename_pattern>"
+    return 1
+  fi
+  find . -name "*$1*" 2>/dev/null
+}
+
+# Quick grep (uses basic grep, not ripgrep)
+qg() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: qg <pattern> [path]"
+    return 1
+  fi
+  local path="${2:-.}"
+  grep -r --color=auto "$1" "$path" 2>/dev/null
+}
+
+# ============================================================================
+# Node.js / npm Functions (if available)
+# ============================================================================
+
+if [[ "$HAS_NPM" == "true" ]]; then
+  # List available npm scripts from package.json
+  nscripts() {
+    if [[ ! -f "package.json" ]]; then
+      echo "Error: No package.json found in current directory"
+      return 1
+    fi
+    echo "Available npm scripts:"
+    node -e "const p=require('./package.json'); Object.keys(p.scripts||{}).forEach(k=>console.log('  '+k+': '+p.scripts[k]))"
+  }
+
+  # Run npm script with fuzzy matching (basic)
+  nrun() {
+    if [[ -z "$1" ]]; then
+      nscripts
+      return 0
+    fi
+    npm run "$1"
+  }
+
+  # Quick project setup - install dependencies
+  nsetup() {
+    if [[ -f "package-lock.json" ]]; then
+      echo "Installing with npm ci (clean install)..."
+      npm ci
+    elif [[ -f "package.json" ]]; then
+      echo "Installing with npm install..."
+      npm install
+    else
+      echo "Error: No package.json found"
+      return 1
+    fi
+  }
+
+  # Clean node_modules and reinstall
+  nclean() {
+    echo "Removing node_modules..."
+    rm -rf node_modules
+    echo "Removing package-lock.json..."
+    rm -f package-lock.json
+    echo "Reinstalling dependencies..."
+    npm install
+  }
+
+  # Check for outdated packages and update interactively
+  ncheck() {
+    echo "Checking for outdated packages..."
+    npm outdated
+  }
+
+  # Initialize a new npm project
+  ninit() {
+    if [[ -f "package.json" ]]; then
+      echo "Warning: package.json already exists"
+      read -p "Overwrite? [y/N] " -n 1 -r
+      echo
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        return 1
+      fi
+    fi
+    npm init -y
+    echo "Created package.json"
+  }
+
+  # Add common dev dependencies for front-end projects
+  ndev-setup() {
+    echo "Installing common front-end dev dependencies..."
+    npm install --save-dev \
+      eslint \
+      prettier \
+      eslint-config-prettier \
+      eslint-plugin-prettier
+    echo "Done! You may want to configure .eslintrc and .prettierrc"
+  }
+
+  # Show package.json info
+  npkg() {
+    if [[ ! -f "package.json" ]]; then
+      echo "Error: No package.json found"
+      return 1
+    fi
+    node -e "
+      const p = require('./package.json');
+      console.log('Name:', p.name || 'N/A');
+      console.log('Version:', p.version || 'N/A');
+      console.log('Description:', p.description || 'N/A');
+      console.log('Main:', p.main || 'N/A');
+      console.log('Dependencies:', Object.keys(p.dependencies || {}).length);
+      console.log('DevDependencies:', Object.keys(p.devDependencies || {}).length);
+    "
+  }
+
+  # Bump package version
+  nbump() {
+    local bump_type="${1:-patch}"
+    if [[ ! "$bump_type" =~ ^(major|minor|patch)$ ]]; then
+      echo "Usage: nbump [major|minor|patch]"
+      echo "Default: patch"
+      return 1
+    fi
+    npm version "$bump_type" --no-git-tag-version
+  }
+fi
+
+# ============================================================================
+# Completion (Bash only)
+# ============================================================================
+
+# Enable programmable completion features
+if ! shopt -oq posix; then
+  if [[ -f /usr/share/bash-completion/bash_completion ]]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [[ -f /etc/bash_completion ]]; then
+    . /etc/bash_completion
+  elif [[ -f /usr/local/etc/bash_completion ]]; then
+    . /usr/local/etc/bash_completion
+  fi
+fi
+
+# Git completion (Git Bash usually has this)
+if [[ -f /usr/share/bash-completion/completions/git ]]; then
+  . /usr/share/bash-completion/completions/git
+elif [[ -f /etc/bash_completion.d/git ]]; then
+  . /etc/bash_completion.d/git
+fi
+
+# ============================================================================
+# Local Overrides
+# ============================================================================
+
+# Load machine-specific configuration if it exists
+if [[ -f "$HOME/.bashrc.local" ]]; then
+  source "$HOME/.bashrc.local"
+fi
+
+# ============================================================================
+# Startup Message
+# ============================================================================
+
+_node_status="no"
+if [[ "$HAS_NODE" == "true" && "$HAS_NPM" == "true" ]]; then
+  _node_status="yes ($(node --version 2>/dev/null || echo 'unknown'))"
+elif [[ "$HAS_NODE" == "true" ]]; then
+  _node_status="node only (no npm)"
+fi
+
+echo "Portable shell loaded | Platform: $DOTFILES_PLATFORM | Node.js: $_node_status"
+unset _node_status
