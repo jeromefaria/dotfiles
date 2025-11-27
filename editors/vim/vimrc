@@ -10,7 +10,48 @@ if has('nvim')
   finish
 endif
 
-" Source Vim configuration modules
+" ============================================================================
+" Platform Detection
+" ============================================================================
+
+let g:vim_platform = 'unknown'
+if has('win32') || has('win64')
+  let g:vim_platform = 'windows'
+elseif has('win32unix')
+  " Git Bash / Cygwin / MSYS
+  let g:vim_platform = 'gitbash'
+elseif has('mac') || has('macunix')
+  let g:vim_platform = 'macos'
+elseif has('unix')
+  let g:vim_platform = 'linux'
+endif
+
+" Check if this is a restricted environment (no external tools)
+" Set this to 1 in your local vimrc to use portable mode
+let g:vim_portable_mode = get(g:, 'vim_portable_mode', 0)
+
+" Auto-detect portable mode if on Git Bash and no fzf available
+if g:vim_platform == 'gitbash' && !executable('fzf')
+  let g:vim_portable_mode = 1
+endif
+
+" ============================================================================
+" Configuration Loading
+" ============================================================================
+
+if g:vim_portable_mode
+  " Use portable configuration (no external dependencies)
+  if filereadable(expand('~/.vim/config/vimrc.portable'))
+    source ~/.vim/config/vimrc.portable
+  elseif filereadable(expand('~/dotfiles/editors/vim/vimrc.portable'))
+    source ~/dotfiles/editors/vim/vimrc.portable
+  else
+    echom "Portable mode enabled but vimrc.portable not found"
+  endif
+  finish
+endif
+
+" Source Vim configuration modules (full configuration)
 " Note: install.sh creates symlink from dotfiles/vim to ~/.vim/config
 so ~/.vim/config/plugins.vim
 so ~/.vim/config/general.vim

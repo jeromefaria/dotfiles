@@ -15,8 +15,28 @@ set guioptions-=Be
 set list
 set listchars=tab:▸\ ,eol:¬,nbsp:⋅,trail:•
 set noswapfile
-"set shell=/bin/bash
-set shell=/usr/local/bin/zsh
+
+" Platform-aware shell configuration
+if exists('g:vim_platform')
+  if g:vim_platform == 'gitbash' || g:vim_platform == 'windows'
+    set shell=bash
+    set shellcmdflag=-c
+  elseif g:vim_platform == 'macos'
+    if executable('/usr/local/bin/zsh')
+      set shell=/usr/local/bin/zsh
+    elseif executable('/opt/homebrew/bin/zsh')
+      set shell=/opt/homebrew/bin/zsh
+    else
+      set shell=/bin/zsh
+    endif
+  else
+    " Linux or unknown - use sh for maximum compatibility
+    set shell=/bin/sh
+  endif
+else
+  " Fallback if platform detection hasn't run
+  set shell=/bin/sh
+endif
 set showmatch
 set smartindent
 "set term=screen-256color
