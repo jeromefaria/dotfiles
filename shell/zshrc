@@ -55,7 +55,10 @@ ZSH_THEME=""
 # ZSH plugins
 plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting zsh-autosuggestions git-open brew omz-git zsh-vi-mode)
 
-# ZSH INTERACTIVE CD
+# FZF - must be loaded before zsh-interactive-cd plugin
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# ZSH INTERACTIVE CD (requires fzf)
 source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
 export PATH="/usr/local/sbin:$PATH"
 
@@ -129,9 +132,6 @@ export LANG=en_US.UTF-8
 fpath=(~/.zsh/completions $fpath)
 
 autoload -U compinit && compinit
-
-## FZF
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # ============================================================================
 # Tool Initialization (Platform-Aware)
