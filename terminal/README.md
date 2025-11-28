@@ -25,6 +25,7 @@ This configuration combines **Tmux** (terminal multiplexer) with **Tmuxinator** 
 
 - [Installation](#installation)
 - [Tmux Configuration](#tmux-configuration)
+  - [Status Bar Theme](#status-bar-theme-oceanicnext)
 - [Keybindings](#keybindings)
 - [Plugins](#plugins)
 - [Tmuxinator Sessions](#tmuxinator-sessions)
@@ -120,12 +121,51 @@ set -g history-file ~/.tmux_history
 ### macOS Integration
 
 ```tmux
-# Clipboard integration (macOS)
-set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+# Clipboard integration (macOS 10.14+ - no reattach-to-user-namespace needed)
+set-option -g default-command "$SHELL"
 
 # Copy to system clipboard
-bind-key -T copy-mode-vi y send-keys -X copy-pipe "reattach-to-user-namespace pbcopy"
+bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
 ```
+
+### Status Bar Theme (OceanicNext)
+
+The status bar is styled to match the OceanicNext color scheme used in Vim/Neovim.
+
+**Color Palette:**
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Background | `#1B2B34` | Status bar background |
+| Foreground | `#D8DEE9` | Default text |
+| Cyan | `#6699CC` | Session name, active pane border |
+| Green | `#99C794` | Hostname |
+| Grey | `#343D46` | Current window, secondary backgrounds |
+| Muted | `#A7ADBA` | Inactive window text |
+
+**Status Bar Layout:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  SESSION   1 window1   2 window2*        2024-01-15  12:30   hostname │
+└─────────────────────────────────────────────────────────────────┘
+     ↑           ↑           ↑                  ↑          ↑        ↑
+   cyan     inactive    current(grey)        date       time     green
+```
+
+**Configuration:**
+```tmux
+# Status bar styling (OceanicNext theme)
+set -g status-style 'bg=#1B2B34 fg=#D8DEE9'
+set -g status-left '#[fg=#1B2B34,bg=#6699CC,bold] #S #[fg=#6699CC,bg=#1B2B34]'
+set -g status-right '#[fg=#343D46]#[fg=#D8DEE9,bg=#343D46] %Y-%m-%d  %H:%M #[fg=#99C794]#[fg=#1B2B34,bg=#99C794,bold] #h '
+setw -g window-status-format '#[fg=#A7ADBA] #I #W '
+setw -g window-status-current-format '#[fg=#1B2B34,bg=#343D46]#[fg=#D8DEE9,bg=#343D46,bold] #I #W #[fg=#343D46,bg=#1B2B34]'
+```
+
+**Powerline Symbols:**
+The status bar uses powerline arrow characters (``, ``) for section separators. Ensure your terminal font includes powerline glyphs (e.g., Nerd Fonts, Powerline fonts).
+
+**Vim Integration:**
+When using Vim with `tmuxline.vim` plugin, the status bar theme automatically syncs with airline. The preset is configured in `editors/vim/misc.vim`.
 
 ---
 
