@@ -172,9 +172,16 @@ let g:session_autoload = 'no'
 let g:airline_theme = 'oceanicnext'
 
 """""""""""""""""""""""""""""""""""""""
-" Tmuxline preset
+" Tmuxline preset (matches OceanicNext)
 """""""""""""""""""""""""""""""""""""""
-let g:tmuxline_preset = 'custom'
+let g:tmuxline_preset = {
+      \ 'a'    : '#S',
+      \ 'win'  : '#I #W',
+      \ 'cwin' : '#I #W',
+      \ 'x'    : '%Y-%m-%d',
+      \ 'y'    : '%H:%M',
+      \ 'z'    : '#h'}
+let g:tmuxline_theme = 'airline'
 
 """""""""""""""""""""""""""""""""""""""
 " Neoplete
