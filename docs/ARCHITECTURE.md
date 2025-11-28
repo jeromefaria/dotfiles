@@ -357,6 +357,27 @@ export FNM_DIR="$HOME/.fnm"      # Node via FNM
 # Paths (shell/zshrc)
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
+
+# macOS Volume Paths (shell/zshrc - macOS only)
+export ARCHIVE="/Volumes/Archive"
+export AUDIO="/Volumes/Audio"
+export MEDIA="/Volumes/Media"
+export PORTABLE="/Volumes/Portable"
+export VIDEO="/Volumes/Video"
+
+# macOS Derived Paths (shell/zshrc - macOS only)
+export CINEMA="$MEDIA/Cinema"
+export DRIVE="$ARCHIVE/Drive"
+export MOBILE="$HOME/Library/Mobile Documents"
+export MUSIC="$MEDIA/Music/FLAC"
+export PROJECTS="$AUDIO/Audio/Projects"
+export SHARED="$DRIVE/Shared"
+export TELEVISION="$MEDIA/Television"
+
+# Cross-Platform Paths (shell/zshrc)
+export DOTFILES="$HOME/dotfiles"
+export DOWNLOADS="$HOME/Downloads"
+export WORK="$HOME/Work"
 ```
 
 ---
