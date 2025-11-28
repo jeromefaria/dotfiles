@@ -10,9 +10,7 @@
     "coc-prettier": ">=1.1.17",
     "coc-sh": ">=0.5.1",
     "coc-snippets": ">=2.1.28",
-    "coc-stylelint": ">=1.1.0",
     "coc-tsserver": ">=1.5.5",
-    "coc-vetur": ">=1.1.13",
     "coc-yaml": ">=1.0.5"
   },
   "disabled": [
