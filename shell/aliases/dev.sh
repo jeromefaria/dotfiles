@@ -29,8 +29,9 @@ alias jkb="bundle exec jekyll build"
 # Node.js / NPM system update
 # Now implemented as a function in shell/functions/dev.sh
 
-# Project-specific (consider moving to project-local config)
-alias sb="seamless bootstrap --all --clean"
-alias a2m="python3 ~/Work/github/aria-control-file-parser/aria2_to_magnet.py"
-alias rbg="sqlite3 ~/Movies/rarbg_db.sqlite"
-alias checktransferlogs="cat /tmp/*.log|rg 'Download complete: /Volumes'"
+# Project-specific aliases moved to ~/.zshrc.local
+# Add these to your ~/.zshrc.local file if needed:
+#   alias sb="seamless bootstrap --all --clean"
+#   alias a2m="python3 ~/Work/github/aria-control-file-parser/aria2_to_magnet.py"
+#   alias rbg="sqlite3 ~/Movies/rarbg_db.sqlite"
+#   alias checktransferlogs="cat /tmp/*.log|rg 'Download complete: /Volumes'"

@@ -25,10 +25,24 @@ function phpserver() {
 
 # Self update Node.js to latest stable version
 # Usage: upgradenode
+# Prefers fnm/volta over deprecated sudo npm approach
 function upgradenode() {
-  sudo npm cache clean -f
-  sudo npm install -g n
-  sudo n stable
+  if command -v fnm &>/dev/null; then
+    echo "→ Upgrading Node.js via fnm..."
+    fnm install --lts
+    fnm use lts-latest
+    fnm default lts-latest
+    echo "✓ Node.js updated to $(node --version)"
+  elif command -v volta &>/dev/null; then
+    echo "→ Upgrading Node.js via volta..."
+    volta install node@latest
+    echo "✓ Node.js updated to $(node --version)"
+  else
+    echo "Error: Neither fnm nor volta found."
+    echo "Install fnm: brew install fnm"
+    echo "  or volta: brew install volta"
+    return 1
+  fi
 }
 
 # Runs a Processing project from the command line
@@ -43,9 +57,16 @@ function p5() {
 
 # Open the Jira ticket for the current branch
 # Usage: oj
+# Configure JIRA_BASE_URL in ~/.zshrc.local, e.g.:
+#   export JIRA_BASE_URL="https://yourcompany.atlassian.net/browse"
 function oj() {
   if [[ ! -d .git ]]; then
     echo "Error: Not in a git repository"
+    return 1
+  fi
+  if [[ -z "$JIRA_BASE_URL" ]]; then
+    echo "Error: JIRA_BASE_URL not set. Add to ~/.zshrc.local:"
+    echo '  export JIRA_BASE_URL="https://yourcompany.atlassian.net/browse"'
     return 1
   fi
   local branch=$(git branch | grep '\*' | grep -o '/\w\+-\d\+')
@@ -53,7 +74,7 @@ function oj() {
     echo "Error: Branch name doesn't contain a Jira ticket reference"
     return 1
   fi
-  open "https://linkfire.atlassian.net/browse${branch}"
+  open "${JIRA_BASE_URL}${branch}"
 }
 
 # Get the date of the current latest commit
@@ -243,11 +264,11 @@ function update() {
     fi
   fi
 
-  # npm
+  # npm (without sudo - uses fnm/volta managed node)
   if [[ "$skip_npm" == false ]] && command -v npm &> /dev/null; then
     echo ""
     echo "→ Updating npm itself..."
-    if sudo npm install -g npm; then
+    if npm install -g npm; then
       echo "✓ npm updated"
     else
       echo "✗ npm update failed (exit code: $?)"
@@ -255,7 +276,7 @@ function update() {
 
     echo ""
     echo "→ Updating global npm packages..."
-    if sudo npm update -g; then
+    if npm update -g; then
       echo "✓ Global npm packages updated"
     else
       echo "✗ Global npm packages update failed (exit code: $?)"
