@@ -20,7 +20,26 @@ alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && 
 alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
 # Trash management
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl; sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent'"
+# Safe trash emptying with confirmation
+function emptytrash() {
+  echo "This will empty:"
+  echo "  - User Trash (~/.Trash)"
+  echo "  - Volume Trashes (/Volumes/*/.Trashes)"
+  echo "  - System logs (/private/var/log/asl/*.asl)"
+  echo "  - Quarantine history"
+  echo ""
+  read -q "REPLY?Are you sure? (y/n) "
+  echo ""
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    sudo rm -rfv ~/.Trash/*
+    sudo rm -rfv /Volumes/*/.Trashes/*
+    sudo rm -rfv /private/var/log/asl/*.asl
+    sqlite3 ~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV* 'delete from LSQuarantineEvent' 2>/dev/null
+    echo "✓ Trash emptied"
+  else
+    echo "Cancelled"
+  fi
+}
 
 # Network utilities
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"

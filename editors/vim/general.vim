@@ -63,7 +63,7 @@ set smartcase
 set number
 set relativenumber
 set lazyredraw
-set ttyfast
+" Note: ttyfast is always set in Vim 8+ and ignored
 set splitbelow
 set splitright
 set scrolloff=8 " set 7 lines to the cursors - when moving vertical

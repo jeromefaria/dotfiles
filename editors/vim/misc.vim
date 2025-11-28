@@ -33,20 +33,8 @@ let g:markdown_fenced_languages = ['css', 'erb=eruby', 'javascript', 'js=javascr
 syntax enable
 filetype plugin indent on
 
-"""""""""""""""""""""""""""""""""""""""
-" Syntastic noob settings
-"""""""""""""""""""""""""""""""""""""""
-
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_javascript_checkers = ['eslint']
+" Note: Syntastic is deprecated in favor of CoC.nvim for LSP
+" These settings are kept for backwards compatibility but CoC handles diagnostics
 
 """""""""""""""""""""""""""""""""""""""
 " Ignore
@@ -57,10 +45,10 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip,/.tmp/     " MacOSX/Linux
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|tmp)$'
 let g:ctrlp_user_command = 'find %s -type f | egrep -v "(build|bower_components|node_modules|\.tmp|\.sass-cache|\.git|\.idea|platforms)"'
 
-let g:ycm_server_python_interpreter = '/usr/bin/python'
-let g:ycm_server_python_interpreter = '/usr/local/bin/python'
-"let $PATH = '/usr/local/opt/python/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib -DPYTHON_INCLUDE_DIR=/usr/local/opt/python/Frameworks/Python.framework/Versions/2.7'.$PATH
-'
+" YCM Python interpreter - use python3 if available
+if executable('python3')
+  let g:ycm_server_python_interpreter = exepath('python3')
+endif
 
 """""""""""""""""""""""""""""""""""""""
 " YouCompleteMe
@@ -74,7 +62,6 @@ let g:ycm_server_python_interpreter = '/usr/local/bin/python'
 """""""""""""""""""""""""""""""""""""""
 set rtp+=/usr/local/opt/fzf
 " Fuzzy-find with fzf
-map <C-p> :Files<cr>
 nmap <C-p> :Files<cr>
 
 " View commits in fzf

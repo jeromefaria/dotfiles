@@ -68,29 +68,31 @@ source $ZSH/oh-my-zsh.sh
 # Load modular aliases (platform-aware)
 # Skip macOS-specific files on non-macOS platforms
 for alias_file in $DOTFILES/shell/aliases/*.sh; do
-  local filename=$(basename "$alias_file")
+  _filename=$(basename "$alias_file")
   # Skip platform-specific files on wrong platforms
-  if [[ "$filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+  if [[ "$_filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
-  if [[ "$filename" == "chrome.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+  if [[ "$_filename" == "chrome.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
-  if [[ "$filename" == "folders.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+  if [[ "$_filename" == "folders.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
-  source "$alias_file"
+  source "$alias_file" || echo "Warning: Failed to load $alias_file" >&2
 done
+unset _filename
 
 # Load modular functions (platform-aware)
 for func_file in $DOTFILES/shell/functions/*.sh; do
-  local filename=$(basename "$func_file")
+  _filename=$(basename "$func_file")
   # Skip macOS-specific functions on non-macOS platforms
-  if [[ "$filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+  if [[ "$_filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
-  source "$func_file"
+  source "$func_file" || echo "Warning: Failed to load $func_file" >&2
 done
+unset _filename
 
 # EDITOR
 export VISUAL=nvim
@@ -112,7 +114,7 @@ ZVM_CURSOR_STYLE_ENABLED=false
 zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
 
 # PATHS
-export PATH=$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:~/.local/bin
+export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin"
 export PATH="/usr/local/opt/node@22/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 
