@@ -7,16 +7,17 @@ Modern terminal-based file manager with Vim-style keybindings, file preview, and
 [Yazi](https://github.com/sxyazi/yazi) is a blazingly fast terminal file manager written in Rust that features:
 - Vim-style navigation and keybindings
 - Async I/O for better performance
-- Built-in image preview
+- Built-in image preview (sixel, kitty protocol, iTerm2)
 - Multi-tab support
 - Integration with modern CLI tools (fd, rg, zoxide, fzf)
 - Customizable openers for different file types
 - Miller column layout (3-pane view)
+- Plugin system for extended functionality
 
 **Configuration Files:**
 - `yazi.toml` - Main configuration, layout, openers, MIME rules
 - `keymap.toml` - All keybindings for different modes
-- `theme.toml` - Colors, icons, and visual styling
+- `theme.toml` - OceanicNext theme with 350+ file type icons
 
 ---
 
@@ -84,15 +85,16 @@ layout = [ 1, 4, 3 ]    # Column ratios: parent:current:preview (1:4:3)
 ### Sorting
 
 ```toml
-sort_by = "alphabetical"    # Sort method
-sort_sensitive = true       # Case-sensitive sorting
+sort_by = "natural"         # Natural sorting (file1, file2, file10)
+sort_sensitive = false      # Case-insensitive sorting
 sort_reverse = false        # Normal order (A-Z)
 sort_dir_first = true       # Show directories before files
+sort_translit = true        # Transliterate for sorting (é → e)
 ```
 
 **Available sort methods:**
 - `alphabetical` - A-Z by name
-- `natural` - Natural sorting (file1, file2, file10)
+- `natural` - Natural sorting (file1, file2, file10) ← **default**
 - `modified` - Last modified time
 - `created` - Creation time
 - `size` - File size
@@ -100,9 +102,12 @@ sort_dir_first = true       # Show directories before files
 ### Display Options
 
 ```toml
-linemode = "none"       # Line information mode
+linemode = "size"       # Show file sizes by default
 show_hidden = false     # Hide dotfiles by default
-show_symlink = false    # Don't show symlink targets
+show_symlink = true     # Show symlink targets
+scrolloff = 5           # Keep cursor 5 lines from edge
+mouse_events = [ "click", "scroll" ]  # Enable mouse support
+title_format = "Yazi: {cwd}"          # Window title
 ```
 
 **Linemodes available** (toggle with `m` prefix):
@@ -134,7 +139,14 @@ show_symlink = false    # Don't show symlink targets
 | `g h` | Home | Go to `~/` |
 | `g c` | Config | Go to `~/.config` |
 | `g d` | Downloads | Go to `~/Downloads` |
+| `g D` | Desktop | Go to `~/Desktop` |
+| `g o` | Documents | Go to `~/Documents` |
+| `g p` | Pictures | Go to `~/Pictures` |
+| `g m` | Music | Go to `~/Music` |
+| `g v` | Movies | Go to `~/Movies` |
+| `g .` | Dotfiles | Go to `~/dotfiles` |
 | `g t` | Temp | Go to `/tmp` |
+| `g /` | Root | Go to `/` |
 | `g <Space>` | Interactive | Choose directory |
 
 ### File Operations
@@ -189,6 +201,22 @@ show_symlink = false    # Don't show symlink targets
 | `z` | Zoxide | Jump to directory (zoxide history) |
 | `Z` | FZF | Fuzzy find directory or file |
 
+### Shell Integration
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `!` | Shell | Open shell in current directory |
+| `@` | Shell confirm | Open shell (confirm on close) |
+| `;` | Command | Run shell command (non-blocking) |
+| `:` | Command block | Run shell command (blocking) |
+
+### File Operations (Extended)
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `c m` | Chmod | Change file permissions |
+| `b r` | Bulk rename | Edit filenames with $EDITOR |
+
 ### Copy Operations
 
 | Key | Action | Description |
@@ -222,12 +250,10 @@ show_symlink = false    # Don't show symlink targets
 | `[` / `]` | Previous/Next | Cycle through tabs |
 | `{` / `}` | Swap tabs | Reorder tabs |
 
-### Shell & Commands
+### Visibility
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `;` | Shell | Run shell command (non-blocking) |
-| `:` | Shell block | Run shell command (blocking UI) |
 | `.` | Toggle hidden | Show/hide dotfiles |
 
 ### Linemode
@@ -440,38 +466,39 @@ cache_dir = ""            # Cache directory (empty = use default)
 
 ## Theme & Colors
 
+This configuration uses the **OceanicNext** color scheme to match the vim/tmux setup.
+
+### OceanicNext Palette
+
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Background | `#1B2B34` | Base background |
+| Foreground | `#D8DEE9` | Text |
+| Red | `#EC5F67` | Errors, deletions, PDFs |
+| Orange | `#F99157` | Audio files |
+| Yellow | `#FAC863` | Video files, search |
+| Green | `#99C794` | Executables, scripts, added |
+| Cyan | `#62B3B2` | Images, symlinks |
+| Blue | `#6699CC` | Directories, selections |
+| Purple | `#C594C5` | Archives |
+| Brown | `#AB7967` | Config files |
+| Grey | `#65737E` | Hidden files, inactive |
+
 ### Manager Theme
 
 ```toml
 [mgr]
-# Hovered item
-hovered = { fg = "black", bg = "lightblue" }
+cwd = { fg = "#6699CC" }
+hovered = { fg = "#1B2B34", bg = "#6699CC", bold = true }
 
 # Markers for file operations
-marker_selected = { fg = "lightgreen", bg = "lightgreen" }
-marker_copied = { fg = "lightyellow", bg = "lightyellow" }
-marker_cut = { fg = "lightred", bg = "lightred" }
+marker_selected = { fg = "#99C794", bg = "#99C794" }
+marker_copied = { fg = "#FAC863", bg = "#FAC863" }
+marker_cut = { fg = "#EC5F67", bg = "#EC5F67" }
 
 # Tabs
-tab_active = { fg = "black", bg = "lightblue" }
-tab_inactive = { fg = "white", bg = "darkgray" }
-```
-
-### Status Bar Theme
-
-```toml
-[status]
-# Mode indicators
-mode_normal = { fg = "black", bg = "lightblue", bold = true }
-mode_select = { fg = "black", bg = "lightgreen", bold = true }
-mode_unset = { fg = "black", bg = "lightmagenta", bold = true }
-
-# Permissions colors
-permissions_t = { fg = "lightgreen" }     # Execute/traverse
-permissions_r = { fg = "lightyellow" }    # Read
-permissions_w = { fg = "lightred" }       # Write
-permissions_x = { fg = "lightcyan" }      # Execute
-permissions_s = { fg = "darkgray" }       # Special
+tab_active = { fg = "#1B2B34", bg = "#6699CC", bold = true }
+tab_inactive = { fg = "#D8DEE9", bg = "#343D46" }
 ```
 
 ### File Type Colors
@@ -479,45 +506,72 @@ permissions_s = { fg = "darkgray" }       # Special
 ```toml
 [filetype]
 rules = [
-  { mime = "image/*", fg = "cyan" },
-  { mime = "video/*", fg = "yellow" },
-  { mime = "audio/*", fg = "yellow" },
-  { mime = "application/zip", fg = "magenta" },
-  { name = "*/", fg = "blue" },           # Directories
+  { name = "*/", fg = "#6699CC", bold = true },     # Directories
+  { is = "link", fg = "#62B3B2", italic = true },   # Symlinks
+  { is = "exec", fg = "#99C794" },                   # Executables
+  { is = "hidden", fg = "#65737E" },                 # Hidden files
+  { mime = "image/*", fg = "#62B3B2" },              # Images
+  { mime = "video/*", fg = "#FAC863" },              # Videos
+  { mime = "audio/*", fg = "#F99157" },              # Audio
+  { mime = "application/pdf", fg = "#EC5F67" },      # PDFs
+  { mime = "application/zip", fg = "#C594C5" },      # Archives
+  { name = "*.toml", fg = "#AB7967" },               # Config
 ]
 ```
 
-### Icons
+### Icons (350+ File Types)
+
+The theme includes icons for all common file types:
 
 ```toml
 [icons]
-# Common directories
-"Desktop/"   = ""
-"Documents/" = ""
-"Downloads/" = ""
-"Music/"     = ""
-"Movies/"    = ""
+# macOS Directories
+"Desktop/"     = ""
+"Documents/"   = ""
+"Downloads/"   = ""
+"Pictures/"    = ""
+"Music/"       = ""
+"Movies/"      = ""
+".config/"     = ""
 
-# Git
-".git/"      = ""
-".gitignore" = ""
+# Development
+"node_modules/"= ""
+".venv/"       = ""
+"target/"      = ""
+".git/"        = ""
+".github/"     = ""
 
 # Programming
-"*.py"  = ""
-"*.js"  = ""
-"*.rs"  = ""
-"*.go"  = ""
-"*.lua" = ""
+"*.py"   = ""
+"*.js"   = ""
+"*.ts"   = ""
+"*.rs"   = ""
+"*.go"   = ""
+"*.lua"  = ""
+"*.rb"   = ""
+"*.java" = ""
+"*.swift"= ""
+"*.vue"  = ""
+"*.svelte" = ""
+
+# Build Tools
+"Makefile"       = ""
+"Cargo.toml"     = ""
+"package.json"   = ""
+"Dockerfile"     = ""
+"docker-compose.yml" = ""
+
+# Documents
+"*.pdf"  = ""
+"*.md"   = ""
+"*.doc"  = ""
 
 # Media
 "*.mp3"  = ""
 "*.mp4"  = ""
 "*.jpg"  = ""
 "*.png"  = ""
-
-# Archives
-"*.zip" = ""
-"*.tar" = ""
+"*.svg"  = ""
 ```
 
 Icons require a [Nerd Font](https://www.nerdfonts.com/) to display properly.
