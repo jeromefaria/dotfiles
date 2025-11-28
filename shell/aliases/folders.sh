@@ -20,12 +20,12 @@ alias projects="cd $PROJECTS"
 alias tmp="cd /private/tmp"
 alias dotfiles="cd $DOTFILES"
 
-# External volumes (environment variable defined)
+# External volumes (environment variables defined in zshrc for macOS)
 alias archive="cd $ARCHIVE"
 alias audio="cd $AUDIO"
 alias media="cd $MEDIA"
 alias portable="cd $PORTABLE"
-alias external="cd $EXTERNAL"
+alias video="cd $VIDEO"
 
 # Cloud storage
 alias drive="cd $DRIVE"

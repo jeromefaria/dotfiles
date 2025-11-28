@@ -18,7 +18,7 @@ fi
 command -v bat &> /dev/null && alias cat="bat"
 command -v fd &> /dev/null && alias find="fd"
 command -v sd &> /dev/null && alias sed="sd"
-command -v htop &> /dev/null && alias top="sudo htop"
+command -v htop &> /dev/null && alias top="htop"
 command -v prettyping &> /dev/null && alias ping='prettyping --nolegend'
 command -v ncdu &> /dev/null && alias du="ncdu --color dark -x --exclude .git --exclude node_modules"
 command -v tokei &> /dev/null && alias cloc="tokei"
