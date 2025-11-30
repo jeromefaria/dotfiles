@@ -24,9 +24,21 @@ esac
 export DOTFILES_PLATFORM
 
 # ============================================================================
-# Platform-Specific: macOS Volumes (only on macOS)
+# Homebrew (must be early for PATH setup)
 # ============================================================================
 if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  if [[ -f "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -f "/usr/local/bin/brew" ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
+fi
+
+# ============================================================================
+# Platform-Specific: macOS
+# ============================================================================
+if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  # Volume shortcuts
   export ARCHIVE="/Volumes/Archive"
   export AUDIO="/Volumes/Audio"
   export MEDIA="/Volumes/Media"
@@ -39,6 +51,17 @@ if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
   export PROJECTS="$AUDIO/Audio/Projects"
   export SHARED="$DRIVE/Shared"
   export TELEVISION="$MEDIA/Television"
+
+  # Day One CLI
+  export DAYONE_APP_PATH="/Applications/Day One.app"
+
+  # cyrus-sasl for neomutt
+  [[ -d "/opt/homebrew/opt/cyrus-sasl/sbin" ]] && \
+    export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
+
+  # Broot launcher
+  [[ -f "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br" ]] && \
+    source "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br"
 fi
 
 # ============================================================================
@@ -55,44 +78,40 @@ ZSH_THEME=""
 # ZSH plugins
 plugins=(git macos encode64 web-search last-working-dir git-flow-completion zsh-syntax-highlighting zsh-autosuggestions git-open brew omz-git zsh-vi-mode)
 
+# zsh-vi-mode settings (must be set before loading oh-my-zsh)
+export ZVM_VI_ESCAPE_BINDKEY=jk
+ZVM_CURSOR_STYLE_ENABLED=false
+
 # FZF - must be loaded before zsh-interactive-cd plugin
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # ZSH INTERACTIVE CD (requires fzf)
-source $ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
-export PATH="/usr/local/sbin:$PATH"
+[[ -f "$ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh" ]] && \
+  source "$ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh"
 
 # SOURCES
-source $ZSH/oh-my-zsh.sh
+source "$ZSH/oh-my-zsh.sh"
 
 # Load modular aliases (platform-aware)
 # Skip macOS-specific files on non-macOS platforms
-for alias_file in $DOTFILES/shell/aliases/*.sh; do
-  _filename=$(basename "$alias_file")
-  # Skip platform-specific files on wrong platforms
-  if [[ "$_filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
-    continue
-  fi
-  if [[ "$_filename" == "chrome.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
-    continue
-  fi
-  if [[ "$_filename" == "folders.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+local -a _macos_only=(macos.sh chrome.sh folders.sh)
+for alias_file in "$DOTFILES"/shell/aliases/*.sh; do
+  _filename=${alias_file:t}
+  if (( ${_macos_only[(Ie)$_filename]} )) && [[ "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
   source "$alias_file" || echo "Warning: Failed to load $alias_file" >&2
 done
-unset _filename
 
 # Load modular functions (platform-aware)
-for func_file in $DOTFILES/shell/functions/*.sh; do
-  _filename=$(basename "$func_file")
-  # Skip macOS-specific functions on non-macOS platforms
+for func_file in "$DOTFILES"/shell/functions/*.sh; do
+  _filename=${func_file:t}
   if [[ "$_filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
   source "$func_file" || echo "Warning: Failed to load $func_file" >&2
 done
-unset _filename
+unset _filename _macos_only
 
 # EDITOR
 export VISUAL=nvim
@@ -101,47 +120,51 @@ export EDITOR="$VISUAL"
 # MAN PAGES
 export MANPAGER='nvim +Man!'
 
-# HISTORY
-export HISTCONTROL=ignorespace
-
 # BINDINGS
 bindkey '^ ' autosuggest-accept
 bindkey -M menuselect '^[[Z' reverse-menu-complete
 bindkey -M viins 'jj' vi-cmd-mode
 
-export ZVM_VI_ESCAPE_BINDKEY=jk
-ZVM_CURSOR_STYLE_ENABLED=false
+# zsh-vi-mode post-init hooks (re-apply bindings that zvm overwrites)
 zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
+zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh')
 
-# PATHS
-export PATH="$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.local/bin"
+# ============================================================================
+# PATH Configuration
+# ============================================================================
+export PATH="$HOME/.local/bin:/usr/local/sbin:$PATH"
 export PATH="/usr/local/opt/node@22/bin:$PATH"
 export PATH="/usr/local/opt/ruby/bin:$PATH"
 
-# iTerm2 integration (macOS only)
-if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
-  test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-fi
-
-## POWERLINE
-# Removed deprecated Python 2.7 reference
-# Powerline is now handled by Starship prompt (see below)
-
-## RTV
+# Locale
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 
-fpath=(~/.zsh/completions $fpath)
+fpath=("$HOME/.zsh/completions" $fpath)
 
-autoload -U compinit && compinit
+# Cached compinit - only regenerate once per day
+autoload -Uz compinit
+if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # ============================================================================
 # Tool Initialization (Platform-Aware)
 # ============================================================================
 
-# Initialise rbenv (if available)
+# rbenv (lazy-loaded for faster shell startup)
 if command -v rbenv &>/dev/null; then
-  eval "$(rbenv init -)"
+  _rbenv_lazy() {
+    unset -f ruby rbenv gem irb _rbenv_lazy
+    eval "$(rbenv init -)"
+    "$0" "$@"
+  }
+  for cmd in ruby rbenv gem irb; do
+    alias $cmd='_rbenv_lazy'
+  done
+  unset cmd
 fi
 
 # Initialise Starship (cross-platform)
@@ -149,35 +172,29 @@ if command -v starship &>/dev/null; then
   eval "$(starship init zsh)"
 fi
 
-# Broot launcher (macOS-specific path)
-if [[ "$DOTFILES_PLATFORM" == "macos" && -f "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br" ]]; then
-  source $HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br
-elif [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
-  source $HOME/.config/broot/launcher/bash/br
+# Broot launcher (cross-platform fallback)
+if [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
+  source "$HOME/.config/broot/launcher/bash/br"
 fi
 
-# Volta (cross-platform)
+# Volta
 if [[ -d "$HOME/.volta" ]]; then
   export VOLTA_HOME="$HOME/.volta"
   export PATH="$VOLTA_HOME/bin:$PATH"
 fi
 
-# thefuck (if available)
+# thefuck (lazy-loaded for faster shell startup)
 if command -v thefuck &>/dev/null; then
-  eval $(thefuck --alias)
+  _thefuck_lazy() {
+    unset -f fuck _thefuck_lazy
+    eval "$(thefuck --alias)"
+    fuck "$@"
+  }
+  alias fuck='_thefuck_lazy'
 fi
 
-# Supress Ruby warnings
+# Suppress Ruby warnings
 export RUBYOPT=-W0
-
-# Homebrew (macOS only)
-if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
-  if [[ -f "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  elif [[ -f "/usr/local/bin/brew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
-  fi
-fi
 
 # 1Password CLI integration (if available)
 if command -v op &>/dev/null; then
@@ -189,29 +206,20 @@ if [[ -d "$HOME/.config/beets" ]]; then
   export BEETSDIR="$HOME/.config/beets/"
 fi
 
-# Warp Terminal settings for ZSH (macOS)
-if [[ "$DOTFILES_PLATFORM" == "macos" && "$TERM_PROGRAM" == "WarpTerminal" ]]; then
-  printf '\eP$f{"hook": "SourcedRcFileForWarp", "value": { "shell": "zsh"}}\x9c'
-fi
-
-# cyrus-sasl homebrew version to fix neomutt (macOS only)
-if [[ "$DOTFILES_PLATFORM" == "macos" && -d "/opt/homebrew/opt/cyrus-sasl/sbin" ]]; then
-  export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
-fi
-
-# Day One CLI (macOS only)
-if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
-  export DAYONE_APP_PATH="/Applications/Day One.app"
-fi
-
 # fnm fast node manager (cross-platform)
 if command -v fnm &>/dev/null; then
   eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
 fi
 
-# zoxide - smarter cd command (cross-platform)
+# zoxide (lazy-loaded for faster shell startup)
 if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
+  _zoxide_lazy() {
+    unset -f z zi _zoxide_lazy
+    eval "$(zoxide init zsh)"
+    "$0" "$@"
+  }
+  alias z='_zoxide_lazy'
+  alias zi='_zoxide_lazy'
 fi
 
 ##########
@@ -260,6 +268,6 @@ unsetopt HIST_VERIFY
 # Example: Work-specific aliases, different paths, custom functions, etc.
 #
 # Create ~/.zshrc.local with machine-specific settings (not tracked in git)
-if [ -f "$HOME/.zshrc.local" ]; then
+if [[ -f "$HOME/.zshrc.local" ]]; then
   source "$HOME/.zshrc.local"
 fi
