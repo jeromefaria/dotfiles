@@ -843,10 +843,7 @@ F12 r
 ```bash
 # Check terminal
 echo $TERM
-# Should be: "screen-256color" or "tmux-256color"
-
-# In iTerm2/terminal preferences:
-# Set "Report Terminal Type" to "xterm-256color"
+# Should be: "tmux-256color" inside tmux
 
 # Reload Tmux
 tmux kill-server
