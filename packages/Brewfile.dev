@@ -91,9 +91,7 @@ brew "multimarkdown"
 tap "tmux/tmux", "https://github.com/tmux/tmux"
 brew "tmux"
 brew "tmuxinator"
-brew "reattach-to-user-namespace"
-cask "iterm2"
-cask "hyper"
+cask "ghostty"
 
 # Mobile Development
 brew "ios-deploy"

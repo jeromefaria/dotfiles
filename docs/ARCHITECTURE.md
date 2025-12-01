@@ -117,7 +117,7 @@ Understanding how your shell environment loads helps you customize effectively.
 When you open a terminal, the following happens in order:
 
 ```
-Terminal.app / iTerm2 / Ghostty
+Ghostty (or other terminal)
     ↓
 Launches Zsh shell
     ↓
