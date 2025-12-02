@@ -209,15 +209,18 @@ function update() {
   echo "=== System Update ==="
   echo ""
 
-  # Refresh sudo timestamp
+  # Refresh sudo timestamp and keep it alive throughout the update
   echo "→ Refreshing sudo credentials..."
   sudo -v
+  # Keep sudo alive in background until this script finishes
+  while true; do sudo -n true; sleep 50; done 2>/dev/null &
+  local sudo_pid=$!
 
   # Mac App Store
   if [[ "$skip_mas" == false ]] && command -v mas &> /dev/null; then
     echo ""
     echo "→ Updating Mac App Store apps..."
-    if mas upgrade; then
+    if sudo mas upgrade; then
       echo "✓ Mac App Store apps updated"
     else
       echo "✗ Mac App Store update failed (exit code: $?)"
@@ -331,6 +334,9 @@ function update() {
       echo "✗ tldr update failed (exit code: $?)"
     fi
   fi
+
+  # Kill the sudo keep-alive process
+  kill "$sudo_pid" 2>/dev/null
 
   echo ""
   echo "=== Update Complete ==="
