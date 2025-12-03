@@ -4,7 +4,7 @@
   "AuddioApiToken": "",
   "AutoHideCommandBar": false,
   "CategoryTrackListSortOrder": 0,
-  "ColorTheme": "default",
+  "ColorTheme": "oceanic-next",
   "DisableAlbumArtistFallback": false,
   "DisableCustomColors": false,
   "DisableRatingColumn": false,
@@ -13,7 +13,7 @@
   "IndexerLogEnabled": false,
   "IndexerThreadCount": 4,
   "IndexerTransactionInterval": 300,
-  "InheritBackgroundColor": false,
+  "InheritBackgroundColor": true,
   "LastFmSessionId": "Byjkyf0p9594SHgMZDTfXQ0810XXDVVL",
   "LastFmToken": "d5WWukTSJYsUw3NocWdI7oSdcMRnxFdX",
   "LastFmUsername": "earational",
@@ -42,5 +42,5 @@
   "StartMinimized": false,
   "SyncOnStartup": true,
   "TrackSearchSortOrder": 0,
-  "UsePaletteColors": true
+  "UsePaletteColors": false
 }
