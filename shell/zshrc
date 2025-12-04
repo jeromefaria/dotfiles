@@ -214,12 +214,19 @@ fi
 # zoxide (lazy-loaded for faster shell startup)
 if command -v zoxide &>/dev/null; then
   _zoxide_lazy() {
-    unset -f z zi _zoxide_lazy
+    unalias z zi 2>/dev/null
+    unset -f _zoxide_lazy
     eval "$(zoxide init zsh)"
-    "$0" "$@"
+    z "$@"
+  }
+  _zoxide_lazy_i() {
+    unalias z zi 2>/dev/null
+    unset -f _zoxide_lazy _zoxide_lazy_i
+    eval "$(zoxide init zsh)"
+    zi "$@"
   }
   alias z='_zoxide_lazy'
-  alias zi='_zoxide_lazy'
+  alias zi='_zoxide_lazy_i'
 fi
 
 ##########
