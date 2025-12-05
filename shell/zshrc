@@ -35,6 +35,11 @@ if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
 fi
 
 # ============================================================================
+# rbenv shims (must be in PATH for non-interactive tools like neovim/mason)
+# ============================================================================
+[[ -d "$HOME/.rbenv/shims" ]] && export PATH="$HOME/.rbenv/shims:$PATH"
+
+# ============================================================================
 # Platform-Specific: macOS
 # ============================================================================
 if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
