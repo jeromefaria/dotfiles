@@ -23,6 +23,7 @@ This configuration combines **Tmux** (terminal multiplexer) with **Tmuxinator** 
 
 ## Table of Contents
 
+- [Tmux Concepts](#tmux-concepts)
 - [Installation](#installation)
 - [Tmux Configuration](#tmux-configuration)
   - [Status Bar Theme](#status-bar-theme-oceanicnext)
@@ -31,6 +32,51 @@ This configuration combines **Tmux** (terminal multiplexer) with **Tmuxinator** 
 - [Tmuxinator Sessions](#tmuxinator-sessions)
 - [Common Workflows](#common-workflows)
 - [Troubleshooting](#troubleshooting)
+- [Quick Reference](#quick-reference-card)
+
+---
+
+## Tmux Concepts
+
+Understanding the hierarchy of sessions, windows, and panes:
+
+```
+Session "work"
+├── Window 1: "editor"
+│   ├── Pane 1: nvim (80%)
+│   └── Pane 2: terminal (20%)
+├── Window 2: "server"
+│   └── Pane 1: npm run dev
+└── Window 3: "git"
+    └── Pane 1: lazygit
+```
+
+| Concept | Description | Analogy |
+|---------|-------------|---------|
+| **Session** | A collection of windows. Persists when you detach. | Desktop workspace |
+| **Window** | Like a tab. Each fills the terminal. Switch with `F12 1-9`. | Browser tab |
+| **Pane** | A split within a window. Multiple visible at once. | Split screen |
+
+### Layouts
+
+| Layout | Description |
+|--------|-------------|
+| `even-horizontal` | Panes side by side, equal width |
+| `even-vertical` | Panes stacked, equal height |
+| `main-horizontal` | One large pane on top, others below |
+| `main-vertical` | One large pane on left, others right |
+| `tiled` | Grid of equal-sized panes |
+
+Switch layouts with `F12 Alt+1-5` or cycle with `F12 Space`.
+
+### Synchronize Panes
+
+Broadcasts keyboard input to all panes in current window. Useful for:
+- Running same command on multiple servers
+- Updating multiple config files simultaneously
+- Parallel testing
+
+Toggle with `F12 S`. Status bar shows "SYNC" when active.
 
 ---
 
@@ -47,10 +93,9 @@ gem install tmuxinator
 
 # Install Tmux Plugin Manager (TPM)
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-
-# Install reattach-to-user-namespace (macOS clipboard support)
-brew install reattach-to-user-namespace
 ```
+
+> **Note:** `reattach-to-user-namespace` is no longer needed on macOS 10.14+
 
 ### Configuration Setup
 
@@ -98,18 +143,25 @@ bind-key F12 last-window
 ### Base Settings
 
 ```tmux
-# Window numbering starts at 1 (not 0)
+# Window and pane numbering starts at 1 (not 0)
 set -g base-index 1
+set -g pane-base-index 1
+
+# Close gaps when windows are closed (1,3,4 → 1,2,3)
+set -g renumber-windows on
 
 # Vi mode for copy mode
 setw -g mode-keys vi
 
-# 256 color support
-set -g default-terminal "screen-256color"
-set -ga terminal-overrides ",*256col*:Tc"
+# True color support
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ",*256col*:Tc,ghostty:Tc"
 
 # Mouse support
 set -g mouse on
+
+# Enable focus events for better editor integration (autoread in Neovim)
+set -g focus-events on
 
 # Prevent automatic window renaming
 set-option -g allow-rename off
@@ -240,8 +292,12 @@ Enter copy mode to scroll and copy text:
 | `v` | Visual selection | Start selecting text (Vi mode) |
 | `y` | Yank | Copy selection to clipboard |
 | `Enter` | Copy | Copy and exit copy mode |
+| `Escape` | Cancel | Exit copy mode without copying |
+| `Ctrl+v` | Rectangle | Toggle block/rectangle selection |
 | `q` | Exit | Leave copy mode |
 | `Space` | Begin selection | Alternative to `v` |
+
+**Rectangle selection:** Toggle with `Ctrl+v` to select columns of text (useful for selecting table columns, aligned code, etc.)
 
 **Vim keybindings work in copy mode:**
 - `h j k l` - Navigate
@@ -249,6 +305,8 @@ Enter copy mode to scroll and copy text:
 - `0 / $` - Line start/end
 - `g g / G` - Top/bottom
 - `Ctrl+d / Ctrl+u` - Page down/up
+- `/ pattern` - Search forward
+- `? pattern` - Search backward
 
 ### Configuration
 
@@ -265,6 +323,26 @@ Enter copy mode to scroll and copy text:
 | `F12 I` | Install plugins | Install/update all plugins |
 | `F12 U` | Update plugins | Update TPM and plugins |
 | `F12 alt+u` | Uninstall plugins | Remove unlisted plugins |
+
+### Productivity Keybindings
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `F12 S` | Sync panes | Toggle input broadcast to all panes |
+| `F12 \|` | Vertical split | Split keeping current directory |
+| `F12 -` | Horizontal split | Split keeping current directory |
+| `F12 C` | New window (path) | New window in current directory |
+| `F12 s` | Session picker | Tree view of all sessions |
+| `F12 w` | Window picker | Tree view of all windows |
+| `F12 J` | Join pane | Pull pane from another window |
+| `F12 B` | Break pane | Move pane to new window |
+| `F12 Ctrl+k` | Clear history | Clear scrollback and screen |
+| `F12 b` | Toggle status | Show/hide status bar |
+| `F12 Alt+1` | Layout: even-h | Even horizontal layout |
+| `F12 Alt+2` | Layout: even-v | Even vertical layout |
+| `F12 Alt+3` | Layout: main-h | Main horizontal layout |
+| `F12 Alt+4` | Layout: main-v | Main vertical layout |
+| `F12 Alt+5` | Layout: tiled | Tiled layout |
 
 ---
 
@@ -325,6 +403,8 @@ set -g @resurrect-capture-pane-contents 'on'
 
 ```tmux
 set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
 ```
 
 **Automatic session saving** - pairs with resurrect.
@@ -333,6 +413,10 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 - Auto-saves every 15 minutes
 - Auto-restores on Tmux start
 - No manual intervention needed
+
+**Configuration:**
+- `@continuum-restore 'on'` - Automatically restore last saved session on start
+- `@continuum-save-interval '15'` - Save every 15 minutes (set to '0' to disable)
 
 ### tmux-urlview
 
@@ -348,19 +432,6 @@ set -g @plugin 'tmux-plugins/tmux-urlview'
 3. `Enter` - Open URL in browser
 
 **Requires:** `brew install urlview`
-
-### tmux-battery
-
-```tmux
-set -g @plugin 'tmux-plugins/tmux-battery'
-```
-
-**Battery status** in status bar.
-
-**Variables available:**
-- `#{battery_percentage}` - Battery %
-- `#{battery_icon}` - Icon
-- `#{battery_status_bg}` - Color
 
 ### tmux-copycat
 
@@ -720,13 +791,15 @@ The configuration enables **unified navigation** across Vim splits and Tmux pane
 
 **How it works:**
 ```tmux
-# Smart pane switching with Vim awareness
-is_vim='echo "#{pane_current_command}" | grep -iqE "(^|\/)g?(view|n?vim?x?)(diff)?$"'
+# Smart pane switching with Vim awareness (also handles fzf)
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?(view|l?n?vim?x?|fzf)(diff)?$'"
 bind -n C-h if-shell "$is_vim" "send-keys C-h" "select-pane -L"
 bind -n C-j if-shell "$is_vim" "send-keys C-j" "select-pane -D"
 bind -n C-k if-shell "$is_vim" "send-keys C-k" "select-pane -U"
 bind -n C-l if-shell "$is_vim" "send-keys C-l" "select-pane -R"
 ```
+
+> The detection pattern also handles **fzf** popups, ensuring navigation keys are passed through correctly when using fuzzy finders.
 
 **Experience:**
 ```text
@@ -856,18 +929,23 @@ tmux
 
 **Solution:**
 ```bash
-# Install reattach-to-user-namespace
-brew install reattach-to-user-namespace
-
-# Verify in config
-grep reattach ~/.tmux.conf
-
 # Test copy
 F12 [
 v (select text)
 y (yank)
 Cmd+V (paste in other app)
+
+# If still not working, check tmux version
+tmux -V
+# Should be 2.6+ for native clipboard support
+
+# Verify copy binding
+F12 :
+list-keys -T copy-mode-vi
+# Should show: y ... copy-pipe-and-cancel "pbcopy"
 ```
+
+> **Note:** `reattach-to-user-namespace` is no longer needed on macOS 10.14+
 
 ### Plugins Not Installing
 
@@ -948,9 +1026,7 @@ F12 Ctrl+r
 # Limit history (in ~/.tmux.conf)
 set-option -g history-limit 10000    # Default: 50000
 
-# Disable unused plugins
-# Comment out in ~/.tmux.conf:
-# set -g @plugin 'tmux-plugins/tmux-battery'
+# Disable unused plugins by commenting them out in ~/.tmux.conf
 ```
 
 ### Reduce Resource Usage
@@ -1018,6 +1094,26 @@ F12 z       Zoom pane
 F12 [       Copy mode
 F12 d       Detach
 F12 r       Reload config
+```
+
+---
+
+## Quick Reference Card
+
+```
+QUICK REFERENCE (Prefix: F12)
+─────────────────────────────────────────────────────────────────
+Sessions:  d=detach  s=pick  $=rename  Q=kill-server
+Windows:   c=new  C=new(path)  n/p=next/prev  ,=rename  0-9=jump
+Panes:     |/-=split(path)  "/%=split  x=kill  z=zoom
+Navigate:  Ctrl+hjkl (no prefix, works in vim too)
+Resize:    hjkl (with prefix)
+Layouts:   Alt+1-5  Space=cycle
+Copy:      [=enter  v=select  y=copy  Escape=cancel  Ctrl+v=rect
+Special:   S=sync  b=status  J=join  B=break  r=reload  Ctrl+k=clear
+Plugins:   I=install  U=update
+Persist:   Ctrl+s=save  Ctrl+r=restore (auto-saves every 15min)
+─────────────────────────────────────────────────────────────────
 ```
 
 ---
