@@ -13,7 +13,7 @@ alias pics="cd $HOME/Pictures"
 
 # Work directories
 alias work="cd $HOME/Work"
-alias blog="cd $WORK/blog"
+alias blog="cd $WORK/jeromefaria.github.io"
 alias projects="cd $PROJECTS"
 
 # System directories

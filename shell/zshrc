@@ -159,17 +159,23 @@ fi
 # Tool Initialization (Platform-Aware)
 # ============================================================================
 
+# Define stub functions early to prevent "command not found" errors
+# These get overwritten by the real implementations below
+_zoxide_lazy() { :; }
+_zoxide_lazy_i() { :; }
+_thefuck_lazy() { :; }
+_rbenv_lazy() { :; }
+
 # rbenv (lazy-loaded for faster shell startup)
 if command -v rbenv &>/dev/null; then
   _rbenv_lazy() {
-    unset -f ruby rbenv gem irb _rbenv_lazy
-    eval "$(rbenv init -)"
-    "$0" "$@"
+    unset -f _rbenv_lazy ruby rbenv gem irb
+    eval "$(rbenv init - zsh)"
   }
-  for cmd in ruby rbenv gem irb; do
-    alias $cmd='_rbenv_lazy'
-  done
-  unset cmd
+  ruby()  { _rbenv_lazy; ruby "$@"; }
+  rbenv() { _rbenv_lazy; command rbenv "$@"; }
+  gem()   { _rbenv_lazy; gem "$@"; }
+  irb()   { _rbenv_lazy; irb "$@"; }
 fi
 
 # Initialise Starship (cross-platform)
