@@ -960,7 +960,7 @@
                         ]
                     },
                     {
-                        "description": "(Vim 1/11) caps_lock -> on, caps_lock, esc, control+[ or any pointing_button -> off",
+                        "description": "(Vim 1/11) caps_lock or j+k -> on, caps_lock, esc, control+[ or any pointing_button -> off",
                         "manipulators": [
                             {
                                 "conditions": [
@@ -969,7 +969,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1030,7 +1031,52 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
+                                        ],
+                                        "type": "frontmost_application_unless"
+                                    },
+                                    {
+                                        "name": "vim_mode",
+                                        "type": "variable_unless",
+                                        "value": 1
+                                    }
+                                ],
+                                "from": {
+                                    "simultaneous": [
+                                        { "key_code": "j" },
+                                        { "key_code": "k" }
+                                    ],
+                                    "simultaneous_options": {
+                                        "key_down_order": "insensitive",
+                                        "key_up_order": "insensitive"
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "set_variable": {
+                                            "name": "vim_mode",
+                                            "value": 1
+                                        }
+                                    },
+                                    {
+                                        "set_notification_message": {
+                                            "id": "vim_mode_plus_enabled",
+                                            "text": "NORMAL - Vim Mode Enabled (j+k)"
+                                        }
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "com.googlecode.iterm2",
+                                            "com.github.atom",
+                                            "com.jetbrains.pycharm",
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1064,7 +1110,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1098,7 +1145,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1135,7 +1183,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_if"
                                     },
@@ -1235,7 +1284,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1280,7 +1330,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1320,7 +1371,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1360,7 +1412,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1386,7 +1439,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1412,7 +1466,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1438,7 +1493,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1464,7 +1520,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1490,7 +1547,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1516,7 +1574,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1546,7 +1605,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1575,7 +1635,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1604,7 +1665,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1648,7 +1710,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1685,7 +1748,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1714,7 +1778,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1743,7 +1808,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1772,7 +1838,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1816,7 +1883,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1860,7 +1928,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1910,7 +1979,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1951,7 +2021,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1975,7 +2046,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -1999,7 +2071,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2028,7 +2101,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2072,7 +2146,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2121,7 +2196,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2162,7 +2238,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2203,7 +2280,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2248,7 +2326,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2292,7 +2371,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2336,7 +2416,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2391,7 +2472,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2432,7 +2514,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2476,7 +2559,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2520,7 +2604,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2565,7 +2650,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2609,7 +2695,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2658,7 +2745,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2699,7 +2787,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2740,7 +2829,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2785,7 +2875,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2829,7 +2920,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2873,7 +2965,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2928,7 +3021,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -2969,7 +3063,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3013,7 +3108,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3057,7 +3153,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3106,7 +3203,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3150,7 +3248,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3211,7 +3310,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3264,7 +3364,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3317,7 +3418,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3374,7 +3476,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3430,7 +3533,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3486,7 +3590,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3541,7 +3646,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3594,7 +3700,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3650,7 +3757,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3706,7 +3814,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3767,7 +3876,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3788,7 +3898,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3812,7 +3923,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3838,7 +3950,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3867,7 +3980,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3893,7 +4007,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3927,7 +4042,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3951,7 +4067,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3975,7 +4092,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -3999,7 +4117,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4023,7 +4142,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4049,7 +4169,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4075,7 +4196,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4105,7 +4227,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4134,7 +4257,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4163,7 +4287,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4207,7 +4332,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4244,7 +4370,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4273,7 +4400,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4302,7 +4430,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4336,7 +4465,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4370,7 +4500,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4411,7 +4542,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4445,7 +4577,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4486,7 +4619,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4525,7 +4659,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4573,7 +4708,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4608,7 +4744,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4643,7 +4780,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4683,7 +4821,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4707,7 +4846,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4731,7 +4871,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4755,7 +4896,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4779,7 +4921,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4803,7 +4946,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4827,7 +4971,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4851,7 +4996,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
@@ -4875,7 +5021,8 @@
                                             "com.googlecode.iterm2",
                                             "com.github.atom",
                                             "com.jetbrains.pycharm",
-                                            "com.visualstudio.code.oss"
+                                            "com.visualstudio.code.oss",
+                                            "com.mitchellh.ghostty"
                                         ],
                                         "type": "frontmost_application_unless"
                                     },
