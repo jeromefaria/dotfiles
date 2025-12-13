@@ -1,8 +1,11 @@
--- Neovim Keymaps Configuration
+-- Modern Keymaps Configuration
+-- Leader key: <Space>
+-- This is the current lazy.nvim era configuration
+
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
--- Set leader key
+-- Leader is set by keymap-mode.lua, but ensure it's space
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
@@ -38,10 +41,6 @@ keymap.set("n", "<A-j>", ":m .+1<CR>==", opts)
 keymap.set("n", "<A-k>", ":m .-2<CR>==", opts)
 keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
 keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
-
--- Keep visual selection after indenting
-keymap.set("v", "<", "<gv", opts)
-keymap.set("v", ">", ">gv", opts)
 
 -- Better paste in visual mode (doesn't yank replaced text)
 keymap.set("v", "p", '"_dP', opts)

@@ -8,13 +8,69 @@ Your dotfiles have been successfully decoupled into two independent configuratio
 
 ---
 
-## Critical Leader Key Change
+## Neovim Dual Keymap System
 
-### ⚠️ MOST IMPORTANT CHANGE
-- **Vim Leader**: `,` (comma)
-- **Neovim Leader**: `<Space>` (spacebar)
+Neovim now supports **two switchable keymap modes** to ease the transition from the original vim-plug configuration:
 
-This is the most significant change that will affect muscle memory!
+### Available Modes
+
+| Mode | Leader Key | Description |
+|------|------------|-------------|
+| **Classic** | `,` (comma) | Original vim-plug era keybindings |
+| **Modern** | `<Space>` | Current lazy.nvim keybindings |
+
+### Switching Between Modes
+
+**Commands:**
+- `:ClassicMode` - Switch to classic keymaps
+- `:ModernMode` - Switch to modern keymaps
+- `:KeymapMode` - Show current mode info
+- `:KeymapToggle` - Toggle between modes
+- `:KeymapSave [mode]` - Save preference for future sessions
+- `:KeymapClearPreference` - Clear saved preference (will prompt on next startup)
+
+**Startup Behavior:**
+1. If you have a saved preference, it loads automatically
+2. If no preference saved, you'll see a prompt to choose
+3. You can save your choice to skip the prompt next time
+
+### Quick Comparison
+
+| Action | Classic (`,` leader) | Modern (`<Space>` leader) |
+|--------|---------------------|---------------------------|
+| Find files | `,t` or `Ctrl-P` | `<Space>ff` |
+| Live grep | `,f` | `<Space>fg` |
+| Buffers | `,b` | `<Space>fb` |
+| File tree | `,m` | `<Space>e` |
+| Delete buffer | `,d` | `<Space>bd` |
+| Clear search | `,<space>` | `<Space>h` |
+| Git status | `,gs` | `<Space>gs` |
+| Indent | `Tab`/`S-Tab` | `<`/`>` |
+| Tab/Buffer nav | `H`/`L` (tabs) | `S-h`/`S-l` (buffers) |
+| Undo tree | `F5` | `<Space>u` |
+| Search | `<Space>` → `/` | Normal `/` |
+
+### Configuration Files
+
+```
+lua/config/
+├── keymap-mode.lua      # Mode switching logic
+├── keymap-selector.lua  # Startup prompt handler
+├── keymaps-classic.lua  # Classic (comma leader) keymaps
+└── keymaps-modern.lua   # Modern (space leader) keymaps
+```
+
+### Preference Storage
+
+Your keymap preference is stored at `~/.config/nvim/keymap-mode`
+
+---
+
+## Leader Key Reference
+
+- **Vim**: `,` (comma) - always
+- **Neovim Classic Mode**: `,` (comma)
+- **Neovim Modern Mode**: `<Space>` (spacebar)
 
 ---
 
@@ -65,11 +121,11 @@ This is the most significant change that will affect muscle memory!
 
 ### Insert Mode
 
-| Action | Vim | Neovim |
-|--------|-----|--------|
-| **Escape** | `jk` | Default only |
-| **Arrow Function** | `<C-l>` → ` => ` | Not mapped |
-| **Save** | `<C-s>` | Not mapped |
+| Action | Vim | Neovim Classic | Neovim Modern |
+|--------|-----|----------------|---------------|
+| **Escape** | `jk` | `jk` | Default `Esc` |
+| **Arrow Function** | `<C-l>` → ` => ` | `<C-l>` → ` => ` | Not mapped |
+| **Save** | `<C-s>` | `<C-s>` | Not mapped |
 
 ### LSP Operations (Neovim Only)
 
@@ -230,11 +286,15 @@ vimrc
 
 ### Neovim
 ```
-neovim/init.lua
+editors/neovim/init.lua
 └── lua/
     ├── config/
     │   ├── options.lua
-    │   ├── keymaps.lua
+    │   ├── keymap-mode.lua      # Mode switching logic
+    │   ├── keymap-selector.lua  # Startup prompt
+    │   ├── keymaps-classic.lua  # Classic keymaps (comma leader)
+    │   ├── keymaps-modern.lua   # Modern keymaps (space leader)
+    │   ├── commands.lua
     │   ├── lazy.lua
     │   └── autocmds.lua
     └── plugins/
@@ -264,22 +324,28 @@ neovim/init.lua
 
 ### If switching from Vim to Neovim:
 
-1. **Muscle memory adjustments**:
+1. **Use Classic Mode first** (recommended):
+   - Run `:ClassicMode` or choose "Classic" at startup
+   - This preserves your muscle memory with comma leader and original keybindings
+   - Gradually learn modern bindings, then switch with `:ModernMode`
+   - Save your preference with `:KeymapSave`
+
+2. **Or adapt to Modern Mode**:
    - Leader key: `,` → `<Space>`
    - File search: `,t` → `<Space>ff`
    - Grep: `,f` → `<Space>fg`
    - File tree: `,m` → `<Space>e`
    - Buffers: Use `Shift-h/l` instead of `H/L`
 
-2. **No insert mode `jk` to escape** - Use default `Esc`
+3. **Classic Mode includes `jk` to escape** - Modern mode uses default `Esc`
 
-3. **New features to learn**:
+4. **New features to learn** (available in both modes):
    - LSP commands (`gd`, `K`, `<leader>ca`, etc.)
    - Telescope is more powerful than FZF
    - Which-key will help discover keybindings
-   - LazyGit integration (`<leader>gg`)
+   - LazyGit integration (`<leader>gg` in modern, `,gg` in classic)
 
-4. **Plugin management**:
+5. **Plugin management**:
    - Use `:Lazy` instead of `:PlugInstall`
    - Use `:Mason` to manage LSP servers and tools
 
@@ -288,57 +354,76 @@ neovim/init.lua
 ## Summary of Significant Changes
 
 ### Most Impactful
-1. **Leader key changed from `,` to `<Space>`**
-2. **All fuzzy finding moved from FZF to Telescope**
+1. **Dual keymap system** - Switch between Classic (`,` leader) and Modern (`<Space>` leader)
+2. **All fuzzy finding moved from FZF to Telescope** (same keys in Classic mode)
 3. **COC.nvim replaced with native LSP** (different completion behavior)
-4. **Insert mode `jk` escape removed**
-5. **Buffer navigation changed** (`H/L` for tabs → `Shift-H/L` for buffers)
+4. **Classic mode preserves `jk` escape** - Modern mode uses default `Esc`
+5. **Buffer navigation** - Classic uses `H/L` for tabs, Modern uses `Shift-H/L` for buffers
 
 ### New Capabilities
-1. **Native LSP support** with go-to-definition, hover, rename, etc.
-2. **TreeSitter** for better syntax highlighting
-3. **LazyGit integration** for visual git operations
-4. **Which-key** to discover keybindings
-5. **Better diagnostics** with Trouble.nvim
-6. **Dashboard** on startup
+1. **Dual keymap modes** - Use `:ClassicMode` or `:ModernMode` to switch
+2. **Native LSP support** with go-to-definition, hover, rename, etc.
+3. **TreeSitter** for better syntax highlighting
+4. **LazyGit integration** for visual git operations
+5. **Which-key** to discover keybindings
+6. **Better diagnostics** with Trouble.nvim
+7. **Dashboard** on startup
 
-### Removed Features
+### Classic Mode Preserves
+- Comma (`,`) as leader key
+- `jk` to escape insert mode
+- `<C-l>` for fat arrow (` => `)
+- `<C-s>` to save
+- Tab/S-Tab for indenting
+- Original FZF-style keybindings (mapped to Telescope)
+
+### Removed from Modern Mode
 - Writing-focused plugins (Goyo, Limelight, etc.)
-- Insert mode custom mappings (`jk`, `<C-l>`, `<C-s>`)
 - Some language-specific plugins (now handled by LSP + TreeSitter)
 
 ---
 
 ## Quick Reference Card
 
-### Essential Neovim Keybindings
+### Keymap Mode Commands
+- `:ClassicMode` - Switch to classic keymaps (comma leader)
+- `:ModernMode` - Switch to modern keymaps (space leader)
+- `:KeymapMode` - Show current mode
+- `:KeymapToggle` - Toggle between modes
+- `:KeymapSave` - Save current mode as preference
 
-**File Operations:**
-- `<Space>ff` - Find files
-- `<Space>fg` - Live grep (search in files)
-- `<Space>fb` - Browse buffers
-- `<Space>fr` - Recent files
-- `<Space>e` - Toggle file explorer
+### Essential Keybindings (Both Modes)
 
-**Code Navigation (LSP):**
+| Action | Classic (`,`) | Modern (`<Space>`) |
+|--------|---------------|-------------------|
+| **Find files** | `,t` or `Ctrl-P` | `<Space>ff` |
+| **Live grep** | `,f` | `<Space>fg` |
+| **Buffers** | `,b` | `<Space>fb` |
+| **File explorer** | `,m` | `<Space>e` |
+| **Save file** | `,w` or `Ctrl-s` | `<Space>w` |
+| **Delete buffer** | `,d` | `<Space>bd` |
+| **Clear highlight** | `,<space>` | `<Space>h` |
+| **Git status** | `,gs` | `<Space>gs` |
+| **Undo tree** | `F5` | `<Space>u` |
+
+### Code Navigation (LSP) - Same in Both Modes
 - `gd` - Go to definition
 - `gr` - Find references
 - `K` - Show documentation
-- `<Space>ca` - Code actions
-- `<Space>rn` - Rename symbol
+- `<leader>ca` - Code actions
+- `<leader>rn` - Rename symbol
 
-**Git:**
-- `<Space>gs` - Git status
-- `<Space>gg` - LazyGit
-- `<Space>hp` - Preview hunk
+### Git (Same in Both Modes)
+- `<leader>hp` - Preview hunk
 - `]h` / `[h` - Next/prev hunk
 
-**Diagnostics:**
+### Diagnostics (Same in Both Modes)
 - `]d` / `[d` - Next/prev diagnostic
-- `<Space>xx` - Show document diagnostics
 
-**Other:**
-- `<Space>w` - Save file
-- `<Space>q` - Quit
-- `<Space>u` - Undo tree
-- `gcc` - Toggle comment
+### Classic Mode Exclusive
+- `jk` - Escape insert mode
+- `<C-l>` - Insert ` => ` (fat arrow)
+- `<C-s>` - Save file
+- `Tab` / `S-Tab` - Indent/dedent
+- `H` / `L` - Previous/next tab
+- `<Space>` - Search (maps to `/`)
