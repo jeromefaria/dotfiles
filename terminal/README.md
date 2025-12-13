@@ -421,7 +421,7 @@ set -g @open-S 'https://www.duckduckgo.com/'
 **Layout:**
 ```yaml
 name: blog
-root: /Users/jeromefaria/Work/blog/
+root: /Users/jeromefaria/Work/jeromefaria.github.io/
 windows:
   - blog:
       panes:
