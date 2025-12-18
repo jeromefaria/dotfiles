@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 
 # Colors for output
 RED='\033[0;31m'
@@ -7,12 +7,15 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+BOLD='\033[1m'
 NC='\033[0m' # No Color
 
 # Plugin managers configuration (compatible with bash 3.2)
-# Format: "key|App Name.app"
+# Format: "key|App Name.app|Custom Path (optional)"
 PLUGIN_MANAGERS=(
     "native|Native Access.app"
+    "arturia|Arturia Software Center.app|/Applications/Arturia/Arturia Software Center.app"
+    "splice|Splice INSTRUMENT.app"
     "izotope|iZotope Product Portal.app"
     "output|Output Hub.app"
     "softube|Softube Central.app"
@@ -49,10 +52,29 @@ get_app_name() {
     local key="$1"
     for entry in "${PLUGIN_MANAGERS[@]}"; do
         local entry_key="${entry%%|*}"
-        local entry_app="${entry#*|}"
+        local rest="${entry#*|}"
+        local entry_app="${rest%%|*}"
         if [ "$entry_key" = "$key" ]; then
             echo "$entry_app"
             return 0
+        fi
+    done
+    return 1
+}
+
+# Get custom path from key (if exists)
+get_custom_path() {
+    local key="$1"
+    for entry in "${PLUGIN_MANAGERS[@]}"; do
+        local entry_key="${entry%%|*}"
+        if [ "$entry_key" = "$key" ]; then
+            # Check if there's a third field (custom path)
+            local rest="${entry#*|}"
+            rest="${rest#*|}"
+            if [ "$rest" != "${entry#*|}" ]; then
+                echo "$rest"
+                return 0
+            fi
         fi
     done
     return 1
@@ -65,7 +87,17 @@ get_key_from_entry() {
 
 # Get app from entry
 get_app_from_entry() {
-    echo "${1#*|}"
+    local rest="${1#*|}"
+    echo "${rest%%|*}"
+}
+
+# Get custom path from entry (if exists)
+get_custom_path_from_entry() {
+    local rest="${1#*|}"
+    rest="${rest#*|}"
+    if [ "$rest" != "${1#*|}" ]; then
+        echo "$rest"
+    fi
 }
 
 show_usage() {
@@ -81,6 +113,8 @@ you to close it before proceeding to the next one.
 OPTIONS:
     --all               Run all available plugin managers (default)
     --native            Run Native Access only
+    --arturia           Run Arturia Software Center only
+    --splice            Run Splice INSTRUMENT only
     --izotope           Run iZotope Product Portal only
     --output            Run Output Hub only
     --softube           Run Softube Central only
@@ -115,7 +149,14 @@ EOF
 # Check if an application exists
 check_app_exists() {
     local app_name="$1"
-    [ -d "/Applications/$app_name" ]
+    local app_path="$2"
+
+    # If a custom path is provided, use it; otherwise use /Applications
+    if [ -n "$app_path" ]; then
+        [ -d "$app_path" ]
+    else
+        [ -d "/Applications/$app_name" ]
+    fi
 }
 
 # Get available managers
@@ -124,7 +165,8 @@ get_available_managers() {
     for entry in "${PLUGIN_MANAGERS[@]}"; do
         local key=$(get_key_from_entry "$entry")
         local app=$(get_app_from_entry "$entry")
-        if check_app_exists "$app"; then
+        local custom_path=$(get_custom_path_from_entry "$entry")
+        if check_app_exists "$app" "$custom_path"; then
             available+=("$key")
         fi
     done
@@ -143,7 +185,8 @@ list_managers() {
     for entry in "${PLUGIN_MANAGERS[@]}"; do
         local key=$(get_key_from_entry "$entry")
         local app_name=$(get_app_from_entry "$entry")
-        if check_app_exists "$app_name"; then
+        local custom_path=$(get_custom_path_from_entry "$entry")
+        if check_app_exists "$app_name" "$custom_path"; then
             print_success "$app_name (${key})"
             ((available_count++))
         else
@@ -167,12 +210,14 @@ open_plugin_manager() {
         return 1
     fi
 
-    if ! check_app_exists "$app_name"; then
+    # Get custom path or use default
+    local custom_path=$(get_custom_path "$key")
+    local app_path="${custom_path:-/Applications/$app_name}"
+
+    if ! check_app_exists "$app_name" "$custom_path"; then
         print_warning "$app_name is not installed, skipping..."
         return 1
     fi
-
-    local app_path="/Applications/$app_name"
 
     echo ""
     print_header "Opening $app_name"
@@ -180,10 +225,24 @@ open_plugin_manager() {
     echo ""
 
     # Open the app and wait for it to close
+    # Disable exit-on-error for this command to handle force-quit gracefully
+    set +e
     open -W "$app_path"
+    local exit_code=$?
+    set -e
 
-    print_success "$app_name closed"
-    return 0
+    # Handle different exit scenarios
+    if [ $exit_code -eq 0 ]; then
+        print_success "$app_name closed normally"
+        return 0
+    elif [ $exit_code -eq 137 ] || [ $exit_code -eq 143 ]; then
+        # 137 = SIGKILL (kill -9), 143 = SIGTERM (kill)
+        print_warning "$app_name was force-quit or killed"
+        return 0
+    else
+        print_warning "$app_name exited with code $exit_code"
+        return 0
+    fi
 }
 
 # Main update function
@@ -257,7 +316,7 @@ else
                 IFS=' ' read -r -a SELECTED_MANAGERS <<< "$(get_available_managers)"
                 shift
                 ;;
-            --native|--izotope|--output|--softube|--spitfire|--xln|--ua|--plugin-alliance|--ilok)
+            --native|--arturia|--splice|--izotope|--output|--softube|--spitfire|--xln|--ua|--plugin-alliance|--ilok)
                 key="${1#--}"
                 SELECTED_MANAGERS+=("$key")
                 shift
