@@ -102,6 +102,53 @@ ZVM_VI_SURROUND_BINDKEY=s-prefix
 # Faster escape response (100ms vs default 400ms)
 export ZVM_KEYTIMEOUT=0.1
 
+# ============================================================================
+# ZSH-VI-MODE POST-INIT HOOKS (must be set BEFORE oh-my-zsh loads)
+# ============================================================================
+# These commands run after zsh-vi-mode initializes
+
+# Auto-suggestions
+zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
+
+# FZF key bindings (must be re-sourced after zvm)
+zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh')
+
+# zsh-autopair integration
+zvm_after_init_commands+=('source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autopair/autopair.zsh 2>/dev/null && autopair-init')
+
+# FZF fuzzy finding keybindings (Telescope equivalents)
+zvm_after_init_commands+=('bindkey -M viins "^p" fzf-git-files')       # Ctrl-P: Find files
+zvm_after_init_commands+=('bindkey -M viins "^f" fzf-ripgrep')         # Ctrl-F: Live grep
+zvm_after_init_commands+=('bindkey -M viins "^g^b" fzf-git-branch')    # Ctrl-G B: Git branches
+zvm_after_init_commands+=('bindkey -M viins "^g^l" fzf-git-log')       # Ctrl-G L: Git log
+zvm_after_init_commands+=('bindkey -M viins "^g^s" fzf-git-status')    # Ctrl-G S: Git status
+
+# Text manipulation
+zvm_after_init_commands+=('bindkey -M viins "^l" insert-fat-arrow')    # Ctrl-L: =>
+zvm_after_init_commands+=('bindkey -M viins "^k" clear-line')          # Ctrl-K: Clear line
+
+# Command palette
+zvm_after_init_commands+=('bindkey -M viins "^x^p" palette')           # Ctrl-X Ctrl-P
+
+# Clipboard operations
+zvm_after_init_commands+=('bindkey -M viins "^y^y" yank-command-line') # Ctrl-Y Y: Yank
+zvm_after_init_commands+=('bindkey -M viins "^v" paste-from-clipboard') # Ctrl-V: Paste
+
+# Normal mode bindings
+zvm_after_init_commands+=('bindkey -M vicmd "/" history-incremental-search-forward')
+zvm_after_init_commands+=('bindkey -M vicmd "?" history-incremental-search-backward')
+zvm_after_init_commands+=('bindkey -M vicmd "Y" yank-pwd')             # Y: Yank pwd
+zvm_after_init_commands+=('bindkey -M vicmd "^p" fzf-git-files')
+zvm_after_init_commands+=('bindkey -M vicmd "^f" fzf-ripgrep')
+
+# Menu selection (hjkl navigation)
+zvm_after_init_commands+=('bindkey -M menuselect "h" vi-backward-char')
+zvm_after_init_commands+=('bindkey -M menuselect "j" vi-down-line-or-history')
+zvm_after_init_commands+=('bindkey -M menuselect "k" vi-up-line-or-history')
+zvm_after_init_commands+=('bindkey -M menuselect "l" vi-forward-char')
+zvm_after_init_commands+=('bindkey -M menuselect "^n" menu-complete')
+zvm_after_init_commands+=('bindkey -M menuselect "^p" reverse-menu-complete')
+
 # FZF - must be loaded before zsh-interactive-cd plugin
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
@@ -141,20 +188,6 @@ export EDITOR="$VISUAL"
 export MANPAGER='nvim +Man!'
 
 # ============================================================================
-# ZSH-VI-MODE POST-INIT CONFIGURATION
-# ============================================================================
-# These commands run after zsh-vi-mode initializes to restore our custom bindings
-
-# Auto-suggestions
-zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
-
-# FZF key bindings (must be re-sourced after zvm)
-zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh')
-
-# zsh-autopair integration
-zvm_after_init_commands+=('source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autopair/autopair.zsh 2>/dev/null && autopair-init')
-
-# ============================================================================
 # FZF-TAB CONFIGURATION (Telescope-like tab completion)
 # ============================================================================
 # Disable default completion menu
@@ -173,52 +206,6 @@ zstyle ':fzf-tab:*' fzf-flags '--height=80%' '--border'
 if [[ -n "$TMUX" ]]; then
   zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
 fi
-
-# ============================================================================
-# COMPREHENSIVE VIM-LIKE KEYBINDINGS
-# ============================================================================
-
-# Insert Mode Keybindings (must be applied after zvm init)
-zvm_after_init_commands+=(
-  # === Text Manipulation ===
-  'bindkey -M viins "^l" insert-fat-arrow'        # Ctrl-L: => (matches nvim classic)
-  'bindkey -M viins "^k" clear-line'              # Ctrl-K: Clear line
-
-  # === FZF Fuzzy Finding (Telescope equivalents) ===
-  'bindkey -M viins "^p" fzf-git-files'           # Ctrl-P: Find files (matches nvim)
-  'bindkey -M viins "^f" fzf-ripgrep'             # Ctrl-F: Live grep (matches ,f in nvim)
-  'bindkey -M viins "^g^b" fzf-git-branch'        # Ctrl-G B: Git branches
-  'bindkey -M viins "^g^l" fzf-git-log'           # Ctrl-G L: Git log
-  'bindkey -M viins "^g^s" fzf-git-status'        # Ctrl-G S: Git status
-
-  # === Command Palette ===
-  'bindkey -M viins "^x^p" palette'               # Ctrl-X Ctrl-P: Command palette
-
-  # === Clipboard Operations ===
-  'bindkey -M viins "^y^y" yank-command-line'     # Ctrl-Y Y: Yank command
-  'bindkey -M viins "^v" paste-from-clipboard'    # Ctrl-V: Paste
-
-  # === History Navigation ===
-  'bindkey -M viins "^n" down-line-or-history'    # Ctrl-N: Next in history
-  'bindkey -M viins "^p" up-line-or-history'      # Ctrl-P: Prev in history (when not fuzzy finding)
-
-  # === Normal Mode Bindings ===
-  'bindkey -M vicmd "/" history-incremental-search-forward'   # /: Search history forward
-  'bindkey -M vicmd "?" history-incremental-search-backward'  # ?: Search history backward
-  'bindkey -M vicmd "Y" yank-pwd'                 # Y: Yank current directory
-
-  # === FZF in Normal Mode ===
-  'bindkey -M vicmd "^p" fzf-git-files'           # Ctrl-P: Find files
-  'bindkey -M vicmd "^f" fzf-ripgrep'             # Ctrl-F: Live grep
-
-  # === Menu Selection (hjkl navigation in completion menu) ===
-  'bindkey -M menuselect "h" vi-backward-char'
-  'bindkey -M menuselect "j" vi-down-line-or-history'
-  'bindkey -M menuselect "k" vi-up-line-or-history'
-  'bindkey -M menuselect "l" vi-forward-char'
-  'bindkey -M menuselect "^n" menu-complete'
-  'bindkey -M menuselect "^p" reverse-menu-complete'
-)
 
 # ============================================================================
 # PATH Configuration
