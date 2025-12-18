@@ -92,9 +92,8 @@ plugins=(
 )
 
 # zsh-vi-mode settings (must be set before loading oh-my-zsh)
-export ZVM_VI_ESCAPE_BINDKEY=jk
-export ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
-ZVM_CURSOR_STYLE_ENABLED=false  # Keep for Ghostty compatibility
+export ZVM_VI_ESCAPE_BINDKEY=jk  # Use jk to exit insert mode
+ZVM_CURSOR_STYLE_ENABLED=false   # Keep for Ghostty compatibility
 
 # Enable surround text objects (like nvim-surround: ys, ds, cs)
 ZVM_VI_SURROUND_BINDKEY=s-prefix
