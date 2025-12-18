@@ -80,13 +80,12 @@ export WORK="$HOME/Work"
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
 
-# ZSH plugins (order matters: fzf-tab → autopair → abbr → autosuggestions → vi-mode LAST)
+# ZSH plugins (order matters: fzf-tab → autopair → autosuggestions → vi-mode LAST)
 plugins=(
   git macos encode64 web-search last-working-dir
   git-flow-completion zsh-syntax-highlighting
   fzf-tab              # Fuzzy tab completion (before autosuggestions)
   zsh-autopair         # Auto-close brackets/quotes
-  zsh-abbr             # Git abbreviations
   zsh-autosuggestions  # Fish-like suggestions
   git-open brew omz-git
   zsh-vi-mode          # Must be LAST
