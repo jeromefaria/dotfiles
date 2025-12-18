@@ -102,6 +102,26 @@ ZVM_VI_SURROUND_BINDKEY=s-prefix
 export ZVM_KEYTIMEOUT=0.1
 
 # ============================================================================
+# FZF-TAB CONFIGURATION (must be set BEFORE oh-my-zsh loads)
+# ============================================================================
+# Disable default completion menu to let fzf-tab take over
+zstyle ':completion:*' menu no
+
+# Preview for cd command (shows directory contents)
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath 2>/dev/null || ls -1 $realpath'
+
+# Preview for other completions
+zstyle ':fzf-tab:complete:*:*' fzf-preview 'echo ${(P)word}'
+
+# FZF window size
+zstyle ':fzf-tab:*' fzf-flags '--height=80%' '--border'
+
+# Use tmux popup if in tmux
+if [[ -n "$TMUX" ]]; then
+  zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
+fi
+
+# ============================================================================
 # ZSH-VI-MODE POST-INIT HOOKS (must be set BEFORE oh-my-zsh loads)
 # ============================================================================
 # These commands run after zsh-vi-mode initializes
@@ -185,26 +205,6 @@ export EDITOR="$VISUAL"
 
 # MAN PAGES
 export MANPAGER='nvim +Man!'
-
-# ============================================================================
-# FZF-TAB CONFIGURATION (Telescope-like tab completion)
-# ============================================================================
-# Disable default completion menu
-zstyle ':completion:*' menu no
-
-# Preview for cd command (shows directory contents)
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath 2>/dev/null || ls -1 $realpath'
-
-# Preview for other completions
-zstyle ':fzf-tab:complete:*:*' fzf-preview 'echo ${(P)word}'
-
-# FZF window size
-zstyle ':fzf-tab:*' fzf-flags '--height=80%' '--border'
-
-# Use tmux popup if in tmux
-if [[ -n "$TMUX" ]]; then
-  zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-fi
 
 # ============================================================================
 # PATH Configuration
