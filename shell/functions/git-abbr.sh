@@ -1,8 +1,11 @@
 #!/usr/bin/env zsh
-# Git abbreviations (expand on space like vim abbreviations)
+# Git aliases (simplified - zsh-abbr removed due to dependency issues)
+# Note: Many of these are already provided by the omz-git plugin
+# To use zsh-abbr in the future, install it with proper dependencies
 
-# Only set up if zsh-abbr is available
-if command -v abbr &>/dev/null; then
+# Skipping zsh-abbr for now due to dependency issues
+# Using regular aliases instead (won't expand on space, but will work)
+if false; then  # Disabled - use omz-git plugin aliases instead
   # ============================================================================
   # STATUS & INFO
   # ============================================================================
@@ -141,6 +144,8 @@ if command -v abbr &>/dev/null; then
   alias gunwip='git log -1 --pretty=%s | grep -q WIP && git reset HEAD~1'  # Undo WIP
 
   echo "Git abbreviations loaded (type 'abbr' to list all)"
-else
-  echo "Warning: zsh-abbr not installed, git abbreviations not available"
 fi
+
+# Note: For now, use the git aliases provided by the omz-git plugin
+# They include: ga, gaa, gb, gba, gco, gcb, gd, gds, gl, gp, gpl, gst, and many more
+# Run 'alias | grep git' to see all available git aliases
