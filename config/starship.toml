@@ -1,5 +1,17 @@
 # add_newline = false
 
+# ============================================================================
+# Vi Mode Indicator (shows current mode like Neovim)
+# ============================================================================
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+vicmd_symbol = "[❮](bold yellow)"
+vimcmd_symbol = "[❮](bold yellow)"
+vimcmd_visual_symbol = "[❮](bold cyan)"
+vimcmd_replace_symbol = "[❮](bold purple)"
+vimcmd_replace_one_symbol = "[❮](bold purple)"
+
 # [package]
 # disabled = true
 
@@ -10,4 +22,7 @@ disabled = true
 disabled = true
 
 [aws]
+disabled = true
+
+[ruby]
 disabled = true
