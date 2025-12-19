@@ -204,10 +204,8 @@ zvm_after_init_commands+=(
   'bindkey -M vicmd "^p" fzf-git-files'           # Ctrl-P: Find files
   'bindkey -M vicmd "^f" fzf-ripgrep'             # Ctrl-F: Live grep
 
-  # === Leader Key Bindings in Normal Mode ===
-  'bindkey -M vicmd ",gb" fzf-git-branch'         # ,gb: Git branches
-  'bindkey -M vicmd ",gl" fzf-git-log'            # ,gl: Git log
-  'bindkey -M vicmd ",gs" fzf-git-status'         # ,gs: Git status
+  # === Git Operations in Normal Mode (g prefix) ===
+  'bindkey -M vicmd "g" git-leader-widget'        # g: Git prefix (gb/gl/gs)
 
   # === Menu Selection (hjkl navigation in completion menu) ===
   'bindkey -M menuselect "h" vi-backward-char'
