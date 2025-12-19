@@ -81,7 +81,7 @@ fzf-git-branch() {
   branch=$(git branch -a --color=always | grep -v HEAD | fzf --ansi --height 40% --reverse \
     --preview 'git log --oneline --graph --color=always {1}' \
     --header 'Git Branches (gb)' |
-    sed 's/remotes\/origin\///' | sed 's/^[* ]*//' | tr -d ' ')
+    /usr/bin/sed 's/remotes\/origin\///' | /usr/bin/sed 's/^[* ]*//' | tr -d ' ')
 
   if [[ -n "$branch" ]]; then
     git checkout "$branch"
