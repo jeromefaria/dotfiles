@@ -184,6 +184,11 @@ zvm_after_init_commands+=(
   'bindkey -M viins "^p" fzf-git-files'           # Ctrl-P: Find files (matches nvim)
   'bindkey -M viins "^f" fzf-ripgrep'             # Ctrl-F: Live grep (matches ,f in nvim)
 
+  # === Leader Key Bindings (vim-style with comma leader) ===
+  'bindkey -M viins ",gb" fzf-git-branch'         # ,gb: Git branches
+  'bindkey -M viins ",gl" fzf-git-log'            # ,gl: Git log
+  'bindkey -M viins ",gs" fzf-git-status'         # ,gs: Git status
+
   # === Command Palette ===
   'bindkey -M viins "^x^p" palette'               # Ctrl-X Ctrl-P: Command palette
 
@@ -203,6 +208,11 @@ zvm_after_init_commands+=(
   # === FZF in Normal Mode ===
   'bindkey -M vicmd "^p" fzf-git-files'           # Ctrl-P: Find files
   'bindkey -M vicmd "^f" fzf-ripgrep'             # Ctrl-F: Live grep
+
+  # === Leader Key Bindings in Normal Mode ===
+  'bindkey -M vicmd ",gb" fzf-git-branch'         # ,gb: Git branches
+  'bindkey -M vicmd ",gl" fzf-git-log'            # ,gl: Git log
+  'bindkey -M vicmd ",gs" fzf-git-status'         # ,gs: Git status
 
   # === Menu Selection (hjkl navigation in completion menu) ===
   'bindkey -M menuselect "h" vi-backward-char'
