@@ -81,11 +81,10 @@ ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
 
 # ZSH plugins
-# Order matters: fzf-tab before autosuggestions, zsh-vi-mode MUST be last
+# Order matters: zsh-vi-mode MUST be last
 plugins=(
   git macos encode64 web-search last-working-dir
   git-flow-completion zsh-syntax-highlighting
-  fzf-tab              # Fuzzy tab completion (Telescope-like)
   zsh-autopair         # Auto-close brackets/quotes
   zsh-autosuggestions
   git-open brew omz-git
@@ -109,6 +108,9 @@ export ZVM_KEYTIMEOUT=0.1
 # ============================================================================
 # COMPLETION CONFIGURATION
 # ============================================================================
+# Enable traditional menu selection for tab completion
+zstyle ':completion:*' menu yes select
+
 # Enable colors in completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
@@ -166,26 +168,6 @@ zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] &
 zvm_after_init_commands+=('source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autopair/autopair.zsh 2>/dev/null && autopair-init')
 
 # ============================================================================
-# FZF-TAB CONFIGURATION (Telescope-like tab completion)
-# ============================================================================
-# Disable default completion menu
-zstyle ':completion:*' menu no
-
-# Preview for cd command (shows directory contents)
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath 2>/dev/null || ls -1 $realpath'
-
-# Preview for other completions
-zstyle ':fzf-tab:complete:*:*' fzf-preview 'echo ${(P)word}'
-
-# FZF window size
-zstyle ':fzf-tab:*' fzf-flags '--height=80%' '--border'
-
-# Use tmux popup if in tmux
-if [[ -n "$TMUX" ]]; then
-  zstyle ':fzf-tab:*' fzf-command ftb-tmux-popup
-fi
-
-# ============================================================================
 # COMPREHENSIVE VIM-LIKE KEYBINDINGS
 # ============================================================================
 
@@ -201,9 +183,9 @@ zvm_after_init_commands+=(
   # === FZF Fuzzy Finding (Telescope equivalents) ===
   'bindkey -M viins "^p" fzf-git-files'           # Ctrl-P: Find files (matches nvim)
   'bindkey -M viins "^f" fzf-ripgrep'             # Ctrl-F: Live grep (matches ,f in nvim)
-  'bindkey -M viins "^g^b" fzf-git-branch'        # Ctrl-G B: Git branches
-  'bindkey -M viins "^g^l" fzf-git-log'           # Ctrl-G L: Git log
-  'bindkey -M viins "^g^s" fzf-git-status'        # Ctrl-G S: Git status
+  'bindkey -M viins "^b" fzf-git-branch'          # Ctrl-B: Git branches (single key)
+  'bindkey -M viins "^[l" fzf-git-log'            # Alt-L: Git log
+  'bindkey -M viins "^[s" fzf-git-status'         # Alt-S: Git status
 
   # === Command Palette ===
   'bindkey -M viins "^x^p" palette'               # Ctrl-X Ctrl-P: Command palette
@@ -224,6 +206,9 @@ zvm_after_init_commands+=(
   # === FZF in Normal Mode ===
   'bindkey -M vicmd "^p" fzf-git-files'           # Ctrl-P: Find files
   'bindkey -M vicmd "^f" fzf-ripgrep'             # Ctrl-F: Live grep
+  'bindkey -M vicmd "^b" fzf-git-branch'          # Ctrl-B: Git branches
+  'bindkey -M vicmd "^[l" fzf-git-log'            # Alt-L: Git log
+  'bindkey -M vicmd "^[s" fzf-git-status'         # Alt-S: Git status
 
   # === Menu Selection (hjkl navigation in completion menu) ===
   'bindkey -M menuselect "h" vi-backward-char'
