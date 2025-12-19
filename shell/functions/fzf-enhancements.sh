@@ -70,7 +70,7 @@ fzf-ripgrep() {
 zle -N fzf-ripgrep
 
 # Fuzzy git branch checkout (like Telescope git_branches)
-# Keybinding: Ctrl-G B
+# Keybinding: Ctrl-B
 fzf-git-branch() {
   if ! git rev-parse --is-inside-work-tree &>/dev/null; then
     echo "Not in a git repository"
@@ -80,7 +80,7 @@ fzf-git-branch() {
   local branch
   branch=$(git branch -a --color=always | grep -v HEAD | fzf --ansi --height 40% --reverse \
     --preview 'git log --oneline --graph --color=always {1}' \
-    --header 'Git Branches (Ctrl-G B)' |
+    --header 'Git Branches (Ctrl-B)' |
     sed 's/remotes\/origin\///' | sed 's/^[* ]*//' | tr -d ' ')
 
   if [[ -n "$branch" ]]; then
@@ -91,7 +91,7 @@ fzf-git-branch() {
 zle -N fzf-git-branch
 
 # Browse git log with preview (like Telescope git_commits)
-# Keybinding: Ctrl-G L
+# Keybinding: Alt-L
 fzf-git-log() {
   if ! git rev-parse --is-inside-work-tree &>/dev/null; then
     echo "Not in a git repository"
@@ -104,7 +104,7 @@ fzf-git-log() {
         --preview 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs git show --color=always' \
         --preview-window=right:50% \
         --bind 'ctrl-/:toggle-preview' \
-        --header 'Git Log (Ctrl-G L)' |
+        --header 'Git Log (Alt-L)' |
     grep -o "[a-f0-9]\{7,\}" | head -1)
 
   if [[ -n "$commit" ]]; then
@@ -115,7 +115,7 @@ fzf-git-log() {
 zle -N fzf-git-log
 
 # Fuzzy git status - stage files interactively
-# Keybinding: Ctrl-G S
+# Keybinding: Alt-S
 fzf-git-status() {
   if ! git rev-parse --is-inside-work-tree &>/dev/null; then
     echo "Not in a git repository"
@@ -126,7 +126,7 @@ fzf-git-status() {
   selected=$(git status --short |
     fzf --height 40% --reverse --multi \
         --preview 'echo {} | awk "{print \$2}" | xargs git diff --color=always' \
-        --header 'Git Status - Tab to select, Enter to stage (Ctrl-G S)' |
+        --header 'Git Status - Tab to select, Enter to stage (Alt-S)' |
     awk '{print $2}')
 
   if [[ -n "$selected" ]]; then
