@@ -21,7 +21,8 @@ bind index \CD purge-message
 bind index L limit
 bind index h noop
 bind index l display-message
-bind index <space> tag-entry
+# Space is handled by leader file - removed from here to avoid conflicts
+# bind index <space> tag-entry
 bind index,pager H view-raw-message
 bind browser l select-entry
 bind pager,browser gg top-page
