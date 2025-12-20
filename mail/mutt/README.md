@@ -10,95 +10,136 @@ This directory contains configuration files for [Neomutt](https://neomutt.org/),
 - **macros** - Custom macros for common operations
 - **colours** - Color scheme configuration
 - **mailcap** - MIME type handlers for attachments
+- **scripts/** - Helper scripts for enhanced functionality (FZF integration, etc.)
 - **accounts/** - Account-specific configurations
 
-## Custom Key Bindings
+## Key Bindings Reference
 
-### Navigation (Vim-style)
-
-| Key | Context | Action | Description |
-|-----|---------|--------|-------------|
-| `j` | index | next-entry | Move to next message |
-| `k` | index | previous-entry | Move to previous message |
-| `j` | pager | next-line | Scroll down one line |
-| `k` | pager | previous-line | Scroll up one line |
-| `l` | index | display-message | Open/view message |
-| `l` | attach | view-mailcap | Open attachment |
-| `h` | pager/attach | exit | Go back/exit |
-| `gg` | index/attach | first-entry | Jump to first message |
-| `gg` | pager/browser | top-page | Jump to top |
-| `G` | index/attach | last-entry | Jump to last message |
-| `G` | pager/browser | bottom-page | Jump to bottom |
-| `<up>` | pager | previous-line | Scroll up |
-| `<down>` | pager | next-line | Scroll down |
-
-### Message Operations
-
-| Key | Context | Action | Description |
-|-----|---------|--------|-------------|
-| `D` | pager | delete-message | Delete current message |
-| `U` | pager | undelete-message | Undelete message |
-| `Ctrl-d` | index | purge-message | Delete message permanently |
-| `L` | index | limit | Limit/filter messages |
-| `Space` | index | tag-entry | Tag/select message |
-| `H` | index/pager | view-raw-message | View raw email source |
-| `S` | index/pager | sync-mailbox | Sync mailbox |
-| `R` | index/pager | group-reply | Reply to all |
-| `@` | index/pager | compose-to-sender | Compose email to sender |
-| `N` | index/pager | search-opposite | Search in opposite direction |
-
-### Compose & Postpone
-
-| Key | Context | Action | Description |
-|-----|---------|--------|-------------|
-| `P` | compose | postpone-message | Save draft |
-| `P` | index | recall-message | Recall postponed message |
-| `Tab` | editor | complete-query | Auto-complete email address |
-
-### Sidebar Navigation
-
-| Key | Context | Action | Description |
-|-----|---------|--------|-------------|
-| `B` | index/pager | sidebar-toggle-visible | Toggle sidebar visibility |
-| `Ctrl-k` | index/pager | sidebar-prev | Previous mailbox |
-| `Ctrl-j` | index/pager | sidebar-next | Next mailbox |
-| `Ctrl-o` | index/pager | sidebar-open | Open selected mailbox |
-| `Ctrl-p` | index/pager | sidebar-prev-new | Previous mailbox with new mail |
-| `Ctrl-n` | index/pager | sidebar-next-new | Next mailbox with new mail |
-
-### Browser
-
-| Key | Context | Action | Description |
-|-----|---------|--------|-------------|
-| `l` | browser | select-entry | Select/open entry |
-| `h` | browser | - | Go to parent folder (via macro) |
-
-## Custom Macros
-
-### Quick Actions
+### Core Navigation (Vim-style)
 
 | Key | Context | Description |
 |-----|---------|-------------|
-| `Ctrl-r` | index | Mark all messages as read |
-| `A` | index | Show all messages (undo limit) |
+| `j` | index | Move to next message |
+| `k` | index | Move to previous message |
+| `j` | pager | Scroll down one line |
+| `k` | pager | Scroll up one line |
+| `l` | index | Open/view selected message |
+| `l` | pager | View attachments |
+| `l` | attach | Open attachment with mailcap |
+| `l` | browser | Select/open entry |
+| `h` | pager | Go back to message list |
+| `h` | attach | Exit attachment view |
 | `h` | browser | Go to parent folder |
+| `gg` | index | Jump to first message |
+| `gg` | attach | Jump to first attachment |
+| `gg` | pager | Jump to top of message |
+| `gg` | browser | Jump to top |
+| `G` | index | Jump to last message |
+| `G` | attach | Jump to last attachment |
+| `G` | pager | Jump to bottom of message |
+| `G` | browser | Jump to bottom |
+| `↑` | pager | Scroll up one line |
+| `↓` | pager | Scroll down one line |
 
-### Account Switching
+### Message Operations
 
-| Key | Description |
-|-----|-------------|
-| `i1` | Switch to personal account (jerome.faria@gmail.com) |
+| Key | Context | Description |
+|-----|---------|-------------|
+| `Space` | index | Tag/select message for batch operations |
+| `D` | pager | Delete current message |
+| `U` | pager | Undelete message |
+| `Ctrl-d` | index | Permanently delete message (purge) |
+| `L` | index | Limit/filter visible messages |
+| `A` | index | Show all messages (remove limit) |
+| `H` | index/pager | View raw email source |
+| `S` | index/pager | Sync mailbox with server |
+| `R` | index/pager | Reply to all recipients |
+| `@` | index/pager | Compose new email to sender |
+| `N` | index/pager | Search in opposite direction |
+| `Ctrl-r` | index | Mark all messages as read |
 
-### Configuration & Filtering
+### Compose & Editor
 
-| Key | Description |
-|-----|-------------|
-| `F1` | Reload configuration |
-| `F2` | Show only new messages |
-| `F3` | Show only flagged messages |
-| `F4` | Filter utilities (EDP, EPAL, MEO, Vodafone, Activobank, etc.) |
-| `F5` | Filter orders and packages |
-| `F6` | Filter PayPal messages |
+| Key | Context | Description |
+|-----|---------|-------------|
+| `P` | compose | Postpone message (save as draft) |
+| `P` | index | Recall postponed message |
+| `Tab` | editor | Auto-complete email address |
+
+### Gmail Folder Navigation
+
+Navigate, move, and copy messages between Gmail folders using mnemonic keys:
+- **Pattern**: `g` = go to folder, `M` = move message, `C` = copy message
+- **Folders**: `i` = inbox, `a` = all mail (archive), `d` = drafts, `s` = sent, `S` = spam
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `gm` | index/pager | **Fuzzy mailbox switcher (FZF)** |
+| `gi` | index/pager | Go to Inbox |
+| `Mi` | index/pager | Move message to Inbox |
+| `Ci` | index/pager | Copy message to Inbox |
+| `ga` | index/pager | Go to All Mail (Archive) |
+| `Ma` | index/pager | Move message to All Mail |
+| `Ca` | index/pager | Copy message to All Mail |
+| `gd` | index/pager | Go to Drafts |
+| `Md` | index/pager | Move message to Drafts |
+| `Cd` | index/pager | Copy message to Drafts |
+| `gs` | index/pager | Go to Sent Mail |
+| `Ms` | index/pager | Move message to Sent Mail |
+| `Cs` | index/pager | Copy message to Sent Mail |
+| `gS` | index/pager | Go to Spam |
+| `MS` | index/pager | Move message to Spam |
+| `CS` | index/pager | Copy message to Spam |
+
+### Sidebar Navigation
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `B` | index/pager | Toggle sidebar visibility |
+| `Ctrl-j` | index/pager | Next mailbox in sidebar |
+| `Ctrl-k` | index/pager | Previous mailbox in sidebar |
+| `Ctrl-o` | index/pager | Open selected mailbox |
+| `Ctrl-n` | index/pager | Next mailbox with new mail |
+| `Ctrl-p` | index/pager | Previous mailbox with new mail |
+
+### Account Management
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `i1` | index/pager | Switch to personal account (jerome.faria@gmail.com) |
+
+### Quick Filters & Function Keys
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `F1` | index | Reload Neomutt configuration |
+| `F2` | index | Show only new messages |
+| `F3` | index | Show only flagged messages |
+| `F4` | index | Filter utilities (EDP, EPAL, MEO, Vodafone, etc.) |
+| `F5` | index | Filter orders and packages (order, encomenda, #) |
+| `F6` | index | Filter PayPal messages |
+
+## Key Binding Patterns
+
+Understanding the logic behind key choices makes them easier to remember:
+
+- **Vim Navigation**: Movement keys follow Vim conventions (`hjkl`, `gg/G` for start/end)
+- **Gmail Folders**: Three-letter pattern for each folder
+  - First letter: `g` (go), `M` (move), or `C` (copy)
+  - Second letter: folder identifier (`i`nbox, `a`rchive, `d`rafts, `s`ent, `S`pam)
+- **Case Sensitivity**: Uppercase often indicates a more destructive/permanent action
+  - `D` (delete) vs `U` (undelete)
+  - `S` (spam) vs `s` (sent)
+  - `M` (move) vs standard motion keys
+
+## Useful Tips
+
+- Press `?` in any context to see all available keybindings for that view
+- Use `:` to enter Neomutt commands directly
+- Press `v` on a message to view attachments
+- Press `y` to change folders manually
+- Press `/` to search messages
+- Mouse wheel scrolling is supported in both index and pager views
 
 ## Features
 
