@@ -1,0 +1,88 @@
+# vim: filetype=neomuttrc
+
+# muttrc file for account personal (LOCAL MAILDIR)
+# Uses mbsync-synced mail from ~/.local/share/mail/gmail/
+
+set realname = "Jerome Faria"
+set from = "jerome.faria@gmail.com"
+alias me Jerome Faria <jerome.faria@gmail.com>
+
+# Use local Maildir instead of IMAP
+set folder = "~/.local/share/mail/gmail"
+set header_cache = ~/.cache/mutt/gmail/headers
+set message_cachedir = ~/.cache/mutt/gmail/bodies
+
+# SMTP for sending (still uses Gmail SMTP)
+set smtp_url = "smtps://jerome.faria@gmail.com@smtp.gmail.com:465/"
+set smtp_authenticators = "login"
+# Use keychain for SMTP password (same as IMAP)
+set smtp_pass = "`$HOME/dotfiles/mail/scripts/get-gmail-pass.sh`"
+
+set mbox_type = Maildir
+set ssl_starttls = yes
+set ssl_force_tls = yes
+
+# Unbind conflicting keys
+bind index,pager gg noop
+bind index,pager g noop
+bind index,pager M noop
+bind index,pager C noop
+bind index gg first-entry
+
+# Clear old mailboxes
+unmailboxes *
+
+# Set mailbox locations (local Maildir folders)
+set spoolfile = "+INBOX"
+set record = "+sent"
+set postponed = "+drafts"
+set trash = "+trash"
+
+# Define mailboxes for sidebar (local folders)
+mailboxes "+INBOX" \
+          "+archive" \
+          "+drafts" \
+          "+sent" \
+          "+spam" \
+          "+trash"
+
+# Gmail-style folder navigation (updated for local folders)
+macro index,pager gi "<change-folder>=INBOX<enter>" "go to inbox"
+macro index,pager Mi ";<save-message>=INBOX<enter>" "move mail to inbox"
+macro index,pager Ci ";<copy-message>=INBOX<enter>" "copy mail to inbox"
+
+macro index,pager ga "<change-folder>=archive<enter>" "go to archive"
+macro index,pager Ma ";<save-message>=archive<enter>" "move mail to archive"
+macro index,pager Ca ";<copy-message>=archive<enter>" "copy mail to archive"
+
+macro index,pager gd "<change-folder>=drafts<enter>" "go to drafts"
+macro index,pager Md ";<save-message>=drafts<enter>" "move mail to drafts"
+macro index,pager Cd ";<copy-message>=drafts<enter>" "copy mail to drafts"
+
+macro index,pager gs "<change-folder>=sent<enter>" "go to sent"
+macro index,pager Ms ";<save-message>=sent<enter>" "move mail to sent"
+macro index,pager Cs ";<copy-message>=sent<enter>" "copy mail to sent"
+
+macro index,pager gS "<change-folder>=spam<enter>" "go to spam"
+macro index,pager MS ";<save-message>=spam<enter>" "move mail to spam"
+macro index,pager CS ";<copy-message>=spam<enter>" "copy mail to spam"
+
+# Compose View Options
+set realname = "Jerome Faria"        # who am i?
+set envelope_from                    # which from?
+set sig_dashes                       # dashes before sig
+set edit_headers                     # show headers when composing
+set fast_reply                       # skip to compose when replying
+set askcc                            # ask for CC:
+set fcc_attach                       # save attachments with the body
+unset mime_forward                   # forward attachments as part of body
+set forward_format = "Fwd: %s"       # format of subject when forwarding
+set forward_decode                   # decode when forwarding
+set attribution = "On %d, %n wrote:" # format of quoting header
+set reply_to                         # reply to Reply to: field
+set reverse_name                     # reply as whomever it was to
+set include                          # include message in replies
+set forward_quote                    # include message in forwards
+
+# Notmuch integration works with local Maildir
+# Virtual mailboxes defined in notmuch config file

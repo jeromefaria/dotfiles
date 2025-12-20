@@ -3,7 +3,7 @@
 # Similar to Telescope search in Neovim
 
 # Notmuch database location (must match ~/.notmuch-config)
-set nm_default_url = "notmuch:///Users/jeromefaria/.local/share/mail"
+set nm_default_url = "notmuch:///Users/jeromefaria/.local/share/mail/gmail"
 
 # Exclude tags from search results (matches notmuch config)
 set nm_exclude_tags = "deleted,spam"
