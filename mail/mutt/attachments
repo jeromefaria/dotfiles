@@ -1,0 +1,28 @@
+# vim: filetype=neomuttrc
+# Better attachment handling
+
+# Attachment view key bindings (Vim-style navigation already in bindings file)
+
+# Default save directory for attachments
+set attach_save_dir = "~/Downloads"
+
+# Attachment viewing enhancements
+# View attachments inline when possible
+set implicit_autoview = yes
+
+# Attachment menu macros
+
+# Save all attachments to Downloads folder
+macro attach S "<tag-prefix><save-entry>~/Downloads/<enter>" "save all attachments to Downloads"
+
+# Save attachment with FZF directory picker (if fd is available)
+macro attach s "<shell-escape>bash $DOTFILES/mail/mutt/scripts/save-attachment-fzf.sh<enter>" "save attachment with FZF picker"
+
+# Quick open attachment (uses mailcap)
+macro attach o "<view-mailcap>" "open attachment with mailcap"
+
+# Pipe attachment to command
+macro attach <Space>p "<pipe-entry>" "leader: pipe attachment to command"
+
+# Copy attachment path to clipboard
+macro attach <Space>y "<shell-escape>echo -n '<attach-file>' | pbcopy<enter>" "leader: copy attachment path"
