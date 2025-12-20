@@ -1,0 +1,49 @@
+# vim: filetype=neomuttrc
+# Notmuch integration for powerful email search
+# Similar to Telescope search in Neovim
+
+# Notmuch database location (must match ~/.notmuch-config)
+set nm_default_url = "notmuch:///Users/jeromefaria/.local/share/mail"
+
+# Query timeout in seconds
+set nm_query_timeout = 60
+
+# Exclude tags from search results (matches notmuch config)
+set nm_exclude_tags = "deleted,spam"
+
+# Record tags are applied to sent messages
+set nm_record_tags = "-inbox,sent"
+
+# Unread tag to use
+set nm_unread_tag = "unread"
+
+# Virtual mailboxes for smart searches (like Telescope saved searches)
+# These act as dynamic folders based on notmuch queries
+virtual-mailboxes \
+  "Search: Inbox"           "notmuch://?query=tag:inbox" \
+  "Search: Unread"          "notmuch://?query=tag:unread" \
+  "Search: Flagged"         "notmuch://?query=tag:flagged" \
+  "Search: Today"           "notmuch://?query=date:today" \
+  "Search: This Week"       "notmuch://?query=date:week.." \
+  "Search: This Month"      "notmuch://?query=date:month.." \
+  "Search: Attachments"     "notmuch://?query=tag:attachment" \
+  "Search: To Me"           "notmuch://?query=to:jerome.faria@gmail.com" \
+  "Search: From Me"         "notmuch://?query=from:jerome.faria@gmail.com"
+
+# Notmuch key bindings
+# Similar to Telescope keybindings in Neovim
+
+# Open notmuch search query prompt (like Telescope live_grep)
+bind index,pager \\ vfolder-from-query
+
+# Modify (add/remove) tags - like Telescope
+bind index,pager + modify-labels
+
+# Search in notmuch (like Telescope grep_string under cursor)
+macro index,pager <F7> "<vfolder-from-query>" "notmuch search"
+
+# Entire thread operations
+bind index,pager <F8> entire-thread
+
+# Reconstruct thread view
+bind index,pager <F9> reconstruct-thread

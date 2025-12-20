@@ -6,6 +6,7 @@ This directory contains configuration files for [Neomutt](https://neomutt.org/),
 
 - **muttrc** - Main configuration file that sources all other config files
 - **settings** - General settings and options
+- **notmuch** - Notmuch integration for powerful search (Telescope-like)
 - **bindings** - Custom key bindings
 - **macros** - Custom macros for common operations
 - **colours** - Color scheme configuration
@@ -118,6 +119,29 @@ Navigate, move, and copy messages between Gmail folders using mnemonic keys:
 | `F4` | index | Filter utilities (EDP, EPAL, MEO, Vodafone, etc.) |
 | `F5` | index | Filter orders and packages (order, encomenda, #) |
 | `F6` | index | Filter PayPal messages |
+
+### Notmuch Search (Telescope-like)
+
+Powerful full-text search using notmuch virtual mailboxes:
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `\` | index/pager | Open notmuch search query (like Telescope live_grep) |
+| `+` | index/pager | Modify tags (add/remove labels) |
+| `F7` | index/pager | Notmuch search prompt |
+| `F8` | index/pager | Show entire email thread |
+| `F9` | index/pager | Reconstruct thread view |
+
+**Virtual Mailboxes** - Access via `c` (change folder):
+- Search: Inbox - All inbox messages
+- Search: Unread - Unread messages across all folders
+- Search: Flagged - Starred/flagged messages
+- Search: Today - Today's messages
+- Search: This Week - Messages from this week
+- Search: This Month - Messages from this month
+- Search: Attachments - Messages with attachments
+- Search: To Me - Direct messages to you
+- Search: From Me - Messages sent by you
 
 ## Key Binding Patterns
 
