@@ -8,6 +8,7 @@ This directory contains configuration files for [Neomutt](https://neomutt.org/),
 - **settings** - General settings and options
 - **notmuch** - Notmuch integration for powerful search (Telescope-like)
 - **abook** - Address book integration with abook
+- **urlview** - URL extraction and handling (like Tmux urlview)
 - **bindings** - Custom key bindings
 - **macros** - Custom macros for common operations
 - **leader** - Space leader key pattern (inspired by Neovim)
@@ -149,6 +150,13 @@ Navigate, move, and copy messages between Gmail folders using mnemonic keys:
 | `Space a` | index/pager | Add sender to address book (quiet) |
 | `Space A` | index/pager | Create mutt alias from address |
 | `Ctrl-T` | compose | Query address book for contact |
+
+### URL Extraction (urlview)
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `Ctrl-b` | index/pager | Extract URLs with urlview (like Tmux) |
+| `Space u` | index/pager | Extract URLs with urlview |
 
 ### Quick Filters & Function Keys
 
