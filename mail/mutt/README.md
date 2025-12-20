@@ -7,10 +7,11 @@ This directory contains configuration files for [Neomutt](https://neomutt.org/),
 - **muttrc** - Main configuration file that sources all other config files
 - **settings** - General settings and options
 - **notmuch** - Notmuch integration for powerful search (Telescope-like)
+- **abook** - Address book integration with abook
 - **bindings** - Custom key bindings
 - **macros** - Custom macros for common operations
 - **leader** - Space leader key pattern (inspired by Neovim)
-- **colours** - Color scheme configuration
+- **colours** - Color scheme configuration (OceanicNext theme)
 - **mailcap** - MIME type handlers for attachments
 - **scripts/** - Helper scripts for enhanced functionality (FZF integration, etc.)
 - **accounts/** - Account-specific configurations
@@ -138,6 +139,16 @@ Navigate, move, and copy messages between Gmail folders using mnemonic keys:
 | Key | Context | Description |
 |-----|---------|-------------|
 | `i1` | index/pager | Switch to personal account (jerome.faria@gmail.com) |
+
+### Address Book (abook)
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `a` | index/pager | Add sender to address book |
+| `A` | index/pager | Open abook for contact management |
+| `Space a` | index/pager | Add sender to address book (quiet) |
+| `Space A` | index/pager | Create mutt alias from address |
+| `Ctrl-T` | compose | Query address book for contact |
 
 ### Quick Filters & Function Keys
 

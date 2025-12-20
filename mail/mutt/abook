@@ -1,0 +1,22 @@
+# vim: filetype=neomuttrc
+# Abook (address book) integration
+
+# Set query command for address lookup (Ctrl-T in compose mode)
+set query_command = "abook --mutt-query '%s'"
+
+# Query format for displaying results
+set query_format = "%4c %t %-25.25a %-25.25n %?e?(%e)?"
+
+# Abook key bindings
+
+# Add sender to address book (from index or pager)
+macro index,pager a "<pipe-message>abook --add-email<return>" "add sender to abook"
+
+# Open abook for contact management
+macro index,pager A "<shell-escape>abook<return>" "open abook"
+
+# Add all recipients of current message to address book
+macro index,pager <Space>a "<pipe-message>abook --add-email-quiet<return>" "leader: add sender to abook (quiet)"
+
+# Create alias from address (alternative to abook)
+macro index,pager <Space>A "<create-alias>" "leader: create mutt alias"

@@ -1,6 +1,7 @@
 # vim: filetype=neomuttrc
 source $DOTFILES/mail/mutt/settings
 source $DOTFILES/mail/mutt/notmuch
+source $DOTFILES/mail/mutt/abook
 source $DOTFILES/mail/mutt/bindings
 source $DOTFILES/mail/mutt/macros
 source $DOTFILES/mail/mutt/leader
