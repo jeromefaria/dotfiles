@@ -91,7 +91,8 @@ Multi-key sequences starting with Space for common operations (single Space in i
 | `Space N` | index | Previous search result |
 | `Space q` | index/pager | Quit Neomutt |
 | `Space R` | index/pager | Recall draft |
-| `Space p` | index/pager | Print message |
+| `Space P` | index/pager | Print message |
+| `Space p` | index/pager | **Command Palette (FZF)** |
 | `Space g a` | index/pager | Archive (move to All Mail) |
 | `Space g d` | index/pager | Move to Drafts |
 | `Space g s` | index/pager | Mark as Spam |
@@ -171,6 +172,28 @@ Powerful full-text search using notmuch virtual mailboxes:
 - Search: Attachments - Messages with attachments
 - Search: To Me - Direct messages to you
 - Search: From Me - Messages sent by you
+
+### Command Palette (Neovim-style)
+
+Press `Space p` to open the FZF command palette - a searchable list of all available commands, similar to `:Commands` in Neovim or the ZSH command palette.
+
+**Features:**
+- Fuzzy search through 70+ email operations
+- Organized by category (messages, search, folders, tagging, threads, etc.)
+- Shows command descriptions
+- Execute any operation without memorizing keybindings
+
+**Categories:**
+- Message operations (reply, forward, delete, etc.)
+- View operations (attachments, raw source, headers)
+- Compose operations (new message, recall draft)
+- Search and filter (limit by criteria, notmuch search)
+- Folder navigation (inbox, sent, drafts, archive, etc.)
+- Message organization (archive, move, copy)
+- Tagging and marking (flag, read/unread, tag patterns)
+- Thread operations (collapse, delete thread, show entire thread)
+- Batch operations (mark all read, delete all visible)
+- Configuration (reload, version, help)
 
 ## Key Binding Patterns
 
