@@ -9,6 +9,7 @@ This directory contains configuration files for [Neomutt](https://neomutt.org/),
 - **notmuch** - Notmuch integration for powerful search (Telescope-like)
 - **bindings** - Custom key bindings
 - **macros** - Custom macros for common operations
+- **leader** - Space leader key pattern (inspired by Neovim)
 - **colours** - Color scheme configuration
 - **mailcap** - MIME type handlers for attachments
 - **scripts/** - Helper scripts for enhanced functionality (FZF integration, etc.)
@@ -66,6 +67,34 @@ This directory contains configuration files for [Neomutt](https://neomutt.org/),
 | `P` | compose | Postpone message (save as draft) |
 | `P` | index | Recall postponed message |
 | `Tab` | editor | Auto-complete email address |
+
+### Space Leader (Neovim-style)
+
+Multi-key sequences starting with Space for common operations (single Space in index still tags):
+
+| Key | Context | Description |
+|-----|---------|-------------|
+| `Space s` | index/pager | Sync mailbox |
+| `Space r` | index/pager | Reply to all |
+| `Space f` | index/pager | Forward message |
+| `Space d` | index/pager | Delete message |
+| `Space u` | index/pager | Undelete message |
+| `Space v` | index/pager | View attachments |
+| `Space h` | index/pager | View raw message/headers |
+| `Space t` | index | Tag message |
+| `Space T` | index | Tag entire thread |
+| `Space c` | index/pager | Compose new message |
+| `Space @` | index/pager | Compose to sender |
+| `Space /` | index | Limit/filter messages |
+| `Space a` | index | Show all (clear limit) |
+| `Space n` | index | Next search result |
+| `Space N` | index | Previous search result |
+| `Space q` | index/pager | Quit Neomutt |
+| `Space R` | index/pager | Recall draft |
+| `Space p` | index/pager | Print message |
+| `Space g a` | index/pager | Archive (move to All Mail) |
+| `Space g d` | index/pager | Move to Drafts |
+| `Space g s` | index/pager | Mark as Spam |
 
 ### Gmail Folder Navigation
 

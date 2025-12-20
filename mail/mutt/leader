@@ -1,0 +1,45 @@
+# vim: filetype=neomuttrc
+# Space leader key pattern (inspired by Neovim space leader)
+# Note: Single <Space> in index still tags messages
+# Multi-key sequences starting with space provide leader-like functionality
+
+# Unbind space in pager to use as leader there
+bind pager <Space> noop
+
+# Space leader - Message Actions
+macro index,pager <Space>s "<sync-mailbox>" "leader: sync mailbox"
+macro index,pager <Space>r "<group-reply>" "leader: reply all"
+macro index,pager <Space>f "<forward-message>" "leader: forward message"
+macro index <Space>d "<delete-message>" "leader: delete message"
+macro pager <Space>d "<exit><delete-message>" "leader: delete message"
+macro index <Space>u "<undelete-message>" "leader: undelete message"
+macro pager <Space>u "<exit><undelete-message>" "leader: undelete message"
+
+# Space leader - View/Navigation
+macro index,pager <Space>v "<view-attachments>" "leader: view attachments"
+macro index,pager <Space>h "<view-raw-message>" "leader: view raw/headers"
+macro index <Space>t "<tag-entry>" "leader: tag message"
+macro index <Space>T "<tag-thread>" "leader: tag thread"
+
+# Space leader - Compose
+macro index,pager <Space>c "<mail>" "leader: compose new message"
+macro index,pager <Space>@ "<compose-to-sender>" "leader: compose to sender"
+
+# Space leader - Search/Filter
+macro index <Space>/ "<limit>" "leader: limit/filter"
+macro index <Space>a "<limit>all\n" "leader: show all (clear limit)"
+macro index <Space>n "<search-next>" "leader: next search result"
+macro index <Space>N "<search-opposite>" "leader: previous search result"
+
+# Space leader - Special
+macro index,pager <Space>q "<quit>" "leader: quit neomutt"
+macro index,pager <Space>R "<recall-message>" "leader: recall draft"
+macro index,pager <Space>p "<print-message>" "leader: print message"
+
+# Space leader - Git-like operations
+macro index <Space>ga ";<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
+macro pager <Space>ga "<exit>;<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
+macro index <Space>gd ";<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
+macro pager <Space>gd "<exit>;<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
+macro index <Space>gs ";<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
+macro pager <Space>gs "<exit>;<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
