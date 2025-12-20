@@ -8,4 +8,5 @@ source $DOTFILES/mail/mutt/bindings
 source $DOTFILES/mail/mutt/macros
 source $DOTFILES/mail/mutt/leader
 source $DOTFILES/mail/mutt/colours
-source $DOTFILES/mail/mutt/accounts/1-personal.muttrc
+# source $DOTFILES/mail/mutt/accounts/1-personal.muttrc
+source $DOTFILES/mail/mutt/accounts/1-personal-maildir.muttrc
