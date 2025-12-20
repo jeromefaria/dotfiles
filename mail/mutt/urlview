@@ -5,8 +5,4 @@
 # Similar to Tmux urlview integration
 macro index,pager \cb "<pipe-message>urlview<enter>" "extract URLs with urlview"
 
-# Alternative: use space leader for URL extraction
-macro index,pager <Space>u "<pipe-message>urlview<enter>" "leader: extract URLs"
-
-# Copy URL to clipboard (if using urlscan instead)
-# macro index,pager \cb "<pipe-message>urlscan -c<enter>" "extract and copy URL"
+# Note: Space+u moved to leader file to avoid binding conflicts

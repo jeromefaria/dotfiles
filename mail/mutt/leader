@@ -49,3 +49,6 @@ macro pager <Space>gs "<exit>;<save-message>=[Gmail].Spam<enter>" "leader: mark 
 # Space leader - Address book operations (from abook file)
 macro index,pager <Space>a "<pipe-message>abook --add-email-quiet<return>" "leader: add sender to abook (quiet)"
 macro index,pager <Space>A "<create-alias>" "leader: create mutt alias"
+
+# Space leader - URL extraction (from urlview file)
+macro index,pager <Space>u "<pipe-message>urlview<enter>" "leader: extract URLs"
