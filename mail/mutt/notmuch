@@ -5,9 +5,6 @@
 # Notmuch database location (must match ~/.notmuch-config)
 set nm_default_url = "notmuch:///Users/jeromefaria/.local/share/mail"
 
-# Query timeout in seconds
-set nm_query_timeout = 60
-
 # Exclude tags from search results (matches notmuch config)
 set nm_exclude_tags = "deleted,spam"
 

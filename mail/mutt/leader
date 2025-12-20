@@ -3,7 +3,8 @@
 # Note: Single <Space> in index still tags messages
 # Multi-key sequences starting with space provide leader-like functionality
 
-# Unbind space in pager to use as leader there
+# Unbind space in pager and index to use as leader
+bind index <Space> noop
 bind pager <Space> noop
 
 # Space leader - Message Actions
@@ -44,3 +45,7 @@ macro index <Space>gd ";<save-message>=[Gmail].Drafts<enter>" "leader: move to d
 macro pager <Space>gd "<exit>;<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
 macro index <Space>gs ";<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
 macro pager <Space>gs "<exit>;<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
+
+# Space leader - Address book operations (from abook file)
+macro index,pager <Space>a "<pipe-message>abook --add-email-quiet<return>" "leader: add sender to abook (quiet)"
+macro index,pager <Space>A "<create-alias>" "leader: create mutt alias"

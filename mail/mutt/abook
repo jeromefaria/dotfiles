@@ -15,8 +15,4 @@ macro index,pager a "<pipe-message>abook --add-email<return>" "add sender to abo
 # Open abook for contact management
 macro index,pager A "<shell-escape>abook<return>" "open abook"
 
-# Add all recipients of current message to address book
-macro index,pager <Space>a "<pipe-message>abook --add-email-quiet<return>" "leader: add sender to abook (quiet)"
-
-# Create alias from address (alternative to abook)
-macro index,pager <Space>A "<create-alias>" "leader: create mutt alias"
+# Note: Space+a and Space+A moved to leader file to avoid conflicts

@@ -38,13 +38,12 @@ color index_flags   color226   default  ~F     # Flagged (yellow)
 color index_tags    color111   default         # Tags (blue)
 
 # Sidebar colors (matching Tmux sidebar)
-color sidebar_normal      color146  default    # Normal mailbox
+# Note: some sidebar options may not be available in older neomutt versions
 color sidebar_highlight   color234  color153   # Selected mailbox (dark on cyan)
 color sidebar_divider     color238  default    # Divider (dark grey)
 color sidebar_flagged     color226  default    # Mailbox with flagged messages (yellow)
 color sidebar_new         color108  default    # Mailbox with new mail (green)
-color sidebar_unread      color153  default    # Mailbox with unread (cyan)
-color sidebar_spoolfile   color111  default    # Current mailbox (blue)
+color sidebar_indicator   color234  color153   # Current mailbox indicator
 
 # Message headers
 color hdrdefault  color238  default              # Default headers (dark grey)
@@ -72,10 +71,10 @@ color body        color153  default  "^# .*"                      # H1 headings 
 color body        color111  default  "^## .*"                     # H2 headings (blue)
 color body        color108  default  "^### .*"                    # H3 headings (green)
 color body        color226  default  "^(\t| )*[-*+] .*"           # List items (yellow)
-color body        color146  default  "\`[^\`]+\`"                 # Inline code (grey)
-color body        color180  default  "\*[^\*]+\*"                 # Emphasis (orange)
+color body        color146  default  "`[^`]+"                     # Inline code (grey)
+color body        color180  default  "\\*[^*]+\\*"                # Emphasis (orange)
 color body        color180  default  "_[^_]+_"                    # Emphasis (orange)
-color body        color153  default  "\*\*[^\*]+\*\*"             # Strong (cyan)
+color body        color153  default  "\\*\\*[^*]+\\*\\*"          # Strong (cyan)
 
 # PGP/GPG colors
 color body        color108  default  "^gpg: Good signature .*"    # Good signature (green)
