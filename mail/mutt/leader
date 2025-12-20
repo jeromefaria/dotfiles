@@ -34,7 +34,8 @@ macro index <Space>N "<search-opposite>" "leader: previous search result"
 # Space leader - Special
 macro index,pager <Space>q "<quit>" "leader: quit neomutt"
 macro index,pager <Space>R "<recall-message>" "leader: recall draft"
-macro index,pager <Space>p "<print-message>" "leader: print message"
+macro index,pager <Space>P "<print-message>" "leader: print message"
+macro index,pager <Space>p "<enter-command>source \$DOTFILES/mail/mutt/scripts/command-palette.sh|<enter>" "leader: command palette"
 
 # Space leader - Git-like operations
 macro index <Space>ga ";<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
