@@ -165,6 +165,19 @@ Plug 'cespare/vim-toml', { 'for': 'toml' }
 " Node.js
 Plug 'moll/vim-node', { 'for': 'javascript' }
 
+" React specific (styled-components, MDX)
+Plug 'styled-components/vim-styled-components', { 'for': ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'] }
+Plug 'jxnblk/vim-mdx-js', { 'for': 'mdx' }
+
+" Enhanced JSX/TSX syntax
+Plug 'peitalin/vim-jsx-typescript', { 'for': 'typescriptreact' }
+
+" Angular support
+Plug 'bdauria/angular-cli.vim', { 'for': ['typescript', 'html'] }
+
+" Prisma ORM
+Plug 'prisma/vim-prisma', { 'for': 'prisma' }
+
 " ============================================================================
 " Color Schemes
 " ============================================================================
@@ -181,6 +194,16 @@ Plug 'mhartington/oceanic-next'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 Plug 'reedes/vim-pencil'
+
+" ============================================================================
+" Productivity Enhancements (Pure Vimscript, No Build)
+" ============================================================================
+
+" Key binding help (pure Vimscript, Git Bash compatible)
+Plug 'liuchengxu/vim-which-key'
+
+" Startup screen and session management (pure Vimscript, Git Bash compatible)
+Plug 'mhinz/vim-startify'
 
 " ============================================================================
 " Utilities (Pure Vimscript)
@@ -205,7 +228,7 @@ call plug#end()
 " Display
 set t_Co=256
 set background=dark
-silent! colorscheme gruvbox
+silent! colorscheme OceanicNext
 
 " Encoding
 set encoding=utf-8
@@ -396,7 +419,7 @@ nnoremap <leader>n :NERDTreeFind<CR>
 let g:airline_powerline_fonts = 0  " Disable powerline fonts for compatibility
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
-let g:airline_theme = 'gruvbox'
+let g:airline_theme = 'oceanicnext'
 
 " Use simple symbols if powerline fonts not available
 if !exists('g:airline_symbols')
@@ -446,6 +469,43 @@ let g:mta_filetypes = {
 " --- Markdown ---
 let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'typescript', 'ts=typescript', 'json=javascript', 'html', 'bash=sh', 'jsx', 'tsx']
 
+" --- Which-Key (show keybinding popup) ---
+let g:which_key_map = {}
+let g:which_key_map['w'] = 'save file'
+let g:which_key_map['b'] = 'buffer list'
+let g:which_key_map['d'] = 'delete buffer'
+let g:which_key_map['m'] = 'toggle NERDTree'
+let g:which_key_map['n'] = 'find in NERDTree'
+let g:which_key_map['t'] = 'find file'
+let g:which_key_map['l'] = 'list buffers'
+let g:which_key_map['p'] = 'alternate file'
+let g:which_key_map['e'] = {
+  \ 'name': '+edit',
+  \ 'v': 'edit vimrc',
+  \ }
+let g:which_key_map[' '] = 'clear search'
+
+" Register which-key map
+autocmd! User vim-which-key call which_key#register(',', "g:which_key_map")
+nnoremap <silent> <leader> :<c-u>WhichKey ','<CR>
+
+" --- Startify (startup screen) ---
+let g:startify_lists = [
+  \ { 'type': 'files',     'header': ['   Recent Files'] },
+  \ { 'type': 'sessions',  'header': ['   Sessions'] },
+  \ { 'type': 'bookmarks', 'header': ['   Bookmarks'] },
+  \ ]
+
+let g:startify_bookmarks = [
+  \ { 'v': '~/.vimrc' },
+  \ { 'd': '~/dotfiles' },
+  \ ]
+
+let g:startify_session_dir = '~/.vim/sessions'
+let g:startify_session_autoload = 0
+let g:startify_session_persistence = 0
+let g:startify_change_to_vcs_root = 1
+
 " ============================================================================
 " CoC.nvim Configuration (only when Node.js is available)
 " ============================================================================
@@ -461,6 +521,7 @@ if g:node_available
     \ 'coc-prettier',
     \ 'coc-snippets',
     \ 'coc-emmet',
+    \ 'coc-angular',
     \ ]
 
   " Use tab for trigger completion with characters ahead and navigate
@@ -628,6 +689,18 @@ augroup portable_autocmds
   autocmd BufRead,BufNewFile *.tsx set filetype=typescriptreact
   autocmd BufRead,BufNewFile .eslintrc,.prettierrc,.babelrc set filetype=json
   autocmd BufRead,BufNewFile *.config.js,*.config.ts set filetype=javascript
+
+  " Angular file associations
+  autocmd BufRead,BufNewFile *.component.html set filetype=html
+  autocmd BufRead,BufNewFile *.component.ts set filetype=typescript
+  autocmd BufRead,BufNewFile *.module.ts set filetype=typescript
+  autocmd BufRead,BufNewFile *.service.ts set filetype=typescript
+
+  " MDX file association (React documentation)
+  autocmd BufRead,BufNewFile *.mdx set filetype=mdx
+
+  " Prisma ORM file association
+  autocmd BufRead,BufNewFile *.prisma set filetype=prisma
 
   " Front-end specific settings
   autocmd FileType javascript,javascriptreact,typescript,typescriptreact,json,css,scss,html,vue
