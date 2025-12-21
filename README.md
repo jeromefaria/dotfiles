@@ -2,7 +2,13 @@
 
 Personal dotfiles for macOS development environment.
 
-**Last updated:** Tue Nov 26 2024
+## Quick Navigation
+
+**New to dotfiles?** → Get started in 5 minutes with the [Quick Start](#-quick-start) below
+**Looking for something specific?** → Browse the [Configuration Index](CONFIGURATION-INDEX.md) (Master catalog of 50+ configs)
+**Having issues?** → Check [Troubleshooting](docs/TROUBLESHOOTING.md) for common problems and solutions
+**Want to understand the system?** → Read the [Architecture Guide](docs/ARCHITECTURE.md) to see how it all works
+**Contributing or developing?** → See [Development Documentation](docs/dev/README.md) for roadmap and guidelines
 
 ## 📋 Contents
 
@@ -144,38 +150,67 @@ This will export lists of installed packages to:
 
 ## 📚 Documentation
 
-Comprehensive documentation available for all major configurations:
+Comprehensive documentation organized by category for easy navigation.
 
-### Complete Guides (with keybindings, parameters, and examples)
+### Getting Started
+- [Configuration Index](CONFIGURATION-INDEX.md) - Master catalog of all 50+ configurations with status tracking
+- [Quick Start Guide](docs/QUICK-START.md) - Get up and running in 5 minutes
+- [Architecture](docs/ARCHITECTURE.md) - System design and how components integrate
+- [Machine-Specific Setup](docs/MACHINE-SPECIFIC-OVERRIDES.md) - Customize per-machine (work vs personal)
+- [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
 
-| Tool | Documentation | Lines | Coverage |
-|------|---------------|-------|----------|
-| **Shell (ZSH)** | [shell/README.md](shell/README.md) | 200+ | ⭐⭐⭐⭐⭐ |
-| **Neovim** | [editors/neovim/README.md](editors/neovim/README.md) | 600+ | ⭐⭐⭐⭐⭐ |
-| **Git** | [git/README.md](git/README.md) | 400+ | ⭐⭐⭐⭐⭐ |
-| **Tmux & Tmuxinator** | [terminal/README.md](terminal/README.md) | 700+ | ⭐⭐⭐⭐⭐ |
-| **Neomutt (Email)** | [mail/mutt/README.md](mail/mutt/README.md) | 140+ | ⭐⭐⭐⭐⭐ |
-| **Beets (Music)** | [config/beets/README.md](config/beets/README.md) | 880+ | ⭐⭐⭐⭐⭐ |
-| **Yazi (File Manager)** | [config/yazi/README.md](config/yazi/README.md) | 770+ | ⭐⭐⭐⭐⭐ |
-| **SKHD (Hotkeys)** | [config/skhd/README.md](config/skhd/README.md) | 244+ | ⭐⭐⭐⭐⭐ |
-| **Yabai (Window Manager)** | [config/yabai/README.md](config/yabai/README.md) | 418+ | ⭐⭐⭐⭐⭐ |
+### Configuration Guides
 
-### Reference Documentation
+**Shell & Terminal**
+- [Shell (ZSH)](shell/README.md) - Modular aliases and functions | [Quick Reference](shell/QUICK_REFERENCE.md)
+- [Tmux](terminal/README.md) - Terminal multiplexer with custom keybindings (700+ lines)
+- [Starship](config/starship/README.md) - Fast, customizable shell prompt
 
-| Document | Purpose |
-|----------|---------|
-| [CONFIGURATION-INDEX.md](CONFIGURATION-INDEX.md) | Master catalog of all 50+ configurations |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design and component integration |
-| [docs/INSTALLATION-IMPROVEMENTS.md](docs/INSTALLATION-IMPROVEMENTS.md) | Installation script analysis and roadmap |
-| [docs/MACHINE-SPECIFIC-OVERRIDES.md](docs/MACHINE-SPECIFIC-OVERRIDES.md) | Per-machine customization guide |
+**Editors**
+- [Neovim](editors/neovim/README.md) - Modern editor with LSP support (600+ lines)
+- [Vim](editors/vim/README.md) - Fallback configuration for systems without Neovim
 
-**Documentation coverage:** 60% of configurations (30+ of 50+ files)
+**Development Tools**
+- [Git](git/README.md) - Version control configuration and aliases (400+ lines)
+- [Packages](packages/README.md) - Profile-based package management system
 
-**Quick starts:**
-- **Neovim keybindings**: `<Space>ff` (find files), `gd` (go to definition), `<Space>ca` (code actions)
-- **Tmux prefix**: `F12` (mapped to Caps Lock), seamless Vim navigation with `Ctrl+hjkl`
-- **Yazi navigation**: Vim-style `hjkl`, `<Space>` to select, `y`/`x`/`p` for copy/cut/paste
-- **Git aliases**: `git co` (checkout), `git hist` (pretty log), `git st` (status)
+**Email & Communication**
+- [Mail (Neomutt)](mail/README.md) - Offline email with mbsync + notmuch + neomutt
+  - [Features Guide](mail/FEATURES.md) - Complete feature documentation
+  - [Quick Reference](mail/QUICK-REFERENCE.md) - Keybinding cheat sheet
+  - [Gmail Setup](mail/GMAIL-SYNC-SETUP.md) - Gmail-specific configuration
+  - [Auto-Sync Setup](mail/AUTO-SYNC-SETUP.md) - Background sync with launchd
+
+**Window Management**
+- [Yabai](config/yabai/README.md) - Tiling window manager for macOS (418+ lines)
+- [SKHD](config/skhd/README.md) - Hotkey daemon with window management shortcuts (244+ lines)
+- [Karabiner](config/karabiner/README.md) - Advanced keyboard remapping (650+ lines)
+
+**File & Media Management**
+- [Yazi](config/yazi/README.md) - Modern file manager with rich previews (770+ lines)
+- [Vifm](config/vifm/README.md) - Vim-like dual-pane file manager
+- [Beets](config/beets/README.md) - Music library management and organization (880+ lines)
+- [Musikcube](config/musikcube/README.md) - Terminal-based music player
+- [Aria2](config/aria2/README.md) - Download manager with torrent support
+
+### Advanced Topics
+- [Migration Guide](docs/MIGRATION-GUIDE.md) - Version upgrades and breaking changes
+- [Development](docs/dev/README.md) - Contributing, roadmap, and development workflows
+
+### Documentation Status
+
+📊 **Coverage:** 100% of major configurations documented
+📚 **Total Documentation:** 45+ comprehensive guides, 15,000+ lines
+✅ **All Major Components:** Complete READMEs with examples, keybindings, and troubleshooting
+
+**Recent Additions (December 2024):**
+- Quick Start Guide for new users
+- Comprehensive Troubleshooting organized by symptom
+- Migration Guide for version upgrades
+- Developer Documentation (ROADMAP, CONTRIBUTING)
+- Component docs: Musikcube, Vifm, Starship, Aria2, enhanced Vim
+
+See [Configuration Index](CONFIGURATION-INDEX.md) for the complete catalog with detailed status indicators.
 
 ## 🛠 Configuration Files
 
