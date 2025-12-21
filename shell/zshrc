@@ -80,6 +80,30 @@ export WORK="$HOME/Work"
 ZSH=$HOME/.oh-my-zsh
 ZSH_THEME=""
 
+# ============================================================================
+# ZSH-VI-MODE CONFIGURATION (must be set BEFORE plugins load)
+# ============================================================================
+# Disable lazy keybindings - apply all bindings immediately
+# This ensures text objects like ci', di" work right away
+export ZVM_LAZY_KEYBINDINGS=false
+
+# Initialize immediately instead of waiting for first command line
+export ZVM_INIT_MODE=sourcing
+
+# Enhanced zsh-vi-mode configuration
+export ZVM_VI_ESCAPE_BINDKEY=jk
+export ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+
+# Enable surround text objects (classic vim-surround style)
+export ZVM_VI_SURROUND_BINDKEY='classic'
+
+# Balanced timeout: fast escape (jk) but allows text objects like ci'
+# Too low (<0.2) breaks multi-key sequences; too high (>0.5) feels sluggish
+export ZVM_KEYTIMEOUT=0.3
+
+# Disable cursor style changes for Ghostty compatibility
+export ZVM_CURSOR_STYLE_ENABLED=false
+
 # ZSH plugins
 # Order matters: zsh-vi-mode MUST be last
 plugins=(
@@ -90,20 +114,6 @@ plugins=(
   git-open brew omz-git
   zsh-vi-mode          # MUST be last
 )
-
-# ============================================================================
-# ZSH-VI-MODE CONFIGURATION
-# ============================================================================
-# Enhanced zsh-vi-mode configuration for better vim-like experience
-export ZVM_VI_ESCAPE_BINDKEY=jk
-export ZVM_VI_INSERT_ESCAPE_BINDKEY=jk  # Backup setting
-ZVM_CURSOR_STYLE_ENABLED=false          # Keep for Ghostty compatibility
-
-# Enable surround text objects (like nvim-surround)
-ZVM_VI_SURROUND_BINDKEY=s-prefix
-
-# Faster escape response (100ms vs default 400ms)
-export ZVM_KEYTIMEOUT=0.1
 
 # ============================================================================
 # COMPLETION CONFIGURATION
@@ -164,8 +174,8 @@ zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
 # FZF key bindings (must be re-sourced after zvm)
 zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh')
 
-# zsh-autopair integration
-zvm_after_init_commands+=('source ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autopair/autopair.zsh 2>/dev/null && autopair-init')
+# zsh-autopair integration (needs to re-init after zvm overwrites bindings)
+zvm_after_init_commands+=('autopair-init 2>/dev/null')
 
 # ============================================================================
 # COMPREHENSIVE VIM-LIKE KEYBINDINGS
@@ -359,6 +369,36 @@ setopt SHARE_HISTORY
 
 # Execute commands using history (e.g.: using !$) immediatel:
 unsetopt HIST_VERIFY
+
+# ============================================================================
+# Final Plugin Initialization
+# ============================================================================
+# Re-initialize autopair after zvm to restore bracket auto-closing
+# Wrapper to ensure bindings work in vi insert mode
+autopair_init_viins() {
+  # Initialize autopair widgets
+  autopair-init
+
+  # Re-bind to viins keymap explicitly (zvm uses viins, not main)
+  local p
+  for p in ${(@k)AUTOPAIR_PAIRS}; do
+    bindkey -M viins "$p" autopair-insert
+    local rchar="$(_ap-get-pair $p)"
+    if [[ $p != $rchar ]]; then
+      bindkey -M viins "$rchar" autopair-close
+    fi
+  done
+
+  # Delete bindings for viins
+  bindkey -M viins "^?" autopair-delete
+  bindkey -M viins "^h" autopair-delete
+  bindkey -M viins "^w" autopair-delete-word
+}
+
+# Call wrapper if autopair is available
+if (( $+functions[autopair-init] )); then
+  autopair_init_viins
+fi
 
 # ============================================================================
 # Machine-Specific Overrides

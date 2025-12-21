@@ -34,6 +34,9 @@ Designed for restricted environments (e.g., Git Bash on Windows):
 - No external CLI tool dependencies (no fzf, ripgrep, etc.)
 - Node.js/npm support when available (enables CoC)
 - Only requires vim-plug (auto-installs via curl)
+- Front-end development focused (Angular, React, Vue, TypeScript)
+- Key binding discovery via which-key
+- Session management via startify
 
 ---
 
@@ -207,6 +210,8 @@ The leader key is `,` (comma).
 
 | Plugin | Description |
 |--------|-------------|
+| `liuchengxu/vim-which-key` | Key binding help popup |
+| `mhinz/vim-startify` | Startup screen and sessions |
 | `scrooloose/nerdtree` | File explorer |
 | `Xuyuanp/nerdtree-git-plugin` | Git status in NERDTree |
 | `tpope/vim-fugitive` | Git integration |
@@ -247,6 +252,11 @@ The leader key is `,` (comma).
 | `jparise/vim-graphql` | GraphQL |
 | `cespare/vim-toml` | TOML |
 | `moll/vim-node` | Node.js |
+| `styled-components/vim-styled-components` | Styled-components (React) |
+| `jxnblk/vim-mdx-js` | MDX (React docs) |
+| `peitalin/vim-jsx-typescript` | Enhanced TSX syntax |
+| `bdauria/angular-cli.vim` | Angular CLI integration |
+| `prisma/vim-prisma` | Prisma ORM syntax |
 
 ### Color Schemes
 
@@ -267,6 +277,51 @@ The leader key is `,` (comma).
 
 ---
 
+## Which-Key Usage
+
+Which-key displays available keybindings in a popup when you press the leader key `,`:
+
+1. **Trigger the popup**: Press `,` and wait ~400ms
+2. **View available commands**: A popup shows all available keybindings
+3. **Execute a command**: Press the corresponding key
+4. **Dismiss**: Press `<Esc>` or wait for timeout
+
+### Key Groups
+
+- `,e` - Edit commands (e.g., `,ev` for edit vimrc)
+- All other leader keys show their descriptions
+
+## Startify Usage
+
+Startify provides a startup screen with recent files and session management.
+
+### Features
+
+- **Recent Files**: Shows most recently used files
+- **Sessions**: Save and load workspace sessions
+- **Bookmarks**: Quick access to important files
+
+### Session Commands
+
+- `:SSave [name]` - Save current session
+- `:SLoad [name]` - Load a saved session
+- `:SDelete [name]` - Delete a session
+
+### Bookmarks
+
+Default bookmarks:
+- `v` - Open ~/.vimrc
+- `d` - Navigate to ~/dotfiles
+
+### Disable Startup Screen
+
+Add to `~/.vimrc.local`:
+```vim
+let g:startify_disable_at_vimenter = 1
+```
+
+---
+
 ## CoC Extensions (Auto-installed)
 
 When Node.js is available, these CoC extensions are automatically installed:
@@ -281,6 +336,7 @@ When Node.js is available, these CoC extensions are automatically installed:
 | `coc-prettier` | Prettier integration |
 | `coc-snippets` | Snippet support |
 | `coc-emmet` | Emmet abbreviations |
+| `coc-angular` | Angular language server |
 
 ---
 
@@ -297,7 +353,7 @@ When Node.js is available, these CoC extensions are automatically installed:
 - Line numbers (relative)
 - Cursor line highlighted
 - 256 colors
-- Gruvbox dark theme
+- OceanicNext theme (fallback to gruvbox)
 
 ### Search
 
@@ -376,6 +432,48 @@ The `path+=**` setting enables recursive searching.
 
 ---
 
+## Differences from Neovim Config
+
+The portable Vim configuration provides similar functionality to the Neovim config but with important differences due to binary dependency constraints:
+
+| Feature | Neovim | Portable Vim | Alternative |
+|---------|--------|--------------|-------------|
+| **Fuzzy Finding** | Telescope (requires ripgrep) | ❌ | `:find *pattern*<Tab>`, NERDTree, vim-vinegar |
+| **Syntax Highlighting** | Treesitter (requires compilation) | ❌ | Built-in syntax highlighting |
+| **LSP** | Mason + nvim-lspconfig | ✅ | CoC.nvim (Node.js based) |
+| **Git UI** | LazyGit (external binary) | ❌ | vim-fugitive |
+| **Formatters** | Multiple (stylua, shfmt, prettier) | Prettier only | CoC-prettier (Node.js) |
+| **Key Discovery** | which-key.nvim | ✅ | vim-which-key |
+| **Sessions** | persistence.nvim | ✅ | vim-startify |
+| **Startup Screen** | alpha-nvim | ✅ | vim-startify |
+| **Colorscheme** | OceanicNext | ✅ | Same (OceanicNext) |
+| **Front-end Support** | Full (Angular, React, Vue) | ✅ | Same plugin ecosystem |
+
+### Why These Limitations?
+
+**Git Bash for Windows constraints:**
+- No `make`/`gcc` - Can't compile native extensions (Treesitter, telescope-fzf)
+- No `ripgrep` - Can't use Telescope's live_grep
+- No `python` - Can't use Python-based formatters
+- Only Node.js available - Limits to CoC.nvim and npm-based tools
+
+### Functional Equivalents
+
+1. **File Finding** (instead of Telescope):
+   - `:find *component*<Tab>` - Built-in fuzzy-ish finding
+   - `,m` - NERDTree file explorer
+   - `-` - vim-vinegar directory listing
+
+2. **Code Search** (instead of Telescope live_grep):
+   - `:vimgrep /pattern/ **/*.js` - Built-in grep
+   - `:grep pattern **/*.js` - External grep (if available)
+
+3. **Git Operations** (instead of LazyGit):
+   - `:Git status` - vim-fugitive
+   - `,gs`, `,gc`, `,gp` - Git shortcuts
+
+---
+
 ## Comparison with Full Config
 
 | Feature | Full (`vimrc`) | Portable (`vimrc.portable`) |
@@ -383,10 +481,13 @@ The `path+=**` setting enables recursive searching.
 | FZF | Yes | No (use `:find`) |
 | Ripgrep | Yes | No (use `:grep`) |
 | CoC.nvim | Yes | Yes (with Node.js) |
+| Which-key | No | Yes |
+| Startify | No | Yes |
 | Tmux integration | Yes | No |
 | Powerline fonts | Yes | No (ASCII fallback) |
 | External formatters | Multiple | Prettier only |
 | Language servers | Full | Front-end focused |
+| Colorscheme | Various | OceanicNext |
 
 ---
 
@@ -423,6 +524,40 @@ The portable config uses ASCII symbols by default. If you have a patched font, a
 let g:airline_powerline_fonts = 1
 ```
 
+### Which-key not showing
+
+If the which-key popup doesn't appear:
+1. Check plugin is installed: `:PlugStatus`
+2. Install if needed: `:PlugInstall`
+3. Adjust timeout: `set timeoutlen=500` in config
+
+### Startify issues
+
+**Session not saving:**
+- Check session directory exists: `~/.vim/sessions`
+- Create manually: `mkdir -p ~/.vim/sessions`
+
+**Recent files not updating:**
+- Startify uses Vim's viminfo
+- Check `:set viminfo?` for configuration
+
+### Colorscheme not loading
+
+If OceanicNext doesn't load:
+1. Fallback to gruvbox is automatic
+2. Force gruvbox: Add to `~/.vimrc.local`:
+   ```vim
+   silent! colorscheme gruvbox
+   let g:airline_theme = 'gruvbox'
+   ```
+
+### Angular support not working
+
+1. Ensure Node.js is available: `node --version`
+2. CoC will auto-install coc-angular extension
+3. Check `:CocList extensions` to verify
+4. Manual install: `:CocInstall coc-angular`
+
 ### Slow startup
 
-This is normal on first run while CoC installs extensions. Subsequent starts will be faster.
+This is normal on first run while CoC installs extensions (9 total, including coc-angular). Subsequent starts will be faster.
