@@ -17,9 +17,6 @@ call plug#begin('~/.vim/plugged')
 " Plug 'ycm-core/YouCompleteMe', { 'do': './install.py' }
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
-" Snippets
-Plug 'honza/vim-snippets'
-
 " ============================================================================
 " Fuzzy Finder & Navigation
 " ============================================================================
@@ -179,7 +176,6 @@ let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-eslint',
   \ 'coc-prettier',
-  \ 'coc-snippets',
   \ ]
 
 " Disable CoC auto-update to prevent SSL errors in corporate environments
