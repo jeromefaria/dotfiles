@@ -120,6 +120,49 @@ To remove all dotfile symlinks (your dotfiles repository remains unchanged):
 ./scripts/uninstall.sh
 ```
 
+## 🪟 Git Bash for Windows (Portable Mode)
+
+For **Git Bash on Windows** or **corporate/restricted environments**, use the portable configuration:
+
+### Quick Setup
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/bootstrap/gitbash-setup.sh)
+```
+
+Then reload your shell: `source ~/.bashrc`
+
+### What You Get
+
+✅ **Git-aware prompt** with branch display
+✅ **40+ git aliases** (ga, gc, gco, gd, gp, etc.)
+✅ **20+ portable functions** (server, extract, qf, qg)
+✅ **Platform-aware clipboard** and file operations
+✅ **Vim with CoC.nvim** (if Node.js available)
+✅ **30+ npm shortcuts** (if Node.js available)
+
+**Zero external dependencies** - Works with just Git Bash!
+
+### Key Features
+
+- **No package managers needed** - All functionality uses standard tools
+- **Corporate-friendly** - Works behind proxies/SSL interception
+- **Node.js optional** - Enhanced features when available, works without
+- **Offline-capable** - Clone once, works anywhere
+
+### What's Different?
+
+| Feature | Full (macOS) | Portable (Git Bash) |
+|---------|--------------|---------------------|
+| Shell | ZSH + Oh My Zsh | Bash (portable) |
+| Prompt | Starship | Git-aware bash prompt |
+| File search | FZF + fd | find + qf function |
+| Code search | ripgrep + FZF | grep + qg function |
+| Editor | Neovim/Vim | Vim (portable) |
+| Tools | Modern CLI (eza, bat, etc.) | Standard Unix tools |
+
+📖 **Full Guide:** [docs/GIT-BASH-SETUP.md](docs/GIT-BASH-SETUP.md)
+
 ## 📦 Package Management
 
 ### Install All Packages
