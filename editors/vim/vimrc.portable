@@ -57,6 +57,9 @@
 "       coc-tsserver coc-json coc-html coc-css coc-eslint \
 "       coc-prettier coc-emmet coc-angular
 "
+"   Alternatively, use the automated command (after setting strict-ssl):
+"     :InstallCocExtensions
+"
 " ============================================================================
 
 " Skip if Neovim (use separate Neovim config)
@@ -611,6 +614,14 @@ if g:node_available
   autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.json,*.vue,*.html
     \ :silent! CocCommand prettier.formatFile
 
+  " Notify user if CoC extensions are not installed
+  autocmd VimEnter *
+    \ if !CocExtensionsInstalled() |
+    \   echohl WarningMsg |
+    \   echo "CoC extensions not found. Run :InstallCocExtensions to install them." |
+    \   echohl None |
+    \ endif
+
 endif
 
 " ============================================================================
@@ -671,6 +682,9 @@ if g:node_available
   command! NpmBuild !npm run build
   command! NpmDev !npm run dev
   command! NpmLint !npm run lint
+
+  " CoC extension installation command
+  command! InstallCocExtensions call InstallCocExtensions()
 endif
 
 " ============================================================================
@@ -741,6 +755,36 @@ function! WinMove(key)
     exec "wincmd " . a:key
   endif
 endfunction
+
+" CoC extension management (only when Node.js is available)
+if g:node_available
+  " Check if CoC extensions are installed
+  function! CocExtensionsInstalled()
+    let extensions_dir = g:portable_platform == 'windows'
+      \ ? expand('$HOME/AppData/Local/coc/extensions/node_modules')
+      \ : expand('~/.config/coc/extensions/node_modules')
+    return isdirectory(extensions_dir . '/coc-tsserver')
+  endfunction
+
+  " Install CoC extensions via npm
+  function! InstallCocExtensions()
+    let extensions_dir = g:portable_platform == 'windows'
+      \ ? expand('$HOME/AppData/Local/coc/extensions')
+      \ : expand('~/.config/coc/extensions')
+
+    if !isdirectory(extensions_dir)
+      call mkdir(extensions_dir, 'p')
+    endif
+
+    let extensions = join([
+      \ 'coc-tsserver', 'coc-json', 'coc-html', 'coc-css',
+      \ 'coc-eslint', 'coc-prettier', 'coc-emmet', 'coc-angular'
+      \ ], ' ')
+
+    echo "Installing CoC extensions..."
+    execute '!cd ' . shellescape(extensions_dir) . ' && npm install --global-style --no-bin-links --no-package-lock ' . extensions
+  endfunction
+endif
 
 " ============================================================================
 " Status Line (Fallback if Airline fails to load)
