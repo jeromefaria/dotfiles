@@ -24,6 +24,24 @@
 "
 "   4. If Node.js is available, CoC extensions will auto-install
 "
+" Troubleshooting (Corporate/Restricted Environments):
+"   If you see "self-signed certificate in certificate chain" errors during
+"   CoC extension installation, your network is intercepting SSL traffic.
+"   Solutions:
+"
+"   Option 1 - Disable SSL verification (quick fix):
+"     npm config set strict-ssl false
+"
+"   Option 2 - Use corporate CA certificate:
+"     npm config set cafile /path/to/corporate-ca-cert.crt
+"
+"   Option 3 - Configure proxy (if behind proxy):
+"     npm config set proxy http://proxy.company.com:port
+"     npm config set https-proxy http://proxy.company.com:port
+"
+"   After fixing npm config, restart Vim or manually run:
+"     :CocInstall coc-tsserver coc-json coc-html coc-css coc-eslint
+"
 " ============================================================================
 
 " Skip if Neovim (use separate Neovim config)
