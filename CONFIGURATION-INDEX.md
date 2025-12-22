@@ -2,8 +2,8 @@
 
 Complete reference for all dotfiles configurations, organized by category with documentation status and key features.
 
-**Documentation Coverage:** ✅ 100% of major components fully documented (52/52 configurations)
-**Last Major Update:** December 2024 - Comprehensive documentation overhaul
+**Documentation Coverage:** ✅ 100% of major components fully documented (55/55 configurations)
+**Last Major Update:** December 2024 - Comprehensive documentation overhaul + Git Bash portable support
 
 ## How to Use This Index
 
@@ -14,11 +14,13 @@ This document catalogs all 50+ configurations in this dotfiles repository:
   - ⚠️ **Partial** - Basic documentation or inline comments only
   - ❌ **Missing** - No dedicated documentation (auto-generated or minimal config)
   - 📦 **Archived** - Legacy/deprecated configuration
+  - 🪟 **Portable** - Designed for Git Bash/Windows/restricted environments
 
 - **Quick Search:** Use `Ctrl+F` (or `Cmd+F` on macOS) to find specific tools
 
 - **Navigation Links:**
   - [Main README](README.md) - Quick start and installation guide
+  - [Git Bash Setup](docs/GIT-BASH-SETUP.md) - Portable mode for Windows/restricted environments
   - [Architecture](docs/ARCHITECTURE.md) - How all components integrate
   - [Troubleshooting](docs/TROUBLESHOOTING.md) - Common issues and solutions
   - [Development](docs/dev/README.md) - Contributing and roadmap
@@ -41,6 +43,37 @@ This document catalogs all 50+ configurations in this dotfiles repository:
 ---
 
 ## Shell Configuration
+
+### Portable Bash (`shell/bashrc.portable`) 🪟
+
+**Documentation:** ✅ Complete - [docs/GIT-BASH-SETUP.md](docs/GIT-BASH-SETUP.md)
+
+**Target Environment:** Git Bash on Windows, corporate/restricted environments
+
+**Main Config:** `shell/bashrc.portable` (732 lines)
+- Git-aware prompt with branch display
+- No external dependencies (no Oh My Zsh, fzf, etc.)
+- Platform detection (Windows/macOS/Linux)
+- Node.js/npm conditional features
+
+**Features:**
+- 40+ git aliases (ga, gc, gco, gd, gp, etc.)
+- 20+ portable functions (server, extract, qf, qg, ggd, gdb)
+- Platform-aware clipboard (clip/pbcopy/xclip)
+- Platform-aware file opening (start/open/xdg-open)
+- npm shortcuts (30+ when Node.js available)
+
+**Installation:**
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/bootstrap/gitbash-setup.sh)
+```
+
+**Related Files:**
+- `bootstrap/gitbash-setup.sh` - One-command installer
+- `git/gitconfig.portable` - Git config without external tools
+- `editors/vim/vimrc.portable` - Vim config for restricted environments
+
+---
 
 ### ZSH (`shell/`)
 
@@ -111,15 +144,25 @@ This document catalogs all 50+ configurations in this dotfiles repository:
 
 **Documentation:** ✅ Complete - [editors/vim/README.md](editors/vim/README.md)
 
-Legacy Vim config for systems without Neovim. Includes portable mode for restricted environments.
+Legacy Vim config for systems without Neovim.
 
 **Leader Key:** `,` (comma)
 
-**Features:**
+**Main Config:** `editors/vim/vimrc` (full version)
+- 57 plugins with external dependencies
+- FZF integration for fuzzy finding
+- Tmux navigator integration
+
+**Portable Config:** `editors/vim/vimrc.portable` (for Git Bash/restricted) 🪟
+- 65 plugins (pure Vimscript only)
+- CoC.nvim for LSP (conditional on Node.js)
+- No FZF required (uses NERDTree + `:find`)
+- Auto-detects Git Bash + missing fzf
+
+**Features (both versions):**
 - CoC.nvim for LSP (when Node.js available)
-- FZF integration (full config) or `:find` (portable)
-- 40+ plugins for development
-- Portable mode for Git Bash/Windows
+- Language support: JavaScript, TypeScript, React, Vue, CSS, HTML
+- Git integration via vim-fugitive
 
 ---
 
@@ -176,7 +219,19 @@ Session templates for projects:
 
 **Documentation:** ✅ Complete - [git/README.md](git/README.md)
 
-**Aliases:**
+**Main Config:** `git/gitconfig` (full version)
+- diff-so-fancy for beautiful diffs
+- Git LFS support
+- gh CLI credential helper
+- Rebase-first pull strategy
+
+**Portable Config:** `git/gitconfig.portable` (for restricted environments) 🪟
+- Native less pager (no diff-so-fancy)
+- No git-lfs filter
+- No gh credential helper
+- All aliases preserved
+
+**Aliases:** (available in both versions)
 | Alias | Command | Usage |
 |-------|---------|-------|
 | `co` | checkout | `git co branch-name` |
@@ -185,13 +240,7 @@ Session templates for projects:
 | `br` | branch | `git br -a` |
 | `hist` | Pretty log | `git hist --all` |
 
-**Features:**
-- diff-so-fancy for beautiful diffs
-- Git LFS support
-- Rebase-first pull strategy
-- Machine-specific overrides (`~/.gitconfig.local`)
-
-**Pager:** diff-so-fancy with custom less options
+**Machine-specific overrides:** `~/.gitconfig.local` (not tracked)
 
 ---
 

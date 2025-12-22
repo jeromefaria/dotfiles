@@ -1,0 +1,69 @@
+# vim: filetype=gitconfig
+# ============================================================================
+# Git Portable Configuration
+# ============================================================================
+#
+# This configuration is designed for environments where:
+# - No diff-so-fancy (uses native less pager)
+# - No git-lfs (filter removed)
+# - No gh CLI (no credential helper)
+#
+# All core git features and aliases are preserved.
+#
+# ============================================================================
+
+[user]
+  name = Jerome Faria
+  email = jerome.faria@gmail.com
+
+[color]
+  ui = true
+
+[mergetool]
+  keepBackup = true
+
+[alias]
+  co = checkout
+  ci = commit
+  st = status
+  br = branch
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  type = cat-file -t
+  dump = cat-file -p
+
+[push]
+  default = simple
+
+[core]
+  excludesfile = ~/.gitignore_global
+  # Use native less instead of diff-so-fancy
+  pager = less --tabs=4 -RFX
+
+[pull]
+  rebase = true
+
+[pager]
+  # Simple pager without diff-so-fancy
+  diff = less --tabs=4 -RFXS
+
+[fetch]
+  prune = true
+
+[rebase]
+  autostash = true
+
+[diff]
+  colorMoved = default
+
+[commit]
+  verbose = true
+
+# Machine-specific overrides
+# Create ~/.gitconfig.local for machine-specific settings (not tracked in git)
+# Example use cases:
+#   - Work email: [user] email = work@company.com
+#   - Different signing key: [user] signingkey = ABCD1234
+#   - Custom aliases: [alias] custom = !custom-script
+#   - LFS if needed: [filter "lfs"] clean = git-lfs clean -- %f
+[include]
+  path = ~/.gitconfig.local
