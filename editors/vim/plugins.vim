@@ -126,9 +126,6 @@ Plug 'godlygeek/tabular'
 " Todo
 Plug 'vitalk/vim-simple-todo'
 
-" Formatting
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-
 " ============================================================================
 " Color Schemes
 " ============================================================================
@@ -199,10 +196,6 @@ let g:session_autoload = 'no'
 
 " FZF settings
 let g:fzf_layout = { 'down': '40%' }
-
-" Prettier settings
-let g:prettier#autoformat = 0
-let g:prettier#exec_cmd_async = 1
 
 " Close tag settings
 let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.tsx,*.vue'
