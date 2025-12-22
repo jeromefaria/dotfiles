@@ -787,6 +787,6 @@ highlight SpellBad cterm=underline ctermfg=red
 syntax enable
 filetype plugin indent on
 
-" Print a message on startup
-let s:node_status = g:node_available ? 'yes (CoC enabled)' : 'no (basic mode)'
-echom "Portable Vim loaded | Platform: " . g:portable_platform . " | Node.js: " . s:node_status
+" Print a message on startup (disabled to prevent Press ENTER prompt)
+" let s:node_status = g:node_available ? 'yes (CoC enabled)' : 'no (basic mode)'
+" echom "Portable Vim loaded | Platform: " . g:portable_platform . " | Node.js: " . s:node_status
