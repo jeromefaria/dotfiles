@@ -48,14 +48,14 @@
 "     cd ~/AppData/Local/coc/extensions
 "     npm install --global-style --no-bin-links --no-package-lock \
 "       coc-tsserver coc-json coc-html coc-css coc-eslint \
-"       coc-prettier coc-snippets coc-emmet coc-angular
+"       coc-prettier coc-emmet coc-angular
 "
 "   Linux/macOS:
 "     mkdir -p ~/.config/coc/extensions
 "     cd ~/.config/coc/extensions
 "     npm install --global-style --no-bin-links --no-package-lock \
 "       coc-tsserver coc-json coc-html coc-css coc-eslint \
-"       coc-prettier coc-snippets coc-emmet coc-angular
+"       coc-prettier coc-emmet coc-angular
 "
 " ============================================================================
 
@@ -125,9 +125,6 @@ Plug 'vim-airline/vim-airline-themes'
 if g:node_available
   " CoC.nvim - LSP client, autocompletion, and more
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-
-  " Snippets (works with CoC)
-  Plug 'honza/vim-snippets'
 endif
 
 " ============================================================================
@@ -529,7 +526,6 @@ if g:node_available
     \ 'coc-css',
     \ 'coc-eslint',
     \ 'coc-prettier',
-    \ 'coc-snippets',
     \ 'coc-emmet',
     \ 'coc-angular',
     \ ]
