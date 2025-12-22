@@ -400,6 +400,12 @@ if (( $+functions[autopair-init] )); then
   autopair_init_viins
 fi
 
+# Re-apply FZF key bindings after zvm initialization
+# This ensures Ctrl+R triggers fzf history search
+if [ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]; then
+  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+fi
+
 # ============================================================================
 # Machine-Specific Overrides
 # ============================================================================
