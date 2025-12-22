@@ -10,7 +10,7 @@
 "
 " Features enabled when Node.js is available:
 " - CoC.nvim for LSP support (autocompletion, diagnostics, etc.)
-" - Prettier for code formatting
+" - Prettier formatting via coc-prettier extension
 "
 " Usage:
 "   1. Install vim-plug (requires curl, which Git Bash has):
@@ -113,9 +113,6 @@ if g:node_available
 
   " Snippets (works with CoC)
   Plug 'honza/vim-snippets'
-
-  " Prettier (uses npm/node)
-  Plug 'prettier/vim-prettier', { 'do': 'npm install' }
 endif
 
 " ============================================================================
@@ -595,11 +592,7 @@ if g:node_available
   " Find symbol in workspace
   nnoremap <silent><nowait> <leader>cs :<C-u>CocList -I symbols<cr>
 
-  " --- Prettier (with Node.js) ---
-  let g:prettier#autoformat = 0
-  let g:prettier#exec_cmd_async = 1
-
-  " Format on save for front-end files
+  " Format on save for front-end files (using coc-prettier)
   autocmd BufWritePre *.js,*.jsx,*.ts,*.tsx,*.css,*.scss,*.json,*.vue,*.html
     \ :silent! CocCommand prettier.formatFile
 
