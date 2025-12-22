@@ -83,26 +83,9 @@ ZSH_THEME=""
 # ============================================================================
 # ZSH-VI-MODE CONFIGURATION (must be set BEFORE plugins load)
 # ============================================================================
-# Disable lazy keybindings - apply all bindings immediately
-# This ensures text objects like ci', di" work right away
-export ZVM_LAZY_KEYBINDINGS=false
-
-# Initialize immediately instead of waiting for first command line
-export ZVM_INIT_MODE=sourcing
-
-# Enhanced zsh-vi-mode configuration
-export ZVM_VI_ESCAPE_BINDKEY=jk
-export ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
-
-# Enable surround text objects (classic vim-surround style)
-export ZVM_VI_SURROUND_BINDKEY='classic'
-
-# Balanced timeout: fast escape (jk) but allows text objects like ci'
-# Too low (<0.2) breaks multi-key sequences; too high (>0.5) feels sluggish
-export ZVM_KEYTIMEOUT=0.3
-
-# Disable cursor style changes for Ghostty compatibility
-export ZVM_CURSOR_STYLE_ENABLED=false
+# Set escape binding (Escape key is always available by default)
+# Uncomment if you want jk as an additional escape sequence:
+# export ZVM_VI_ESCAPE_BINDKEY=jk
 
 # ZSH plugins
 # Order matters: zsh-vi-mode MUST be last
@@ -114,6 +97,20 @@ plugins=(
   git-open brew omz-git
   zsh-vi-mode          # MUST be last
 )
+
+# ============================================================================
+# ZSH-VI-MODE POST-INIT HOOKS
+# ============================================================================
+# Minimal hooks to restore critical bindings after zvm initialization
+
+# Restore autosuggest binding
+zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
+
+# Restore FZF keybindings
+zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh')
+
+# Restore autopair after zvm init
+zvm_after_init_commands+=('autopair-init 2>/dev/null')
 
 # ============================================================================
 # COMPLETION CONFIGURATION
@@ -165,66 +162,7 @@ export MANPAGER='nvim +Man!'
 # BINDINGS
 bindkey '^ ' autosuggest-accept
 bindkey -M menuselect '^[[Z' reverse-menu-complete
-bindkey -M viins 'jj' vi-cmd-mode
-bindkey -M viins 'jk' vi-cmd-mode  # Manual jk binding (ZVM_VI_ESCAPE_BINDKEY alone doesn't work)
 
-# zsh-vi-mode post-init hooks (re-apply bindings that zvm overwrites)
-zvm_after_init_commands+=('bindkey "^ " autosuggest-accept')
-
-# FZF key bindings (must be re-sourced after zvm)
-zvm_after_init_commands+=('[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ] && source /opt/homebrew/opt/fzf/shell/key-bindings.zsh')
-
-# zsh-autopair integration (needs to re-init after zvm overwrites bindings)
-zvm_after_init_commands+=('autopair-init 2>/dev/null')
-
-# ============================================================================
-# COMPREHENSIVE VIM-LIKE KEYBINDINGS
-# ============================================================================
-
-# Insert Mode Keybindings (must be applied after zvm init)
-zvm_after_init_commands+=(
-  # === Manual jk binding (critical fix) ===
-  'bindkey -M viins "jk" vi-cmd-mode'             # jk: Exit insert mode (manual binding)
-
-  # === Text Manipulation ===
-  'bindkey -M viins "^l" insert-fat-arrow'        # Ctrl-L: => (matches nvim classic)
-  'bindkey -M viins "^k" clear-line'              # Ctrl-K: Clear line
-
-  # === FZF Fuzzy Finding (Telescope equivalents) ===
-  'bindkey -M viins "^p" fzf-git-files'           # Ctrl-P: Find files (matches nvim)
-  'bindkey -M viins "^f" fzf-ripgrep'             # Ctrl-F: Live grep (matches ,f in nvim)
-
-  # === Command Palette ===
-  'bindkey -M viins "^x^p" palette'               # Ctrl-X Ctrl-P: Command palette
-
-  # === Clipboard Operations ===
-  'bindkey -M viins "^y^y" yank-command-line'     # Ctrl-Y Y: Yank command
-  'bindkey -M viins "^v" paste-from-clipboard'    # Ctrl-V: Paste
-
-  # === History Navigation ===
-  'bindkey -M viins "^n" down-line-or-history'    # Ctrl-N: Next in history
-  'bindkey -M viins "^p" up-line-or-history'      # Ctrl-P: Prev in history (when not fuzzy finding)
-
-  # === Normal Mode Bindings ===
-  'bindkey -M vicmd "/" history-incremental-search-forward'   # /: Search history forward
-  'bindkey -M vicmd "?" history-incremental-search-backward'  # ?: Search history backward
-  'bindkey -M vicmd "Y" yank-pwd'                 # Y: Yank current directory
-
-  # === FZF in Normal Mode ===
-  'bindkey -M vicmd "^p" fzf-git-files'           # Ctrl-P: Find files
-  'bindkey -M vicmd "^f" fzf-ripgrep'             # Ctrl-F: Live grep
-
-  # === Git Operations in Normal Mode (g prefix) ===
-  'bindkey -M vicmd "g" git-leader-widget'        # g: Git prefix (gb/gl/gs)
-
-  # === Menu Selection (hjkl navigation in completion menu) ===
-  'bindkey -M menuselect "h" vi-backward-char'
-  'bindkey -M menuselect "j" vi-down-line-or-history'
-  'bindkey -M menuselect "k" vi-up-line-or-history'
-  'bindkey -M menuselect "l" vi-forward-char'
-  'bindkey -M menuselect "^n" menu-complete'
-  'bindkey -M menuselect "^p" reverse-menu-complete'
-)
 
 # ============================================================================
 # PATH Configuration
