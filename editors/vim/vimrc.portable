@@ -42,6 +42,21 @@
 "   After fixing npm config, restart Vim or manually run:
 "     :CocInstall coc-tsserver coc-json coc-html coc-css coc-eslint
 "
+"   If CoC still has SSL errors, install extensions manually via npm:
+"   Windows Git Bash:
+"     mkdir -p ~/AppData/Local/coc/extensions
+"     cd ~/AppData/Local/coc/extensions
+"     npm install --global-style --no-bin-links --no-package-lock \
+"       coc-tsserver coc-json coc-html coc-css coc-eslint \
+"       coc-prettier coc-snippets coc-emmet coc-angular
+"
+"   Linux/macOS:
+"     mkdir -p ~/.config/coc/extensions
+"     cd ~/.config/coc/extensions
+"     npm install --global-style --no-bin-links --no-package-lock \
+"       coc-tsserver coc-json coc-html coc-css coc-eslint \
+"       coc-prettier coc-snippets coc-emmet coc-angular
+"
 " ============================================================================
 
 " Skip if Neovim (use separate Neovim config)
@@ -518,6 +533,10 @@ if g:node_available
     \ 'coc-emmet',
     \ 'coc-angular',
     \ ]
+
+  " Disable CoC auto-update to prevent SSL errors in corporate environments
+  let g:coc_disable_startup_warning = 1
+  let g:coc_global_extensions_check_update = 0
 
   " Use tab for trigger completion with characters ahead and navigate
   inoremap <silent><expr> <TAB>

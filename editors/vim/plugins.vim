@@ -182,6 +182,10 @@ let g:coc_global_extensions = [
   \ 'coc-snippets',
   \ ]
 
+" Disable CoC auto-update to prevent SSL errors in corporate environments
+let g:coc_disable_startup_warning = 1
+let g:coc_global_extensions_check_update = 0
+
 " NERDTree settings
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.git$', '\.DS_Store$', 'node_modules']
