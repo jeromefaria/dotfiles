@@ -57,7 +57,10 @@ EOF
 
 # List all backup directories
 list_backups() {
-  local backups=($(find "$HOME" -maxdepth 1 -type d -name ".dotfiles-backup-*" | sort -r))
+  local backups=()
+  while IFS= read -r line; do
+    backups+=("$line")
+  done < <(find "$HOME" -maxdepth 1 -type d -name ".dotfiles-backup-*" | sort -r)
 
   if [ ${#backups[@]} -eq 0 ]; then
     print_warning "No backup directories found"
@@ -71,9 +74,11 @@ list_backups() {
 
   local count=1
   for backup in "${backups[@]}"; do
-    local backup_name=$(basename "$backup")
+    local backup_name
+    backup_name=$(basename "$backup")
     local backup_date=${backup_name#.dotfiles-backup-}
-    local file_count=$(find "$backup" -type f 2>/dev/null | wc -l | xargs)
+    local file_count
+    file_count=$(find "$backup" -type f 2>/dev/null | wc -l | xargs)
 
     echo -e "${CYAN}[$count]${NC} $backup_name"
     echo "    Date: $backup_date"
@@ -101,7 +106,8 @@ validate_backup() {
     return 1
   fi
 
-  local file_count=$(find "$backup_dir" -type f 2>/dev/null | wc -l | xargs)
+  local file_count
+  file_count=$(find "$backup_dir" -type f 2>/dev/null | wc -l | xargs)
   if [ "$file_count" -eq 0 ]; then
     print_warning "Backup directory is empty: $backup_dir"
     return 1
@@ -121,7 +127,8 @@ restore_file() {
   fi
 
   # Create parent directory if needed
-  local target_dir=$(dirname "$target_file")
+  local target_dir
+  target_dir=$(dirname "$target_file")
   if [ ! -d "$target_dir" ]; then
     mkdir -p "$target_dir" || {
       print_error "Failed to create directory: $target_dir"
@@ -132,7 +139,8 @@ restore_file() {
   # Backup current file if it exists and is different
   if [ -e "$target_file" ]; then
     if ! diff -q "$backup_file" "$target_file" &>/dev/null; then
-      local safety_backup="${target_file}.before-restore-$(get_timestamp)"
+      local safety_backup
+      safety_backup="${target_file}.before-restore-$(get_timestamp)"
       cp "$target_file" "$safety_backup"
       print_info "Created safety backup: $safety_backup"
     fi
@@ -158,7 +166,10 @@ restore_from_backup() {
   echo ""
 
   # Find all files in backup
-  local files=($(find "$backup_dir" -type f))
+  local files=()
+  while IFS= read -r line; do
+    files+=("$line")
+  done < <(find "$backup_dir" -type f)
 
   if [ ${#files[@]} -eq 0 ]; then
     print_warning "No files found in backup"
@@ -183,7 +194,7 @@ restore_from_backup() {
 
   for backup_file in "${files[@]}"; do
     # Determine target path (remove backup dir prefix, add HOME)
-    local rel_path="${backup_file#$backup_dir/}"
+    local rel_path="${backup_file#"$backup_dir"/}"
     local target_file="$HOME/$rel_path"
 
     if restore_file "$backup_file" "$target_file"; then
@@ -211,9 +222,12 @@ interactive_select() {
     return 1
   fi
 
-  local backups=($(find "$HOME" -maxdepth 1 -type d -name ".dotfiles-backup-*" | sort -r))
+  local backups=()
+  while IFS= read -r line; do
+    backups+=("$line")
+  done < <(find "$HOME" -maxdepth 1 -type d -name ".dotfiles-backup-*" | sort -r)
 
-  read -p "Select backup number (1-${#backups[@]}) or 'q' to quit: " selection
+  read -r -p "Select backup number (1-${#backups[@]}) or 'q' to quit: " selection
 
   if [[ "$selection" == "q" ]]; then
     print_info "Restore cancelled"

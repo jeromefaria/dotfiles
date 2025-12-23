@@ -8,7 +8,7 @@ echo "==================================="
 echo
 
 # Set DOTFILES if not set
-: ${DOTFILES:="$HOME/dotfiles"}
+: "${DOTFILES:=$HOME/dotfiles}"
 
 # Colors for output
 GREEN='\033[0;32m'

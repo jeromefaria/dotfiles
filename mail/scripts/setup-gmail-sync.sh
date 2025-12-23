@@ -16,27 +16,25 @@ echo "5. Click 'Generate'"
 echo "6. Copy the 16-character password (it will look like: xxxx xxxx xxxx xxxx)"
 echo ""
 echo "Press Enter when you have the app-specific password ready..."
-read
+read -r
 
 echo ""
 echo "Step 2: Store Password in macOS Keychain"
 echo "------------------------------------------------------------"
 echo "Enter your Gmail app-specific password (it will be stored securely):"
-read -s app_password
+read -r -s app_password
 
 # Remove spaces from the password
 app_password=$(echo "$app_password" | tr -d ' ')
 
 # Store in macOS Keychain
-security add-internet-password \
+if security add-internet-password \
   -a "jerome.faria@gmail.com" \
   -s "imap.gmail.com" \
   -w "$app_password" \
   -r "imap" \
   -l "Gmail IMAP (jerome.faria@gmail.com)" \
-  2>/dev/null
-
-if [ $? -eq 0 ]; then
+  2>/dev/null; then
   echo ""
   echo "✅ Password stored successfully in Keychain!"
 else
@@ -59,7 +57,7 @@ echo "------------------------------------------------------------"
 echo "Testing mbsync connection to Gmail..."
 
 # Test the password retrieval
-test_pass=$($HOME/dotfiles/mail/scripts/get-gmail-pass.sh)
+test_pass=$("$HOME"/dotfiles/mail/scripts/get-gmail-pass.sh)
 if [ -n "$test_pass" ]; then
   echo "✅ Password retrieval works!"
 
@@ -67,7 +65,7 @@ if [ -n "$test_pass" ]; then
   echo "Testing Gmail connection..."
   timeout 30 mbsync -V gmail-inbox 2>&1 | grep -E "Logging in|Opening|Selecting|Syncing" | head -10
 
-  if [ ${PIPESTATUS[0]} -eq 0 ]; then
+  if [ "${PIPESTATUS[0]}" -eq 0 ]; then
     echo ""
     echo "✅ Connection successful!"
     echo ""
@@ -86,7 +84,7 @@ if [ -n "$test_pass" ]; then
       echo ""
       echo "Step 5: Index with Notmuch"
       echo "------------------------------------------------------------"
-      cd ~/.local/share/mail/gmail
+      cd ~/.local/share/mail/gmail || exit
       notmuch new
       echo ""
       echo "✅ Mail indexed!"

@@ -191,7 +191,8 @@ create_backup_dir() {
 # Backup existing file
 backup_file() {
   local file=$1
-  local filename=$(basename "$file")
+  local filename
+  filename=$(basename "$file")
 
   if [ -e "$file" ] && [ ! -L "$file" ]; then
     cp -r "$file" "$BACKUP_DIR/$filename"
@@ -205,7 +206,8 @@ backup_file() {
 create_symlink() {
   local source=$1
   local target=$2
-  local target_name=$(basename "$target")
+  local target_name
+  target_name=$(basename "$target")
 
   # Check if symlink already points to correct location (idempotent)
   if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
