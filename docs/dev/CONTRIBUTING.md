@@ -355,6 +355,19 @@ Use **Conventional Commits** format:
 <footer>
 ```
 
+### Historical Note
+
+**Repository-wide Conventional Commits compliance:**
+
+As of December 2025, the entire commit history (642 commits dating back to 2015) was rewritten to follow Conventional Commits format. This ensures consistency throughout the repository's lifetime and makes it easier to:
+
+- Generate automated changelogs
+- Understand changes at a glance
+- Navigate commit history semantically
+- Maintain professional standards across all contributions
+
+All commits now follow the format specified in this guide, providing a clean foundation for future contributions.
+
 ### Type
 
 **Must be one of:**
