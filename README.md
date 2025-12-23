@@ -38,7 +38,7 @@ curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts
 
 **Options:**
 ```bash
-# Custom installation directory
+# Custom installation directory (fully location-independent)
 curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts/bootstrap.sh | bash -s -- --dir ~/my-dotfiles
 
 # Custom repository
@@ -47,6 +47,9 @@ curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts
 # Custom branch
 curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/scripts/bootstrap.sh | bash -s -- --branch develop
 ```
+
+**🎯 Location-Independent Installation:**
+The dotfiles now support installation to any directory (not just `~/dotfiles`). All scripts automatically detect and use the correct paths. Perfect for multi-machine setups or custom directory preferences.
 
 ### Manual Installation
 
@@ -122,15 +125,34 @@ To remove all dotfile symlinks (your dotfiles repository remains unchanged):
 
 ## 🪟 Git Bash for Windows (Portable Mode)
 
-For **Git Bash on Windows** or **corporate/restricted environments**, use the portable configuration:
+For **Git Bash on Windows** or **corporate/restricted environments**, we provide two approaches:
 
-### Quick Setup
+### Option 1: Quick Bootstrap (Recommended for First-Time Setup)
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/bootstrap/gitbash-setup.sh)
 ```
 
 Then reload your shell: `source ~/.bashrc`
+
+### Option 2: Full Clone with Portable Setup (For Systems Without Symlink Support)
+
+If you can't create symlinks (no admin rights), use the portable setup:
+
+```bash
+# Clone to any location you prefer
+git clone https://github.com/jeromefaria/dotfiles.git ~/usr/src/dotfiles
+cd ~/usr/src/dotfiles
+
+# Run the Windows portable setup
+./scripts/setup-portable-windows.sh
+```
+
+This will copy (not symlink) the portable configs and set up the `DOTFILES` environment variable.
+
+📖 **Guides:**
+- [Windows Setup Guide](docs/WINDOWS-SETUP.md) - For systems without symlink support
+- [Git Bash Setup Guide](docs/GIT-BASH-SETUP.md) - For quick bootstrap setup
 
 ### What You Get
 
@@ -149,6 +171,7 @@ Then reload your shell: `source ~/.bashrc`
 - **Corporate-friendly** - Works behind proxies/SSL interception
 - **Node.js optional** - Enhanced features when available, works without
 - **Offline-capable** - Clone once, works anywhere
+- **Location-independent** - Works from any directory
 
 ### What's Different?
 
@@ -160,8 +183,7 @@ Then reload your shell: `source ~/.bashrc`
 | Code search | ripgrep + FZF | grep + qg function |
 | Editor | Neovim/Vim | Vim (portable) |
 | Tools | Modern CLI (eza, bat, etc.) | Standard Unix tools |
-
-📖 **Full Guide:** [docs/GIT-BASH-SETUP.md](docs/GIT-BASH-SETUP.md)
+| Config Method | Symlinks | Hard copies (auto-synced) |
 
 ## 📦 Package Management
 
@@ -205,8 +227,9 @@ Comprehensive documentation organized by category for easy navigation.
 ### Configuration Guides
 
 **Shell & Terminal**
-- [Shell (ZSH)](terminal/zsh/README.md) - Modular aliases and functions | [Quick Reference](shell/QUICK_REFERENCE.md)
-- [Tmux](terminal/README.md) - Terminal multiplexer with custom keybindings (700+ lines)
+- [Shell (ZSH)](terminal/zsh/README.md) - Modular aliases and functions | [Quick Reference](terminal/zsh/QUICK_REFERENCE.md)
+- [Shell (Bash Portable)](terminal/bash/PORTABLE.md) - Portable config for Git Bash/Windows
+- [Tmux](terminal/tmux/README.md) - Terminal multiplexer with custom keybindings (700+ lines)
 - [Starship](config/starship/README.md) - Fast, customizable shell prompt
 
 **Editors**
@@ -259,16 +282,19 @@ See [Configuration Index](CONFIGURATION-INDEX.md) for the complete catalog with 
 
 ### Repository Structure
 
-- **`shell/`** - ZSH configuration (zshrc, aliases.sh, functions.sh)
+- **`terminal/`** - Shell and terminal configurations
+  - **`zsh/`** - ZSH configuration (zshrc, modular aliases/functions)
+  - **`bash/`** - Portable Bash configuration for Git Bash/Windows
+  - **`tmux/`** - Tmux configuration and tmuxinator sessions
 - **`editors/`** - Editor configurations
   - **`vim/`** - Vim configuration (separate from Neovim)
   - **`neovim/`** - Neovim configuration with lazy.nvim
-- **`terminal/`** - Terminal multiplexer configuration (tmux.conf, tmuxinator/)
 - **`git/`** - Git configuration (gitconfig)
 - **`config/`** - XDG-compliant application configurations (see `config/README.md`)
 - **`packages/`** - Package management files (see `packages/README.md`)
 - **`scripts/`** - Installation and setup scripts (install.sh, uninstall.sh, macos-setup.sh)
 - **`docs/`** - Documentation and analysis files
+- **`bootstrap/`** - Bootstrap scripts for quick setup on new systems
 
 ### Shell (ZSH)
 

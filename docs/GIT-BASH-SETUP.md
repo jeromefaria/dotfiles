@@ -3,6 +3,10 @@
 
 This guide covers setting up portable dotfiles configuration for Git Bash on Windows, specifically designed for corporate/restricted environments.
 
+> **📖 Related Guides:**
+> - **Can't create symlinks?** See [Windows Setup Guide](WINDOWS-SETUP.md) for hard-copy based setup
+> - **This guide** uses the bootstrap script for quick setup with symlinks (if supported)
+
 ## Table of Contents
 
 - [Overview](#overview)
