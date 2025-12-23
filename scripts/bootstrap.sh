@@ -11,7 +11,7 @@
 #   curl -fsSL https://raw.githubusercontent.com/USER/dotfiles/master/scripts/bootstrap.sh | bash -s -- --yes
 # ============================================================================
 
-set -e
+set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
 
 # Configuration
 REPO_URL="${DOTFILES_REPO:-https://github.com/jeromefaria/dotfiles.git}"

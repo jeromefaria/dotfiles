@@ -7,7 +7,7 @@
 # It does NOT remove installed packages or applications.
 ################################################################################
 
-set -e
+set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
 
 # Colors for output
 RED='\033[0;31m'

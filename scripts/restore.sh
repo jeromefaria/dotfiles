@@ -11,7 +11,7 @@
 #   ./restore.sh --list             # List available backups
 # ============================================================================
 
-set -e
+set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
 
 # Source shared configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
