@@ -110,8 +110,8 @@ Guide for upgrading between major versions of this dotfiles configuration.
 cd ~/dotfiles
 
 # Create backup
-cp shell/aliases.sh shell/aliases.sh.backup
-cp shell/functions.sh shell/functions.sh.backup
+cp terminal/zsh/aliases.sh terminal/zsh/aliases.sh.backup
+cp terminal/zsh/functions.sh terminal/zsh/functions.sh.backup
 ```
 
 #### 2. Pull Updates
@@ -355,25 +355,25 @@ git checkout HEAD~1 docs/
 2. **Update zshrc:**
    ```bash
    # Edit ~/.zshrc
-   nvim ~/dotfiles/shell/zshrc
+   nvim ~/dotfiles/terminal/zsh/zshrc
 
    # Change FROM:
-   for alias_file in $DOTFILES/shell/aliases/*.sh; do
+   for alias_file in $DOTFILES/terminal/zsh/aliases/*.sh; do
      source "$alias_file"
    done
-   for func_file in $DOTFILES/shell/functions/*.sh; do
+   for func_file in $DOTFILES/terminal/zsh/functions/*.sh; do
      source "$func_file"
    done
 
    # TO:
-   source $DOTFILES/shell/aliases.sh
-   source $DOTFILES/shell/functions.sh
+   source $DOTFILES/terminal/zsh/aliases.sh
+   source $DOTFILES/terminal/zsh/functions.sh
    ```
 
 3. **Remove modular directories:**
    ```bash
-   rm -rf ~/dotfiles/shell/aliases/
-   rm -rf ~/dotfiles/shell/functions/
+   rm -rf ~/dotfiles/terminal/zsh/aliases/
+   rm -rf ~/dotfiles/terminal/zsh/functions/
    ```
 
 4. **Reload shell:**
@@ -421,7 +421,7 @@ brew upgrade
 
 **A:** No, if you store custom aliases in:
 - `~/.zshrc.local` (machine-specific)
-- Custom files in `shell/aliases/` (tracked)
+- Custom files in `terminal/zsh/aliases/` (tracked)
 
 Both are preserved during upgrades.
 

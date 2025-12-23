@@ -16,14 +16,14 @@ This dotfiles repository supports machine-specific configuration overrides, allo
 ### 1. Shell Configuration
 
 **File:** `~/.zshrc.local`
-**Template:** `~/dotfiles/shell/zshrc.local.example`
+**Template:** `~/dotfiles/terminal/zsh/zshrc.local.example`
 
-Loaded at the end of `shell/zshrc`, this file allows you to override or extend shell configuration.
+Loaded at the end of `terminal/zsh/zshrc`, this file allows you to override or extend shell configuration.
 
 **Setup:**
 ```bash
 # Copy the example template
-cp ~/dotfiles/shell/zshrc.local.example ~/.zshrc.local
+cp ~/dotfiles/terminal/zsh/zshrc.local.example ~/.zshrc.local
 
 # Edit with your settings
 nvim ~/.zshrc.local
@@ -272,7 +272,7 @@ export GITHUB_TOKEN=$(security find-generic-password -s github_token -w)
 **Shell:**
 ```bash
 # Verify it's sourced in zshrc
-grep "zshrc.local" ~/dotfiles/shell/zshrc
+grep "zshrc.local" ~/dotfiles/terminal/zsh/zshrc
 
 # Manually source to test
 source ~/.zshrc.local
@@ -315,7 +315,7 @@ export EDITOR="code"  # Overrides nvim from main config
 
 Always copy from `.example` files:
 ```bash
-cp ~/dotfiles/shell/zshrc.local.example ~/.zshrc.local
+cp ~/dotfiles/terminal/zsh/zshrc.local.example ~/.zshrc.local
 cp ~/dotfiles/git/gitconfig.local.example ~/.gitconfig.local
 ```
 

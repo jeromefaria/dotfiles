@@ -205,7 +205,7 @@ Comprehensive documentation organized by category for easy navigation.
 ### Configuration Guides
 
 **Shell & Terminal**
-- [Shell (ZSH)](shell/README.md) - Modular aliases and functions | [Quick Reference](shell/QUICK_REFERENCE.md)
+- [Shell (ZSH)](terminal/zsh/README.md) - Modular aliases and functions | [Quick Reference](shell/QUICK_REFERENCE.md)
 - [Tmux](terminal/README.md) - Terminal multiplexer with custom keybindings (700+ lines)
 - [Starship](config/starship/README.md) - Fast, customizable shell prompt
 
@@ -272,20 +272,20 @@ See [Configuration Index](CONFIGURATION-INDEX.md) for the complete catalog with 
 
 ### Shell (ZSH)
 
-- **`shell/zshrc`** - Main ZSH configuration
+- **`terminal/zsh/zshrc`** - Main ZSH configuration
   - Oh My Zsh integration
   - Custom plugins (syntax highlighting, autosuggestions, vi-mode)
   - FNM (Fast Node Manager) for Node.js version management
   - Starship prompt
   - Custom key bindings
 
-- **`shell/aliases.sh`** - Shell aliases
+- **`terminal/zsh/aliases.sh`** - Shell aliases
   - Navigation shortcuts
   - Modern tool replacements (eza, bat, fd, ripgrep)
   - Git aliases
   - macOS-specific utilities
 
-- **`shell/functions.sh`** - Custom shell functions
+- **`terminal/zsh/functions.sh`** - Custom shell functions
   - HTTP server utilities
   - File operations
   - Development helpers
@@ -309,12 +309,12 @@ See [Configuration Index](CONFIGURATION-INDEX.md) for the complete catalog with 
 
 ### Terminal Multiplexer
 
-- **`terminal/tmux.conf`** - Tmux configuration
+- **`terminal/tmux/tmux.conf`** - Tmux configuration
   - Custom prefix key (F12)
   - Vi-mode keybindings
   - Plugin management with TPM
   - Vim/Tmux navigator integration
-- **`terminal/tmuxinator/`** - Tmuxinator session configurations
+- **`terminal/tmux/tmuxinator/`** - Tmuxinator session configurations
 
 ### Git
 
@@ -365,7 +365,7 @@ See `config/README.md` for detailed information about each configuration.
 
 ### Adding Custom Aliases
 
-Edit `shell/aliases.sh` and add your aliases:
+Edit `terminal/zsh/aliases.sh` and add your aliases:
 
 ```bash
 alias myalias="command"
@@ -373,7 +373,7 @@ alias myalias="command"
 
 ### Adding Custom Functions
 
-Edit `shell/functions.sh` and add your functions:
+Edit `terminal/zsh/functions.sh` and add your functions:
 
 ```bash
 function myfunction() {

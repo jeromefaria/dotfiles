@@ -72,9 +72,9 @@ unlink_dotfiles() {
   print_header "Removing Dotfile Symlinks"
 
   # Main dotfiles
-  remove_symlink "$HOME/.zshrc" "$DOTFILES_DIR/shell/zshrc"
+  remove_symlink "$HOME/.zshrc" "$DOTFILES_DIR/terminal/zsh/zshrc"
   remove_symlink "$HOME/.vimrc" "$DOTFILES_DIR/editors/vim/vimrc"
-  remove_symlink "$HOME/.tmux.conf" "$DOTFILES_DIR/terminal/tmux.conf"
+  remove_symlink "$HOME/.tmux.conf" "$DOTFILES_DIR/terminal/tmux/tmux.conf"
   remove_symlink "$HOME/.gitconfig" "$DOTFILES_DIR/git/gitconfig"
 
   # Vim config directory

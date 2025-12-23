@@ -94,8 +94,8 @@ echo ""
 echo "Creating symlinks..."
 
 # Bash configuration (essential)
-if ln -sf "$DOTFILES_DIR/shell/bashrc.portable" "$HOME/.bashrc"; then
-  echo "  ✓ ~/.bashrc → shell/bashrc.portable"
+if ln -sf "$DOTFILES_DIR/terminal/bash/bashrc.portable" "$HOME/.bashrc"; then
+  echo "  ✓ ~/.bashrc → terminal/bash/bashrc.portable"
 else
   echo "  ✗ Failed to link ~/.bashrc"
 fi
@@ -223,6 +223,6 @@ echo "     alias | grep git    # See all git aliases"
 echo "     nscripts            # Show npm scripts (if Node.js available)"
 echo ""
 echo "Documentation:"
-echo "  • Full features: $DOTFILES_DIR/shell/bashrc.portable"
+echo "  • Full features: $DOTFILES_DIR/terminal/bash/bashrc.portable"
 echo "  • Vim guide: $DOTFILES_DIR/editors/vim/README.md"
 echo ""

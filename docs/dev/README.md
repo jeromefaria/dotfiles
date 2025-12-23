@@ -65,10 +65,10 @@ Edit configuration files, scripts, or documentation.
 
 ```bash
 # Option 1: Test in subshell
-zsh -c "source ~/dotfiles-dev/shell/zshrc"
+zsh -c "source ~/dotfiles-dev/terminal/zsh/zshrc"
 
 # Option 2: Test specific files
-source ~/dotfiles-dev/shell/aliases/dev.sh
+source ~/dotfiles-dev/terminal/zsh/aliases/dev.sh
 
 # Option 3: Use separate install location
 ./scripts/install.sh --target ~/.dotfiles-test
@@ -90,7 +90,7 @@ Open PR on GitHub with description of changes.
 
 **Manual Testing Checklist:**
 
-- [ ] Shell loads without errors: `zsh -n ~/dotfiles/shell/zshrc`
+- [ ] Shell loads without errors: `zsh -n ~/dotfiles/terminal/zsh/zshrc`
 - [ ] Aliases work as expected: `source ~/.zshrc && type alias-name`
 - [ ] Functions execute correctly: `function-name test-args`
 - [ ] Symlinks created properly: `./scripts/health-check.sh`

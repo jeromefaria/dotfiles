@@ -172,10 +172,10 @@ Screenshots, examples, links to similar implementations.
 1. **Test locally:**
    ```bash
    # Test shell config
-   zsh -n ~/dotfiles/shell/zshrc
+   zsh -n ~/dotfiles/terminal/zsh/zshrc
 
    # Test in subshell
-   zsh -c "source ~/dotfiles/shell/zshrc"
+   zsh -c "source ~/dotfiles/terminal/zsh/zshrc"
 
    # Run health check
    ./scripts/health-check.sh

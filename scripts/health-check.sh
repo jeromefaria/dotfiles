@@ -108,9 +108,9 @@ fi
 
 # Check 2: Core symlinks
 print_header "2. Core Configuration Symlinks"
-check_symlink "$HOME/.zshrc" "$DOTFILES_DIR/shell/zshrc" "zsh configuration"
+check_symlink "$HOME/.zshrc" "$DOTFILES_DIR/terminal/zsh/zshrc" "zsh configuration"
 check_symlink "$HOME/.vimrc" "$DOTFILES_DIR/editors/vim/vimrc" "vim configuration"
-check_symlink "$HOME/.tmux.conf" "$DOTFILES_DIR/terminal/tmux.conf" "tmux configuration"
+check_symlink "$HOME/.tmux.conf" "$DOTFILES_DIR/terminal/tmux/tmux.conf" "tmux configuration"
 check_symlink "$HOME/.gitconfig" "$DOTFILES_DIR/git/gitconfig" "git configuration"
 
 # Check 3: XDG config symlinks
@@ -222,23 +222,23 @@ fi
 
 # Check 10: Shell configuration
 print_header "10. Shell Configuration"
-if [ -d "$DOTFILES_DIR/shell/aliases" ]; then
-    alias_count=$(find "$DOTFILES_DIR/shell/aliases" -name "*.sh" | wc -l | xargs)
+if [ -d "$DOTFILES_DIR/terminal/zsh/aliases" ]; then
+    alias_count=$(find "$DOTFILES_DIR/terminal/zsh/aliases" -name "*.sh" | wc -l | xargs)
     print_success "Modular aliases: $alias_count categories"
 else
     print_warning "Modular aliases directory not found"
 fi
 
-if [ -d "$DOTFILES_DIR/shell/functions" ]; then
-    function_count=$(find "$DOTFILES_DIR/shell/functions" -name "*.sh" | wc -l | xargs)
+if [ -d "$DOTFILES_DIR/terminal/zsh/functions" ]; then
+    function_count=$(find "$DOTFILES_DIR/terminal/zsh/functions" -name "*.sh" | wc -l | xargs)
     print_success "Modular functions: $function_count categories"
 else
     print_warning "Modular functions directory not found"
 fi
 
 # Check for backup files
-if ls "$DOTFILES_DIR/shell/"*.backup 1> /dev/null 2>&1; then
-    print_warning "Backup files found in shell/ directory (can be deleted)"
+if ls "$DOTFILES_DIR/terminal/zsh/"*.backup 1> /dev/null 2>&1; then
+    print_warning "Backup files found in terminal/zsh/ directory (can be deleted)"
 fi
 
 # Summary

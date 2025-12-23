@@ -34,9 +34,9 @@ OPTIONAL_COMMANDS=(
 
 # Home directory symlinks
 HOME_SYMLINKS=(
-  "$HOME/.zshrc:shell/zshrc"
+  "$HOME/.zshrc:terminal/zsh/zshrc"
   "$HOME/.vimrc:editors/vim/vimrc"
-  "$HOME/.tmux.conf:terminal/tmux.conf"
+  "$HOME/.tmux.conf:terminal/tmux/tmux.conf"
   "$HOME/.gitconfig:git/gitconfig"
 )
 
