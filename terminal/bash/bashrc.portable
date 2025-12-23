@@ -621,7 +621,7 @@ while ($true) {
     # Prevent system sleep and display timeout
     [void][SleepUtil]::SetThreadExecutionState($ES_CONTINUOUS -bor $ES_SYSTEM_REQUIRED -bor $ES_DISPLAY_REQUIRED)
 
-    # Simulate user activity for Teams detection (every 4 minutes)
+    # Simulate user activity for Teams detection (every 2 minutes)
     $pos = [System.Windows.Forms.Cursor]::Position
     $pos.X += 1
     [System.Windows.Forms.Cursor]::Position = $pos
@@ -629,7 +629,7 @@ while ($true) {
     $pos.X -= 1
     [System.Windows.Forms.Cursor]::Position = $pos
 
-    Start-Sleep -Seconds 240
+    Start-Sleep -Seconds 120
 }
 PSEOF
       ;;
@@ -645,7 +645,7 @@ while ($true) {
     Start-Sleep -Milliseconds 50
     $pos.X -= 1
     [System.Windows.Forms.Cursor]::Position = $pos
-    Start-Sleep -Seconds 240
+    Start-Sleep -Seconds 120
 }
 PSEOF
       ;;
@@ -656,7 +656,7 @@ $wsh = New-Object -ComObject WScript.Shell
 Write-Host "Keep-awake active (Method 3: SendKeys - prevents screen lock and Teams away)"
 while ($true) {
     $wsh.SendKeys('{F15}')
-    Start-Sleep -Seconds 240
+    Start-Sleep -Seconds 120
 }
 PSEOF
       ;;
