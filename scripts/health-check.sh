@@ -242,6 +242,37 @@ if ls "$DOTFILES_DIR/terminal/zsh/"*.backup 1> /dev/null 2>&1; then
     print_warning "Backup files found in terminal/zsh/ directory (can be deleted)"
 fi
 
+# Check 6: Shell Performance
+print_header "6. Shell Performance"
+
+# Measure ZSH startup time
+if command -v zsh &> /dev/null; then
+    # Run test 3 times and average
+    total_time=0
+    runs=3
+
+    for ((i=1; i<=runs; i++)); do
+        startup_time=$(/usr/bin/time -p zsh -i -c exit 2>&1 | grep real | awk '{print $2}')
+        total_time=$(echo "$total_time + $startup_time" | bc)
+    done
+
+    avg_time=$(echo "scale=3; $total_time / $runs" | bc)
+    avg_ms=$(echo "scale=0; $avg_time * 1000 / 1" | bc)
+
+    # Check against thresholds
+    if (( $(echo "$avg_time < 0.250" | bc -l) )); then
+        print_success "ZSH startup time: ${avg_time}s (${avg_ms}ms) - Excellent!"
+    elif (( $(echo "$avg_time < 0.500" | bc -l) )); then
+        print_warning "ZSH startup time: ${avg_time}s (${avg_ms}ms) - Acceptable (target: <250ms)"
+    else
+        print_warning "ZSH startup time: ${avg_time}s (${avg_ms}ms) - Slow (target: <250ms)"
+    fi
+else
+    print_info "ZSH not available (skipping performance check)"
+fi
+
+echo ""
+
 # Summary
 print_header "Summary"
 echo ""
