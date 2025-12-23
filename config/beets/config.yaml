@@ -66,8 +66,7 @@ overwrite_null:
   album: []
   track: []
 
-# plugins: discogs lastgenre fetchart embedart lyrics albumtypes mbsync
-plugins: lastgenre fetchart embedart albumtypes mbsync
+plugins: discogs lastgenre fetchart embedart albumtypes mbsync
 pluginpath: []
 threaded: yes
 timeout: 5.0
