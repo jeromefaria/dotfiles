@@ -81,9 +81,9 @@ The installation script creates symlinks from your home directory to the version
 ### Home Directory Symlinks
 
 ```bash
-~/.zshrc        → ~/dotfiles/shell/zshrc
+~/.zshrc        → ~/dotfiles/terminal/zsh/zshrc
 ~/.vimrc        → ~/dotfiles/editors/vim/vimrc
-~/.tmux.conf    → ~/dotfiles/terminal/tmux.conf
+~/.tmux.conf    → ~/dotfiles/terminal/tmux/tmux.conf
 ~/.gitconfig    → ~/dotfiles/git/gitconfig
 ```
 
@@ -121,12 +121,12 @@ Ghostty (or other terminal)
     ↓
 Launches Zsh shell
     ↓
-Reads ~/.zshrc (symlinked to shell/zshrc)
+Reads ~/.zshrc (symlinked to terminal/zsh/zshrc)
 ```
 
 ### 2. Shell Configuration Loading
 
-The `shell/zshrc` file orchestrates loading in this order:
+The `terminal/zsh/zshrc` file orchestrates loading in this order:
 
 ```zsh
 # 1. Oh My Zsh framework
@@ -136,12 +136,12 @@ source $ZSH/oh-my-zsh.sh
 source $ZSH_CUSTOM/plugins/...
 
 # 3. Modular aliases (auto-discovered)
-for alias_file in shell/aliases/*.sh; do
+for alias_file in terminal/zsh/aliases/*.sh; do
   source "$alias_file"
 done
 
 # 4. Modular functions (auto-discovered)
-for function_file in shell/functions/*.sh; do
+for function_file in terminal/zsh/functions/*.sh; do
   source "$function_file"
 done
 
@@ -159,7 +159,7 @@ eval "$(starship init zsh)"      # Prompt
 Aliases are conditionally created only if tools exist:
 
 ```zsh
-# From shell/aliases/tools.sh
+# From terminal/zsh/aliases/tools.sh
 command -v eza &> /dev/null && alias ls="eza"
 command -v bat &> /dev/null && alias cat="bat"
 # ... prevents errors if tools aren't installed
@@ -172,7 +172,7 @@ command -v bat &> /dev/null && alias cat="bat"
 ### Shell + Git
 
 ```
-shell/zshrc loads git/gitconfig aliases
+terminal/zsh/zshrc loads git/gitconfig aliases
     ↓
 Git commands use custom aliases
     ↓ (example: git hist)
@@ -188,7 +188,7 @@ Pretty log format defined in gitconfig
 ### Shell + Neovim
 
 ```
-shell/zshrc sets alias: vim="nvim"
+terminal/zsh/zshrc sets alias: vim="nvim"
     ↓
 Launches Neovim with config from editors/neovim/
     ↓
@@ -205,13 +205,13 @@ LSP, Telescope, Treesitter configured
 ### Shell + Tmux
 
 ```
-shell/zshrc starts with Tmux available
+terminal/zsh/zshrc starts with Tmux available
     ↓
 User runs: tmux or tmuxinator start <project>
     ↓
-terminal/tmux.conf loads with plugins
+terminal/tmux/tmux.conf loads with plugins
     ↓
-Sessions defined in terminal/tmuxinator/
+Sessions defined in terminal/tmux/tmuxinator/
 ```
 
 **Key Bindings:**
@@ -252,10 +252,10 @@ Here's the flow when adding a new tool to your environment:
 2. Install the package
    brew install newtool
 
-3. (Optional) Add alias in shell/aliases/<category>.sh
+3. (Optional) Add alias in terminal/zsh/aliases/<category>.sh
    command -v newtool &> /dev/null && alias nt="newtool"
 
-4. (Optional) Add function in shell/functions/<category>.sh
+4. (Optional) Add function in terminal/zsh/functions/<category>.sh
    newtool_wrapper() {
      newtool "$@" --with-defaults
    }
@@ -270,7 +270,7 @@ Here's the flow when adding a new tool to your environment:
 ### Customizing Configurations
 
 **For Shell:**
-1. Edit files in `shell/aliases/` or `shell/functions/`
+1. Edit files in `terminal/zsh/aliases/` or `terminal/zsh/functions/`
 2. Reload: `source ~/.zshrc`
 3. Changes take effect immediately
 
@@ -285,7 +285,7 @@ Here's the flow when adding a new tool to your environment:
 3. Test with `git config --list`
 
 **For Tmux:**
-1. Edit `terminal/tmux.conf`
+1. Edit `terminal/tmux/tmux.conf`
 2. Reload: `tmux source ~/.tmux.conf` or `F12 + r`
 3. May need to restart tmux for some changes
 
@@ -298,7 +298,7 @@ For configurations that differ between machines (work vs. personal):
 [include]
   path = ~/.gitconfig.local
 
-# Shell: Add at end of shell/zshrc
+# Shell: Add at end of terminal/zsh/zshrc
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 # Create local files (not tracked in git)
@@ -316,7 +316,7 @@ Three plugin managers maintain different parts of the system:
 - **Location**: `~/.oh-my-zsh/`
 - **Purpose**: Shell framework, themes, plugins
 - **Update**: `omz update`
-- **Config**: `shell/zshrc` (ZSH_THEME, plugins array)
+- **Config**: `terminal/zsh/zshrc` (ZSH_THEME, plugins array)
 
 ### 2. lazy.nvim (Neovim)
 - **Location**: `~/.local/share/nvim/lazy/`
@@ -329,7 +329,7 @@ Three plugin managers maintain different parts of the system:
 - **Purpose**: Tmux plugin management
 - **Install Plugins**: `F12 + I`
 - **Update Plugins**: `F12 + U`
-- **Config**: `terminal/tmux.conf` (set -g @plugin lines)
+- **Config**: `terminal/tmux/tmux.conf` (set -g @plugin lines)
 
 ---
 
@@ -338,34 +338,34 @@ Three plugin managers maintain different parts of the system:
 Key environment variables set by the configurations:
 
 ```bash
-# XDG Base Directories (shell/zshrc)
+# XDG Base Directories (terminal/zsh/zshrc)
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 
-# Editor (shell/zshrc)
+# Editor (terminal/zsh/zshrc)
 export EDITOR="nvim"
 export VISUAL="nvim"
 
-# Oh My Zsh (shell/zshrc)
+# Oh My Zsh (terminal/zsh/zshrc)
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_THEME="robbyrussell"  # Or overridden by Starship
 
 # Language Version Managers
 export FNM_DIR="$HOME/.fnm"      # Node via FNM
 
-# Paths (shell/zshrc)
+# Paths (terminal/zsh/zshrc)
 export PATH="$HOME/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
-# macOS Volume Paths (shell/zshrc - macOS only)
+# macOS Volume Paths (terminal/zsh/zshrc - macOS only)
 export ARCHIVE="/Volumes/Archive"
 export AUDIO="/Volumes/Audio"
 export MEDIA="/Volumes/Media"
 export PORTABLE="/Volumes/Portable"
 export VIDEO="/Volumes/Video"
 
-# macOS Derived Paths (shell/zshrc - macOS only)
+# macOS Derived Paths (terminal/zsh/zshrc - macOS only)
 export CINEMA="$MEDIA/Cinema"
 export DRIVE="$ARCHIVE/Drive"
 export MOBILE="$HOME/Library/Mobile Documents"
@@ -374,7 +374,7 @@ export PROJECTS="$AUDIO/Audio/Projects"
 export SHARED="$DRIVE/Shared"
 export TELEVISION="$MEDIA/Television"
 
-# Cross-Platform Paths (shell/zshrc)
+# Cross-Platform Paths (terminal/zsh/zshrc)
 export DOTFILES="$HOME/dotfiles"
 export DOWNLOADS="$HOME/Downloads"
 export WORK="$HOME/Work"
@@ -431,7 +431,7 @@ This checks:
 ## Further Reading
 
 - [Main README](../README.md) - Installation and overview
-- [Shell Documentation](../shell/README.md) - Shell configuration details
+- [Shell Documentation](../terminal/zsh/README.md) - Shell configuration details
 - [Package Management](../packages/README.md) - Package workflow
 - [Vim/Neovim Guide](vim-neovim-configuration-review.md) - Editor keybindings
 
@@ -446,7 +446,7 @@ This checks:
                      │
                      ▼
 ┌─────────────────────────────────────────────────────────────┐
-│  shell/zshrc  (Main orchestrator)                           │
+│  terminal/zsh/zshrc  (Main orchestrator)                           │
 │  • Loads Oh My Zsh                                          │
 │  • Sources aliases/* and functions/*                        │
 │  • Initializes tools (zoxide, fnm, starship)                │

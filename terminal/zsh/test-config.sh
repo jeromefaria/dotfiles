@@ -35,7 +35,7 @@ test_info() {
 
 echo "1. Testing Alias Files"
 echo "----------------------"
-for alias_file in "$DOTFILES/shell/aliases"/*.sh; do
+for alias_file in "$DOTFILES/terminal/zsh/aliases"/*.sh; do
   if [[ -f "$alias_file" ]]; then
     if source "$alias_file" 2>/dev/null; then
       test_pass "$(basename "$alias_file") loads successfully"
@@ -48,7 +48,7 @@ echo
 
 echo "2. Testing Function Files"
 echo "-------------------------"
-for func_file in "$DOTFILES/shell/functions"/*.sh; do
+for func_file in "$DOTFILES/terminal/zsh/functions"/*.sh; do
   if [[ -f "$func_file" ]]; then
     if source "$func_file" 2>/dev/null; then
       test_pass "$(basename "$func_file") loads successfully"
@@ -62,7 +62,7 @@ echo
 echo "3. Testing Key Aliases"
 echo "----------------------"
 # Source all aliases first
-for alias_file in "$DOTFILES/shell/aliases"/*.sh; do
+for alias_file in "$DOTFILES/terminal/zsh/aliases"/*.sh; do
   source "$alias_file" 2>/dev/null
 done
 
@@ -79,7 +79,7 @@ echo
 echo "4. Testing Key Functions"
 echo "------------------------"
 # Source all functions first
-for func_file in "$DOTFILES/shell/functions"/*.sh; do
+for func_file in "$DOTFILES/terminal/zsh/functions"/*.sh; do
   source "$func_file" 2>/dev/null
 done
 
@@ -111,7 +111,7 @@ if command -v zoxide &>/dev/null; then
   test_pass "zoxide is installed"
 
   # Check if zoxide init is in zshrc
-  if grep -q "zoxide init" "$DOTFILES/shell/zshrc"; then
+  if grep -q "zoxide init" "$DOTFILES/terminal/zsh/zshrc"; then
     test_pass "zoxide init found in zshrc"
   else
     test_fail "zoxide init NOT found in zshrc"
@@ -131,7 +131,7 @@ echo
 
 echo "7. Testing File Structure"
 echo "--------------------------"
-required_dirs=("$DOTFILES/shell/aliases" "$DOTFILES/shell/functions")
+required_dirs=("$DOTFILES/terminal/zsh/aliases" "$DOTFILES/terminal/zsh/functions")
 for dir in "${required_dirs[@]}"; do
   if [[ -d "$dir" ]]; then
     test_pass "Directory exists: $dir"
@@ -140,7 +140,7 @@ for dir in "${required_dirs[@]}"; do
   fi
 done
 
-required_files=("$DOTFILES/shell/zshrc" "$DOTFILES/shell/README.md")
+required_files=("$DOTFILES/terminal/zsh/zshrc" "$DOTFILES/terminal/zsh/README.md")
 for file in "${required_files[@]}"; do
   if [[ -f "$file" ]]; then
     test_pass "File exists: $(basename "$file")"
@@ -152,13 +152,13 @@ echo
 
 echo "8. Testing Backup Files"
 echo "-----------------------"
-if [[ -f "$DOTFILES/shell/aliases.sh.backup" ]]; then
+if [[ -f "$DOTFILES/terminal/zsh/aliases.sh.backup" ]]; then
   test_pass "Backup found: aliases.sh.backup"
 else
   test_info "No backup: aliases.sh.backup (may have been deleted)"
 fi
 
-if [[ -f "$DOTFILES/shell/functions.sh.backup" ]]; then
+if [[ -f "$DOTFILES/terminal/zsh/functions.sh.backup" ]]; then
   test_pass "Backup found: functions.sh.backup"
 else
   test_info "No backup: functions.sh.backup (may have been deleted)"
@@ -176,7 +176,7 @@ if [[ $fail_count -eq 0 ]]; then
   echo -e "${GREEN}All tests passed!${NC}"
   echo
   echo "Your shell configuration is ready to use."
-  echo "Run 'source $DOTFILES/shell/zshrc' or 'reload' to activate."
+  echo "Run 'source $DOTFILES/terminal/zsh/zshrc' or 'reload' to activate."
   exit 0
 else
   echo -e "${RED}Some tests failed.${NC}"

@@ -44,13 +44,13 @@ This document catalogs all 50+ configurations in this dotfiles repository:
 
 ## Shell Configuration
 
-### Portable Bash (`shell/bashrc.portable`) 🪟
+### Portable Bash (`terminal/bash/bashrc.portable`) 🪟
 
 **Documentation:** ✅ Complete - [docs/GIT-BASH-SETUP.md](docs/GIT-BASH-SETUP.md)
 
 **Target Environment:** Git Bash on Windows, corporate/restricted environments
 
-**Main Config:** `shell/bashrc.portable` (732 lines)
+**Main Config:** `terminal/bash/bashrc.portable` (732 lines)
 - Git-aware prompt with branch display
 - No external dependencies (no Oh My Zsh, fzf, etc.)
 - Platform detection (Windows/macOS/Linux)
@@ -77,9 +77,9 @@ bash <(curl -fsSL https://raw.githubusercontent.com/jeromefaria/dotfiles/master/
 
 ### ZSH (`shell/`)
 
-**Documentation:** ✅ Comprehensive - [shell/README.md](shell/README.md)
+**Documentation:** ✅ Comprehensive - [terminal/zsh/README.md](terminal/zsh/README.md)
 
-**Main Config:** `shell/zshrc` (171 lines)
+**Main Config:** `terminal/zsh/zshrc` (171 lines)
 - Leader: Oh My Zsh with 22 plugins
 - Vi mode with `jk` and `jj` escape
 - zoxide for smart directory jumping
@@ -168,7 +168,7 @@ Legacy Vim config for systems without Neovim.
 
 ## Terminal
 
-### Tmux (`terminal/tmux.conf`)
+### Tmux (`terminal/tmux/tmux.conf`)
 
 **Documentation:** ⚠️ Inline comments only - [Needs README]
 
@@ -200,7 +200,7 @@ Legacy Vim config for systems without Neovim.
 | `F12 + HJKL` | Resize panes |
 | `F12 + Shift-Arrow` | Swap windows |
 
-### Tmuxinator (`terminal/tmuxinator/`)
+### Tmuxinator (`terminal/tmux/tmuxinator/`)
 
 **Documentation:** ❌ No documentation
 
@@ -506,7 +506,7 @@ Keyboard remapping with 249KB of JSON configuration.
 ## Configuration Documentation Status
 
 ### ✅ Excellent (100+ lines or comprehensive inline)
-1. Shell configuration - `shell/README.md` (200 lines)
+1. Shell configuration - `terminal/zsh/README.md` (200 lines)
 2. Neomutt - `mail/mutt/README.md` (142 lines)
 3. Neovim - `editors/neovim/README.md` (NEW, 600+ lines)
 4. Git - `git/README.md` (NEW, 400+ lines)
@@ -584,9 +584,9 @@ Keyboard remapping with 249KB of JSON configuration.
 
 ### Symlinked Locations
 ```
-~/.zshrc              → ~/dotfiles/shell/zshrc
+~/.zshrc              → ~/dotfiles/terminal/zsh/zshrc
 ~/.vimrc              → ~/dotfiles/editors/vim/vimrc
-~/.tmux.conf          → ~/dotfiles/terminal/tmux.conf
+~/.tmux.conf          → ~/dotfiles/terminal/tmux/tmux.conf
 ~/.gitconfig          → ~/dotfiles/git/gitconfig
 ~/.config/nvim/       → ~/dotfiles/editors/neovim/
 ~/.config/neomutt/    → ~/dotfiles/mail/mutt/
@@ -603,9 +603,9 @@ Keyboard remapping with 249KB of JSON configuration.
 
 | Tool | Config File | Documentation |
 |------|-------------|---------------|
-| ZSH | `shell/zshrc` | [README](shell/README.md) |
+| ZSH | `terminal/zsh/zshrc` | [README](terminal/zsh/README.md) |
 | Neovim | `editors/neovim/` | [README](editors/neovim/README.md) |
-| Tmux | `terminal/tmux.conf` | Inline only |
+| Tmux | `terminal/tmux/tmux.conf` | Inline only |
 | Git | `git/gitconfig` | [README](git/README.md) |
 | Neomutt | `mail/mutt/` | [README](mail/mutt/README.md) |
 
@@ -636,9 +636,9 @@ Keyboard remapping with 249KB of JSON configuration.
 
 ### For Keybindings
 
-- Shell: `shell/README.md`
+- Shell: `terminal/zsh/README.md`
 - Neovim: `editors/neovim/README.md`
-- Tmux: Check `terminal/tmux.conf` inline comments
+- Tmux: Check `terminal/tmux/tmux.conf` inline comments
 - SKHD: `config/skhd/README.md`
 - Neomutt: `mail/mutt/README.md`
 

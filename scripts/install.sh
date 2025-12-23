@@ -300,9 +300,9 @@ link_dotfiles() {
   create_backup_dir
 
   # Main dotfiles (organized by category)
-  create_symlink "$DOTFILES_DIR/shell/zshrc" "$HOME/.zshrc"
+  create_symlink "$DOTFILES_DIR/terminal/zsh/zshrc" "$HOME/.zshrc"
   create_symlink "$DOTFILES_DIR/editors/vim/vimrc" "$HOME/.vimrc"
-  create_symlink "$DOTFILES_DIR/terminal/tmux.conf" "$HOME/.tmux.conf"
+  create_symlink "$DOTFILES_DIR/terminal/tmux/tmux.conf" "$HOME/.tmux.conf"
   create_symlink "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 
   # Vim directory (separate from Neovim for systems without Neovim)

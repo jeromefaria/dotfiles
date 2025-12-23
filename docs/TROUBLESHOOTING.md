@@ -145,7 +145,7 @@ Common issues and solutions organized by symptom.
 
 3. **Aliases degrade gracefully** - if tools aren't installed, aliases won't be created:
    ```bash
-   # In shell/aliases/tools.sh
+   # In terminal/zsh/aliases/tools.sh
    command -v eza &> /dev/null && alias ls="eza" || alias ls="ls --color=auto"
    ```
 
@@ -174,13 +174,13 @@ type mkd
 
 3. **Verify alias files exist:**
    ```bash
-   ls -la ~/dotfiles/shell/aliases/
-   ls -la ~/dotfiles/shell/functions/
+   ls -la ~/dotfiles/terminal/zsh/aliases/
+   ls -la ~/dotfiles/terminal/zsh/functions/
    ```
 
 4. **Check zshrc loads modules:**
    ```bash
-   grep "aliases" ~/dotfiles/shell/zshrc
+   grep "aliases" ~/dotfiles/terminal/zsh/zshrc
    ```
 
 ### Symptom: zoxide not working (`cd` doesn't learn directories)
@@ -199,7 +199,7 @@ which zoxide
 
 2. **Verify initialization:**
    ```bash
-   grep "zoxide init" ~/dotfiles/shell/zshrc
+   grep "zoxide init" ~/dotfiles/terminal/zsh/zshrc
    ```
 
 3. **Reload shell:**
@@ -232,7 +232,7 @@ ls -la ~/.oh-my-zsh
 
 2. **Restore dotfiles zshrc:**
    ```bash
-   ln -sf ~/dotfiles/shell/zshrc ~/.zshrc
+   ln -sf ~/dotfiles/terminal/zsh/zshrc ~/.zshrc
    ```
 
 3. **Install missing plugins:**
@@ -723,7 +723,7 @@ If you're still stuck:
    ```
 
 3. **Check component-specific docs:**
-   - [Shell README](../shell/README.md)
+   - [Shell README](../terminal/zsh/README.md)
    - [Neovim README](../editors/neovim/README.md)
    - [Mail README](../mail/README.md)
    - [See all docs](../CONFIGURATION-INDEX.md)

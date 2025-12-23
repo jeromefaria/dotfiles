@@ -126,7 +126,7 @@ tmux
 Edit your shell aliases:
 
 ```bash
-nvim ~/dotfiles/shell/aliases/custom.sh    # Or use vim/nano
+nvim ~/dotfiles/terminal/zsh/aliases/custom.sh    # Or use vim/nano
 ```
 
 Add your aliases:
@@ -151,7 +151,7 @@ For machine-specific customizations (work vs personal):
 
 ```bash
 # Copy the example file
-cp ~/dotfiles/shell/zshrc.local.example ~/.zshrc.local
+cp ~/dotfiles/terminal/zsh/zshrc.local.example ~/.zshrc.local
 
 # Edit with your machine-specific settings
 nvim ~/.zshrc.local
@@ -227,7 +227,7 @@ Now that you're set up, explore the full documentation:
 - [Configuration Index](../CONFIGURATION-INDEX.md) - Browse all 50+ configurations
 
 ### Deep Dive into Components
-- [Shell Documentation](../shell/README.md) - Learn all aliases and functions
+- [Shell Documentation](../terminal/zsh/README.md) - Learn all aliases and functions
 - [Neovim Guide](../editors/neovim/README.md) - Master your editor
 - [Tmux Setup](../terminal/README.md) - Terminal multiplexer power user
 

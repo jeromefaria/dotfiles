@@ -134,7 +134,7 @@ source "$ZSH/oh-my-zsh.sh"
 # Load modular aliases (platform-aware)
 # Skip macOS-specific files on non-macOS platforms
 local -a _macos_only=(macos.sh chrome.sh folders.sh)
-for alias_file in "$DOTFILES"/shell/aliases/*.sh; do
+for alias_file in "$DOTFILES"/terminal/zsh/aliases/*.sh; do
   _filename=${alias_file:t}
   if (( ${_macos_only[(Ie)$_filename]} )) && [[ "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
@@ -143,7 +143,7 @@ for alias_file in "$DOTFILES"/shell/aliases/*.sh; do
 done
 
 # Load modular functions (platform-aware)
-for func_file in "$DOTFILES"/shell/functions/*.sh; do
+for func_file in "$DOTFILES"/terminal/zsh/functions/*.sh; do
   _filename=${func_file:t}
   if [[ "$_filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue

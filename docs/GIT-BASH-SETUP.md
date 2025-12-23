@@ -222,7 +222,7 @@ cp ~/.gitconfig ~/dotfiles_backup/ 2>/dev/null
 
 ```bash
 # Bash (required)
-ln -sf ~/dotfiles/shell/bashrc.portable ~/.bashrc
+ln -sf ~/dotfiles/terminal/bash/bashrc.portable ~/.bashrc
 
 # Vim (optional, if vim is installed)
 ln -sf ~/dotfiles/editors/vim/vimrc.portable ~/.vimrc
@@ -429,13 +429,13 @@ gb  # List all branches
 1. **Explore the functions** - Try `server`, `extract`, `nscripts`
 2. **Learn the aliases** - Run `alias | grep git` to see shortcuts
 3. **Customize** - Add your preferences to `~/.bashrc.local`
-4. **Read the code** - Check `~/dotfiles/shell/bashrc.portable` for all features
+4. **Read the code** - Check `~/dotfiles/terminal/bash/bashrc.portable` for all features
 5. **Install Node.js** - Unlock npm shortcuts and CoC.nvim features
 
 ## Resources
 
 - **Main Documentation:** `~/dotfiles/README.md`
-- **Bash Portable:** `~/dotfiles/shell/bashrc.portable`
+- **Bash Portable:** `~/dotfiles/terminal/bash/bashrc.portable`
 - **Vim Portable:** `~/dotfiles/editors/vim/vimrc.portable`
 - **Vim Guide:** `~/dotfiles/editors/vim/README.md`
 
