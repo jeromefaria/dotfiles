@@ -602,7 +602,7 @@ _keep_awake_get_script() {
 
   case "$method" in
     1)
-      # Method 1: Persistent PowerShell with SetThreadExecutionState
+      # Method 1: Combined API + user activity simulation (prevents screen lock AND Teams away status)
       cat <<'PSEOF'
 Add-Type -TypeDefinition @'
 using System;
@@ -612,41 +612,51 @@ public class SleepUtil {
     public static extern uint SetThreadExecutionState(uint esFlags);
 }
 '@
+Add-Type -AssemblyName System.Windows.Forms
 $ES_CONTINUOUS = [uint32]"0x80000000"
 $ES_SYSTEM_REQUIRED = [uint32]"0x00000001"
 $ES_DISPLAY_REQUIRED = [uint32]"0x00000002"
-$ES_AWAYMODE_REQUIRED = [uint32]"0x00000040"
-Write-Host "Keep-awake active (Method 1: SetThreadExecutionState)"
+Write-Host "Keep-awake active (Method 1: API + Mouse jiggle - prevents screen lock and Teams away)"
 while ($true) {
+    # Prevent system sleep and display timeout
     [void][SleepUtil]::SetThreadExecutionState($ES_CONTINUOUS -bor $ES_SYSTEM_REQUIRED -bor $ES_DISPLAY_REQUIRED)
-    Start-Sleep -Seconds 30
+
+    # Simulate user activity for Teams detection (every 4 minutes)
+    $pos = [System.Windows.Forms.Cursor]::Position
+    $pos.X += 1
+    [System.Windows.Forms.Cursor]::Position = $pos
+    Start-Sleep -Milliseconds 50
+    $pos.X -= 1
+    [System.Windows.Forms.Cursor]::Position = $pos
+
+    Start-Sleep -Seconds 240
 }
 PSEOF
       ;;
     2)
-      # Method 2: Persistent PowerShell with mouse jiggle
+      # Method 2: Mouse movement only (prevents screen lock and Teams away)
       cat <<'PSEOF'
 Add-Type -AssemblyName System.Windows.Forms
-Write-Host "Keep-awake active (Method 2: Mouse movement)"
+Write-Host "Keep-awake active (Method 2: Mouse movement - prevents screen lock and Teams away)"
 while ($true) {
     $pos = [System.Windows.Forms.Cursor]::Position
     $pos.X += 1
     [System.Windows.Forms.Cursor]::Position = $pos
-    Start-Sleep -Milliseconds 100
+    Start-Sleep -Milliseconds 50
     $pos.X -= 1
     [System.Windows.Forms.Cursor]::Position = $pos
-    Start-Sleep -Seconds 30
+    Start-Sleep -Seconds 240
 }
 PSEOF
       ;;
     3)
-      # Method 3: Persistent PowerShell with SendKeys
+      # Method 3: SendKeys (prevents screen lock and Teams away)
       cat <<'PSEOF'
 $wsh = New-Object -ComObject WScript.Shell
-Write-Host "Keep-awake active (Method 3: SendKeys)"
+Write-Host "Keep-awake active (Method 3: SendKeys - prevents screen lock and Teams away)"
 while ($true) {
     $wsh.SendKeys('{F15}')
-    Start-Sleep -Seconds 30
+    Start-Sleep -Seconds 240
 }
 PSEOF
       ;;
@@ -796,9 +806,9 @@ keep_awake() {
       for m in 1 2 3; do
         local method_name=""
         case "$m" in
-          1) method_name="SetThreadExecutionState API" ;;
-          2) method_name="Mouse cursor movement" ;;
-          3) method_name="WScript.Shell SendKeys" ;;
+          1) method_name="API + Mouse jiggle (best for Teams)" ;;
+          2) method_name="Mouse movement only" ;;
+          3) method_name="SendKeys F15" ;;
         esac
 
         printf "Method %d (%s): " "$m" "$method_name"
@@ -824,8 +834,10 @@ keep_awake() {
     *)
       echo "Usage: keep_awake [start|stop|status|test]"
       echo ""
+      echo "Prevents Windows screen lock and Microsoft Teams auto-away status."
+      echo ""
       echo "Commands:"
-      echo "  start   Start keep-awake (prevents sleep and screensaver)"
+      echo "  start   Start keep-awake (prevents sleep, screensaver, and Teams away)"
       echo "  stop    Stop keep-awake"
       echo "  status  Show current status"
       echo "  test    Test all methods and show which ones work"
