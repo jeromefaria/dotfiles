@@ -54,7 +54,7 @@ function flac2alac() {
 # Update music production plugin managers
 # Usage: update-music-plugins [--native] [--izotope] [--output] etc.
 function update-music-plugins() {
-  local script="$HOME/dotfiles/scripts/update-music-plugins.sh"
+  local script="${DOTFILES:-$HOME/dotfiles}/scripts/update-music-plugins.sh"
 
   if [[ ! -f "$script" ]]; then
     echo "Error: update-music-plugins.sh not found at $script"

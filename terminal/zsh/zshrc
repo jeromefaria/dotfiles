@@ -80,7 +80,7 @@ fi
 # ============================================================================
 # Cross-Platform Folders
 # ============================================================================
-export DOTFILES="$HOME/dotfiles"
+export DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 export DOWNLOADS="$HOME/Downloads"
 export WORK="$HOME/Work"
 

@@ -17,7 +17,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-DOTFILES_DIR="$HOME/dotfiles"
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 
 # Print colored output
 print_info() {
