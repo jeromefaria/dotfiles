@@ -14,26 +14,36 @@ The `bashrc.portable` configuration provides:
 
 ### Quick Setup (Git Bash on Windows)
 
-```bash
-# Clone your dotfiles (if not already done)
-git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+**Recommended: Use the automated setup script**
 
-# Source the portable config from your .bashrc
-echo '[ -f ~/dotfiles/shell/bashrc.portable ] && source ~/dotfiles/shell/bashrc.portable' >> ~/.bashrc
+```bash
+# Clone your dotfiles (to any location)
+git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/usr/src/dotfiles
+cd ~/usr/src/dotfiles
+
+# Run the Windows portable setup (handles everything)
+./scripts/setup-portable-windows.sh
+```
+
+See [Windows Setup Guide](../../docs/WINDOWS-SETUP.md) for detailed instructions.
+
+### Manual Setup (Advanced)
+
+If you prefer manual configuration:
+
+```bash
+# Option 1: Source from your .bashrc
+echo '[ -f ~/dotfiles/terminal/bash/bashrc.portable ] && source ~/dotfiles/terminal/bash/bashrc.portable' >> ~/.bashrc
+
+# Option 2: Symlink (if supported on your system)
+mv ~/.bashrc ~/.bashrc.backup
+ln -s ~/dotfiles/terminal/bash/bashrc.portable ~/.bashrc
 
 # Reload
 source ~/.bashrc
 ```
 
-### Alternative: Direct Symlink
-
-```bash
-# Backup existing .bashrc
-mv ~/.bashrc ~/.bashrc.backup
-
-# Symlink portable config
-ln -s ~/dotfiles/shell/bashrc.portable ~/.bashrc
-```
+**Note:** On Windows without admin rights, symlinks may not work. Use Option 1 or the automated setup script instead.
 
 ## Features
 
@@ -461,7 +471,9 @@ which npm
 
 Ensure the file is sourced correctly:
 ```bash
-source ~/dotfiles/shell/bashrc.portable
+source ~/dotfiles/terminal/bash/bashrc.portable
+# Or if installed elsewhere:
+source ~/usr/src/dotfiles/terminal/bash/bashrc.portable
 ```
 
 ### Colors not showing

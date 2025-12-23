@@ -13,6 +13,11 @@ This directory contains utility scripts for managing your dotfiles installation.
 - **`uninstall.sh`** - Removes dotfiles symlinks
 - **`config.sh`** - Shared configuration and utilities (sourced by other scripts)
 
+### Portable/Windows Scripts
+
+- **`sync-portable-configs.sh`** - Syncs portable configs for systems without symlink support
+- **`setup-portable-windows.sh`** - One-command Windows/Git Bash setup with portable configs
+
 ### Utility Scripts
 
 - **`update-music-plugins.sh`** - Updates music plugin managers (Logic Pro, Ableton, etc.)
@@ -188,7 +193,12 @@ This means:
 
 - **macOS**: Full support (primary platform)
 - **Linux**: Partial support (some features may require adaptation)
-- **Windows (Git Bash)**: Basic support via `bootstrap/gitbash-setup.sh`
+- **Windows (Git Bash)**: Full portable support via:
+  - `scripts/setup-portable-windows.sh` - Complete setup for systems without symlink support
+  - `scripts/sync-portable-configs.sh` - Manual config synchronization
+  - `bootstrap/gitbash-setup.sh` - Quick bootstrap for first-time setup
+
+See [Windows Setup Guide](../docs/WINDOWS-SETUP.md) for detailed instructions.
 
 ## Testing
 

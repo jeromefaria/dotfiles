@@ -2,6 +2,10 @@
 
 This guide is for setting up dotfiles on Windows systems where you don't have admin rights and can't create symlinks.
 
+> **📖 Related Guides:**
+> - **Need symlink support?** See [Git Bash Setup Guide](GIT-BASH-SETUP.md) for quick bootstrap with symlinks
+> - **This guide** is for systems **without symlink support** (uses hard copies instead)
+
 ## Quick Start
 
 If you've already cloned the dotfiles repository to a custom location (e.g., `~/usr/src/dotfiles`):

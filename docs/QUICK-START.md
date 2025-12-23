@@ -6,11 +6,18 @@ Get your dotfiles up and running in 5 minutes.
 
 Before you begin, ensure you have:
 
+**For macOS:**
 - **macOS 11+** (Big Sur or later)
 - **Terminal access** (Terminal.app, iTerm2, or similar)
 - **Internet connection** (for downloading dependencies)
 
 Xcode Command Line Tools will be installed automatically if needed.
+
+**For Windows:**
+- **Git Bash** installed
+- **Internet connection** (for downloading dependencies)
+
+See [Windows Setup Guide](WINDOWS-SETUP.md) for Windows-specific instructions.
 
 ## Installation
 
@@ -43,6 +50,21 @@ cd ~/dotfiles
 # 2. Run installation
 ./scripts/install.sh
 ```
+
+### Option 3: Custom Directory Installation
+
+Install to a custom location (fully location-independent):
+
+```bash
+# 1. Clone to your preferred location
+git clone https://github.com/jeromefaria/dotfiles.git ~/my-custom-location
+cd ~/my-custom-location
+
+# 2. Set DOTFILES_DIR environment variable and run installation
+DOTFILES_DIR=~/my-custom-location ./scripts/install.sh
+```
+
+The scripts will automatically detect and use the custom location.
 
 ## Verify Installation
 
