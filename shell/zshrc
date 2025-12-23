@@ -85,7 +85,7 @@ ZSH_THEME=""
 # ============================================================================
 # Set escape binding (Escape key is always available by default)
 # Uncomment if you want jk as an additional escape sequence:
-# export ZVM_VI_ESCAPE_BINDKEY=jk
+export ZVM_VI_ESCAPE_BINDKEY=jk
 
 # ZSH plugins
 # Order matters: zsh-vi-mode MUST be last
