@@ -602,21 +602,21 @@ _keep_awake_get_command() {
 
   case "$method" in
     1)
-      # Method 1: SetThreadExecutionState (Display + System required)
-      # This is the proper Windows API way to prevent sleep and screen lock
-      echo "powershell.exe -NoProfile -Command \"Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices; public class SleepUtil { [DllImport(\\\"kernel32.dll\\\")] public static extern uint SetThreadExecutionState(uint esFlags); }'; [void][SleepUtil]::SetThreadExecutionState(0x80000003)\""
+      # Method 1: Mouse cursor movement + SendKeys combination
+      # Most reliable method - simulates user activity
+      echo "powershell.exe -NoProfile -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null; \\\$p = [System.Windows.Forms.Cursor]::Position; \\\$p.X += 1; [System.Windows.Forms.Cursor]::Position = \\\$p; Start-Sleep -Milliseconds 100; \\\$p.X -= 1; [System.Windows.Forms.Cursor]::Position = \\\$p\""
       ;;
     2)
-      # Method 2: Mouse cursor movement (fallback)
-      echo "powershell.exe -NoProfile -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null; \\\$p = [System.Windows.Forms.Cursor]::Position; \\\$p.X += 1; [System.Windows.Forms.Cursor]::Position = \\\$p; \\\$p.X -= 1; [System.Windows.Forms.Cursor]::Position = \\\$p\""
-      ;;
-    3)
-      # Method 3: WScript.Shell with Scroll Lock (fallback)
+      # Method 2: WScript.Shell with Scroll Lock
       echo "powershell.exe -NoProfile -Command \"\\\$ws = New-Object -ComObject WScript.Shell; \\\$ws.SendKeys('{SCROLLLOCK}{SCROLLLOCK}')\""
       ;;
-    4)
-      # Method 4: WScript.Shell with F15 (fallback)
+    3)
+      # Method 3: WScript.Shell with F15 (non-intrusive key)
       echo "powershell.exe -NoProfile -Command \"\\\$ws = New-Object -ComObject WScript.Shell; \\\$ws.SendKeys('{F15}')\""
+      ;;
+    4)
+      # Method 4: WScript.Shell with Shift key press
+      echo "powershell.exe -NoProfile -Command \"\\\$ws = New-Object -ComObject WScript.Shell; \\\$ws.SendKeys('+')\""
       ;;
     *)
       return 1
@@ -697,7 +697,7 @@ keep_awake() {
             # Method failed, exit and let user restart with re-detection
             exit 1
           }
-          sleep 300  # 5 minutes
+          sleep 60  # 1 minute - frequent enough to prevent screen lock
         done
       ) &>/dev/null &
 
@@ -758,10 +758,10 @@ keep_awake() {
       for m in 1 2 3 4; do
         local method_name=""
         case "$m" in
-          1) method_name="SetThreadExecutionState API" ;;
-          2) method_name="Mouse cursor movement" ;;
-          3) method_name="WScript.Shell (Scroll Lock)" ;;
-          4) method_name="WScript.Shell (F15)" ;;
+          1) method_name="Mouse cursor movement" ;;
+          2) method_name="WScript.Shell (Scroll Lock)" ;;
+          3) method_name="WScript.Shell (F15)" ;;
+          4) method_name="WScript.Shell (Shift)" ;;
         esac
 
         printf "Method %d (%s): " "$m" "$method_name"
