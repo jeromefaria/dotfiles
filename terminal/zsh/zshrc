@@ -24,14 +24,22 @@ esac
 export DOTFILES_PLATFORM
 
 # ============================================================================
-# Homebrew (must be early for PATH setup)
+# Homebrew (manual PATH setup instead of shellenv for speed)
 # ============================================================================
 if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
-  if [[ -f "/opt/homebrew/bin/brew" ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  elif [[ -f "/usr/local/bin/brew" ]]; then
-    eval "$(/usr/local/bin/brew shellenv)"
+  if [[ -d "/opt/homebrew/bin" ]]; then
+    export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+    export HOMEBREW_PREFIX="/opt/homebrew"
+    export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+    export HOMEBREW_REPOSITORY="/opt/homebrew"
+  elif [[ -d "/usr/local/bin" ]]; then
+    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+    export HOMEBREW_PREFIX="/usr/local"
+    export HOMEBREW_CELLAR="/usr/local/Cellar"
+    export HOMEBREW_REPOSITORY="/usr/local"
   fi
+  export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
+  export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
 fi
 
 # ============================================================================
@@ -195,6 +203,8 @@ _zoxide_lazy() { :; }
 _zoxide_lazy_i() { :; }
 _thefuck_lazy() { :; }
 _rbenv_lazy() { :; }
+_fnm_lazy() { :; }
+_starship_precmd() { :; }
 
 # rbenv (lazy-loaded for faster shell startup)
 if command -v rbenv &>/dev/null; then
@@ -208,9 +218,15 @@ if command -v rbenv &>/dev/null; then
   irb()   { _rbenv_lazy; irb "$@"; }
 fi
 
-# Initialise Starship (cross-platform)
+# Starship (lazy-loaded via precmd hook for faster startup)
 if command -v starship &>/dev/null; then
-  eval "$(starship init zsh)"
+  _starship_precmd() {
+    # Remove this hook after first execution
+    precmd_functions=("${(@)precmd_functions:#_starship_precmd}")
+    # Now initialize starship
+    eval "$(starship init zsh)"
+  }
+  precmd_functions+=(_starship_precmd)
 fi
 
 # Broot launcher (cross-platform fallback)
@@ -247,9 +263,17 @@ if [[ -d "$HOME/.config/beets" ]]; then
   export BEETSDIR="$HOME/.config/beets/"
 fi
 
-# fnm fast node manager (cross-platform)
+# fnm (lazy-loaded for faster shell startup)
 if command -v fnm &>/dev/null; then
-  eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
+  _fnm_lazy() {
+    unset -f _fnm_lazy node npm npx fnm
+    eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
+    "$0" "$@"
+  }
+  node() { _fnm_lazy; }
+  npm() { _fnm_lazy; }
+  npx() { _fnm_lazy; }
+  fnm() { _fnm_lazy; }
 fi
 
 # zoxide (lazy-loaded for faster shell startup)
@@ -307,43 +331,6 @@ setopt SHARE_HISTORY
 
 # Execute commands using history (e.g.: using !$) immediatel:
 unsetopt HIST_VERIFY
-
-# ============================================================================
-# Final Plugin Initialization
-# ============================================================================
-# Re-initialize autopair after zvm to restore bracket auto-closing
-# Wrapper to ensure bindings work in vi insert mode
-autopair_init_viins() {
-  # Initialize autopair widgets
-  autopair-init
-
-  # Re-bind to viins keymap explicitly (zvm uses viins, not main)
-  local p
-  for p in ${(@k)AUTOPAIR_PAIRS}; do
-    bindkey -M viins "$p" autopair-insert
-    local rchar="$(_ap-get-pair $p)"
-    if [[ $p != $rchar ]]; then
-      bindkey -M viins "$rchar" autopair-close
-    fi
-  done
-
-  # Delete bindings for viins
-  bindkey -M viins "^?" autopair-delete
-  bindkey -M viins "^h" autopair-delete
-  bindkey -M viins "^w" autopair-delete-word
-}
-
-# Call wrapper if autopair is available
-if (( $+functions[autopair-init] )); then
-  autopair_init_viins
-fi
-
-# Re-apply FZF key bindings after zvm initialization
-# This ensures Ctrl+R triggers fzf history search
-if [ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]; then
-  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
-fi
-
 # ============================================================================
 # Machine-Specific Overrides
 # ============================================================================
