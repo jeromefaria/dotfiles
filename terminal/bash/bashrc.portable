@@ -597,26 +597,58 @@ qg() {
 # ============================================================================
 
 # Helper function to get the command for a specific method
-_keep_awake_get_command() {
+_keep_awake_get_script() {
   local method="$1"
 
   case "$method" in
     1)
-      # Method 1: Mouse cursor movement + SendKeys combination
-      # Most reliable method - simulates user activity
-      echo "powershell.exe -NoProfile -Command \"[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') | Out-Null; \\\$p = [System.Windows.Forms.Cursor]::Position; \\\$p.X += 1; [System.Windows.Forms.Cursor]::Position = \\\$p; Start-Sleep -Milliseconds 100; \\\$p.X -= 1; [System.Windows.Forms.Cursor]::Position = \\\$p\""
+      # Method 1: Persistent PowerShell with SetThreadExecutionState
+      cat <<'PSEOF'
+Add-Type -TypeDefinition @'
+using System;
+using System.Runtime.InteropServices;
+public class SleepUtil {
+    [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern uint SetThreadExecutionState(uint esFlags);
+}
+'@
+$ES_CONTINUOUS = [uint32]"0x80000000"
+$ES_SYSTEM_REQUIRED = [uint32]"0x00000001"
+$ES_DISPLAY_REQUIRED = [uint32]"0x00000002"
+$ES_AWAYMODE_REQUIRED = [uint32]"0x00000040"
+Write-Host "Keep-awake active (Method 1: SetThreadExecutionState)"
+while ($true) {
+    [void][SleepUtil]::SetThreadExecutionState($ES_CONTINUOUS -bor $ES_SYSTEM_REQUIRED -bor $ES_DISPLAY_REQUIRED)
+    Start-Sleep -Seconds 30
+}
+PSEOF
       ;;
     2)
-      # Method 2: WScript.Shell with Scroll Lock
-      echo "powershell.exe -NoProfile -Command \"\\\$ws = New-Object -ComObject WScript.Shell; \\\$ws.SendKeys('{SCROLLLOCK}{SCROLLLOCK}')\""
+      # Method 2: Persistent PowerShell with mouse jiggle
+      cat <<'PSEOF'
+Add-Type -AssemblyName System.Windows.Forms
+Write-Host "Keep-awake active (Method 2: Mouse movement)"
+while ($true) {
+    $pos = [System.Windows.Forms.Cursor]::Position
+    $pos.X += 1
+    [System.Windows.Forms.Cursor]::Position = $pos
+    Start-Sleep -Milliseconds 100
+    $pos.X -= 1
+    [System.Windows.Forms.Cursor]::Position = $pos
+    Start-Sleep -Seconds 30
+}
+PSEOF
       ;;
     3)
-      # Method 3: WScript.Shell with F15 (non-intrusive key)
-      echo "powershell.exe -NoProfile -Command \"\\\$ws = New-Object -ComObject WScript.Shell; \\\$ws.SendKeys('{F15}')\""
-      ;;
-    4)
-      # Method 4: WScript.Shell with Shift key press
-      echo "powershell.exe -NoProfile -Command \"\\\$ws = New-Object -ComObject WScript.Shell; \\\$ws.SendKeys('+')\""
+      # Method 3: Persistent PowerShell with SendKeys
+      cat <<'PSEOF'
+$wsh = New-Object -ComObject WScript.Shell
+Write-Host "Keep-awake active (Method 3: SendKeys)"
+while ($true) {
+    $wsh.SendKeys('{F15}')
+    Start-Sleep -Seconds 30
+}
+PSEOF
       ;;
     *)
       return 1
@@ -627,13 +659,21 @@ _keep_awake_get_command() {
 # Helper function to test a method
 _keep_awake_test_method() {
   local method="$1"
-  local cmd="$(_keep_awake_get_command "$method")"
+  local script="$(_keep_awake_get_script "$method")"
 
-  if [[ -z "$cmd" ]]; then
+  if [[ -z "$script" ]]; then
     return 1
   fi
 
-  eval "$cmd" &>/dev/null
+  # Test by running the script for 2 seconds
+  local test_file="/tmp/keep_awake_test_$$.ps1"
+  echo "$script" > "$test_file"
+  timeout 2 powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$test_file" &>/dev/null
+  local result=$?
+  rm -f "$test_file"
+
+  # Return success if timeout killed it (means it ran) or if it exited cleanly
+  [[ $result -eq 124 || $result -eq 0 ]]
   return $?
 }
 
@@ -672,7 +712,7 @@ keep_awake() {
       local method=$(cat "$method_file" 2>/dev/null)
       if [[ -z "$method" ]]; then
         echo "Detecting working method..."
-        for m in 1 2 3 4; do
+        for m in 1 2 3; do
           if _keep_awake_test_method "$m"; then
             method="$m"
             echo "$method" > "$method_file"
@@ -687,19 +727,15 @@ keep_awake() {
         fi
       fi
 
-      # Get command for the method
-      local cmd="$(_keep_awake_get_command "$method")"
+      # Get PowerShell script for the method
+      local script="$(_keep_awake_get_script "$method")"
+      local script_file="$HOME/.keep_awake.ps1"
 
-      # Launch background worker
-      (
-        while true; do
-          eval "$cmd" 2>/dev/null || {
-            # Method failed, exit and let user restart with re-detection
-            exit 1
-          }
-          sleep 60  # 1 minute - frequent enough to prevent screen lock
-        done
-      ) &>/dev/null &
+      # Write script to file
+      echo "$script" > "$script_file"
+
+      # Launch persistent PowerShell process in background
+      powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$script_file" &>/dev/null &
 
       local worker_pid=$!
       echo "$worker_pid" > "$pid_file"
@@ -713,18 +749,20 @@ keep_awake() {
       fi
 
       local pid=$(cat "$pid_file" 2>/dev/null)
+      local script_file="$HOME/.keep_awake.ps1"
+
       if [[ -z "$pid" ]]; then
         echo "Error: Invalid PID file"
-        rm -f "$pid_file"
+        rm -f "$pid_file" "$script_file"
         return 1
       fi
 
       if ps -p "$pid" &>/dev/null; then
         kill "$pid" 2>/dev/null
-        rm -f "$pid_file"
+        rm -f "$pid_file" "$script_file"
         echo "Keep-awake stopped"
       else
-        rm -f "$pid_file"
+        rm -f "$pid_file" "$script_file"
         echo "Keep-awake was not running (cleaned up stale PID file)"
       fi
       ;;
@@ -755,13 +793,12 @@ keep_awake() {
       echo "Testing keep-awake methods..."
       local found_working=0
 
-      for m in 1 2 3 4; do
+      for m in 1 2 3; do
         local method_name=""
         case "$m" in
-          1) method_name="Mouse cursor movement" ;;
-          2) method_name="WScript.Shell (Scroll Lock)" ;;
-          3) method_name="WScript.Shell (F15)" ;;
-          4) method_name="WScript.Shell (Shift)" ;;
+          1) method_name="SetThreadExecutionState API" ;;
+          2) method_name="Mouse cursor movement" ;;
+          3) method_name="WScript.Shell SendKeys" ;;
         esac
 
         printf "Method %d (%s): " "$m" "$method_name"
