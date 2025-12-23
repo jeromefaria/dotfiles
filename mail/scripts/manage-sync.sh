@@ -83,7 +83,7 @@ case "$1" in
 
   now)
     echo -e "${BLUE}Running sync manually...${NC}"
-    "$HOME/dotfiles/mail/scripts/sync-mail.sh"
+    "${DOTFILES:-$HOME/dotfiles}/mail/scripts/sync-mail.sh"
     ;;
 
   *)

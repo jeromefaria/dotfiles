@@ -16,7 +16,7 @@ set message_cachedir = ~/.cache/mutt/gmail/bodies
 set smtp_url = "smtps://jerome.faria@gmail.com@smtp.gmail.com:465/"
 set smtp_authenticators = "login"
 # Use keychain for SMTP password (same as IMAP)
-set smtp_pass = "`$HOME/dotfiles/mail/scripts/get-gmail-pass.sh`"
+set smtp_pass = "`${DOTFILES:-$HOME/dotfiles}/mail/scripts/get-gmail-pass.sh`"
 
 set mbox_type = Maildir
 set ssl_starttls = yes
