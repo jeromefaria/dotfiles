@@ -48,8 +48,7 @@ DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/jeromefaria/dotfiles.git}"
 
 if [[ -d "$DOTFILES_DIR/.git" ]]; then
   echo "Updating existing dotfiles at $DOTFILES_DIR..."
-  cd "$DOTFILES_DIR" && git pull
-  if [[ $? -ne 0 ]]; then
+  if ! (cd "$DOTFILES_DIR" && git pull); then
     echo "⚠  Warning: git pull failed, continuing with existing files"
   fi
 else

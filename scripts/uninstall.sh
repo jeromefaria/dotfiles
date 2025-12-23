@@ -48,7 +48,8 @@ remove_symlink() {
   local expected_target=$2
 
   if [ -L "$link" ]; then
-    local current_target=$(readlink "$link")
+    local current_target
+    current_target=$(readlink "$link")
     # Check if symlink points to our dotfiles
     if [[ "$current_target" == *"$DOTFILES_DIR"* ]] || [[ "$current_target" == "$expected_target" ]]; then
       rm "$link"

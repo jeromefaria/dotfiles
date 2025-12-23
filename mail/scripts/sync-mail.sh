@@ -17,7 +17,7 @@ if mbsync -q gmail 2>&1; then
 
   # Index new mail with notmuch
   echo -e "${YELLOW}Indexing new mail...${NC}"
-  cd ~/.local/share/mail/gmail
+  cd ~/.local/share/mail/gmail || exit
   new_count=$(notmuch new 2>&1 | grep -o '[0-9]\+ new' | grep -o '[0-9]\+')
 
   if [ -n "$new_count" ] && [ "$new_count" -gt 0 ]; then

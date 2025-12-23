@@ -163,9 +163,12 @@ check_app_exists() {
 get_available_managers() {
     local available=()
     for entry in "${PLUGIN_MANAGERS[@]}"; do
-        local key=$(get_key_from_entry "$entry")
-        local app=$(get_app_from_entry "$entry")
-        local custom_path=$(get_custom_path_from_entry "$entry")
+        local key
+        key=$(get_key_from_entry "$entry")
+        local app
+        app=$(get_app_from_entry "$entry")
+        local custom_path
+        custom_path=$(get_custom_path_from_entry "$entry")
         if check_app_exists "$app" "$custom_path"; then
             available+=("$key")
         fi
@@ -183,9 +186,12 @@ list_managers() {
     local missing_count=0
 
     for entry in "${PLUGIN_MANAGERS[@]}"; do
-        local key=$(get_key_from_entry "$entry")
-        local app_name=$(get_app_from_entry "$entry")
-        local custom_path=$(get_custom_path_from_entry "$entry")
+        local key
+        key=$(get_key_from_entry "$entry")
+        local app_name
+        app_name=$(get_app_from_entry "$entry")
+        local custom_path
+        custom_path=$(get_custom_path_from_entry "$entry")
         if check_app_exists "$app_name" "$custom_path"; then
             print_success "$app_name (${key})"
             ((available_count++))
@@ -203,7 +209,8 @@ list_managers() {
 # Open a plugin manager and wait for it to close
 open_plugin_manager() {
     local key="$1"
-    local app_name=$(get_app_name "$key")
+    local app_name
+    app_name=$(get_app_name "$key")
 
     if [ -z "$app_name" ]; then
         print_error "Unknown plugin manager: $key"
@@ -211,7 +218,8 @@ open_plugin_manager() {
     fi
 
     # Get custom path or use default
-    local custom_path=$(get_custom_path "$key")
+    local custom_path
+    custom_path=$(get_custom_path "$key")
     local app_path="${custom_path:-/Applications/$app_name}"
 
     if ! check_app_exists "$app_name" "$custom_path"; then
@@ -261,12 +269,13 @@ run_updates() {
     for manager in "${managers[@]}"; do
         ((current++))
 
-        local app_name=$(get_app_name "$manager")
+        local app_name
+        app_name=$(get_app_name "$manager")
         echo ""
         print_info "[$current/$total] Processing: $app_name"
 
         # Ask for confirmation
-        read -p "$(echo -e ${CYAN}?${NC}) Open $app_name? [Y/n/q] " -n 1 -r
+        read -p "$(echo -e "${CYAN}?${NC}") Open $app_name? [Y/n/q] " -n 1 -r
         echo ""
 
         if [[ $REPLY =~ ^[Qq]$ ]]; then
@@ -293,7 +302,7 @@ run_updates() {
     echo "  Skipped:           $skipped"
     echo ""
 
-    if [ $success -eq $total ]; then
+    if [ "$success" -eq "$total" ]; then
         print_success "All plugin managers processed successfully!"
     else
         print_info "Plugin manager updates completed"
