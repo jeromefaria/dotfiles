@@ -49,7 +49,8 @@ check_symlink() {
     local description=$3
 
     if [ -L "$target" ]; then
-        local actual_source=$(readlink "$target")
+        local actual_source
+        actual_source=$(readlink "$target")
         if [ "$actual_source" = "$expected_source" ]; then
             print_success "$description"
             return 0
