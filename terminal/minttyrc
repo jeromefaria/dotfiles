@@ -1,0 +1,109 @@
+# ============================================================================
+# MinTTY Configuration for Git Bash (Windows)
+# Theme: OceanicNext
+# ============================================================================
+#
+# Installation:
+#   1. Copy or symlink this file to your home directory:
+#      cp ~/dotfiles/terminal/minttyrc ~/.minttyrc
+#      OR
+#      ln -s ~/dotfiles/terminal/minttyrc ~/.minttyrc
+#
+#   2. Restart Git Bash for changes to take effect
+#
+# Note: On Windows, the home directory is typically:
+#   C:\Users\YourUsername\.minttyrc
+# ============================================================================
+
+# Font Configuration
+Font=Consolas
+FontHeight=11
+FontSmoothing=default
+
+# Window Configuration
+Columns=120
+Rows=30
+Scrollbar=none
+ScrollbackLines=10000
+
+# Cursor
+CursorType=block
+CursorBlinks=yes
+CursorColour=216,222,233
+
+# ============================================================================
+# OceanicNext Color Scheme
+# ============================================================================
+# Based on the OceanicNext theme used in tmux and vim configs
+# Palette: https://github.com/voronianski/oceanic-next-color-scheme
+# ============================================================================
+
+# Background and Foreground
+ForegroundColour=216,222,233
+BackgroundColour=27,43,52
+
+# Black (Normal and Bright)
+Black=27,43,52
+BoldBlack=52,61,70
+
+# Red (Normal and Bright)
+Red=236,95,103
+BoldRed=255,130,138
+
+# Green (Normal and Bright)
+Green=153,199,148
+BoldGreen=185,215,172
+
+# Yellow (Normal and Bright)
+Yellow=250,200,99
+BoldYellow=255,215,135
+
+# Blue (Normal and Bright)
+Blue=102,153,204
+BoldBlue=145,184,216
+
+# Magenta (Normal and Bright)
+Magenta=198,120,221
+BoldMagenta=213,160,233
+
+# Cyan (Normal and Bright)
+Cyan=95,179,179
+BoldCyan=134,196,196
+
+# White (Normal and Bright)
+White=167,173,186
+BoldWhite=216,222,233
+
+# ============================================================================
+# Additional Settings
+# ============================================================================
+
+# Terminal Type
+Term=xterm-256color
+
+# Locale
+Locale=en_US
+Charset=UTF-8
+
+# Transparency (optional - 255 = opaque, 0 = fully transparent)
+# Uncomment to enable transparency:
+# Transparency=off
+# OpaqueWhenFocused=yes
+
+# Bell
+BellType=0
+BellTaskbar=no
+
+# Copy/Paste behavior
+CopyOnSelect=yes
+PasteControls=no
+ClipShortcuts=yes
+
+# Window behavior
+ScrollMod=shift
+PgUpDnScroll=yes
+
+# Other options
+AllowBlinking=yes
+BoldAsFont=no
+BoldAsColour=yes
