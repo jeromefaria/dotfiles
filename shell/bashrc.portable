@@ -98,6 +98,17 @@ shopt -s nocaseglob
 shopt -s cdspell
 
 # ============================================================================
+# Vi Mode Configuration
+# ============================================================================
+
+# Enable vi mode for command line editing
+set -o vi
+
+# Bind 'jk' to exit insert mode (alternative to Esc)
+# This makes it faster to switch to normal mode
+bind -m vi-insert '"jk": vi-movement-mode'
+
+# ============================================================================
 # Prompt Configuration
 # ============================================================================
 
