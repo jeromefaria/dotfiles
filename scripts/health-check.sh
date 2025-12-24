@@ -70,7 +70,7 @@ check_symlink() {
 check_command() {
     local cmd=$1
     local description=$2
-    local optional=$3
+    local optional="${3:-}"
 
     if command -v "$cmd" &> /dev/null; then
         print_success "$description"
@@ -116,31 +116,54 @@ check_symlink "$HOME/.gitconfig" "$DOTFILES_DIR/git/gitconfig" "git configuratio
 
 # Check 3: XDG config symlinks
 print_header "3. XDG Configuration Symlinks"
-config_items=(
-    "nvim:config/nvim:Neovim"
-    "starship.toml:config/starship.toml:Starship prompt"
-    "aria2:config/aria2:aria2"
-    "bat:config/bat:bat"
-    "beets:config/beets:beets"
-    "gh:config/gh:GitHub CLI"
-    "mpv:config/mpv:mpv"
-    "neomutt:mail/mutt:neomutt"
-    "musikcube:config/musikcube:musikcube"
-    "ncmpcpp:config/ncmpcpp:ncmpcpp"
-    "neofetch:config/neofetch:neofetch"
-    "ranger:config/ranger:ranger"
-    "skhd:config/skhd:skhd"
-    "tmuxinator:terminal/tmux/tmuxinator:tmuxinator"
-    "yabai:config/yabai:yabai"
-    "yarn:config/yarn:yarn"
-)
 
-for item in "${config_items[@]}"; do
-    IFS=':' read -r target source description <<< "$item"
-    if [ -e "$DOTFILES_DIR/$source" ]; then
-        check_symlink "$HOME/.config/$target" "$DOTFILES_DIR/$source" "$description"
+# Check if ~/.config itself is a symlink (whole-directory strategy)
+if [ -L "$HOME/.config" ]; then
+    config_target=$(readlink "$HOME/.config")
+    if [ "$config_target" = "$DOTFILES_DIR/config" ]; then
+        print_success "Using whole-directory strategy: ~/.config → $DOTFILES_DIR/config"
+        print_info "All configs automatically linked through directory symlink"
+
+        # Verify key configs are accessible
+        test_configs=("nvim" "starship.toml" "bat" "gh")
+        for config in "${test_configs[@]}"; do
+            if [ -e "$HOME/.config/$config" ]; then
+                print_success "  $config accessible"
+            else
+                print_warning "  $config not found"
+            fi
+        done
+    else
+        print_error "~/.config is a symlink but points to: $config_target (expected: $DOTFILES_DIR/config)"
     fi
-done
+else
+    # Individual symlink strategy
+    config_items=(
+        "nvim:config/nvim:Neovim"
+        "starship.toml:config/starship.toml:Starship prompt"
+        "aria2:config/aria2:aria2"
+        "bat:config/bat:bat"
+        "beets:config/beets:beets"
+        "gh:config/gh:GitHub CLI"
+        "mpv:config/mpv:mpv"
+        "neomutt:mail/mutt:neomutt"
+        "musikcube:config/musikcube:musikcube"
+        "ncmpcpp:config/ncmpcpp:ncmpcpp"
+        "neofetch:config/neofetch:neofetch"
+        "ranger:config/ranger:ranger"
+        "skhd:config/skhd:skhd"
+        "tmuxinator:terminal/tmux/tmuxinator:tmuxinator"
+        "yabai:config/yabai:yabai"
+        "yarn:config/yarn:yarn"
+    )
+
+    for item in "${config_items[@]}"; do
+        IFS=':' read -r target source description <<< "$item"
+        if [ -e "$DOTFILES_DIR/$source" ]; then
+            check_symlink "$HOME/.config/$target" "$DOTFILES_DIR/$source" "$description"
+        fi
+    done
+fi
 
 # Check 3.5: Circular symlinks in config directory
 print_header "3.5. Circular Symlink Detection"
