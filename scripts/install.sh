@@ -209,6 +209,20 @@ create_symlink() {
   local target_name
   target_name=$(basename "$target")
 
+  # SAFETY: Prevent circular symlinks - source must not be a symlink itself
+  if [ -L "$source" ]; then
+    print_error "Circular symlink risk: source is already a symlink: $source"
+    print_error "Target would be: $target"
+    print_error "This would create: $target → $source → $(readlink "$source")"
+    return 1
+  fi
+
+  # SAFETY: Verify source exists (file or directory)
+  if [ ! -e "$source" ]; then
+    print_error "Source does not exist: $source"
+    return 1
+  fi
+
   # Check if symlink already points to correct location (idempotent)
   if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
     print_success "Already linked: $target_name"
