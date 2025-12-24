@@ -312,7 +312,7 @@ Enter copy mode to scroll and copy text:
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `F12 r` | Reload config | Source `~/dotfiles/terminal/tmux.conf` |
+| `F12 r` | Reload config | Source `~/.tmux.conf` |
 | `F12 ?` | Show keys | Display all keybindings |
 | `F12 :` | Command prompt | Enter Tmux command |
 
@@ -343,6 +343,17 @@ Enter copy mode to scroll and copy text:
 | `F12 Alt+3` | Layout: main-h | Main horizontal layout |
 | `F12 Alt+4` | Layout: main-v | Main vertical layout |
 | `F12 Alt+5` | Layout: tiled | Tiled layout |
+
+### Workflow Enhancement Keybindings
+
+| Key | Action | Description |
+|-----|--------|-------------|
+| `F12 Space` | Which-key menu | Show contextual keybinding hints |
+| `F12 f` | FZF menu | Fuzzy find sessions/windows/panes |
+| `F12 a` | Thumbs | Hint-based text selection |
+| `F12 e` | Extrakto | FZF-based text extraction |
+| `F12 g` | Switch session | Prompt for session name (sessionist) |
+| `F12 @` | Promote pane | Move pane to new session (sessionist) |
 
 ---
 
@@ -403,7 +414,7 @@ set -g @resurrect-capture-pane-contents 'on'
 
 ```tmux
 set -g @plugin 'tmux-plugins/tmux-continuum'
-set -g @continuum-restore 'on'
+set -g @continuum-restore 'off'
 set -g @continuum-save-interval '15'
 ```
 
@@ -411,11 +422,11 @@ set -g @continuum-save-interval '15'
 
 **Features:**
 - Auto-saves every 15 minutes
-- Auto-restores on Tmux start
-- No manual intervention needed
+- Manual restore available (auto-restore disabled to avoid conflicts with tmuxinator)
+- Works alongside tmuxinator for project-based sessions
 
 **Configuration:**
-- `@continuum-restore 'on'` - Automatically restore last saved session on start
+- `@continuum-restore 'off'` - Disabled to prevent conflicts with tmuxinator session layouts
 - `@continuum-save-interval '15'` - Save every 15 minutes (set to '0' to disable)
 
 ### tmux-urlview
@@ -462,6 +473,160 @@ set -g @open-S 'https://www.duckduckgo.com/'
 - `o` - Open selection (files with $EDITOR, URLs in browser)
 - `Ctrl+o` - Open selection with $PAGER
 - `S` - Search selection on DuckDuckGo
+
+### tmux-which-key
+
+```tmux
+set -g @plugin 'alexwforsythe/tmux-which-key'
+```
+
+**Contextual keybinding hints** - Shows available keybindings when you pause after pressing prefix.
+
+**Features:**
+- Automatic menu display after prefix key
+- Organized by category (Windows, Panes, Sessions, etc.)
+- Shows custom keybindings alongside defaults
+- Improves discoverability of tmux features
+
+**Usage:**
+- Press `F12` and wait briefly - menu appears automatically
+- Press `Space` for main menu
+- Navigate with arrow keys or vim keys
+
+### tmux-fzf
+
+```tmux
+set -g @plugin 'sainnhe/tmux-fzf'
+set -g @tmux-fzf-launch-key "f"
+```
+
+**FZF integration for tmux** - Fuzzy find sessions, windows, panes, and more.
+
+**Features:**
+- Session switcher
+- Window switcher
+- Pane switcher
+- Command menu
+- Keybinding browser
+
+**Usage:**
+- `F12 f` - Launch FZF menu
+- Type to filter, `Enter` to select
+- `Esc` to cancel
+
+### tmux-thumbs
+
+```tmux
+set -g @plugin 'fcsonline/tmux-thumbs'
+set -g @thumbs-key a
+```
+
+**Fast text selection with hints** - Vim-like hint mode for copying text.
+
+**Features:**
+- Shows hint labels over copyable text (paths, URLs, hashes, IPs)
+- Fast keyboard-driven selection
+- No need to enter copy mode first
+- Regex-based pattern matching
+
+**Usage:**
+- `F12 a` - Activate hint mode
+- Type hint letters to select
+- Automatically copies to clipboard
+
+**Requires:** `brew install tmux-thumbs`
+
+### extrakto
+
+```tmux
+set -g @plugin 'laktak/extrakto'
+set -g @extrakto_key e
+set -g @extrakto_grab_area "full"
+set -g @extrakto_fzf_tool "fzf"
+```
+
+**FZF-based text extraction** - Alternative to thumbs with FZF interface.
+
+**Features:**
+- Extracts paths, URLs, git hashes, IPs, etc.
+- FZF fuzzy filtering
+- Works on full pane content
+- Integrates with clipboard
+
+**Usage:**
+- `F12 e` - Launch extrakto
+- Type to filter matches
+- `Enter` to copy selection
+- `Tab` to insert into prompt
+
+**Comparison with thumbs:**
+- Thumbs: Faster, overlay hints directly on text
+- Extrakto: More flexible filtering with FZF
+
+### tmux-yank
+
+```tmux
+set -g @plugin 'tmux-plugins/tmux-yank'
+```
+
+**Enhanced clipboard integration** - Improved copying to system clipboard.
+
+**Features:**
+- Better clipboard support across different systems
+- Mouse selection auto-copies
+- Works with copy mode selections
+- Handles terminal vs GUI contexts
+
+**Usage:**
+- In copy mode: `y` yanks to clipboard
+- Mouse select: Automatically copies
+- Works seamlessly with macOS, Linux, WSL
+
+### tmux-prefix-highlight
+
+```tmux
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @prefix_highlight_show_copy_mode 'on'
+set -g @prefix_highlight_copy_mode_attr 'fg=#1B2B34,bg=#FAC863,bold'
+set -g @prefix_highlight_prefix_prompt 'PREFIX'
+set -g @prefix_highlight_copy_prompt 'COPY'
+```
+
+**Visual prefix indicator** - Shows when prefix key or copy mode is active.
+
+**Features:**
+- Status bar indicator when prefix pressed
+- Shows "COPY" when in copy mode
+- Customizable colors and text
+- Helps avoid confusion about current mode
+
+**Display:**
+- Shows "PREFIX" in status bar when `F12` is pressed
+- Shows "COPY" when in copy mode
+- Disappears after key sequence completes
+
+### tmux-sessionist
+
+```tmux
+set -g @plugin 'tmux-plugins/tmux-sessionist'
+```
+
+**Session management helpers** - Enhanced session switching and manipulation.
+
+**Features:**
+- Quick session switching
+- Create new sessions
+- Promote pane to new session
+- Kill sessions without detaching
+
+**Keybindings:**
+- `F12 g` - Prompt for session name and switch to it
+- `F12 C` (Shift+c) - Create new session
+- `F12 X` (Shift+x) - Kill current session without detaching
+- `F12 S` (Shift+s) - Switch to last session (Note: overridden by sync-panes binding)
+- `F12 @` - Promote current pane into new session
+
+**Note:** The `F12 S` binding is overridden by the sync-panes toggle in this configuration.
 
 ---
 
@@ -825,12 +990,12 @@ require('nvim-tmux-navigation').setup()
 
 ### Session Persistence
 
-**Automatic save/restore** via tmux-continuum:
+**Automatic saving** via tmux-continuum:
 
 ```bash
-# Session saves every 15 minutes
-# On reboot, last session auto-restores
-# Nothing to do manually!
+# Session saves every 15 minutes automatically
+# Auto-restore is disabled to avoid conflicts with tmuxinator
+# Use manual restore when needed
 ```
 
 **Manual save/restore:**
@@ -838,9 +1003,9 @@ require('nvim-tmux-navigation').setup()
 # Save current session
 F12 Ctrl+s
 
-# After reboot
+# After reboot or when needed
 tmux
-F12 Ctrl+r      # Restore
+F12 Ctrl+r      # Restore last saved session
 ```
 
 ### Copy Mode Tips
@@ -1094,6 +1259,9 @@ F12 z       Zoom pane
 F12 [       Copy mode
 F12 d       Detach
 F12 r       Reload config
+F12 Space   Which-key menu
+F12 f       FZF menu
+F12 a       Thumbs (text hints)
 ```
 
 ---
@@ -1103,7 +1271,7 @@ F12 r       Reload config
 ```
 QUICK REFERENCE (Prefix: F12)
 ─────────────────────────────────────────────────────────────────
-Sessions:  d=detach  s=pick  $=rename  Q=kill-server
+Sessions:  d=detach  s=pick  $=rename  Q=kill-server  g=switch
 Windows:   c=new  C=new(path)  n/p=next/prev  ,=rename  0-9=jump
 Panes:     |/-=split(path)  "/%=split  x=kill  z=zoom
 Navigate:  Ctrl+hjkl (no prefix, works in vim too)
@@ -1111,6 +1279,7 @@ Resize:    hjkl (with prefix)
 Layouts:   Alt+1-5  Space=cycle
 Copy:      [=enter  v=select  y=copy  Escape=cancel  Ctrl+v=rect
 Special:   S=sync  b=status  J=join  B=break  r=reload  Ctrl+k=clear
+Workflow:  Space=which-key  f=fzf  a=thumbs  e=extrakto  @=promote
 Plugins:   I=install  U=update
 Persist:   Ctrl+s=save  Ctrl+r=restore (auto-saves every 15min)
 ─────────────────────────────────────────────────────────────────
