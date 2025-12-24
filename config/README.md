@@ -1,6 +1,46 @@
 # Config Directory
 
-This directory contains XDG-compliant application configurations. These files are designed to be symlinked or copied to `~/.config/` for use by various applications.
+This directory contains XDG-compliant application configurations. These files are designed to be symlinked to `~/.config/` for use by various applications.
+
+## How It Works
+
+**Source of truth**: `~/dotfiles/config/*` (this directory)
+- Contains the **actual configuration files and directories**
+- Tracked in git for version control
+- Should contain **real files and directories, NOT symlinks**
+
+**Application configs**: `~/.config/*` (XDG standard location)
+- Contains **symlinks** pointing to `~/dotfiles/config/*`
+- Applications read from their expected XDG locations
+- Changes in either location reflect immediately
+
+### Example Structure
+
+```
+~/dotfiles/config/nvim/          # Real directory (source of truth)
+├── init.lua
+└── lua/
+
+~/.config/nvim → ~/dotfiles/config/nvim    # Symlink pointing to source
+```
+
+When Neovim runs, it reads `~/.config/nvim/` which is a symlink to `~/dotfiles/config/nvim/`.
+
+## ⚠️ Important: Avoiding Circular Symlinks
+
+**DO NOT** create symlinks within `~/dotfiles/config/` that point to themselves. This creates circular references and breaks the configuration.
+
+**WRONG** (Circular symlink):
+```bash
+~/dotfiles/config/nvim → /Users/username/dotfiles/config/nvim  # Points to itself!
+```
+
+**RIGHT** (Real directory):
+```bash
+~/dotfiles/config/nvim/  # Real directory containing files
+```
+
+The `install.sh` script now includes safety checks to prevent circular symlinks from being created.
 
 ## Structure
 
