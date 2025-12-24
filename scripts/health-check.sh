@@ -117,7 +117,7 @@ check_symlink "$HOME/.gitconfig" "$DOTFILES_DIR/git/gitconfig" "git configuratio
 # Check 3: XDG config symlinks
 print_header "3. XDG Configuration Symlinks"
 config_items=(
-    "nvim:editors/neovim:Neovim"
+    "nvim:config/nvim:Neovim"
     "starship.toml:config/starship.toml:Starship prompt"
     "aria2:config/aria2:aria2"
     "bat:config/bat:bat"
@@ -130,7 +130,7 @@ config_items=(
     "neofetch:config/neofetch:neofetch"
     "ranger:config/ranger:ranger"
     "skhd:config/skhd:skhd"
-    "tmuxinator:config/tmuxinator:tmuxinator"
+    "tmuxinator:terminal/tmux/tmuxinator:tmuxinator"
     "yabai:config/yabai:yabai"
     "yarn:config/yarn:yarn"
 )
@@ -141,6 +141,28 @@ for item in "${config_items[@]}"; do
         check_symlink "$HOME/.config/$target" "$DOTFILES_DIR/$source" "$description"
     fi
 done
+
+# Check 3.5: Circular symlinks in config directory
+print_header "3.5. Circular Symlink Detection"
+circular_found=false
+
+# Check config/ directory for circular symlinks
+for item in "$DOTFILES_DIR/config"/*; do
+    if [ -L "$item" ]; then
+        item_name=$(basename "$item")
+        target=$(readlink "$item")
+
+        # Check if symlink points to itself (circular)
+        if [ "$target" = "$item" ] || [ "$target" = "$(cd "$(dirname "$item")" && pwd -P)/$item_name" ]; then
+            print_error "Circular symlink: config/$item_name → $target"
+            circular_found=true
+        fi
+    fi
+done
+
+if [ "$circular_found" = false ]; then
+    print_success "No circular symlinks found in config/"
+fi
 
 # Check 4: Essential tools
 print_header "4. Essential Tools"
