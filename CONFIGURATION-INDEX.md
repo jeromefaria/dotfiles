@@ -170,24 +170,30 @@ Legacy Vim config for systems without Neovim.
 
 ### Tmux (`terminal/tmux/tmux.conf`)
 
-**Documentation:** ⚠️ Inline comments only - [Needs README]
+**Documentation:** ✅ Complete - [terminal/tmux/README.md](terminal/tmux/README.md)
 
 **Prefix:** `F12` (via PCKeyboardHack mapping Caps Lock → F12)
 
 **Key Features:**
 - Vi mode enabled
-- 16 splits max for performance
 - Mouse support
 - TPM (Tmux Plugin Manager)
 - Vim-Tmux navigation integration
+- **Now Playing** - Musikcube integration in status bar (`musikcube-now-playing.sh`)
+- OceanicNext theme with powerline symbols
 
 **Plugins:**
 - tmux-resurrect - Save/restore sessions
 - tmux-continuum - Auto-save sessions
 - tmux-urlview - Extract URLs
-- tmux-battery - Battery status
 - tmux-copycat - Search enhancement
 - tmux-open - Open files/URLs
+- tmux-prefix-highlight - Visual prefix indicator
+- tmux-fzf - FZF integration
+- tmux-thumbs - Fast text selection
+- extrakto - FZF-based text extraction
+- tmux-yank - Enhanced clipboard
+- tmux-sessionist - Session management
 - vim-tmux-navigator - Seamless Vim/Tmux navigation
 
 **Essential Bindings:**
