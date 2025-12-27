@@ -37,6 +37,7 @@ cask "elektron-transfer"
 brew "cmus"                    # Terminal music player
 brew "mpd"                     # Music Player Daemon
 brew "musikcube"               # Terminal music player
+brew "websocat"                # Websocket client (for musikcube API)
 brew "nicotine-plus"           # Soulseek client
 cask "spotify"
 cask "lastfm"

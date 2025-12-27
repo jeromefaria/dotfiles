@@ -27,6 +27,7 @@ This configuration combines **Tmux** (terminal multiplexer) with **Tmuxinator** 
 - [Installation](#installation)
 - [Tmux Configuration](#tmux-configuration)
   - [Status Bar Theme](#status-bar-theme-oceanicnext)
+- [Now Playing Integration](#now-playing-integration)
 - [Keybindings](#keybindings)
 - [Plugins](#plugins)
 - [Tmuxinator Sessions](#tmuxinator-sessions)
@@ -196,11 +197,11 @@ The status bar is styled to match the OceanicNext color scheme used in Vim/Neovi
 
 **Status Bar Layout:**
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│  SESSION   1 window1   2 window2*        2024-01-15  12:30   hostname │
-└─────────────────────────────────────────────────────────────────┘
-     ↑           ↑           ↑                  ↑          ↑        ↑
-   cyan     inactive    current(grey)        date       time     green
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  SESSION   1 window1   2 window2*    ♫ Artist - Title    2024-01-15  12:30   hostname │
+└──────────────────────────────────────────────────────────────────────────────┘
+     ↑           ↑           ↑                  ↑              ↑          ↑        ↑
+   cyan     inactive    current(grey)      now playing      date       time     green
 ```
 
 **Configuration:**
@@ -208,10 +209,89 @@ The status bar is styled to match the OceanicNext color scheme used in Vim/Neovi
 # Status bar styling (OceanicNext theme)
 set -g status-style 'bg=#1B2B34 fg=#D8DEE9'
 set -g status-left '#[fg=#1B2B34,bg=#6699CC,bold] #S #[fg=#6699CC,bg=#1B2B34]'
-set -g status-right '#[fg=#343D46]#[fg=#D8DEE9,bg=#343D46] %Y-%m-%d  %H:%M #[fg=#99C794]#[fg=#1B2B34,bg=#99C794,bold] #h '
+set -g status-right '#{prefix_highlight} #[fg=#D8DEE9,bg=#1B2B34]#(~/.tmux/musikcube-now-playing.sh) #[fg=#343D46,bg=#1B2B34]#[fg=#D8DEE9,bg=#343D46] %Y-%m-%d  %H:%M #[fg=#99C794,bg=#343D46]#[fg=#1B2B34,bg=#99C794,bold] #h '
 setw -g window-status-format '#[fg=#A7ADBA] #I #W '
 setw -g window-status-current-format '#[fg=#1B2B34,bg=#343D46]#[fg=#D8DEE9,bg=#343D46,bold] #I #W #[fg=#343D46,bg=#1B2B34]'
 ```
+
+**Now Playing Integration:**
+
+The status bar displays the currently playing track from musikcube:
+- Shows `♫ Artist - Title` when music is playing
+- Shows `⏸ Artist - Title` when paused
+- Hidden when stopped or musikcube isn't running
+- Truncates to 50 characters to prevent overflow
+
+**Requirements:**
+- [musikcube](https://musikcube.com/) installed and running
+- [websocat](https://github.com/vi/websocat) for websocket communication
+
+**Script:** `musikcube-now-playing.sh` queries the musikcube websocket API (port 7905) and returns formatted track information. Symlinked to `~/.tmux/musikcube-now-playing.sh`.
+
+---
+
+## Now Playing Integration
+
+Display currently playing music from musikcube in the tmux status bar.
+
+### Setup
+
+**Install websocat:**
+```bash
+brew install websocat
+```
+
+**Create symlink (done automatically via dotfiles install):**
+```bash
+ln -sf ~/dotfiles/terminal/tmux/musikcube-now-playing.sh ~/.tmux/musikcube-now-playing.sh
+```
+
+**Configuration is already in `tmux.conf`:**
+```tmux
+set -g status-right '#{prefix_highlight} #[fg=#D8DEE9,bg=#1B2B34]#(~/.tmux/musikcube-now-playing.sh) ...'
+```
+
+### How It Works
+
+The script:
+1. Checks if musikcube is running (port 7905)
+2. Connects to musikcube's websocket API
+3. Authenticates (empty password by default)
+4. Queries playback state via `get_playback_overview`
+5. Parses JSON response for artist, title, and playback state
+6. Returns formatted string: `♫ Artist - Title` or `⏸ Artist - Title`
+
+### Customization
+
+**Adjust max length** (default 50 chars) in `musikcube-now-playing.sh`:
+```bash
+if [ ${#OUTPUT} -gt 50 ]; then
+    OUTPUT="${OUTPUT:0:47}..."
+fi
+```
+
+**Change musikcube password** (if you've set one):
+```bash
+AUTH_MSG="{\"name\":\"authenticate\",...,\"options\":{\"password\":\"YOUR_PASSWORD\"}}"
+```
+
+**Adjust refresh rate** in `tmux.conf`:
+```tmux
+set -g status-interval 5  # Refresh every 5 seconds (default: 15)
+```
+
+### Troubleshooting
+
+**Nothing shows up:**
+- Check musikcube is running: `lsof -i :7905`
+- Test script manually: `~/.tmux/musikcube-now-playing.sh`
+- Verify websocat is installed: `which websocat`
+
+**Shows old song:**
+- Increase `status-interval` refresh rate
+- Musikcube may be paused/stopped
+
+---
 
 **Powerline Symbols:**
 The status bar uses powerline arrow characters (``, ``) for section separators. Ensure your terminal font includes powerline glyphs (e.g., Nerd Fonts, Powerline fonts).
