@@ -15,7 +15,6 @@ NC='\033[0m' # No Color
 PLUGIN_MANAGERS=(
     "native|Native Access.app"
     "arturia|Arturia Software Center.app|/Applications/Arturia/Arturia Software Center.app"
-    "splice|Splice INSTRUMENT.app"
     "izotope|iZotope Product Portal.app"
     "output|Output Hub.app"
     "softube|Softube Central.app"
@@ -114,7 +113,6 @@ OPTIONS:
     --all               Run all available plugin managers (default)
     --native            Run Native Access only
     --arturia           Run Arturia Software Center only
-    --splice            Run Splice INSTRUMENT only
     --izotope           Run iZotope Product Portal only
     --output            Run Output Hub only
     --softube           Run Softube Central only
@@ -325,7 +323,7 @@ else
                 IFS=' ' read -r -a SELECTED_MANAGERS <<< "$(get_available_managers)"
                 shift
                 ;;
-            --native|--arturia|--splice|--izotope|--output|--softube|--spitfire|--xln|--ua|--plugin-alliance|--ilok)
+            --native|--arturia|--izotope|--output|--softube|--spitfire|--xln|--ua|--plugin-alliance|--ilok)
                 key="${1#--}"
                 SELECTED_MANAGERS+=("$key")
                 shift
