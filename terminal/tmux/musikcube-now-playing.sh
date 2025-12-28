@@ -11,8 +11,8 @@
 #   - websocat for websocket communication
 #
 # Output:
-#   "♫ Artist - Title" when playing
-#   "⏸ Artist - Title" when paused
+#   "♫ Artist - Title [Album]" when playing
+#   "⏸ Artist - Title [Album]" when paused
 #   "" (empty) when stopped or not running
 #
 
@@ -58,10 +58,11 @@ if [ -n "$RESPONSE" ]; then
     if [ "$STATE" = "stopped" ] || [ -z "$STATE" ]; then
         echo ""
     else
-        # Try to extract title and artist from the JSON response
+        # Try to extract title, artist, and album from the JSON response
         # Using grep and sed for simple JSON parsing
         TITLE=$(echo "$RESPONSE" | grep -o '"title":"[^"]*"' | tail -1 | sed 's/"title":"\(.*\)"/\1/')
         ARTIST=$(echo "$RESPONSE" | grep -o '"album_artist":"[^"]*"' | tail -1 | sed 's/"album_artist":"\(.*\)"/\1/')
+        ALBUM=$(echo "$RESPONSE" | grep -o '"album":"[^"]*"' | tail -1 | sed 's/"album":"\(.*\)"/\1/')
 
         # Fallback to regular artist if album_artist is empty
         if [ -z "$ARTIST" ]; then
@@ -77,16 +78,28 @@ if [ -n "$RESPONSE" ]; then
             fi
 
             if [ -n "$ARTIST" ]; then
+                # Build output with album if available
+                if [ -n "$ALBUM" ]; then
+                    OUTPUT="${INDICATOR} ${ARTIST} - ${TITLE} [${ALBUM}]"
+                else
+                    OUTPUT="${INDICATOR} ${ARTIST} - ${TITLE}"
+                fi
+
                 # Limit length to prevent status bar overflow
-                OUTPUT="${INDICATOR} ${ARTIST} - ${TITLE}"
-                if [ ${#OUTPUT} -gt 50 ]; then
-                    OUTPUT="${OUTPUT:0:47}..."
+                if [ ${#OUTPUT} -gt 60 ]; then
+                    OUTPUT="${OUTPUT:0:57}..."
                 fi
                 echo "$OUTPUT"
             else
-                OUTPUT="${INDICATOR} ${TITLE}"
-                if [ ${#OUTPUT} -gt 50 ]; then
-                    OUTPUT="${OUTPUT:0:47}..."
+                # No artist, just show title and album if available
+                if [ -n "$ALBUM" ]; then
+                    OUTPUT="${INDICATOR} ${TITLE} [${ALBUM}]"
+                else
+                    OUTPUT="${INDICATOR} ${TITLE}"
+                fi
+
+                if [ ${#OUTPUT} -gt 60 ]; then
+                    OUTPUT="${OUTPUT:0:57}..."
                 fi
                 echo "$OUTPUT"
             fi
