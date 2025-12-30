@@ -66,7 +66,7 @@ overwrite_null:
   album: []
   track: []
 
-plugins: discogs lastgenre fetchart embedart albumtypes mbsync
+plugins: musicbrainz discogs lastgenre fetchart embedart albumtypes mbsync
 pluginpath: []
 threaded: yes
 timeout: 5.0
@@ -109,12 +109,16 @@ statefile: state.pickle
 
 musicbrainz:
   host: musicbrainz.org
-  https: no
+  https: yes
   ratelimit: 1
   ratelimit_interval: 1.0
   searchlimit: 5
   extra_tags: []
   genres: no
+  data_source_mismatch_penalty: 0.0
+
+discogs:
+  data_source_mismatch_penalty: 1.0
 
 match:
   strong_rec_thresh: 0.04
