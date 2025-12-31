@@ -269,10 +269,10 @@ if command -v fnm &>/dev/null; then
     unset -f _fnm_lazy node npm npx fnm
     eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive)"
   }
-  node() { _fnm_lazy; node "$@"; }
-  npm() { _fnm_lazy; npm "$@"; }
-  npx() { _fnm_lazy; npx "$@"; }
-  fnm() { _fnm_lazy; fnm "$@"; }
+  node() { _fnm_lazy; command node "$@"; }
+  npm() { _fnm_lazy; command npm "$@"; }
+  npx() { _fnm_lazy; command npx "$@"; }
+  fnm() { _fnm_lazy; command fnm "$@"; }
 fi
 
 # zoxide (lazy-loaded for faster shell startup)
