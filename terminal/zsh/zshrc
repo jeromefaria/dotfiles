@@ -210,12 +210,12 @@ _starship_precmd() { :; }
 if command -v rbenv &>/dev/null; then
   _rbenv_lazy() {
     unset -f _rbenv_lazy ruby rbenv gem irb
-    eval "$(rbenv init - zsh)"
+    eval "$(command rbenv init - zsh)"
   }
-  ruby()  { _rbenv_lazy; ruby "$@"; }
+  ruby()  { _rbenv_lazy; command ruby "$@"; }
   rbenv() { _rbenv_lazy; command rbenv "$@"; }
-  gem()   { _rbenv_lazy; gem "$@"; }
-  irb()   { _rbenv_lazy; irb "$@"; }
+  gem()   { _rbenv_lazy; command gem "$@"; }
+  irb()   { _rbenv_lazy; command irb "$@"; }
 fi
 
 # Starship (lazy-loaded via precmd hook for faster startup)
@@ -224,7 +224,7 @@ if command -v starship &>/dev/null; then
     # Remove this hook after first execution
     precmd_functions=("${(@)precmd_functions:#_starship_precmd}")
     # Now initialize starship
-    eval "$(starship init zsh)"
+    eval "$(command starship init zsh)"
   }
   precmd_functions+=(_starship_precmd)
 fi
@@ -244,7 +244,7 @@ fi
 if command -v thefuck &>/dev/null; then
   _thefuck_lazy() {
     unset -f fuck _thefuck_lazy
-    eval "$(thefuck --alias)"
+    eval "$(command thefuck --alias)"
     fuck "$@"
   }
   alias fuck='_thefuck_lazy'
