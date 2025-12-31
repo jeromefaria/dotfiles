@@ -109,9 +109,9 @@ statefile: state.pickle
 
 musicbrainz:
   host: musicbrainz.org
-  https: yes
+  https: no
   ratelimit: 1
-  ratelimit_interval: 1.0
+  ratelimit_interval: 2.0
   searchlimit: 5
   extra_tags: []
   genres: no
