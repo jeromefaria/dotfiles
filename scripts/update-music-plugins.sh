@@ -23,6 +23,9 @@ PLUGIN_MANAGERS=(
     "ua|UA Connect.app"
     "plugin-alliance|PA-InstallationManager.app"
     "ilok|iLok License Manager.app"
+    "vcv-rack|VCV Rack 2 Pro.app"
+    "grm-atelier|GRM Tools Atelier.app"
+    "soundthread|SoundThread.app"
 )
 
 # Function to print colored output
@@ -121,6 +124,9 @@ OPTIONS:
     --ua                Run UA Connect only
     --plugin-alliance   Run Plugin Alliance only
     --ilok              Run iLok License Manager only
+    --vcv-rack          Run VCV Rack 2 Pro only
+    --grm-atelier       Run GRM Tools Atelier only
+    --soundthread       Run Soundthread only
     --list              List all available plugin managers
     -h, --help          Show this help message
 
@@ -323,7 +329,7 @@ else
                 IFS=' ' read -r -a SELECTED_MANAGERS <<< "$(get_available_managers)"
                 shift
                 ;;
-            --native|--arturia|--izotope|--output|--softube|--spitfire|--xln|--ua|--plugin-alliance|--ilok)
+            --native|--arturia|--izotope|--output|--softube|--spitfire|--xln|--ua|--plugin-alliance|--ilok|--vcv-rack|--grm-atelier|--soundthread)
                 key="${1#--}"
                 SELECTED_MANAGERS+=("$key")
                 shift
