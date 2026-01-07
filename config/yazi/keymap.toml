@@ -137,6 +137,20 @@ keymap = [
 	{ on = [ "g", "/" ],       run = "cd /",                  desc = "Go to the root directory" },
 	{ on = [ "g", "<Space>" ], run = "cd --interactive",      desc = "Go to a directory interactively" },
 
+	# Custom volume shortcuts
+	{ on = [ "g", "a" ],       run = "cd /Volumes/Archive",   desc = "Go to Archive volume" },
+	{ on = [ "g", "A" ],       run = "cd /Volumes/Audio",     desc = "Go to Audio volume" },
+	{ on = [ "g", "M" ],       run = "cd /Volumes/Media",     desc = "Go to Media volume" },
+	{ on = [ "g", "V" ],       run = "cd /Volumes/Video",     desc = "Go to Video volume" },
+	{ on = [ "g", "C" ],       run = "cd /Volumes/Media/Cinema", desc = "Go to Cinema directory" },
+	{ on = [ "g", "r" ],       run = "cd /Volumes/Archive/Drive", desc = "Go to Drive directory" },
+	{ on = [ "g", "i" ],       run = "cd ~/Library/Mobile\\ Documents", desc = "Go to Mobile Documents" },
+	{ on = [ "g", "f" ],       run = "cd /Volumes/Media/Music/FLAC", desc = "Go to FLAC music directory" },
+	{ on = [ "g", "P" ],       run = "cd /Volumes/Audio/Audio/Projects", desc = "Go to audio projects directory" },
+	{ on = [ "g", "s" ],       run = "cd /Volumes/Archive/Drive/Shared", desc = "Go to Shared directory" },
+	{ on = [ "g", "T" ],       run = "cd /Volumes/Media/Television", desc = "Go to Television directory" },
+	{ on = [ "g", "w" ],       run = "cd ~/Work",             desc = "Go to Work directory" },
+
 	# Shell integration
 	{ on = [ "!" ],  run = 'shell "$SHELL" --block',          desc = "Open shell in current directory" },
 	{ on = [ "@" ],  run = 'shell "$SHELL" --block --confirm', desc = "Open shell (confirm before closing)" },
