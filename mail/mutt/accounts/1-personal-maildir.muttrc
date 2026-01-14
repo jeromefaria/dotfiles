@@ -22,13 +22,6 @@ set mbox_type = Maildir
 set ssl_starttls = yes
 set ssl_force_tls = yes
 
-# Unbind conflicting keys
-bind index,pager gg noop
-bind index,pager g noop
-bind index,pager M noop
-bind index,pager C noop
-bind index gg first-entry
-
 # Clear old mailboxes
 unmailboxes *
 

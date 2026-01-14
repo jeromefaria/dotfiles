@@ -2,7 +2,9 @@
 
 bind index,pager i noop
 bind index,pager g noop
-bind index,pager gg noop
+bind index,pager M noop
+bind index,pager C noop
+bind index,pager CS noop
 bind index \Cf noop
 
 # General rebindings

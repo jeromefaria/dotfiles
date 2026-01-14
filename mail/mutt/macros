@@ -5,16 +5,13 @@ macro browser h '<change-dir><kill-line>..<enter>' "Go to parent folder"
 macro index \Cr "T~U<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "mark all messages as read"
 macro index A "<limit>all\n" "show all messages (undo limit)"
 
-# Unbind 'g' prefix to avoid conflicts with Gmail navigation
-# (already done in bindings file, but also noop gm before defining it)
-bind index,pager gm noop
-
 # FZF mailbox switcher (like fzf-git-branch in ZSH)
+# Note: 'g' prefix already nooped in bindings file
 macro index,pager gm "<enter-command>source \$DOTFILES/mail/mutt/scripts/fzf-mailbox.sh|<enter>" "fuzzy mailbox switcher"
 
-macro index,pager i1 '<sync-mailbox><enter-command>source $DOTFILES/config/mutt/accounts/1-personal.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to jerome.faria@gmail.com"
+macro index,pager i1 '<sync-mailbox><enter-command>source $DOTFILES/mail/mutt/accounts/1-personal.muttrc<enter><change-folder>!<enter>;<check-stats>' "switch to jerome.faria@gmail.com"
 
-macro index <f1> '<enter-command>source $DOTFILES/config/mutt/muttrc<enter>' "Configuration reloaded!"
+macro index <f1> '<enter-command>source $DOTFILES/mail/mutt/muttrc<enter>' "Configuration reloaded!"
 macro index <f2> '<limit>~N<enter>'
 macro index <f3> '<limit>~F<enter>'
 macro index <f4> '<limit>(edp|epal|meo|vodafone|activobank|autoridade tributária e aduaneira|sandra peixeiro|castelogest)<enter>'
