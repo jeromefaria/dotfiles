@@ -27,6 +27,7 @@ windows:
       pre: cd ~
       panes:
         - musikcube
+        - nicotine
   - code:
       pre: cd ~/Work
       layout: e57b,213x52,0,0[213x40,0,0{106x40,0,0,6,106x40,107,0,13},213x11,0,41{106x11,0,41,10,106x11,107,41,11}]
