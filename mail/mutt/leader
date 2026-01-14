@@ -1,54 +1,61 @@
 # vim: filetype=neomuttrc
-# Space leader key pattern (inspired by Neovim space leader)
-# Note: Single <Space> in index still tags messages
-# Multi-key sequences starting with space provide leader-like functionality
+# Comma leader key pattern (matching Neovim classic mode with comma leader)
+# Note: Spacebar in index tags messages (standard mutt behavior)
 
-# Unbind space in pager and index to use as leader
-bind index <Space> noop
-bind pager <Space> noop
+# Keep spacebar for tagging in index (standard mutt behavior)
+bind index <Space> tag-entry
 
-# Space leader - Message Actions
-macro index,pager <Space>s "<sync-mailbox>" "leader: sync mailbox"
-macro index,pager <Space>r "<group-reply>" "leader: reply all"
-macro index,pager <Space>f "<forward-message>" "leader: forward message"
-macro index <Space>d "<delete-message>" "leader: delete message"
-macro pager <Space>d "<exit><delete-message>" "leader: delete message"
-macro index <Space>u "<undelete-message>" "leader: undelete message"
-macro pager <Space>u "<exit><undelete-message>" "leader: undelete message"
+# Setup multi-key comma leader sequences (noop required for neomutt to recognize multi-key bindings)
+bind index ,g noop
+bind pager ,g noop
 
-# Space leader - View/Navigation
-macro index,pager <Space>v "<view-attachments>" "leader: view attachments"
-macro index,pager <Space>h "<view-raw-message>" "leader: view raw/headers"
-macro index <Space>t "<tag-entry>" "leader: tag message"
-macro index <Space>T "<tag-thread>" "leader: tag thread"
+# Comma leader - Message Actions
+macro index,pager ,s "<sync-mailbox>" "leader: sync mailbox"
+macro index,pager ,m "<sync-mailbox><shell-escape>$DOTFILES/mail/scripts/sync-mail.sh<enter>" "leader: full mail sync"
+macro index,pager ,r "<group-reply>" "leader: reply all"
+macro index,pager ,f "<forward-message>" "leader: forward message"
+macro index ,d "<delete-message>" "leader: delete message"
+macro pager ,d "<exit><delete-message>" "leader: delete message"
+macro index ,u "<undelete-message>" "leader: undelete message"
+macro pager ,u "<exit><undelete-message>" "leader: undelete message"
 
-# Space leader - Compose
-macro index,pager <Space>c "<mail>" "leader: compose new message"
-macro index,pager <Space>@ "<compose-to-sender>" "leader: compose to sender"
+# Comma leader - View/Navigation
+macro index,pager ,v "<view-attachments>" "leader: view attachments"
+macro index,pager ,h "<view-raw-message>" "leader: view raw/headers"
+macro index ,t "<tag-entry>" "leader: tag message"
+macro index ,T "<tag-thread>" "leader: tag thread"
 
-# Space leader - Search/Filter
-macro index <Space>/ "<limit>" "leader: limit/filter"
-macro index <Space>a "<limit>all\n" "leader: show all (clear limit)"
-macro index <Space>n "<search-next>" "leader: next search result"
-macro index <Space>N "<search-opposite>" "leader: previous search result"
+# Comma leader - Compose
+macro index,pager ,c "<mail>" "leader: compose new message"
+macro index,pager ,@ "<compose-to-sender>" "leader: compose to sender"
 
-# Space leader - Special
-macro index,pager <Space>q "<quit>" "leader: quit neomutt"
-macro index,pager <Space>R "<recall-message>" "leader: recall draft"
-macro index,pager <Space>P "<print-message>" "leader: print message"
-macro index,pager <Space>p "<enter-command>source \$DOTFILES/mail/mutt/scripts/command-palette.sh|<enter>" "leader: command palette"
+# Comma leader - Search/Filter
+macro index ,/ "<limit>" "leader: limit/filter"
+macro index ,a "<limit>all\n" "leader: show all (clear limit)"
+macro index ,n "<search-next>" "leader: next search result"
+macro index ,N "<search-opposite>" "leader: previous search result"
 
-# Space leader - Git-like operations
-macro index <Space>ga ";<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
-macro pager <Space>ga "<exit>;<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
-macro index <Space>gd ";<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
-macro pager <Space>gd "<exit>;<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
-macro index <Space>gs ";<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
-macro pager <Space>gs "<exit>;<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
+# Comma leader - Special
+macro index,pager ,q "<quit>" "leader: quit neomutt"
+macro index,pager ,R "<recall-message>" "leader: recall draft"
+macro index,pager ,P "<print-message>" "leader: print message"
+macro index,pager ,p "<enter-command>source \$DOTFILES/mail/mutt/scripts/command-palette.sh|<enter>" "leader: command palette"
+macro index,pager ,! "<shell-escape>" "leader: run shell command"
 
-# Space leader - Address book operations (from abook file)
-macro index,pager <Space>a "<pipe-message>abook --add-email-quiet<return>" "leader: add sender to abook (quiet)"
-macro index,pager <Space>A "<create-alias>" "leader: create mutt alias"
+# Comma leader - AI/Claude
+macro index,pager ,C "<pipe-message>claude<return>" "leader: analyze with claude"
 
-# Space leader - URL extraction (from urlview file)
-macro index,pager <Space>u "<pipe-message>urlview<enter>" "leader: extract URLs"
+# Comma leader - Git-like operations
+macro index ,ga ";<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
+macro pager ,ga "<exit>;<save-message>=[Gmail].All\ Mail<enter>" "leader: archive (move to All Mail)"
+macro index ,gd ";<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
+macro pager ,gd "<exit>;<save-message>=[Gmail].Drafts<enter>" "leader: move to drafts"
+macro index ,gs ";<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
+macro pager ,gs "<exit>;<save-message>=[Gmail].Spam<enter>" "leader: mark as spam"
+
+# Comma leader - Address book operations (from abook file)
+macro index,pager ,a "<pipe-message>abook --add-email-quiet<return>" "leader: add sender to abook (quiet)"
+macro index,pager ,A "<create-alias>" "leader: create mutt alias"
+
+# Comma leader - URL extraction (from urlview file)
+macro index,pager ,u "<pipe-message>urlview<enter>" "leader: extract URLs"
