@@ -102,6 +102,14 @@ shopt -s nocaseglob
 shopt -s cdspell
 
 # ============================================================================
+# VS Code Shell Integration
+# ============================================================================
+
+# Enable VS Code shell integration when running in VS Code terminal
+# This provides features like command decorations, directory tracking, and more
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path bash)"
+
+# ============================================================================
 # Vi Mode Configuration
 # ============================================================================
 
