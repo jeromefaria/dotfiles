@@ -2,35 +2,31 @@ name: Personal
 root: ~/
 windows:
   - files:
-      pre: cd ~
       layout: even-vertical
       panes:
         - yazi
         - clear
   - dotfiles:
       pre: cd ~/dotfiles
-      layout: 5d11,212x58,0,0[212x39,0,0,16,212x18,0,40,24]
+      layout: main-horizontal
       panes:
         - nvim
         - clear
   - email:
-      pre: cd ~
       panes:
         - neomutt
   - transfer:
-      pre: cd ~
       layout: even-vertical
       panes:
         - clear
         - clear
   - music:
-      pre: cd ~
       panes:
         - musikcube
-        - nicotine
+        - if [ -d /Volumes/Media/Music/FLAC/ ]; then nicotine; else echo "Music library not available"; fi
   - code:
       pre: cd ~/Work
-      layout: e57b,213x52,0,0[213x40,0,0{106x40,0,0,6,106x40,107,0,13},213x11,0,41{106x11,0,41,10,106x11,107,41,11}]
+      layout: tiled
       panes:
         - nvim
         - clear
