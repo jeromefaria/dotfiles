@@ -1,9 +1,9 @@
-name: blog
+name: website
 root: /Users/jeromefaria/Work/jeromefaria.github.io/
 windows:
-  - blog:
+  - website:
       layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
       panes:
         - nvim
-        - sleep 5 && open http://localhost:4000 && clear
-        - bundle exec jekyll serve -D
+        - sleep 5 && open http://localhost:5173 && clear
+        - npm run dev
