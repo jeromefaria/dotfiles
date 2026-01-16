@@ -74,5 +74,4 @@ alias weather="curl -4 http://wttr.in"
 # Beets music library
 if command -v beet &> /dev/null; then
   alias b="beet"
-  alias bmp="beet -c ~/.config/beets/config-mp3.yaml"
 fi

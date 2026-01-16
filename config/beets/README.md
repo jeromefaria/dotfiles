@@ -9,11 +9,10 @@ Beets is a command-line music library manager that:
 - Fetches metadata from MusicBrainz and Discogs
 - Downloads album artwork
 - Manages duplicate detection
-- Supports multiple library configurations (FLAC and MP3)
+- Supports multiple library configurations
 
 **Configuration Files:**
 - `config.yaml` - FLAC library (primary, lossless)
-- `config-mp3.yaml` - MP3 library (lossy, portable)
 
 ---
 
@@ -85,25 +84,6 @@ For Discogs plugin functionality:
 - Stores lossless FLAC files
 - Larger storage requirements
 - Used for archival and high-quality playback
-
-### config-mp3.yaml (MP3 Library)
-
-**Purpose:** Secondary library for lossy MP3 files
-
-**Location:**
-- Database: `/Users/jeromefaria/Documents/Beets/MP3.db`
-- Music files: `/Volumes/Music/Music/MP3/`
-
-**Key Differences from FLAC config:**
-- Stores lossy MP3 files
-- Smaller storage requirements
-- Used for portable devices and streaming
-
-**Usage:**
-```bash
-# Use MP3 configuration
-beet -c ~/.config/beets/config-mp3.yaml import /path/to/music
-```
 
 ---
 
@@ -431,9 +411,6 @@ beet import -s /path/to/music
 
 # Resume interrupted import
 beet import -p /path/to/music
-
-# Use MP3 configuration
-beet -c ~/.config/beets/config-mp3.yaml import /path/to/music
 ```
 
 ### Query Library
@@ -630,8 +607,8 @@ beet move
 beet ls -a -f '$path' > albums.txt
 
 # 2. Use external tool for conversion
-# 3. Import to MP3 library
-beet -c ~/.config/beets/config-mp3.yaml import /path/to/mp3s
+# 3. Import converted files
+beet import /path/to/mp3s
 ```
 
 ---
