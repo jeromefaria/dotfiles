@@ -66,8 +66,9 @@ overwrite_null:
   album: []
   track: []
 
-plugins: musicbrainz discogs lastgenre fetchart embedart albumtypes mbsync
-pluginpath: []
+plugins: mbretry musicbrainz discogs lastgenre fetchart embedart albumtypes mbsync
+pluginpath:
+  - /Users/jeromefaria/dotfiles/config/beets/plugins
 threaded: no
 timeout: 30.0
 per_disc_numbering: no
@@ -116,6 +117,23 @@ musicbrainz:
   extra_tags: []
   genres: no
   data_source_mismatch_penalty: 0.0
+
+mbretry:
+  max_retries: 3              # Maximum retry attempts
+  initial_delay: 5            # Initial delay in seconds (respects 10s rate limit)
+  max_delay: 60               # Maximum delay between retries
+  backoff_strategy: exponential  # exponential, linear, or fixed
+  backoff_multiplier: 2       # Exponential backoff multiplier
+  jitter: true                # Add random jitter to delays
+  jitter_range: 0.1           # Jitter as ±10% of delay
+  retry_on_errors:            # Error types to retry
+    - NetworkError
+    - ResponseError
+    - WebServiceError
+    - timeout
+  log_retries: true           # Log retry attempts
+  log_level: info             # debug, info, or warning
+  respect_ratelimit: true     # Honor existing rate limits
 
 discogs:
   user_token: WrEezFeLsPOOVbdUtnpEQRXWAWuXLbNZqtEJsxnC
