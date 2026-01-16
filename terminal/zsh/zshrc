@@ -97,6 +97,9 @@ ZSH_THEME=""
 # Uncomment if you want jk as an additional escape sequence:
 export ZVM_VI_ESCAPE_BINDKEY=jk
 
+# Reduce key timeout for faster 'j' navigation (default is 0.4 seconds)
+export ZVM_KEYTIMEOUT=0.1
+
 # ZSH plugins
 # Order matters: zsh-vi-mode MUST be last
 plugins=(
