@@ -66,9 +66,13 @@ overwrite_null:
   album: []
   track: []
 
-plugins: mbretry musicbrainz discogs lastgenre fetchart embedart albumtypes mbsync
+plugins: mbretry musicbrainz discogs lastgenre fetchart embedart albumtypes mbsync duplicates missing
 pluginpath:
   - /Users/jeromefaria/dotfiles/config/beets/plugins
+
+duplicates:
+  format: $albumartist - $album
+
 threaded: no
 timeout: 30.0
 per_disc_numbering: no
