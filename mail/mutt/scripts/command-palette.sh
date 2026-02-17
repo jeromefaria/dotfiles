@@ -6,6 +6,7 @@
 commands=(
   # Message operations
   "sync:Sync all mailboxes:<sync-mailbox>"
+  "full-sync:Full mail sync (mbsync):<sync-mailbox><shell-escape>\$DOTFILES/mail/scripts/sync-mail.sh<enter>"
   "reply-all:Reply to all recipients:<group-reply>"
   "forward:Forward current message:<forward-message>"
   "delete:Delete current message:<delete-message>"
@@ -28,6 +29,9 @@ commands=(
 
   # Search and filter
   "search:Search messages:<search>"
+  "search-next:Next search result:<search-next>"
+  "search-previous:Previous search result:<search-opposite>"
+  "limit:Filter/limit messages:<limit>"
   "limit-unread:Show only unread:<limit>~U<enter>"
   "limit-flagged:Show only flagged:<limit>~F<enter>"
   "limit-today:Show today's mail:<limit>~d<1d<enter>"
@@ -78,6 +82,13 @@ commands=(
   "reload-config:Reload configuration:<enter-command>source \$DOTFILES/mail/mutt/muttrc<enter>"
   "show-version:Show Neomutt version:<version>"
   "show-keybindings:Show all keybindings:<help>"
+
+  # AI/Claude
+  "claude-analyze:Analyze message with Claude:<pipe-message>claude<return>"
+
+  # Address book
+  "add-to-abook:Add sender to address book:<pipe-message>abook --add-email-quiet<return>"
+  "create-alias:Create mutt alias:<create-alias>"
 
   # Utility
   "print:Print message:<print-message>"
