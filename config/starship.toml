@@ -1,4 +1,5 @@
 # add_newline = false
+scan_timeout = 10000
 
 # ============================================================================
 # Vi Mode Indicator (shows current mode like Neovim)
