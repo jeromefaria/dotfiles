@@ -41,8 +41,6 @@ brew "neovim"
 brew "vim"
 brew "emacs"
 cask "visual-studio-code"
-cask "cursor"           # AI-powered VS Code fork
-cask "zed"              # High-performance editor
 cask "claude-code"      # Claude AI code editor
 cask "ghostty"          # Modern terminal emulator
 
