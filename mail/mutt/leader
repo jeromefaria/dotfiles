@@ -31,7 +31,6 @@ macro index,pager ,@ "<compose-to-sender>" "leader: compose to sender"
 
 # Comma leader - Search/Filter
 macro index ,/ "<limit>" "leader: limit/filter"
-macro index ,a "<limit>all\n" "leader: show all (clear limit)"
 macro index ,n "<search-next>" "leader: next search result"
 macro index ,N "<search-opposite>" "leader: previous search result"
 
@@ -58,4 +57,4 @@ macro index,pager ,a "<pipe-message>abook --add-email-quiet<return>" "leader: ad
 macro index,pager ,A "<create-alias>" "leader: create mutt alias"
 
 # Comma leader - URL extraction (from urlview file)
-macro index,pager ,u "<pipe-message>urlview<enter>" "leader: extract URLs"
+macro index,pager ,U "<pipe-message>urlview<enter>" "leader: extract URLs"

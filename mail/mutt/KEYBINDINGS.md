@@ -58,8 +58,7 @@ Matches Neovim classic mode configuration.
 | Key | Action |
 |-----|--------|
 | `,/` | Limit/filter |
-| `,a` | Show all (clear limit) |
-| `A` | Show all messages |
+| `A` | Show all messages (clear limit) |
 | `,n` | Next search result |
 | `,N` | Previous search result |
 | `N` | Search opposite direction |
@@ -75,7 +74,7 @@ Matches Neovim classic mode configuration.
 ## Address Book (Leader)
 | Key | Action |
 |-----|--------|
-| `,a` | Add sender to abook (quiet) |
+| `,a` | Add sender to address book |
 | `,A` | Create mutt alias |
 
 ## Special (Leader)
@@ -85,7 +84,7 @@ Matches Neovim classic mode configuration.
 | `,R` | Recall draft |
 | `,P` | Print message |
 | `,p` | Command palette |
-| `,u` | Extract URLs (urlview) |
+| `,U` | Extract URLs (urlview) |
 
 ## Sidebar
 | Key | Action |
