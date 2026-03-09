@@ -108,6 +108,9 @@ return {
   {
     "tpope/vim-markdown",
     ft = "markdown",
+    init = function()
+      vim.g.markdown_recommended_style = 0 -- Prevent vim-markdown from overriding tabstop
+    end,
   },
 
   -- Vue.js support

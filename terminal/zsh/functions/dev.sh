@@ -220,7 +220,7 @@ function update() {
   if [[ "$skip_mas" == false ]] && command -v mas &> /dev/null; then
     echo ""
     echo "→ Updating Mac App Store apps..."
-    if sudo mas upgrade; then
+    if MAS_NO_AUTO_INDEX=1 sudo mas upgrade; then
       echo "✓ Mac App Store apps updated"
     else
       echo "✗ Mac App Store update failed (exit code: $?)"
