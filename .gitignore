@@ -1,3 +1,4 @@
+# Global patterns
 *.bkp
 *.zip
 *.log
@@ -5,7 +6,7 @@
 node_modules
 .DS_Store
 
-# Claude Code directories
+# Claude Code
 .claude/
 
 # Sensitive credentials and tokens
@@ -16,38 +17,30 @@ config/op/config
 config/hub
 config/AWSVPNClient/Preferences
 config/gh/hosts.yml
+config/beets/discogs_token.json
+config/raycast/config.json
 
 # Session and history files
-config/**/history.json
-config/**/history.log
 config/**/*history*
 config/**/list_history.dat
 config/**/userstate.cbor
 
-# Databases
+# Databases and backups
 config/**/*.db
 config/**/*.db-*
-config/**/*.mdb/
+config/**/*.mdb
+config/beets/*.backup
 
-# Cache and state files
-config/**/cache
+# Cache and state
 config/**/*cache*
 config/**/*.pickle
 config/**/autosave
-
-# Package dependencies
-config/**/node_modules/
-config/yarn/global/node_modules/
-
-# JSON schema caches
-config/coc/extensions/coc-json-data/json-schema-cache/
-
-# Runtime/temporary files
-config/**/*.log
 config/**/memos.json
 config/**/mru
 config/**/snippets-mru
-config/AWSVPNClient/OpenVpnConfigs/current_connection.txt
+
+# Package dependencies
+config/**/node_modules/
 
 # Application state
 config/musikcube/*.txt
@@ -57,15 +50,14 @@ config/musikcube/1/
 config/nvim/sessions/
 config/MusicBrainz/.Picard.ini.synclock
 
-# Large/unnecessary directories
+# Large/build directories
 config/AWSVPNClient/logs/
-config/musikcube/1/thumbs/
+config/AWSVPNClient/OpenVpnConfigs/current_connection.txt
 config/nvim/bundle/
 config/nvim/pack/nvim/start
 config/nvim/plugged/
 config/nvim/view/
 config/raycast/extensions
+config/raycast/ai/
 config/iterm2/AppSupport
 
-# Specific token files
-config/beets/discogs_token.json
