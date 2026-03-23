@@ -30,7 +30,7 @@ import:
   group_albums: no
   pretend: no
   search_ids: []
-  duplicate_action: ask
+  duplicate_action: skip
   bell: no
   set_fields: {}
 
