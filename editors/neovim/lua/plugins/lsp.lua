@@ -25,105 +25,57 @@ return {
   -- Mason LSP config (must be loaded before lspconfig)
   {
     "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim" },
+    dependencies = {
+      "williamboman/mason.nvim",
+      "neovim/nvim-lspconfig",
+      "hrsh7th/cmp-nvim-lsp",
+    },
     lazy = false,
     config = function()
-      -- Setup capabilities for autocompletion
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-      -- Default config for all LSP servers
-      local default_config = {
-        capabilities = capabilities,
-      }
+      vim.lsp.config("*", { capabilities = capabilities })
 
-      -- Configure language servers
-      local servers = {
-        lua_ls = {
-          settings = {
-            Lua = {
-              diagnostics = {
-                globals = { "vim" },
-              },
-              workspace = {
-                library = {
-                  [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                  [vim.fn.stdpath("config") .. "/lua"] = true,
-                },
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            diagnostics = { globals = { "vim" } },
+            workspace = {
+              library = {
+                [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                [vim.fn.stdpath("config") .. "/lua"] = true,
               },
             },
           },
         },
-        ts_ls = {
-          settings = {
-            typescript = {
-              inlayHints = {
-                includeInlayParameterNameHints = "all",
-                includeInlayFunctionParameterTypeHints = true,
-                includeInlayVariableTypeHints = true,
-              },
+      })
+
+      vim.lsp.config("ts_ls", {
+        settings = {
+          typescript = {
+            inlayHints = {
+              includeInlayParameterNameHints = "all",
+              includeInlayFunctionParameterTypeHints = true,
+              includeInlayVariableTypeHints = true,
             },
           },
         },
-        eslint = {},
-        jsonls = {},
-        html = {},
-        cssls = {},
-        tailwindcss = {},
-        pyright = {},
-        bashls = {},
-        yamlls = {},
-        volar = {},
-      }
+      })
 
       require("mason-lspconfig").setup({
-        -- Only include servers that install without issues
-        ensure_installed = {
-          "lua_ls",
-          "ts_ls",
-          "pyright",
-        },
-        -- This will automatically install LSP servers when you open relevant files
-        automatic_installation = true,
-        -- Setup handlers right here in the same config
-        handlers = {
-          -- Default handler for all servers
-          function(server_name)
-            local lspconfig = require("lspconfig")
-            local server_config = vim.tbl_deep_extend("force", default_config, servers[server_name] or {})
-            lspconfig[server_name].setup(server_config)
-          end,
+        ensure_installed = { "lua_ls", "ts_ls", "pyright" },
+        automatic_enable = {
+          exclude = { "stylua" },
         },
       })
     end,
   },
 
-  -- LSP Configuration
+  -- LSP Configuration (provides lsp/<name>.lua files; loaded eagerly via mason-lspconfig deps)
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-      "hrsh7th/cmp-nvim-lsp",
-    },
+    lazy = true,
     config = function()
-      -- Suppress lspconfig deprecation warning until v3.0.0 migration
-      local notify = vim.notify
-      vim.notify = function(msg, ...)
-        if msg:match("lspconfig.*deprecated") then
-          return
-        end
-        notify(msg, ...)
-      end
-
-      -- Restore original vim.notify after a delay
-      vim.defer_fn(function()
-        vim.notify = notify
-      end, 1000)
-
-      -- Note: Server setup is now handled by mason-lspconfig handlers above
-
-      -- Configure diagnostic display and signs
       vim.diagnostic.config({
         virtual_text = {
           prefix = "●",
