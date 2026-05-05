@@ -1,7 +1,8 @@
 name: Personal
-root: ~/
+root: /Users/jeromefaria
 windows:
   - files:
+      pre: cd ~
       layout: even-vertical
       panes:
         - yazi
@@ -13,14 +14,17 @@ windows:
         - nvim
         - clear
   - email:
+      pre: cd ~
       panes:
         - neomutt
   - transfer:
+      pre: cd ~
       layout: even-vertical
       panes:
         - clear
         - clear
   - music:
+      pre: cd ~
       panes:
         - musikcube
         - "if [ -d /Volumes/Media/Music/FLAC/ ]; then nicotine; else echo 'Music library not available'; fi"
