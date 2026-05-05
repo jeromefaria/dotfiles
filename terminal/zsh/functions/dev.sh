@@ -341,3 +341,15 @@ function update() {
   echo ""
   echo "=== Update Complete ==="
 }
+
+# Switch into a MainProject project under src/
+# Usage: sel [project] (default: app_frontend)
+function sel() {
+  local project="${1:-app_frontend}"
+  local target="$HOME/Work/Employer/MainProject/src/$project"
+  if [[ ! -d "$target" ]]; then
+    echo "Error: $target does not exist"
+    return 1
+  fi
+  builtin cd "$target"
+}
