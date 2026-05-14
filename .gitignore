@@ -19,6 +19,7 @@ config/AWSVPNClient/Preferences
 config/gh/hosts.yml
 config/beets/discogs_token.json
 config/raycast/config.json
+config/jerome-tooling/config.json
 
 # Session and history files
 config/**/*history*

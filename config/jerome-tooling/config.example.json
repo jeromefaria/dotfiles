@@ -1,0 +1,34 @@
+{
+  "user": {
+    "name": "Your Name",
+    "email": "your.email@example.com",
+    "github_handle": "your-github-handle",
+    "jira_account_id": "112233:00000000-0000-0000-0000-000000000000",
+    "keychain_account": "jira:<host-uuid>:<jira-account-id>"
+  },
+  "project": {
+    "name": "ProjectName",
+    "workspace": "~/Work/Path/To/ProjectRoot",
+    "doc_dir": "doc",
+    "primary_repo": "src/frontend",
+    "claude_md": "src/frontend/CLAUDE.md",
+    "project_state": "doc/PROJECT_STATE.md",
+    "git_repos": ["src/frontend", "src/backend"]
+  },
+  "jira": {
+    "base": "https://your-org.atlassian.net",
+    "anchor_ticket": "PROJ-1",
+    "sprint_field": "customfield_10020",
+    "points_field": "customfield_10028"
+  },
+  "github": {
+    "repos": ["org/frontend", "org/backend"]
+  },
+  "locale": {
+    "region": "PT",
+    "bank_holidays": [
+      "2026-01-01",
+      "2026-12-25"
+    ]
+  }
+}
