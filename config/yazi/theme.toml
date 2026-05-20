@@ -153,16 +153,13 @@ footer  = { fg = "#1B2B34", bg = "#D8DEE9" }
 
 rules = [
 	# Directories
-	{ name = "*/", fg = "#6699CC", bold = true },
+	{ url = "*/", fg = "#6699CC", bold = true },
 
 	# Symlinks
-	{ is = "link", fg = "#62B3B2", italic = true },
+	{ url = "*", is = "link", fg = "#62B3B2", italic = true },
 
 	# Executables
-	{ is = "exec", fg = "#99C794" },
-
-	# Hidden files
-	{ is = "hidden", fg = "#65737E" },
+	{ url = "*", is = "exec", fg = "#99C794" },
 
 	# Images
 	{ mime = "image/*", fg = "#62B3B2" },
@@ -187,380 +184,396 @@ rules = [
 	{ mime = "application/zstd",            fg = "#C594C5" },
 
 	# Config files
-	{ name = "*.toml", fg = "#AB7967" },
-	{ name = "*.yaml", fg = "#AB7967" },
-	{ name = "*.yml",  fg = "#AB7967" },
-	{ name = "*.json", fg = "#AB7967" },
-	{ name = "*.conf", fg = "#AB7967" },
-	{ name = "*.ini",  fg = "#AB7967" },
+	{ url = "*.toml", fg = "#AB7967" },
+	{ url = "*.yaml", fg = "#AB7967" },
+	{ url = "*.yml",  fg = "#AB7967" },
+	{ url = "*.json", fg = "#AB7967" },
+	{ url = "*.conf", fg = "#AB7967" },
+	{ url = "*.ini",  fg = "#AB7967" },
 
 	# Scripts
-	{ name = "*.sh",   fg = "#99C794" },
-	{ name = "*.bash", fg = "#99C794" },
-	{ name = "*.zsh",  fg = "#99C794" },
-	{ name = "*.fish", fg = "#99C794" },
+	{ url = "*.sh",   fg = "#99C794" },
+	{ url = "*.bash", fg = "#99C794" },
+	{ url = "*.zsh",  fg = "#99C794" },
+	{ url = "*.fish", fg = "#99C794" },
 
 	# Default text
 	{ mime = "text/*", fg = "#D8DEE9" },
 ]
 
-[icons]
+[icon]
 
-# macOS Directories
-"Desktop/"     = ""
-"Documents/"   = ""
-"Downloads/"   = ""
-"Pictures/"    = ""
-"Music/"       = ""
-"Movies/"      = ""
-"Videos/"      = ""
-"Public/"      = ""
-"Library/"     = ""
-"Applications/"= ""
-"Developer/"   = ""
-"Development/" = ""
-".config/"     = ""
-".local/"      = ""
-".cache/"      = ""
-"node_modules/"= ""
-"vendor/"      = ""
-".venv/"       = ""
-"__pycache__/" = ""
-"target/"      = ""
-"build/"       = ""
-"dist/"        = ""
-".next/"       = ""
-".nuxt/"       = ""
+dirs = [
+	# macOS
+	{ name = "Desktop",      text = "" },
+	{ name = "Documents",    text = "" },
+	{ name = "Downloads",    text = "" },
+	{ name = "Pictures",     text = "" },
+	{ name = "Music",        text = "" },
+	{ name = "Movies",       text = "" },
+	{ name = "Videos",       text = "" },
+	{ name = "Public",       text = "" },
+	{ name = "Library",      text = "" },
+	{ name = "Applications", text = "" },
+	{ name = "Developer",    text = "" },
+	{ name = "Development",  text = "" },
 
-# Git
-".git/"           = ""
-".gitignore"      = ""
-".gitmodules"     = ""
-".gitattributes"  = ""
-".gitconfig"      = ""
-".github/"        = ""
-".gitlab-ci.yml"  = ""
+	# Hidden / cache / build
+	{ name = ".config",      text = "" },
+	{ name = ".local",       text = "" },
+	{ name = ".cache",       text = "" },
+	{ name = "node_modules", text = "" },
+	{ name = "vendor",       text = "" },
+	{ name = ".venv",        text = "" },
+	{ name = "__pycache__",  text = "" },
+	{ name = "target",       text = "" },
+	{ name = "build",        text = "" },
+	{ name = "dist",         text = "" },
+	{ name = ".next",        text = "" },
+	{ name = ".nuxt",        text = "" },
 
-# Dotfiles
-".DS_Store"       = ""
-".bashrc"         = ""
-".bash_profile"   = ""
-".zshrc"          = ""
-".zshenv"         = ""
-".zprofile"       = ""
-".vimrc"          = ""
-".editorconfig"   = ""
-".env"            = ""
-".env.local"      = ""
-".env.example"    = ""
-".dockerignore"   = ""
-".prettierrc"     = ""
-".eslintrc"       = ""
-".npmrc"          = ""
-".yarnrc"         = ""
+	# Git / CI
+	{ name = ".git",         text = "" },
+	{ name = ".github",      text = "" },
+	{ name = ".circleci",    text = "" },
+]
 
-# Text
-"*.txt"      = ""
-"*.md"       = ""
-"*.mdx"      = ""
-"*.rst"      = ""
-"*.org"      = ""
-"*.norg"     = ""
-"*.log"      = ""
+files = [
+	# Git
+	{ name = ".gitignore",         text = "" },
+	{ name = ".gitmodules",        text = "" },
+	{ name = ".gitattributes",     text = "" },
+	{ name = ".gitconfig",         text = "" },
+	{ name = ".gitlab-ci.yml",     text = "" },
 
-# PDF/Documents
-"*.pdf"      = ""
-"*.epub"     = ""
-"*.djvu"     = ""
-"*.doc"      = ""
-"*.docx"     = ""
-"*.xls"      = ""
-"*.xlsx"     = ""
-"*.ppt"      = ""
-"*.pptx"     = ""
-"*.odt"      = ""
-"*.ods"      = ""
-"*.odp"      = ""
+	# Dotfiles
+	{ name = ".DS_Store",          text = "" },
+	{ name = ".bashrc",            text = "" },
+	{ name = ".bash_profile",      text = "" },
+	{ name = ".zshrc",             text = "" },
+	{ name = ".zshenv",            text = "" },
+	{ name = ".zprofile",          text = "" },
+	{ name = ".vimrc",             text = "" },
+	{ name = ".editorconfig",      text = "" },
+	{ name = ".env",               text = "" },
+	{ name = ".env.local",         text = "" },
+	{ name = ".env.example",       text = "" },
+	{ name = ".dockerignore",      text = "" },
+	{ name = ".prettierrc",        text = "" },
+	{ name = ".eslintrc",          text = "" },
+	{ name = ".npmrc",             text = "" },
+	{ name = ".yarnrc",            text = "" },
 
-# Archives
-"*.zip"      = ""
-"*.tar"      = ""
-"*.gz"       = ""
-"*.tgz"      = ""
-"*.bz2"      = ""
-"*.xz"       = ""
-"*.zst"      = ""
-"*.7z"       = ""
-"*.rar"      = ""
-"*.lz"       = ""
-"*.lzma"     = ""
+	# Vim/Neovim
+	{ name = "init.lua",           text = "" },
+	{ name = "init.vim",           text = "" },
 
-# Audio
-"*.mp3"      = ""
-"*.flac"     = ""
-"*.wav"      = ""
-"*.aac"      = ""
-"*.ogg"      = ""
-"*.m4a"      = ""
-"*.opus"     = ""
-"*.wma"      = ""
-"*.aiff"     = ""
+	# Build / package
+	{ name = "Makefile",           text = "" },
+	{ name = "CMakeLists.txt",     text = "" },
+	{ name = "Cargo.toml",         text = "" },
+	{ name = "Cargo.lock",         text = "" },
+	{ name = "package.json",       text = "" },
+	{ name = "package-lock.json",  text = "" },
+	{ name = "yarn.lock",          text = "" },
+	{ name = "pnpm-lock.yaml",     text = "" },
+	{ name = "bun.lockb",          text = "" },
+	{ name = "Gemfile",            text = "" },
+	{ name = "Gemfile.lock",       text = "" },
+	{ name = "requirements.txt",   text = "" },
+	{ name = "pyproject.toml",     text = "" },
+	{ name = "setup.py",           text = "" },
+	{ name = "setup.cfg",          text = "" },
+	{ name = "Pipfile",            text = "" },
+	{ name = "Pipfile.lock",       text = "" },
+	{ name = "poetry.lock",        text = "" },
+	{ name = "go.mod",             text = "" },
+	{ name = "go.sum",             text = "" },
+	{ name = "composer.json",      text = "" },
+	{ name = "composer.lock",      text = "" },
+	{ name = "build.gradle",       text = "" },
+	{ name = "pom.xml",            text = "" },
+	{ name = "mix.exs",            text = "" },
+	{ name = "mix.lock",           text = "" },
+	{ name = "deno.json",          text = "" },
+	{ name = "deno.lock",          text = "" },
+	{ name = "flake.nix",          text = "" },
+	{ name = "flake.lock",         text = "" },
 
-# Video
-"*.mp4"      = ""
-"*.mkv"      = ""
-"*.avi"      = ""
-"*.mov"      = ""
-"*.wmv"      = ""
-"*.webm"     = ""
-"*.flv"      = ""
-"*.m4v"      = ""
-"*.mpeg"     = ""
-"*.mpg"      = ""
-"*.3gp"      = ""
+	# Docker
+	{ name = "Dockerfile",            text = "" },
+	{ name = "docker-compose.yml",    text = "" },
+	{ name = "docker-compose.yaml",   text = "" },
 
-# Images
-"*.jpg"      = ""
-"*.jpeg"     = ""
-"*.png"      = ""
-"*.gif"      = ""
-"*.webp"     = ""
-"*.avif"     = ""
-"*.bmp"      = ""
-"*.ico"      = ""
-"*.svg"      = ""
-"*.tiff"     = ""
-"*.tif"      = ""
-"*.heic"     = ""
-"*.heif"     = ""
-"*.raw"      = ""
-"*.cr2"      = ""
-"*.nef"      = ""
-"*.psd"      = ""
-"*.ai"       = ""
-"*.xcf"      = ""
+	# CI/CD
+	{ name = "Jenkinsfile",           text = "" },
+	{ name = ".travis.yml",           text = "" },
+	{ name = "azure-pipelines.yml",   text = "" },
 
-# Fonts
-"*.ttf"      = ""
-"*.otf"      = ""
-"*.woff"     = ""
-"*.woff2"    = ""
-"*.eot"      = ""
+	# Project meta
+	{ name = "LICENSE",            text = "" },
+	{ name = "LICENSE.txt",        text = "" },
+	{ name = "LICENSE.md",         text = "" },
+	{ name = "COPYING",            text = "" },
+	{ name = "README",             text = "" },
+	{ name = "README.md",          text = "" },
+	{ name = "README.txt",         text = "" },
+	{ name = "CHANGELOG",          text = "" },
+	{ name = "CHANGELOG.md",       text = "" },
+	{ name = "CONTRIBUTING",       text = "" },
+	{ name = "CONTRIBUTING.md",    text = "" },
+	{ name = "AUTHORS",            text = "" },
+	{ name = "TODO",               text = "" },
+	{ name = "TODO.md",            text = "" },
+]
 
-# Programming Languages
-"*.c"        = ""
-"*.cpp"      = ""
-"*.cc"       = ""
-"*.cxx"      = ""
-"*.h"        = ""
-"*.hpp"      = ""
-"*.hxx"      = ""
-"*.rs"       = ""
-"*.go"       = ""
-"*.py"       = ""
-"*.pyi"      = ""
-"*.pyc"      = ""
-"*.pyo"      = ""
-"*.pyw"      = ""
-"*.js"       = ""
-"*.mjs"      = ""
-"*.cjs"      = ""
-"*.ts"       = ""
-"*.mts"      = ""
-"*.cts"      = ""
-"*.tsx"      = ""
-"*.jsx"      = ""
-"*.rb"       = ""
-"*.erb"      = ""
-"*.php"      = ""
-"*.java"     = ""
-"*.kt"       = ""
-"*.kts"      = ""
-"*.scala"    = ""
-"*.clj"      = ""
-"*.cljs"     = ""
-"*.edn"      = ""
-"*.ex"       = ""
-"*.exs"      = ""
-"*.erl"      = ""
-"*.hrl"      = ""
-"*.hs"       = ""
-"*.lhs"      = ""
-"*.ml"       = ""
-"*.mli"      = ""
-"*.fs"       = ""
-"*.fsx"      = ""
-"*.fsi"      = ""
-"*.cs"       = ""
-"*.csx"      = ""
-"*.vb"       = ""
-"*.swift"    = ""
-"*.dart"     = ""
-"*.r"        = ""
-"*.R"        = ""
-"*.m"        = ""
-"*.mm"       = ""
-"*.pl"       = ""
-"*.pm"       = ""
-"*.raku"     = ""
-"*.nim"      = ""
-"*.zig"      = ""
-"*.v"        = ""
-"*.d"        = ""
-"*.cr"       = ""
+exts = [
+	# Text
+	{ name = "txt",   text = "" },
+	{ name = "md",    text = "" },
+	{ name = "mdx",   text = "" },
+	{ name = "rst",   text = "" },
+	{ name = "org",   text = "" },
+	{ name = "norg",  text = "" },
+	{ name = "log",   text = "" },
 
-# Shell
-"*.sh"       = ""
-"*.bash"     = ""
-"*.zsh"      = ""
-"*.fish"     = ""
-"*.ksh"      = ""
-"*.csh"      = ""
-"*.tcsh"     = ""
-"*.ps1"      = ""
-"*.psm1"     = ""
-"*.psd1"     = ""
-"*.bat"      = ""
-"*.cmd"      = ""
+	# PDF / documents
+	{ name = "pdf",   text = "" },
+	{ name = "epub",  text = "" },
+	{ name = "djvu",  text = "" },
+	{ name = "doc",   text = "" },
+	{ name = "docx",  text = "" },
+	{ name = "xls",   text = "" },
+	{ name = "xlsx",  text = "" },
+	{ name = "ppt",   text = "" },
+	{ name = "pptx",  text = "" },
+	{ name = "odt",   text = "" },
+	{ name = "ods",   text = "" },
+	{ name = "odp",   text = "" },
 
-# Vim/Neovim
-"*.vim"      = ""
-"*.lua"      = ""
-"init.lua"   = ""
-"init.vim"   = ""
+	# Archives
+	{ name = "zip",   text = "" },
+	{ name = "tar",   text = "" },
+	{ name = "gz",    text = "" },
+	{ name = "tgz",   text = "" },
+	{ name = "bz2",   text = "" },
+	{ name = "xz",    text = "" },
+	{ name = "zst",   text = "" },
+	{ name = "7z",    text = "" },
+	{ name = "rar",   text = "" },
+	{ name = "lz",    text = "" },
+	{ name = "lzma",  text = "" },
 
-# Web
-"*.html"     = ""
-"*.htm"      = ""
-"*.xhtml"    = ""
-"*.css"      = ""
-"*.scss"     = ""
-"*.sass"     = ""
-"*.less"     = ""
-"*.styl"     = ""
-"*.vue"      = ""
-"*.svelte"   = ""
-"*.astro"    = ""
-"*.wasm"     = ""
+	# Audio
+	{ name = "mp3",   text = "" },
+	{ name = "flac",  text = "" },
+	{ name = "wav",   text = "" },
+	{ name = "aac",   text = "" },
+	{ name = "ogg",   text = "" },
+	{ name = "m4a",   text = "" },
+	{ name = "opus",  text = "" },
+	{ name = "wma",   text = "" },
+	{ name = "aiff",  text = "" },
 
-# Data
-"*.json"     = ""
-"*.jsonc"    = ""
-"*.json5"    = ""
-"*.toml"     = ""
-"*.yml"      = ""
-"*.yaml"     = ""
-"*.xml"      = ""
-"*.ini"      = ""
-"*.conf"     = ""
-"*.cfg"      = ""
-"*.csv"      = ""
-"*.tsv"      = ""
-"*.sql"      = ""
-"*.graphql"  = ""
-"*.gql"      = ""
+	# Video
+	{ name = "mp4",   text = "" },
+	{ name = "mkv",   text = "" },
+	{ name = "avi",   text = "" },
+	{ name = "mov",   text = "" },
+	{ name = "wmv",   text = "" },
+	{ name = "webm",  text = "" },
+	{ name = "flv",   text = "" },
+	{ name = "m4v",   text = "" },
+	{ name = "mpeg",  text = "" },
+	{ name = "mpg",   text = "" },
+	{ name = "3gp",   text = "" },
 
-# Build/Package
-"Makefile"        = ""
-"CMakeLists.txt"  = ""
-"Cargo.toml"      = ""
-"Cargo.lock"      = ""
-"package.json"    = ""
-"package-lock.json" = ""
-"yarn.lock"       = ""
-"pnpm-lock.yaml"  = ""
-"bun.lockb"       = ""
-"Gemfile"         = ""
-"Gemfile.lock"    = ""
-"requirements.txt"= ""
-"pyproject.toml"  = ""
-"setup.py"        = ""
-"setup.cfg"       = ""
-"Pipfile"         = ""
-"Pipfile.lock"    = ""
-"poetry.lock"     = ""
-"go.mod"          = ""
-"go.sum"          = ""
-"composer.json"   = ""
-"composer.lock"   = ""
-"build.gradle"    = ""
-"pom.xml"         = ""
-"mix.exs"         = ""
-"mix.lock"        = ""
-"deno.json"       = ""
-"deno.lock"       = ""
-"flake.nix"       = ""
-"flake.lock"      = ""
+	# Images
+	{ name = "jpg",   text = "" },
+	{ name = "jpeg",  text = "" },
+	{ name = "png",   text = "" },
+	{ name = "gif",   text = "" },
+	{ name = "webp",  text = "" },
+	{ name = "avif",  text = "" },
+	{ name = "bmp",   text = "" },
+	{ name = "ico",   text = "" },
+	{ name = "svg",   text = "" },
+	{ name = "tiff",  text = "" },
+	{ name = "tif",   text = "" },
+	{ name = "heic",  text = "" },
+	{ name = "heif",  text = "" },
+	{ name = "raw",   text = "" },
+	{ name = "cr2",   text = "" },
+	{ name = "nef",   text = "" },
+	{ name = "psd",   text = "" },
+	{ name = "ai",    text = "" },
+	{ name = "xcf",   text = "" },
 
-# Docker
-"Dockerfile"      = ""
-"docker-compose.yml" = ""
-"docker-compose.yaml" = ""
+	# Fonts
+	{ name = "ttf",   text = "" },
+	{ name = "otf",   text = "" },
+	{ name = "woff",  text = "" },
+	{ name = "woff2", text = "" },
+	{ name = "eot",   text = "" },
 
-# CI/CD
-"Jenkinsfile"     = ""
-".travis.yml"     = ""
-".circleci/"      = ""
-"azure-pipelines.yml" = ""
+	# Programming languages
+	{ name = "c",     text = "" },
+	{ name = "cpp",   text = "" },
+	{ name = "cc",    text = "" },
+	{ name = "cxx",   text = "" },
+	{ name = "h",     text = "" },
+	{ name = "hpp",   text = "" },
+	{ name = "hxx",   text = "" },
+	{ name = "rs",    text = "" },
+	{ name = "go",    text = "" },
+	{ name = "py",    text = "" },
+	{ name = "pyi",   text = "" },
+	{ name = "pyc",   text = "" },
+	{ name = "pyo",   text = "" },
+	{ name = "pyw",   text = "" },
+	{ name = "js",    text = "" },
+	{ name = "mjs",   text = "" },
+	{ name = "cjs",   text = "" },
+	{ name = "ts",    text = "" },
+	{ name = "mts",   text = "" },
+	{ name = "cts",   text = "" },
+	{ name = "tsx",   text = "" },
+	{ name = "jsx",   text = "" },
+	{ name = "rb",    text = "" },
+	{ name = "erb",   text = "" },
+	{ name = "php",   text = "" },
+	{ name = "java",  text = "" },
+	{ name = "kt",    text = "" },
+	{ name = "kts",   text = "" },
+	{ name = "scala", text = "" },
+	{ name = "clj",   text = "" },
+	{ name = "cljs",  text = "" },
+	{ name = "edn",   text = "" },
+	{ name = "ex",    text = "" },
+	{ name = "exs",   text = "" },
+	{ name = "erl",   text = "" },
+	{ name = "hrl",   text = "" },
+	{ name = "hs",    text = "" },
+	{ name = "lhs",   text = "" },
+	{ name = "ml",    text = "" },
+	{ name = "mli",   text = "" },
+	{ name = "fs",    text = "" },
+	{ name = "fsx",   text = "" },
+	{ name = "fsi",   text = "" },
+	{ name = "cs",    text = "" },
+	{ name = "csx",   text = "" },
+	{ name = "vb",    text = "" },
+	{ name = "swift", text = "" },
+	{ name = "dart",  text = "" },
+	{ name = "r",     text = "" },
+	{ name = "R",     text = "" },
+	{ name = "m",     text = "" },
+	{ name = "mm",    text = "" },
+	{ name = "pl",    text = "" },
+	{ name = "pm",    text = "" },
+	{ name = "raku",  text = "" },
+	{ name = "nim",   text = "" },
+	{ name = "zig",   text = "" },
+	{ name = "v",     text = "" },
+	{ name = "d",     text = "" },
+	{ name = "cr",    text = "" },
 
-# Config files
-"*.nix"           = ""
-"*.lock"          = ""
-"LICENSE"         = ""
-"LICENSE.txt"     = ""
-"LICENSE.md"      = ""
-"COPYING"         = ""
-"README"          = ""
-"README.md"       = ""
-"README.txt"      = ""
-"CHANGELOG"       = ""
-"CHANGELOG.md"    = ""
-"CONTRIBUTING"    = ""
-"CONTRIBUTING.md" = ""
-"AUTHORS"         = ""
-"TODO"            = ""
-"TODO.md"         = ""
+	# Shell
+	{ name = "sh",    text = "" },
+	{ name = "bash",  text = "" },
+	{ name = "zsh",   text = "" },
+	{ name = "fish",  text = "" },
+	{ name = "ksh",   text = "" },
+	{ name = "csh",   text = "" },
+	{ name = "tcsh",  text = "" },
+	{ name = "ps1",   text = "" },
+	{ name = "psm1",  text = "" },
+	{ name = "psd1",  text = "" },
+	{ name = "bat",   text = "" },
+	{ name = "cmd",   text = "" },
 
-# Security
-"*.key"           = ""
-"*.pem"           = ""
-"*.crt"           = ""
-"*.cer"           = ""
-"*.pub"           = ""
-"*.gpg"           = ""
-"*.asc"           = ""
+	# Vim / Lua
+	{ name = "vim",   text = "" },
+	{ name = "lua",   text = "" },
 
-# Binary/Executable
-"*.exe"           = ""
-"*.dll"           = ""
-"*.so"            = ""
-"*.dylib"         = ""
-"*.a"             = ""
-"*.o"             = ""
-"*.obj"           = ""
-"*.class"         = ""
-"*.jar"           = ""
-"*.war"           = ""
-"*.ear"           = ""
-"*.AppImage"      = ""
-"*.app"           = ""
-"*.deb"           = ""
-"*.rpm"           = ""
-"*.dmg"           = ""
-"*.iso"           = ""
-"*.img"           = ""
+	# Web
+	{ name = "html",   text = "" },
+	{ name = "htm",    text = "" },
+	{ name = "xhtml",  text = "" },
+	{ name = "css",    text = "" },
+	{ name = "scss",   text = "" },
+	{ name = "sass",   text = "" },
+	{ name = "less",   text = "" },
+	{ name = "styl",   text = "" },
+	{ name = "vue",    text = "" },
+	{ name = "svelte", text = "" },
+	{ name = "astro",  text = "" },
+	{ name = "wasm",   text = "" },
 
-# Database
-"*.db"            = ""
-"*.sqlite"        = ""
-"*.sqlite3"       = ""
-"*.mdb"           = ""
+	# Data
+	{ name = "json",    text = "" },
+	{ name = "jsonc",   text = "" },
+	{ name = "json5",   text = "" },
+	{ name = "toml",    text = "" },
+	{ name = "yml",     text = "" },
+	{ name = "yaml",    text = "" },
+	{ name = "xml",     text = "" },
+	{ name = "ini",     text = "" },
+	{ name = "conf",    text = "" },
+	{ name = "cfg",     text = "" },
+	{ name = "csv",     text = "" },
+	{ name = "tsv",     text = "" },
+	{ name = "sql",     text = "" },
+	{ name = "graphql", text = "" },
+	{ name = "gql",     text = "" },
 
-# Notebook
-"*.ipynb"         = ""
+	# Config / lock
+	{ name = "nix",   text = "" },
+	{ name = "lock",  text = "" },
 
-# Default
-"*"  = ""
-"*/" = ""
+	# Security
+	{ name = "key",   text = "" },
+	{ name = "pem",   text = "" },
+	{ name = "crt",   text = "" },
+	{ name = "cer",   text = "" },
+	{ name = "pub",   text = "" },
+	{ name = "gpg",   text = "" },
+	{ name = "asc",   text = "" },
+
+	# Binary / executable
+	{ name = "exe",      text = "" },
+	{ name = "dll",      text = "" },
+	{ name = "so",       text = "" },
+	{ name = "dylib",    text = "" },
+	{ name = "a",        text = "" },
+	{ name = "o",        text = "" },
+	{ name = "obj",      text = "" },
+	{ name = "class",    text = "" },
+	{ name = "jar",      text = "" },
+	{ name = "war",      text = "" },
+	{ name = "ear",      text = "" },
+	{ name = "AppImage", text = "" },
+	{ name = "app",      text = "" },
+	{ name = "deb",      text = "" },
+	{ name = "rpm",      text = "" },
+	{ name = "dmg",      text = "" },
+	{ name = "iso",      text = "" },
+	{ name = "img",      text = "" },
+
+	# Database
+	{ name = "db",       text = "" },
+	{ name = "sqlite",   text = "" },
+	{ name = "sqlite3",  text = "" },
+	{ name = "mdb",      text = "" },
+
+	# Notebook
+	{ name = "ipynb",    text = "" },
+]
+
+conds = [
+	# Fallbacks (lowest priority)
+	{ if = "dir",  text = "" },
+	{ if = "!dir", text = "" },
+]
 
 # : }}}
