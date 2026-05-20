@@ -67,7 +67,7 @@ pager = [
 [open]
 rules = [
 	# Directories
-	{ name = "*/", use = [ "edit", "open", "reveal" ] },
+	{ url = "*/", use = [ "edit", "open", "reveal" ] },
 
 	# Text files
 	{ mime = "text/*",        use = [ "edit", "pager", "reveal" ] },
