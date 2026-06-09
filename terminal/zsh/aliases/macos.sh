@@ -64,5 +64,8 @@ alias repairvolumes="for v in /Volumes/*; do m disk repair volume $v; done"
 # Max/MSP
 alias maxrebuilddb="rm ~/Library/Application\ Support/Cycling\ \'74/Max\ 9/Database/macintosh\ hd--applications-max.x64.maxdb*"
 
+# Audio plugin cleanup
+alias plugin-cleanup="$HOME/dotfiles/scripts/audio-plugin-cleanup.py"
+
 # GPG
 alias gpgrestart="gpgconf --kill gpg-agent"
