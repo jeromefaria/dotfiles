@@ -336,3 +336,6 @@ unsetopt HIST_VERIFY
 if [[ -f "$HOME/.zshrc.local" ]]; then
   source "$HOME/.zshrc.local"
 fi
+
+# GPG signing — ensure TTY is set for fallback pinentry modes
+export GPG_TTY=$(tty)
