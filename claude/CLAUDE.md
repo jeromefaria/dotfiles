@@ -30,6 +30,14 @@ Project CLAUDE.md supplies the project-specific instantiations: base branch name
 2. Transition the ticket → `In Progress` in the project's tracking system.
 3. **Verify the ticket is in the active sprint/iteration.** Backlog tickets must be moved into the active sprint before work begins — otherwise the card won't appear on the sprint board, the work won't count for sprint analytics, and reviewers struggle to find it.
 
+### Pre-implementation discipline (do BEFORE the first feature edit)
+
+Steps that get silently skipped when the work feels "small enough." Each is a real recovery from a real miss — when in doubt, document the step's output so you can prove to yourself you didn't skip it.
+
+- **Refactor-first audit, documented inline.** Scan the files the ticket will touch; list each candidate as Bundle / Defer with a one-line Why. Honour the 3rd-instance extraction threshold. The audit is a deliverable, not a mental exercise — paste it into the PR body under a `## Refactor assessment` section. Doing it in your head and skipping the write-up is the actual failure mode.
+- **Verify the dev-notes / spec against current state.** Predictive planning docs drift between writing and execution. Re-check every "Depends on" / "What's already in place" / "File-by-file impact" claim against the live branch before trusting them. Note any drift in the PR body so the reviewer doesn't trip over the same gap.
+- **Verify the ticket-system state.** Issue type can change transition validity (e.g. Story vs Task on some boards). If the ticket is in backlog, confirm whether the PO wants it moved into the active sprint before you transition status — sprint membership is generally the PO's call, not the implementer's. When uncertain, leave the ticket untouched and surface the decision at PR-open time.
+
 ### During development
 
 - Implement and commit freely using the project's `wip:` (or equivalent) prefix — history quality does not matter yet
@@ -58,7 +66,9 @@ Delegate to a sub-agent (Explore or general-purpose) for independent review. Bri
 
 This is the *real* gate. Catch issues here, before the history rewrite, while the wip state is still recoverable.
 
-Run, in order: unit tests, E2E tests, linter, type checker, manual browser smoke (UI work only — already done during dev, re-run if the diff has changed since). The exact commands are in project CLAUDE.md. Fix any failures before proceeding.
+Run, in order: unit tests, E2E tests, linter, type checker, **production build**, manual browser smoke (UI work only — already done during dev, re-run if the diff has changed since). The exact commands are in project CLAUDE.md. Fix any failures before proceeding.
+
+**Why the production build is non-negotiable:** project type-checkers (e.g. `vue-tsc --noEmit`) operate in isolation-mode and miss errors that the Rollup-based production build catches — most commonly around template-expression type narrowing and prop-handler signature mismatches (e.g. forwarding `refetch` directly to `@click` when it expects `(payload: PointerEvent) => void`). The full build pass catches these *before* CI does. Adopted after TICKET-A (a recent sprint) when a clean `tsc` masked a real TS error caught only at `vite build`.
 
 ### Clean up git history
 
@@ -118,9 +128,23 @@ A soft reset + recommit doesn't change the working tree, so this is a lightweigh
    Common drifts to check: a convention or pattern in `CONTRIBUTING.md` references a file/helper the PR renamed/moved/deleted, or names a "next candidate" the PR shipped; a `README.md` example references behaviour the PR changed; a doc-cited count has shifted; a new env var landed in code but not in `.env.example`.
 
    The reviewer's first action is to follow the recipe and skim repo docs the PR touches; if either falls apart, the review cycle stalls and you've shipped friction onto the reviewer.
-10. Mark PR as **ready for review** and request the project's default reviewer (project CLAUDE.md names them).
-11. Transition ticket → `Code Review`.
-12. **Reassign the ticket to the reviewer** — ticket-system ownership tracks who has the next action; while in Code Review the ticket belongs to the reviewer, not the implementer.
+10. **End-to-end recipe walk — actually execute the Testing-section steps and verify each expected result against rendered behaviour.** Step 9 is the static read-the-body pass; this step is the dynamic walk. Static verification catches stale strings, dead refs, and broken `cp` filenames, but it cannot catch behavioural claims that simply don't hold — UI text that doesn't render, click handlers that silently no-op, framework wrappers where an attribute lands on the wrong DOM element, mock-mode caveats that invalidate the recipe.
+
+    Procedure for UI changes:
+    - Start the dev server fresh (kill any pre-existing 5173 process to avoid `reuseExistingServer` pollution).
+    - Drive each Testing-section step via a one-off Playwright script (e.g. `scripts/smoke-pr<N>-recipe.ts`) using the project's auth + mock-state fixtures. For each step, snapshot the assertion target (visible text, DOM attribute, `document.activeElement`, computed style, console events) and compare against the body's stated expectation. Print the comparison line-by-line so any drift is obvious.
+    - For steps the script cannot drive (DevTools panes, screen-reader announcements, actual click-to-focus delegation through a portal-rendered widget), do a manual browser smoke and verify by hand.
+    - When a step claims a specific date range / numeric input / interaction sequence, verify it's actually **reviewer-feasible**: a recipe that asks the reviewer to navigate 40 calendar months or type into a portal-rendered widget is a recipe smell, even if the underlying behaviour is correct. Replace with a reachable equivalent that yields the same render-branch.
+    - If the script surfaces a real implementation bug (not just a body issue), fix the bug, fold via `--fixup` + autosquash, then re-run the walk. Body claims that match correct behaviour are worth more than body claims that match the current (potentially broken) implementation.
+    - Clean up the script before push (drop or `.gitignore`); it's verification scaffolding, not committed code.
+
+    Procedure for pure-tooling / non-UI changes:
+    - Static body verification (step 9) is usually sufficient. If the Testing section names a command, run it and verify the output matches what the body claims.
+
+    Why this step exists: PR #90 / PR #91 / PR #92 (TICKET-C / 3227 / 3228 in a recent sprint) each had body claims that passed step 9's read-the-body pass but failed step 10's walk-the-recipe pass — an unreachable date range, a fictional DevTools-network-throttling-slows-the-skeleton claim, and a PrimeVue DatePicker where `<label for="X">` paired in DOM but native focus delegation silently didn't fire because the id landed on the wrapper `<span>` instead of the inner `<input>`. None of these would be caught by green CI, green unit tests, or step 9's static read.
+11. Mark PR as **ready for review** and request the project's default reviewer (project CLAUDE.md names them).
+12. Transition ticket → `Code Review`.
+13. **Reassign the ticket to the reviewer** — ticket-system ownership tracks who has the next action; while in Code Review the ticket belongs to the reviewer, not the implementer.
 
 ### When the PR is approved (next action: merge)
 
