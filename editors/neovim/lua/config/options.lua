@@ -27,6 +27,7 @@ opt.ignorecase = true -- Ignore case in search
 opt.smartcase = true -- Override ignorecase if search contains uppercase
 opt.hlsearch = true -- Highlight search results
 opt.incsearch = true -- Incremental search
+opt.gdefault = true  -- Replace all matches by default (no need for /g flag)
 
 -- Indentation
 opt.expandtab = true -- Use spaces instead of tabs
