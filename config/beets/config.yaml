@@ -78,7 +78,7 @@ timeout: 30.0
 per_disc_numbering: no
 verbose: 0
 terminal_encoding:
-original_date: no
+original_date: yes
 artist_credit: no
 id3v23: no
 va_name: Various Artists
