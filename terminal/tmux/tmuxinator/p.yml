@@ -36,3 +36,7 @@ windows:
         - sel && claude --dangerously-skip-permissions --continue
         - clear
         - clear
+  - audio:
+      pre: cd /Volumes/Audio/Audio
+      panes:
+        - claude --dangerously-skip-permissions --continue
