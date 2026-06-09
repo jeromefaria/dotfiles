@@ -68,7 +68,7 @@ This is the *real* gate. Catch issues here, before the history rewrite, while th
 
 Run, in order: unit tests, E2E tests, linter, type checker, **production build**, manual browser smoke (UI work only — already done during dev, re-run if the diff has changed since). The exact commands are in project CLAUDE.md. Fix any failures before proceeding.
 
-**Why the production build is non-negotiable:** project type-checkers (e.g. `vue-tsc --noEmit`) operate in isolation-mode and miss errors that the Rollup-based production build catches — most commonly around template-expression type narrowing and prop-handler signature mismatches (e.g. forwarding `refetch` directly to `@click` when it expects `(payload: PointerEvent) => void`). The full build pass catches these *before* CI does. Adopted after TICKET-A (a recent sprint) when a clean `tsc` masked a real TS error caught only at `vite build`.
+**Why the production build is non-negotiable:** project type-checkers (e.g. `vue-tsc --noEmit`) operate in isolation-mode and miss errors that the Rollup-based production build catches — most commonly around template-expression type narrowing and prop-handler signature mismatches (e.g. forwarding `refetch` directly to `@click` when it expects `(payload: PointerEvent) => void`). The full build pass catches these *before* CI does. Adopted after a real miss when a clean `tsc` masked a TS error that only `vite build` surfaced.
 
 ### Clean up git history
 
@@ -141,7 +141,7 @@ A soft reset + recommit doesn't change the working tree, so this is a lightweigh
     Procedure for pure-tooling / non-UI changes:
     - Static body verification (step 9) is usually sufficient. If the Testing section names a command, run it and verify the output matches what the body claims.
 
-    Why this step exists: PR #90 / PR #91 / PR #92 (TICKET-C / 3227 / 3228 in a recent sprint) each had body claims that passed step 9's read-the-body pass but failed step 10's walk-the-recipe pass — an unreachable date range, a fictional DevTools-network-throttling-slows-the-skeleton claim, and a PrimeVue DatePicker where `<label for="X">` paired in DOM but native focus delegation silently didn't fire because the id landed on the wrapper `<span>` instead of the inner `<input>`. None of these would be caught by green CI, green unit tests, or step 9's static read.
+    Why this step exists: a series of recent PRs each had body claims that passed step 9's read-the-body pass but failed step 10's walk-the-recipe pass — an unreachable date range, a fictional DevTools-network-throttling-slows-the-skeleton claim, and a PrimeVue DatePicker where `<label for="X">` paired in DOM but native focus delegation silently didn't fire because the id landed on the wrapper `<span>` instead of the inner `<input>`. None of these would be caught by green CI, green unit tests, or step 9's static read.
 11. Mark PR as **ready for review** and request the project's default reviewer (project CLAUDE.md names them).
 12. Transition ticket → `Code Review`.
 13. **Reassign the ticket to the reviewer** — ticket-system ownership tracks who has the next action; while in Code Review the ticket belongs to the reviewer, not the implementer.

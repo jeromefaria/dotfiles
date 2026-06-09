@@ -342,11 +342,18 @@ function update() {
   echo "=== Update Complete ==="
 }
 
-# Switch into a MainProject project under src/
-# Usage: sel [project] (default: app_frontend)
+# Switch into a project under the configured work tree's src/
+# Usage: sel [project] (default: $WORK_DEFAULT_PROJECT)
+# Configure in ~/.zshrc.local:
+#   export WORK_PROJECT_BASE="$HOME/path/to/work/tree"
+#   export WORK_DEFAULT_PROJECT="default-project-name"
 function sel() {
-  local project="${1:-app_frontend}"
-  local target="$HOME/Work/Employer/MainProject/src/$project"
+  if [[ -z "$WORK_PROJECT_BASE" || -z "$WORK_DEFAULT_PROJECT" ]]; then
+    echo "Error: set WORK_PROJECT_BASE and WORK_DEFAULT_PROJECT in ~/.zshrc.local"
+    return 1
+  fi
+  local project="${1:-$WORK_DEFAULT_PROJECT}"
+  local target="$WORK_PROJECT_BASE/src/$project"
   if [[ ! -d "$target" ]]; then
     echo "Error: $target does not exist"
     return 1
