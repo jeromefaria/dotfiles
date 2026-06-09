@@ -21,6 +21,7 @@ config/gh/hosts.yml
 config/beets/discogs_token.json
 config/raycast/config.json
 config/jerome-tooling/config.json
+config/acli/
 
 # Session and history files
 config/**/*history*
