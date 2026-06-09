@@ -5,6 +5,7 @@
 .backup
 node_modules
 .DS_Store
+__pycache__/
 
 # Claude Code
 .claude/
