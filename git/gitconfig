@@ -39,6 +39,7 @@
   colorMoved = default
 [commit]
   verbose = true
+	gpgsign = true
 
 # Machine-specific overrides
 # Create ~/.gitconfig.local for machine-specific settings (not tracked in git)
