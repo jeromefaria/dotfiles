@@ -24,6 +24,21 @@ Project-level files override or specialise this layer (e.g. they supply the test
 
 Project CLAUDE.md supplies the project-specific instantiations: base branch name, branch-naming pattern, ticket-tracking system + transitions, test/lint/type-check commands, PR-body URL pattern, reviewer handles, merge-permission specifics. Everything below is the cross-project discipline.
 
+### Mandatory pre-action surface for high-cost actions
+
+The four high-cost actions below are **never** taken without first surfacing the protocol state and waiting for explicit consent. This is structural — the documented protocol is consulted *before* the action, not recalled afterwards as a checklist of what was skipped.
+
+| Action | Surface format before taking it |
+|---|---|
+| `git push` (any branch, any kind) | "Pushing `<branch>` to remote. Checklist for the action: [what's walked / what isn't / blockers]. Ready?" |
+| `gh pr create` (draft or ready) | "Opening PR `<base>...HEAD` as `<draft\|ready>`. Checklist: gates / body verify / forbidden-ref grep / recipe walk / refactor assessment. Ready?" |
+| `gh pr ready` | "Marking PR #N ready. Checklist: CI green on head SHA / Sonar inline annotations triaged / mergeable=MERGEABLE / verification workflow SHIP verdict. Ready?" |
+| `gh pr merge` | "Merging PR #N (`<strategy>` + `<admin>` + `<delete-branch>`). Checklist: reviewDecision=APPROVED or no required reviewers / no open review comments needing reply / mergeable / CI green. Ready?" |
+
+**Why this exists.** Each of these actions is publicly observable (CI fires, notifications go out, branches become discoverable, code lands on `develop`). The protocol's whole point is to front-load 30 seconds of verification so it prevents 5–30 minutes of recovery if a missed step surfaces downstream. Skipping the surface saves the cheap cost and incurs the expensive one. The rule is mechanical: surface first, every time, until the user explicitly opts out of the surface for a defined window.
+
+This is a default, not a per-ticket reminder — the user should not have to ask "did you follow protocol?" or "are you about to push?" for it to fire.
+
 ### Starting a task
 
 1. Branch from the project's base branch (project file names it — often `master`, `develop`, or `main`) using the project's branch-naming pattern.
