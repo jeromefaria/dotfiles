@@ -141,7 +141,6 @@ function svg2css() {
 #   -m, --skip-mas      Skip Mac App Store updates
 #   -o, --skip-omz      Skip Oh My Zsh updates
 #   -t, --skip-tldr     Skip tldr updates
-#   -y, --yes           Skip confirmations (auto-yes)
 function update() {
   local skip_brew=false
   local skip_npm=false
@@ -149,7 +148,6 @@ function update() {
   local skip_mas=false
   local skip_omz=false
   local skip_tldr=false
-  local auto_yes=false
 
   # Parse command-line arguments
   while [[ $# -gt 0 ]]; do
@@ -167,7 +165,6 @@ function update() {
         echo "  -m, --skip-mas      Skip Mac App Store updates"
         echo "  -o, --skip-omz      Skip Oh My Zsh updates"
         echo "  -t, --skip-tldr     Skip tldr updates"
-        echo "  -y, --yes           Skip confirmations (auto-yes)"
         return 0
         ;;
       -s|--skip-brew)
@@ -192,10 +189,6 @@ function update() {
         ;;
       -t|--skip-tldr)
         skip_tldr=true
-        shift
-        ;;
-      -y|--yes)
-        auto_yes=true
         shift
         ;;
       *)
@@ -239,7 +232,7 @@ function update() {
 
     echo ""
     echo "→ Upgrading Homebrew formulae..."
-    if brew upgrade --formulae; then
+    if brew upgrade --formulae --yes; then
       echo "✓ Formulae upgraded"
     else
       echo "✗ Formulae upgrade failed (exit code: $?)"
