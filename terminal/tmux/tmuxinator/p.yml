@@ -27,7 +27,7 @@ windows:
       pre: cd ~
       panes:
         - musikcube
-        - "if [ -d /Volumes/Media/Music/FLAC/ ]; then nicotine; else echo 'Music library not available'; fi"
+        - "if test -d /Volumes/Media/Music/FLAC/; then nicotine; else echo 'Music library not available'; fi"
   - code:
       pre: cd "${WORK_PROJECT_BASE:-$HOME/Code}"
       layout: 4cd7,255x64,0,0[255x51,0,0{127x51,0,0,6,127x51,128,0,11},255x12,0,52{127x12,0,52,12,127x12,128,52,13}]
