@@ -48,7 +48,7 @@ while [ $# -gt 0 ]; do
     --bwlimit)        BWLIMIT_OVERRIDE="$2"; shift 2 ;;
     --bwlimit=*)      BWLIMIT_OVERRIDE="${1#*=}"; shift ;;
     -h|--help)
-      sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'
+      awk 'NR==1{next} /^#/{sub(/^# ?/,""); print; next} /^[[:space:]]*$/{next} {exit}' "$0"
       exit 0
       ;;
     *)
