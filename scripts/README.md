@@ -23,6 +23,15 @@ This directory contains utility scripts for managing your dotfiles installation.
 - **`update-music-plugins.sh`** - Updates music plugin managers (Logic Pro, Ableton, etc.)
 - **`macos-setup.sh`** - macOS-specific system configuration
 
+### Audio Backup
+
+Automated rclone-based backup of `/Volumes/Audio/Audio` to Google Drive, scheduled by launchd with WiFi-allowlist + hotspot gates. See [`audio-backup.md`](audio-backup.md) for full guide.
+
+- **`audio-backup.conf`** - Configuration (single source of truth)
+- **`audio-backup-filters.txt`** - rclone include/exclude rules
+- **`audio-backup-sync.sh`** - One-shot sync action (called by launchd or `audio-backup-manage now`)
+- **`audio-backup-manage.sh`** - Service controller — `start`/`stop`/`status`/`logs`/`now`/`wizard`
+
 ## Script Quality & Linting
 
 All bash scripts in this repository follow strict coding standards and are regularly checked with [ShellCheck](https://www.shellcheck.net/).
