@@ -34,6 +34,15 @@ current_wifi_router() {
   networksetup -getinfo Wi-Fi 2>/dev/null | awk -F': ' '/^Router:/{print $2; exit}'
 }
 
+is_trusted_router() {
+  local router="$1"
+  [ -z "$router" ] && return 1
+  for allowed in "${TRUSTED_ROUTER_ALLOWLIST[@]}"; do
+    [ "$router" = "$allowed" ] && return 0
+  done
+  return 1
+}
+
 if [ ! -f "$CONFIG" ]; then
   echo "ERROR: config not found at $CONFIG" >&2
   exit 1
@@ -230,7 +239,7 @@ wizard_setup() {
   echo "Current Wi-Fi router: ${router:-<not on Wi-Fi>}"
   echo "Configured trusted-router allowlist (from audio-backup.conf):"
   for r in "${TRUSTED_ROUTER_ALLOWLIST[@]}"; do echo "  • $r"; done
-  if [ -n "$router" ] && [[ ! " ${TRUSTED_ROUTER_ALLOWLIST[*]} " =~ " ${router} " ]]; then
+  if [ -n "$router" ] && ! is_trusted_router "$router"; then
     echo -e "${YELLOW}⚠ Current router '$router' is NOT in the allowlist.${NC}"
     echo "  Edit ${CONFIG} to add it (or replace the placeholder)."
   fi
@@ -300,9 +309,7 @@ wizard_interactive() {
   wifi_router="$(current_wifi_router)"
   echo "  Wi-Fi router: ${wifi_router:-<not on Wi-Fi>}"
   local trusted=0
-  for r in "${TRUSTED_ROUTER_ALLOWLIST[@]}"; do
-    [ "$wifi_router" = "$r" ] && trusted=1 && break
-  done
+  is_trusted_router "$wifi_router" && trusted=1
   if [[ "$wifi_router" == ${HOTSPOT_GATEWAY_PATTERN}* ]]; then
     echo -e "${YELLOW}⚠ iPhone hotspot detected${NC}"
   elif [ "$trusted" -eq 1 ]; then
