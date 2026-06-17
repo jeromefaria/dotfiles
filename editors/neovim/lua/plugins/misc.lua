@@ -104,13 +104,35 @@ return {
     lazy = true,
   },
 
-  -- Markdown preview
+  -- Markdown syntax + filetype
   {
     "tpope/vim-markdown",
     ft = "markdown",
     init = function()
       vim.g.markdown_recommended_style = 0 -- Prevent vim-markdown from overriding tabstop
     end,
+  },
+
+  -- Markdown preview (browser, hot-reload, renders Mermaid/diagrams)
+  -- Build runs `npm install` in the plugin's app/ — required so the bundled
+  -- Node.js server can load its tslib + other deps. The plugin's own
+  -- mkdp#util#install() helper is meant to fetch a precompiled binary but
+  -- silently falls back to the Node runtime, so explicit npm install is safer.
+  -- npm install mutates yarn.lock (npm leaves a trace), which makes lazy.nvim
+  -- see the plugin tree as dirty and refuse future updates. The git checkout
+  -- discards that side-effect so the tree stays clean for future :Lazy sync.
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewToggle" },
+    ft = { "markdown" },
+    build = "cd app && npm install && git checkout -- yarn.lock 2>/dev/null || true",
+    init = function()
+      vim.g.mkdp_filetypes = { "markdown" }
+      vim.g.mkdp_auto_close = 0 -- Keep the browser tab open when buffer closes
+    end,
+    keys = {
+      { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", desc = "Markdown Preview Toggle", ft = "markdown" },
+    },
   },
 
   -- Vue.js support
