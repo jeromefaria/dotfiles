@@ -1,0 +1,39 @@
+# rclone --filter-from rules for the Audio drive backup.
+#
+# Order matters: rules are evaluated top-to-bottom, first match wins.
+# `+` = include, `-` = exclude.
+# `**` matches any number of path segments.
+#
+# To preview what will be transferred:
+#   rclone copy /Volumes/Audio/Audio drive:Backup/Audio \
+#     --filter-from ~/dotfiles/scripts/audio-backup-filters.txt --dry-run
+
+# ─── Exclude Live regeneratable artefacts inside any project ──────────
+# These are recreated automatically by Live on next open.
+- Projects/**/Analysis Files/**
+- Projects/**/Autosaves/**
+- Projects/**/Backup/**
+- Projects/**/Undo/**
+- Projects/**/Freeze/**
+
+# Loose Ableton analysis cache files anywhere in the tree
+- **/*.asd
+
+# macOS clutter
+- **/.DS_Store
+- **/Icon?
+- **/._*
+- **/.Trashes/**
+- **/.Spotlight-V100/**
+- **/.fseventsd/**
+
+# ─── Include the in-scope top-level folders ───────────────────────────
++ SYSTEM.md
++ Documents/**
++ Releases/**
++ Recordings/**
++ Projects/**
+
+# ─── Exclude everything else (Libraries/, Samples/, etc.) ─────────────
+# Out of scope per backup design (vendor-redownloadable, large, low value)
+- *

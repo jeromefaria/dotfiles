@@ -67,5 +67,8 @@ alias maxrebuilddb="rm ~/Library/Application\ Support/Cycling\ \'74/Max\ 9/Datab
 # Audio plugin cleanup
 alias plugin-cleanup="$HOME/dotfiles/scripts/audio-plugin-cleanup.py"
 
+# Audio backup (Audio drive → Google Drive, scheduled by launchd)
+alias audio-backup="$HOME/dotfiles/scripts/audio-backup-manage.sh"
+
 # GPG
 alias gpgrestart="gpgconf --kill gpg-agent"
