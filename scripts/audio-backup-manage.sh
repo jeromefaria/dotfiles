@@ -18,10 +18,22 @@
 #   audio-backup now --force --yes  Bypass and skip the hotspot warn
 #   audio-backup wizard             Interactive run (gates, dry-run, confirm, sync)
 #   audio-backup wizard --setup     First-time setup (rclone config, router, plist)
+#
+# Off-device working copy (Audio drive may be disconnected for pull, must be
+# connected for push):
+#   audio-backup pull <remote-rel-path> <local-dest>
+#                                   Download a folder/file from Drive to a
+#                                   local path you choose. No Audio drive
+#                                   required.
+#   audio-backup push <local-src> <remote-rel-path> [--yes]
+#                                   Sync local changes back to the Audio drive
+#                                   (drive must be mounted). Shows a dry-run
+#                                   diff, prompts to confirm. Next nightly
+#                                   backup then reflects to Drive.
 
 set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG="${SCRIPT_DIR}/audio-backup.conf"
+CONFIG="${AUDIO_BACKUP_CONFIG:-${SCRIPT_DIR}/audio-backup.conf}"
 SYNC_SCRIPT="${SCRIPT_DIR}/audio-backup-sync.sh"
 
 # ─── Network detection helper ──────────────────────────────────────────
@@ -340,6 +352,168 @@ wizard_interactive() {
   fi
 }
 
+# ─── Off-device working copy: pull / push ──────────────────────────────
+cmd_pull() {
+  local remote_path="${1:-}"
+  local local_dest="${2:-}"
+
+  if [ -z "$remote_path" ] || [ -z "$local_dest" ]; then
+    echo "Usage: $0 pull <remote-rel-path> <local-dest>" >&2
+    echo "  e.g. $0 pull \"Projects/Albums/MyAlbum\" ~/work/MyAlbum" >&2
+    return 1
+  fi
+
+  if ! command -v rclone &> /dev/null; then
+    echo -e "${RED}✗ rclone not installed.${NC}" >&2
+    return 1
+  fi
+  if ! rclone listremotes | grep -q "^${RCLONE_REMOTE}:$"; then
+    echo -e "${RED}✗ rclone remote '${RCLONE_REMOTE}:' not configured.${NC}" >&2
+    return 1
+  fi
+  if [ ! -f "$FILTERS_FILE" ]; then
+    echo -e "${RED}✗ Filters file not found at $FILTERS_FILE${NC}" >&2
+    return 1
+  fi
+
+  local src="${RCLONE_REMOTE}:${RCLONE_DEST_PATH}/${remote_path}"
+  echo -e "${BLUE}Pulling${NC} $src"
+  echo -e "    ${BLUE}→${NC} $local_dest"
+  mkdir -p "$(dirname "$local_dest")"
+
+  # Probe whether source is a file or a directory. rclone refuses ANY filter
+  # flag (--exclude, --filter-from, etc.) on a single-file source, so we have
+  # to skip excludes when pulling a file.
+  local rclone_filters=()
+  if rclone lsjson --stat "$src" 2>/dev/null | grep -q '"IsDir": *true'; then
+    # Directory: apply path-independent excludes for Live regeneratables.
+    # (Not using --filter-from because the nightly filter file is anchored
+    # at the drive root and breaks when applied to a sub-path.)
+    rclone_filters=(
+      --exclude='Analysis Files/**'
+      --exclude='Autosaves/**'
+      --exclude='Backup/**'
+      --exclude='Undo/**'
+      --exclude='Freeze/**'
+      --exclude='*.asd'
+      --exclude='.DS_Store'
+      --exclude='._*'
+    )
+  fi
+
+  # copyto (not copy): preserves exact destination path semantics for both
+  # files and directories. Plain `copy` nests files inside a dir at the
+  # given path, which is not what users expect.
+  # ${arr[@]+...} idiom: safely expand even when array is empty under `set -u`.
+  if rclone copyto "$src" "$local_dest" \
+       ${rclone_filters[@]+"${rclone_filters[@]}"} \
+       --progress; then
+    echo -e "${GREEN}✓ Pull complete${NC}"
+    echo "  When ready to merge back: $0 push \"$local_dest\" \"$remote_path\""
+    return 0
+  else
+    echo -e "${RED}✗ Pull failed${NC}" >&2
+    return 1
+  fi
+}
+
+cmd_push() {
+  local local_src=""
+  local remote_path=""
+  local skip_confirm=0
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --yes|-y) skip_confirm=1; shift ;;
+      *)
+        if   [ -z "$local_src" ];   then local_src="$1"
+        elif [ -z "$remote_path" ]; then remote_path="$1"
+        else echo "Unexpected argument: $1" >&2; return 1
+        fi
+        shift
+        ;;
+    esac
+  done
+
+  if [ -z "$local_src" ] || [ -z "$remote_path" ]; then
+    echo "Usage: $0 push <local-src> <remote-rel-path> [--yes]" >&2
+    echo "  e.g. $0 push ~/work/MyAlbum \"Projects/Albums/MyAlbum\"" >&2
+    return 1
+  fi
+
+  if [ ! -e "$local_src" ]; then
+    echo -e "${RED}✗ Local source not found: $local_src${NC}" >&2
+    return 1
+  fi
+  if [ ! -f "$SENTINEL" ]; then
+    echo -e "${RED}✗ Audio drive not mounted (sentinel $SENTINEL missing).${NC}" >&2
+    echo "  Push requires the Audio drive to be connected." >&2
+    return 1
+  fi
+  if [ ! -f "$FILTERS_FILE" ]; then
+    echo -e "${RED}✗ Filters file not found at $FILTERS_FILE${NC}" >&2
+    return 1
+  fi
+
+  local target="${SOURCE}/${remote_path}"
+  local rsync_src="$local_src"
+  local rsync_dst="$target"
+  local target_existed=1
+  [ -e "$target" ] || target_existed=0
+
+  # Folder push needs trailing slashes for rsync's "copy contents" semantics
+  if [ -d "$local_src" ]; then
+    rsync_src="${local_src%/}/"
+    rsync_dst="${target%/}/"
+  fi
+
+  echo -e "${BLUE}── Dry-run preview ──${NC}"
+  if [ "$target_existed" -eq 0 ]; then
+    echo -e "${YELLOW}⚠ Target does not exist on Audio drive — push will CREATE: $target${NC}"
+  fi
+  # --filter from rclone-style is not rsync-compatible; instead use rsync's own exclude pattern set
+  rsync -a --dry-run --itemize-changes \
+    --exclude='Analysis Files/' --exclude='Autosaves/' --exclude='Backup/' \
+    --exclude='Undo/' --exclude='Freeze/' --exclude='*.asd' \
+    --exclude='.DS_Store' --exclude='._*' \
+    "$rsync_src" "$rsync_dst" | head -40
+
+  echo ""
+  if [ "$skip_confirm" -eq 0 ]; then
+    read -r -p "Proceed with push? [y/N]: " ans
+    if [[ ! "$ans" =~ ^[Yy]$ ]]; then
+      echo "Aborted."
+      return 0
+    fi
+  fi
+
+  mkdir -p "$(dirname "$target")"
+  if rsync -a --info=stats2 \
+    --exclude='Analysis Files/' --exclude='Autosaves/' --exclude='Backup/' \
+    --exclude='Undo/' --exclude='Freeze/' --exclude='*.asd' \
+    --exclude='.DS_Store' --exclude='._*' \
+    "$rsync_src" "$rsync_dst"; then
+    echo -e "${GREEN}✓ Push complete${NC} → $target"
+  else
+    echo -e "${RED}✗ Push failed${NC}" >&2
+    return 1
+  fi
+
+  echo ""
+  if [ "$skip_confirm" -eq 0 ]; then
+    read -r -p "Delete local source ($local_src)? [y/N]: " ans
+    if [[ "$ans" =~ ^[Yy]$ ]]; then
+      rm -rf "$local_src"
+      echo -e "${GREEN}✓ Deleted local source${NC}"
+    else
+      echo "  (kept — delete manually when ready)"
+    fi
+  fi
+
+  echo ""
+  echo "The next nightly backup run will reflect this to Drive."
+}
+
 # ─── Dispatch ──────────────────────────────────────────────────────────
 case "${1:-}" in
   start)    shift; cmd_start "$@" ;;
@@ -349,6 +523,8 @@ case "${1:-}" in
   logs)     shift; cmd_logs "$@" ;;
   now)      shift; cmd_now "$@" ;;
   wizard)   shift; cmd_wizard "$@" ;;
+  pull)     shift; cmd_pull "$@" ;;
+  push)     shift; cmd_push "$@" ;;
   ""|-h|--help)
     usage
     exit 0

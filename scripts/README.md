@@ -30,7 +30,8 @@ Automated rclone-based backup of `/Volumes/Audio/Audio` to Google Drive, schedul
 - **`audio-backup.conf`** - Configuration (single source of truth)
 - **`audio-backup-filters.txt`** - rclone include/exclude rules
 - **`audio-backup-sync.sh`** - One-shot sync action (called by launchd or `audio-backup-manage now`)
-- **`audio-backup-manage.sh`** - Service controller — `start`/`stop`/`status`/`logs`/`now`/`wizard`
+- **`audio-backup-manage.sh`** - Service controller — `start`/`stop`/`status`/`logs`/`now`/`wizard`/`pull`/`push`
+- **`test-audio-backup.sh`** - Integration test suite (mocked Drive + launchctl)
 
 ## Script Quality & Linting
 
