@@ -18,7 +18,7 @@
 
 set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG="${SCRIPT_DIR}/audio-backup.conf"
+CONFIG="${AUDIO_BACKUP_CONFIG:-${SCRIPT_DIR}/audio-backup.conf}"
 
 if [ ! -f "$CONFIG" ]; then
   echo "ERROR: config not found at $CONFIG" >&2
