@@ -13,12 +13,12 @@ __pycache__/
 # Sensitive credentials and tokens
 config/nicotine/config
 config/nicotine/config.old
-config/tuir/refresh-token
 config/op/config
 config/hub
-config/AWSVPNClient/Preferences
+config/AWSVPNClient/
 config/gh/hosts.yml
 config/beets/discogs_token.json
+config/beets/secrets.yaml
 config/raycast/config.json
 config/jerome-tooling/config.json
 config/acli/
@@ -56,8 +56,6 @@ config/nvim/sessions/
 config/MusicBrainz/.Picard.ini.synclock
 
 # Large/build directories
-config/AWSVPNClient/logs/
-config/AWSVPNClient/OpenVpnConfigs/current_connection.txt
 config/nvim/bundle/
 config/nvim/pack/nvim/start
 config/nvim/plugged/
