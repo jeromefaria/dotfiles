@@ -4,12 +4,8 @@
 PLIST="$HOME/Library/LaunchAgents/com.jeromefaria.mailsync.plist"
 SERVICE="com.jeromefaria.mailsync"
 
-# Colors
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m'
+# Shared TTY-aware colors
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../scripts" && pwd)/lib/io.sh"
 
 case "$1" in
   start)

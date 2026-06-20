@@ -62,12 +62,8 @@ fi
 # shellcheck disable=SC1090
 source "$CONFIG"
 
-# Colors
-if [ -t 1 ]; then
-  GREEN='\033[0;32m'; BLUE='\033[0;34m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
-else
-  GREEN=''; BLUE=''; YELLOW=''; RED=''; NC=''
-fi
+# Shared TTY-aware colors
+source "${SCRIPT_DIR}/lib/io.sh"
 
 usage() {
   # Print the leading comment block (everything after the shebang up to the
