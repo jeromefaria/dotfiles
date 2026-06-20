@@ -54,6 +54,8 @@ config/musikcube/playback.json
 config/musikcube/1/
 config/nvim/sessions/
 config/MusicBrainz/.Picard.ini.synclock
+config/MusicBrainz/Picard*.ini
+config/vifm/vifminfo
 
 # Large/build directories
 config/nvim/bundle/
