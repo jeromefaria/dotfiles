@@ -6,24 +6,14 @@
 
 set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# Shared color palette + print_header. Local print_success/error/warning/info
+# are overridden below — they use 2-space indents under headers and the
+# error/warning variants tally counters.
+source "$(dirname "${BASH_SOURCE[0]}")/lib/io.sh"
 
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 ISSUES_FOUND=0
 WARNINGS_FOUND=0
-
-# Functions for colored output
-print_header() {
-    echo ""
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${BLUE}  $1${NC}"
-    echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-}
 
 print_success() {
     echo -e "  ${GREEN}✓${NC} $1"
