@@ -1,0 +1,34 @@
+# ============================================================================
+# Machine-Specific SSH Host Configuration
+# ============================================================================
+# Template for personal/machine-specific SSH hosts. Copy to ~/.ssh/config.local
+# (NOT tracked in git) and customize.
+#
+# Copy command:
+#   cp ~/dotfiles/ssh/config.local.example ~/.ssh/config.local
+#
+# Loaded via `Include ~/.ssh/config.local` from ~/.ssh/config. Because Include
+# is processed inline and SSH config is first-match-wins, host blocks here
+# take precedence over the global blocks defined after the Include directive.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Example: a LAN host on your home network
+# ----------------------------------------------------------------------------
+# Host pi
+#   HostName 192.168.x.x
+#   User youruser
+
+# ----------------------------------------------------------------------------
+# Example: a work host that should use a non-default key
+# ----------------------------------------------------------------------------
+# Host work.example.com
+#   IdentityFile ~/.ssh/work_ed25519
+
+# ----------------------------------------------------------------------------
+# Example: a host that should bypass the 1Password agent and use a specific
+# on-disk key directly (e.g. CI access keys).
+# ----------------------------------------------------------------------------
+# Host ci.example.com
+#   IdentityFile ~/.ssh/ci_key
+#   IdentityAgent none

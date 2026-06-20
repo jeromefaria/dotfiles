@@ -1,0 +1,44 @@
+# ============================================================================
+# SSH Client Configuration
+# ============================================================================
+# Source of truth: ~/dotfiles/ssh/config (symlinked to ~/.ssh/config).
+# Machine-specific host blocks live in ~/.ssh/config.local (NOT tracked).
+# See ~/dotfiles/ssh/config.local.example for the template.
+#
+# Block order matters: SSH config is first-match-wins per parameter, so
+# more-specific blocks must come before general defaults.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# Global defaults — apply to every connection unless overridden below.
+# ----------------------------------------------------------------------------
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_rsa
+
+# ----------------------------------------------------------------------------
+# Machine-local host overrides.
+# Loaded early so host-specific settings here win first-match-wins evaluation
+# against the global 1Password block further down. Untracked.
+# ----------------------------------------------------------------------------
+Include ~/.ssh/config.local
+
+# ----------------------------------------------------------------------------
+# GitHub — opt out of 1Password for this host. Uses the macOS launchd agent
+# (SSH_AUTH_SOCK), with the key's passphrase cached in the macOS Keychain via
+# `ssh-add --apple-use-keychain ~/.ssh/id_rsa`. Survives reboot, no per-session
+# 1Password unlock required.
+# Must appear BEFORE the Host * 1Password block.
+# ----------------------------------------------------------------------------
+Host github.com
+  IdentityFile ~/.ssh/id_rsa
+  IdentityAgent SSH_AUTH_SOCK
+  UseKeychain yes
+  AddKeysToAgent yes
+
+# ----------------------------------------------------------------------------
+# Default agent: 1Password for every other host.
+# ----------------------------------------------------------------------------
+Host *
+  IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
