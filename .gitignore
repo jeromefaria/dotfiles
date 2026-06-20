@@ -23,6 +23,7 @@ config/raycast/config.json
 config/jerome-tooling/config.json
 config/acli/
 config/rclone/rclone.conf
+ssh/config.local
 
 # Session and history files
 config/**/*history*
