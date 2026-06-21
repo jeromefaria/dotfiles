@@ -510,6 +510,12 @@ cmd_push() {
 }
 
 # ─── Dispatch ──────────────────────────────────────────────────────────
+# Guarded so tests can source the file to call cmd_* / generate_plist
+# directly without triggering the case dispatch.
+if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+  return 0
+fi
+
 case "${1:-}" in
   start)    shift; cmd_start "$@" ;;
   stop)     shift; cmd_stop "$@" ;;

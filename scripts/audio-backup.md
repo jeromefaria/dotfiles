@@ -445,7 +445,7 @@ bash ~/dotfiles/scripts/test-audio-backup.sh           # quiet (test results onl
 bash ~/dotfiles/scripts/test-audio-backup.sh -v        # verbose (subcommand output)
 ```
 
-**Coverage (24 tests, 36 assertions):**
+**Coverage (25 tests, 37 assertions):**
 
 - **Pull** (file + folder, with-junk-and-excludes-applied)
 - **Push** (existing target, new path, refused when drive not mounted, respects rsync excludes)
@@ -454,6 +454,7 @@ bash ~/dotfiles/scripts/test-audio-backup.sh -v        # verbose (subcommand out
 - **Sync end-to-end** (`--dry-run` writes nothing, `--force` writes to Drive)
 - **Forced-run network paths** (hotspot caps at `BWLIMIT_FORCE`, untrusted router caps at `BWLIMIT_FORCE`, `--bwlimit` override wins)
 - **launchctl lifecycle** (`status` when stopped, `start` errors without plist, `start`/`stop` roundtrip with mock)
+- **Plist generation** (`generate_plist` output passes `plutil -lint`; macOS only)
 - **Help / usage** (no-args, `--help`, unknown command rejection)
 
 **How the mocks work:**
