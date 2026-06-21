@@ -378,6 +378,64 @@ Separation of concerns. `sync.sh` is the action — composable, callable from an
 
 ---
 
+## Troubleshooting
+
+Quick map from symptom → where to look.
+
+### Logs
+
+| Source | Path | What's in it |
+|---|---|---|
+| Per-run log (one per scheduled or manual sync) | `${LOG_DIR}/audio-backup-YYYY-MM-DD.log` | The full rclone output for that run, including the gate-check banner |
+| launchd stdout | `${LOG_DIR}/launchd.out.log` | What launchd captured from the most recent run. Usually empty (sync.sh writes to its own log). |
+| launchd stderr | `${LOG_DIR}/launchd.err.log` | launchd-level errors (plist syntax, ProgramArguments resolution, permissions). If this file is non-empty, the schedule itself isn't running. |
+
+`${LOG_DIR}` is the path set in `audio-backup.conf` (default: `/Volumes/Audio/Audio/Documents/.backup-logs/`). `audio-backup logs` tails the latest per-run log and, if non-empty, the launchd stderr.
+
+### Common symptoms
+
+**"Service not loaded" in `audio-backup status`**
+- The plist hasn't been installed. Run `audio-backup wizard --setup` to generate `~/Library/LaunchAgents/com.jeromefaria.audiobackup.plist` and load it.
+
+**"Audio drive not mounted (sentinel `SYSTEM.md` missing)"** (exit 0, silent skip)
+- Drive is genuinely unplugged, OR the sentinel file at the configured `SENTINEL` path was deleted. Re-mount the drive; if it's mounted but the sentinel is missing, `touch /Volumes/Audio/Audio/SYSTEM.md` to restore it.
+
+**"Router not in trusted allowlist"** (exit 0, silent skip)
+- The SSID's gateway IP isn't listed in `TRUSTED_ROUTER_ALLOWLIST`. Either you're on a different network than usual, or your router got a new LAN IP after a reboot. Check with `ipconfig getoption en0 router` (or `en1`) and add the IP to the allowlist in `audio-backup.conf`. Pass `--force` for a one-off override on an untrusted network.
+
+**"Connected via hotspot — refusing to sync"** (`--force` required)
+- The gateway matches `HOTSPOT_GATEWAY_PATTERN` (default `172.20.10.`). Intentional — guards against burning mobile data. Use `--force --yes` to override.
+
+**"rclone remote `drive:` not configured"** (fatal, exit 1)
+- The remote name in `RCLONE_REMOTE` doesn't exist in your rclone config. Run `rclone listremotes` to verify; run `rclone config` to set it up. The config lives at `~/.config/rclone/rclone.conf` (gitignored).
+
+**Filters file not found** (fatal, exit 1)
+- `FILTERS_FILE` points at a path that doesn't exist. Should be `~/dotfiles/scripts/audio-backup-filters.txt`. If you moved the dotfiles checkout, update `audio-backup.conf` accordingly.
+
+**Sync ran but a file you expected is missing on Drive**
+- Check `audio-backup-filters.txt` — the file may be excluded by a rule. Pull from Drive and verify it's not there (`audio-backup pull "<path>" /tmp/check`).
+
+**Scheduled run didn't fire at the scheduled time**
+- Check `${LOG_DIR}/launchd.err.log` for plist errors. If empty, the Mac was asleep at the scheduled time and launchd doesn't fire missed catchup runs by default — the schedule fires at the next match. To run on wake, regenerate the plist with the wizard (it sets `StartCalendarInterval`, not `RunAtLoad`).
+
+**`audio-backup logs` shows nothing**
+- No runs have completed since the last log-dir cleanup. Run `audio-backup now --force --dry-run` to write a dry-run log and confirm the path is correct.
+
+### Resetting the state
+
+If something's wrong and you want to start clean (without losing the Drive copy):
+
+```bash
+audio-backup stop          # unload the launchd job
+rm "$LOG_DIR"/launchd.*.log  # clear launchd captures
+audio-backup wizard --setup  # regenerate the plist and reload
+audio-backup now --dry-run   # smoke-test the full gate stack
+```
+
+This does NOT touch the rclone remote, the on-disk filters file, or any per-run log older than the launchd capture.
+
+---
+
 ## Testing
 
 A self-contained integration suite lives at `test-audio-backup.sh`. It runs in a temporary directory with fake Audio drive + fake Drive remote (via rclone's `local:` backend) and a mocked `launchctl`, so it never touches your real launchd state or makes real Google Drive calls.
