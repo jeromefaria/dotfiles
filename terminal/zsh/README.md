@@ -1,28 +1,35 @@
-# Shell Configuration
+# ZSH Configuration
 
 Modular Zsh configuration with aliases and functions organized by category.
 
 ## Structure
 
 ```
-shell/
-├── aliases/           # Alias files by category
-│   ├── chrome.sh     # Chrome development
-│   ├── core.sh       # Navigation, clipboard, etc.
-│   ├── dev.sh        # Docker, Tmux, Jekyll
-│   ├── folders.sh    # Directory shortcuts
-│   ├── git.sh        # Git aliases
-│   ├── macos.sh      # macOS-specific
-│   └── tools.sh      # Modern CLI remappings
-├── functions/         # Functions by purpose
-│   ├── core.sh       # Utility functions
-│   ├── dev.sh        # Development utilities
-│   ├── macos.sh      # macOS functions
-│   └── media.sh      # Audio/video conversion
-├── zshrc             # Main configuration
-├── bashrc.portable   # Portable bash config for restricted environments
-└── PORTABLE.md       # Portable config documentation
+terminal/zsh/
+├── aliases/                   # Alias files by category
+│   ├── chrome.sh              # Chrome development
+│   ├── core.sh                # Navigation, clipboard, etc.
+│   ├── ddc.sh                 # External monitor brightness (ddcctl)
+│   ├── dev.sh                 # Docker, Tmux, Jekyll
+│   ├── folders.sh             # Directory shortcuts
+│   ├── git.sh                 # Git aliases
+│   ├── macos.sh               # macOS-specific
+│   └── tools.sh               # Modern CLI remappings
+├── functions/                 # Functions by purpose
+│   ├── clipboard.sh           # Clipboard helpers
+│   ├── command-palette.sh     # fzf-based command palette
+│   ├── core.sh                # Utility functions
+│   ├── dev.sh                 # Development utilities
+│   ├── fzf-enhancements.sh    # Extra fzf bindings/widgets
+│   ├── git-leader.sh          # Leader-key git workflow
+│   ├── macos.sh               # macOS functions
+│   ├── media.sh               # Audio/video conversion
+│   ├── ps5-detect.sh          # PS5 LAN detection
+│   └── vim-commands.sh        # vim-shaped shell shortcuts
+└── zshrc                      # Main configuration
 ```
+
+Portable bash setup (`bashrc.portable`, `PORTABLE.md`) lives separately under `terminal/bash/`.
 
 ## Aliases
 
