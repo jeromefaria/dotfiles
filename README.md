@@ -5,7 +5,7 @@ Personal dotfiles for macOS development environment.
 ## Quick Navigation
 
 **New to dotfiles?** → Get started in 5 minutes with the [Quick Start](#-quick-start) below
-**Looking for something specific?** → Browse the [Configuration Index](CONFIGURATION-INDEX.md) (Master catalog of 50+ configs)
+**Looking for something specific?** → Each top-level directory has its own README — start with the [Configuration Files](#-configuration-files) section below
 **Having issues?** → Check [Troubleshooting](docs/TROUBLESHOOTING.md) for common problems and solutions
 **Want to understand the system?** → Read the [Architecture Guide](docs/ARCHITECTURE.md) to see how it all works
 **Contributing or developing?** → See [Development Documentation](docs/dev/README.md) for roadmap and guidelines
@@ -218,7 +218,6 @@ This will export lists of installed packages to:
 Comprehensive documentation organized by category for easy navigation.
 
 ### Getting Started
-- [Configuration Index](CONFIGURATION-INDEX.md) - Master catalog of all 50+ configurations with status tracking
 - [Quick Start Guide](docs/QUICK-START.md) - Get up and running in 5 minutes
 - [Architecture](docs/ARCHITECTURE.md) - System design and how components integrate
 - [Machine-Specific Setup](docs/MACHINE-SPECIFIC-OVERRIDES.md) - Customize per-machine (work vs personal)
@@ -275,8 +274,6 @@ Comprehensive documentation organized by category for easy navigation.
 - Migration Guide for version upgrades
 - Developer Documentation (ROADMAP, CONTRIBUTING)
 - Component docs: Musikcube, Vifm, Starship, Aria2, enhanced Vim
-
-See [Configuration Index](CONFIGURATION-INDEX.md) for the complete catalog with detailed status indicators.
 
 ## 🛠 Configuration Files
 

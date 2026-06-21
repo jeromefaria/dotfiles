@@ -413,9 +413,8 @@ eval "$(starship init zsh)"
 
 ## Related Documentation
 
-- [Shell Configuration](../../shell/README.md) - ZSH setup and vi-mode
+- [Shell Configuration](../../terminal/zsh/README.md) - ZSH setup and vi-mode
 - [Architecture](../../docs/ARCHITECTURE.md) - How components integrate
-- [Configuration Index](../../CONFIGURATION-INDEX.md) - All configurations
 
 ## Resources
 
@@ -429,8 +428,7 @@ eval "$(starship init zsh)"
 
 ## Related Documentation
 
-- [Shell Configuration](../../shell/README.md) - ZSH setup and vi-mode
-- [Configuration Index](../../CONFIGURATION-INDEX.md) - All configurations
+- [Shell Configuration](../../terminal/zsh/README.md) - ZSH setup and vi-mode
 - [Architecture](../../docs/ARCHITECTURE.md) - How components integrate
 - [Troubleshooting](../../docs/TROUBLESHOOTING.md) - Common issues
 
@@ -438,7 +436,7 @@ eval "$(starship init zsh)"
 
 - Run health check: `./scripts/health-check.sh`
 - Review [Troubleshooting Guide](../../docs/TROUBLESHOOTING.md)
-- Check [Shell documentation](../../shell/README.md)
+- Check [Shell documentation](../../terminal/zsh/README.md)
 
 ---
 

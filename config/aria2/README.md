@@ -551,7 +551,6 @@ For private trackers:
 
 ## Related Documentation
 
-- [Configuration Index](../../CONFIGURATION-INDEX.md) - All configurations
 - [Packages](../../packages/README.md) - Package installation
 
 ## Resources
@@ -566,7 +565,6 @@ For private trackers:
 
 ## Related Documentation
 
-- [Configuration Index](../../CONFIGURATION-INDEX.md) - All configurations
 - [Packages](../../packages/README.md) - Package installation
 - [Troubleshooting](../../docs/TROUBLESHOOTING.md) - Common issues
 

@@ -293,14 +293,7 @@ set number
    - Use component README template
    - Include all required sections
 
-2. **Entry in CONFIGURATION-INDEX.md:**
-   ```markdown
-   ### NewTool (`config/newtool/`)
-
-   **Documentation:** ✅ Complete - [config/newtool/README.md](config/newtool/README.md)
-   ```
-
-3. **Cross-references to related docs:**
+2. **Cross-references to related docs:**
    - Link from main README.md
    - Link from related component docs
    - Add to architecture doc if it's a major component
@@ -504,7 +497,6 @@ Brief description of changes.
 ## Documentation
 
 - [ ] Updated component README
-- [ ] Updated CONFIGURATION-INDEX.md
 - [ ] Updated main README.md navigation (if new component)
 - [ ] Added troubleshooting section (if applicable)
 
@@ -553,7 +545,6 @@ Closes #[issue number]
 
 - [ ] **Documentation:**
   - [ ] README.md created/updated
-  - [ ] CONFIGURATION-INDEX.md updated
   - [ ] Troubleshooting section added
   - [ ] Cross-references updated
 

@@ -478,6 +478,5 @@ curl -fsSL <raw-url>/bootstrap.sh | bash
 - `scripts/config.sh` - Shared configuration (201 lines)
 - `scripts/bootstrap.sh` - One-liner installer (144 lines)
 - `scripts/restore.sh` - Backup restoration (286 lines)
-- `docs/INSTALLATION-IMPROVEMENTS.md` - This document
 
 **Total:** +631 lines of installation infrastructure improvements
