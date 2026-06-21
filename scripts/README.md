@@ -21,7 +21,24 @@ This directory contains utility scripts for managing your dotfiles installation.
 ### Utility Scripts
 
 - **`update-music-plugins.sh`** - Updates music plugin managers (Logic Pro, Ableton, etc.)
-- **`macos-setup.sh`** - macOS-specific system configuration
+- **`macos-setup.sh`** - macOS-specific system configuration; orchestrates the modular `macos/` scripts below
+- **`arturia-fix-presets.py`** - Reorganizes the Arturia preset library on the external audio drive
+- **`audio-plugin-cleanup.py`** - Detects and removes VST2 plugins that have a VST3 twin (dry-run / trash / rm modes)
+
+### macOS Modules (`macos/`)
+
+Sourced by `macos-setup.sh`; can also be run individually.
+
+- **`base.sh`** - Core OS settings
+- **`apps.sh`** - Stock-app preferences
+- **`developer.sh`** - Developer-oriented settings (Xcode, terminal, etc.)
+- **`personal.sh`** - Per-machine personal preferences
+- **`backup-settings.sh`** / **`restore-settings.sh`** / **`export-settings.sh`** - Backup, restore, and export of macOS defaults
+- **`helpers.sh`** - Shared `log_*` / `print_*` helpers + macOS-specific utilities
+
+### Shared Library (`lib/`)
+
+- **`io.sh`** - TTY-aware colors + `print_header` / `print_success` / `print_error` / `print_warning` / `print_info` / `print_step` helpers, sourced by `install.sh`, `health-check.sh`, `config.sh`, `audio-backup-*.sh`, and `mail/scripts/manage-sync.sh`
 
 ### Audio Backup
 
