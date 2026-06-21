@@ -278,7 +278,7 @@ if ls "$DOTFILES_DIR/terminal/zsh/"*.backup 1> /dev/null 2>&1; then
 fi
 
 # Check 6: Shell Performance
-print_header "6. Shell Performance"
+print_header "11. Shell Performance"
 
 # Measure ZSH startup time
 if command -v zsh &> /dev/null; then
