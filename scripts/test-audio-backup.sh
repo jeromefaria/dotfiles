@@ -125,6 +125,24 @@ esac
 exit 0
 MOCKEOF
 chmod +x "$TESTROOT_BIN/launchctl"
+
+# Mock networksetup so router-gate tests can choose what `current_wifi_router`
+# returns. Reads MOCK_ROUTER env var; empty = "no Wi-Fi" simulation.
+cat > "$TESTROOT_BIN/networksetup" <<'MOCKEOF'
+#!/bin/bash
+# Only handle the one invocation audio-backup-sync.sh makes.
+if [ "$1" = "-getinfo" ] && [ "$2" = "Wi-Fi" ]; then
+  if [ -n "${MOCK_ROUTER:-}" ]; then
+    echo "Router: $MOCK_ROUTER"
+  else
+    echo "Router: (null)"
+  fi
+  exit 0
+fi
+exit 0
+MOCKEOF
+chmod +x "$TESTROOT_BIN/networksetup"
+
 export PATH="$TESTROOT_BIN:$PATH"
 
 # ─── Test helpers ──────────────────────────────────────────────────────
@@ -363,7 +381,38 @@ else
   echo -e "  ${RED}✗${NC} status=$status, output: $output"; FAIL=$((FAIL+1))
 fi
 
-heading "TEST 21: Pull on a directory applies LIVE_JUNK excludes"
+heading "TEST 21: Forced run on hotspot caps at BWLIMIT_FORCE"
+# Mock networksetup to claim we're on an iPhone hotspot (172.20.10.x range).
+# --force --yes skips the interactive warn; sync should proceed with the
+# forced bandwidth cap and log a warning naming "hotspot".
+# Note: env var must be set inside the $(...) subshell so it crosses the
+# exec into audio-backup-manage.sh's child process.
+output=$(MOCK_ROUTER="172.20.10.1" "$MANAGE" now --force --yes --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && echo "$output" | grep -qi "hotspot" && echo "$output" | grep -q "20M"; then
+  echo -e "  ${GREEN}✓${NC} hotspot detected, BWLIMIT_FORCE=20M applied"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 22: Forced run on untrusted router caps at BWLIMIT_FORCE"
+# Some random non-allowlisted, non-hotspot router IP.
+output=$(MOCK_ROUTER="10.0.0.1" "$MANAGE" now --force --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && echo "$output" | grep -qi "untrusted" && echo "$output" | grep -q "20M"; then
+  echo -e "  ${GREEN}✓${NC} untrusted router detected, BWLIMIT_FORCE=20M applied"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 23: --bwlimit override wins over BWLIMIT_FORCE on forced run"
+# On a hotspot with --force --yes, --bwlimit 50M should win over BWLIMIT_FORCE=20M.
+output=$(MOCK_ROUTER="172.20.10.1" "$MANAGE" now --force --yes --bwlimit 50M --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && echo "$output" | grep -q "50M"; then
+  echo -e "  ${GREEN}✓${NC} --bwlimit 50M override propagated to rclone"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 24: Pull on a directory applies LIVE_JUNK excludes"
 # Audit gap: TEST 1 covers single-file pull (no excludes expected), TEST 2
 # covers folder pull but the fixture has no junk to filter, so a regression
 # that always took the file-branch would slip excludes silently. This puts
