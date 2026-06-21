@@ -412,7 +412,27 @@ else
   echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
 fi
 
-heading "TEST 24: Pull on a directory applies LIVE_JUNK excludes"
+heading "TEST 24: generate_plist writes a plutil-valid plist"
+# Audit gap: the wizard generates a plist via shell variable interpolation,
+# but nothing checked that the result is well-formed. Source the manage
+# script under the BASH_SOURCE guard, call generate_plist directly, then
+# run `plutil -lint`. macOS only — silently skipped elsewhere.
+if command -v plutil &> /dev/null; then
+  (
+    # shellcheck disable=SC1090
+    source "$MANAGE"
+    generate_plist
+  )
+  if plutil -lint "$TESTROOT/test.plist" > /dev/null 2>&1; then
+    echo -e "  ${GREEN}✓${NC} generated plist passes plutil -lint"; PASS=$((PASS+1))
+  else
+    echo -e "  ${RED}✗${NC} plutil -lint failed:"; plutil -lint "$TESTROOT/test.plist"; FAIL=$((FAIL+1))
+  fi
+else
+  echo -e "  ${YELLOW}⊘${NC} plutil not available — skipping (non-macOS host)"
+fi
+
+heading "TEST 25: Pull on a directory applies LIVE_JUNK excludes"
 # Audit gap: TEST 1 covers single-file pull (no excludes expected), TEST 2
 # covers folder pull but the fixture has no junk to filter, so a regression
 # that always took the file-branch would slip excludes silently. This puts
