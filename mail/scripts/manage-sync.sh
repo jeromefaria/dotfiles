@@ -4,14 +4,15 @@
 PLIST="$HOME/Library/LaunchAgents/com.jeromefaria.mailsync.plist"
 SERVICE="com.jeromefaria.mailsync"
 
-# Shared TTY-aware colors
-source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../scripts" && pwd)/lib/io.sh"
+# Shared TTY-aware colors + launchd service primitives
+LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../scripts" && pwd)/lib"
+source "${LIB_DIR}/io.sh"
+source "${LIB_DIR}/launchd-svc.sh"
 
 case "$1" in
   start)
     echo -e "${BLUE}Starting mail sync service...${NC}"
-    launchctl load "$PLIST" 2>/dev/null
-    if launchctl list | grep -q "$SERVICE"; then
+    if svc_start "$PLIST" "$SERVICE"; then
       echo -e "${GREEN}✅ Service started successfully${NC}"
       echo -e "${YELLOW}Mail will sync every 15 minutes${NC}"
     else
@@ -22,8 +23,7 @@ case "$1" in
 
   stop)
     echo -e "${BLUE}Stopping mail sync service...${NC}"
-    launchctl unload "$PLIST" 2>/dev/null
-    if ! launchctl list | grep -q "$SERVICE"; then
+    if svc_stop "$PLIST" "$SERVICE"; then
       echo -e "${GREEN}✅ Service stopped${NC}"
     else
       echo -e "${RED}❌ Failed to stop service${NC}"
@@ -33,10 +33,7 @@ case "$1" in
 
   restart)
     echo -e "${BLUE}Restarting mail sync service...${NC}"
-    launchctl unload "$PLIST" 2>/dev/null
-    sleep 1
-    launchctl load "$PLIST" 2>/dev/null
-    if launchctl list | grep -q "$SERVICE"; then
+    if svc_restart "$PLIST" "$SERVICE"; then
       echo -e "${GREEN}✅ Service restarted${NC}"
     else
       echo -e "${RED}❌ Failed to restart service${NC}"
@@ -46,7 +43,7 @@ case "$1" in
 
   status)
     echo -e "${BLUE}Mail sync service status:${NC}"
-    if launchctl list | grep -q "$SERVICE"; then
+    if svc_is_loaded "$SERVICE"; then
       echo -e "${GREEN}✅ Running${NC}"
       echo ""
       echo "Last run info:"
