@@ -1,6 +1,9 @@
 -- Classic Keymaps Configuration
--- Restored from original vim-plug era configuration
--- Leader key: , (comma)
+-- Restored from original vim-plug era configuration.
+-- Leader key: , (comma).
+--
+-- Mode-agnostic bindings (window nav, move-line, paste, diagnostic nav,
+-- jk-escape, terminal-escape) live in config/keymaps-shared.lua.
 
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
@@ -9,12 +12,12 @@ local opts = { noremap = true, silent = true }
 vim.g.mapleader = ","
 vim.g.maplocalleader = ","
 
+-- Mode-agnostic bindings (shared with modern)
+require("config.keymaps-shared").apply()
+
 --------------------------------------------------------------------------------
 -- INSERT MODE
 --------------------------------------------------------------------------------
-
--- Remap escape
-keymap.set("i", "jk", "<Esc>", opts)
 
 -- Arrow for fat arrow (useful for JS/TS)
 keymap.set("i", "<C-l>", " => ", opts)
@@ -74,22 +77,6 @@ keymap.set("n", "H", "gT", opts) -- Previous tab
 keymap.set("n", "L", "gt", opts) -- Next tab
 
 --------------------------------------------------------------------------------
--- NORMAL MODE - Move Lines
---------------------------------------------------------------------------------
-
-keymap.set("n", "<A-j>", ":m .+1<CR>==", opts)
-keymap.set("n", "<A-k>", ":m .-2<CR>==", opts)
-
---------------------------------------------------------------------------------
--- NORMAL MODE - Window Navigation
---------------------------------------------------------------------------------
-
-keymap.set("n", "<C-h>", "<C-w>h", opts)
-keymap.set("n", "<C-j>", "<C-w>j", opts)
-keymap.set("n", "<C-k>", "<C-w>k", opts)
-keymap.set("n", "<C-l>", "<C-w>l", opts)
-
---------------------------------------------------------------------------------
 -- VISUAL MODE
 --------------------------------------------------------------------------------
 
@@ -100,20 +87,12 @@ keymap.set("v", "<S-Tab>", "<gv", opts)
 -- Execute dot command on selection
 keymap.set("v", ".", ":norm.<CR>", opts)
 
--- Move lines
-keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
-keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
-
--- Better paste (don't yank replaced text)
-keymap.set("v", "p", '"_dP', opts)
-
 --------------------------------------------------------------------------------
 -- TERMINAL MODE
 --------------------------------------------------------------------------------
 
--- Exit terminal mode (original used kk)
+-- Exit terminal mode (original used kk; <Esc> is also bound in keymaps-shared)
 keymap.set("t", "kk", "<C-\\><C-n>", opts)
-keymap.set("t", "<Esc>", "<C-\\><C-n>", opts)
 
 --------------------------------------------------------------------------------
 -- PLUGIN MAPPINGS - File Explorer (NERDTree -> NvimTree)
@@ -183,11 +162,12 @@ end, { desc = "Flash jump" })
 
 --------------------------------------------------------------------------------
 -- LSP KEYMAPS (set when LSP attaches)
--- These remain mostly the same as they're standard
+-- Single shared augroup name (KeymapLsp) with clear=true so a mode toggle
+-- replaces the previous handler rather than stacking a second one.
 --------------------------------------------------------------------------------
 
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("ClassicLspConfig", { clear = true }),
+  group = vim.api.nvim_create_augroup("KeymapLsp", { clear = true }),
   callback = function(ev)
     local bufopts = { noremap = true, silent = true, buffer = ev.buf }
     keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
@@ -199,6 +179,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
     keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
     keymap.set("n", "gr", vim.lsp.buf.references, bufopts)
+    -- Classic uses <leader>F for format because <leader>f is grep
     keymap.set("n", "<leader>F", function()
       vim.lsp.buf.format({ async = true })
     end, bufopts)
@@ -206,13 +187,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 --------------------------------------------------------------------------------
--- DIAGNOSTIC KEYMAPS
+-- DIAGNOSTIC KEYMAPS (classic-specific; [d / ]d / <leader>dl live in keymaps-shared)
 --------------------------------------------------------------------------------
 
-keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
-keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts) -- Note: conflicts with file explorer in modern mode
-keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, opts)
+-- Note: <leader>e conflicts with file explorer in modern mode, but that's fine
+-- because each mode loads only its own set after the toggle.
+keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
 
 --------------------------------------------------------------------------------
 -- TERMINAL
