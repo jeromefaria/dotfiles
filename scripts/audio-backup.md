@@ -445,13 +445,14 @@ bash ~/dotfiles/scripts/test-audio-backup.sh           # quiet (test results onl
 bash ~/dotfiles/scripts/test-audio-backup.sh -v        # verbose (subcommand output)
 ```
 
-**Coverage (21 tests, 33 assertions):**
+**Coverage (24 tests, 36 assertions):**
 
 - **Pull** (file + folder, with-junk-and-excludes-applied)
 - **Push** (existing target, new path, refused when drive not mounted, respects rsync excludes)
 - **Argument validation** (missing args, non-existent source)
 - **Sync gates** (mount missing, untrusted router, filters file missing, rclone remote not configured)
 - **Sync end-to-end** (`--dry-run` writes nothing, `--force` writes to Drive)
+- **Forced-run network paths** (hotspot caps at `BWLIMIT_FORCE`, untrusted router caps at `BWLIMIT_FORCE`, `--bwlimit` override wins)
 - **launchctl lifecycle** (`status` when stopped, `start` errors without plist, `start`/`stop` roundtrip with mock)
 - **Help / usage** (no-args, `--help`, unknown command rejection)
 
@@ -460,6 +461,7 @@ bash ~/dotfiles/scripts/test-audio-backup.sh -v        # verbose (subcommand out
 - **Fake Drive remote**: an rclone config with `[testdrive] type = local` pointing at a temp directory. Same code path as the real `drive:` backend (it's all `rclone copyto`/`rclone copy` calls under the hood) but no network.
 - **Fake Audio drive**: a temp dir with `SYSTEM.md` sentinel touched in. Tests overlay/remove the sentinel to exercise mount-gate logic.
 - **Mock `launchctl`**: a small bash script in the test's `bin/` dir, prepended to `PATH`. Stores "loaded labels" as empty files in a state dir. `launchctl list` lists them, `load`/`unload` create/remove them. Lets us verify start/stop/restart behavior without polluting the user's actual launchd state.
+- **Mock `networksetup`**: same bin/ dir, prepended to PATH. Reads the `MOCK_ROUTER` env var and prints `Router: <value>` so `current_wifi_router()` resolves to whatever the test wants. Used by the forced-run-on-hotspot / forced-run-on-untrusted / `--bwlimit-override` tests. Env var must be set inside the `$(…)` subshell that captures output, not as a leading assignment to the test line — see TEST 21–23 for the working pattern.
 - **Config override**: the production scripts honor `AUDIO_BACKUP_CONFIG` env var (defaulting to the standard path). Tests point this at a temp config that overrides all paths to the fake dirs.
 
 The test config sets `TRUSTED_ROUTER_ALLOWLIST=("0.0.0.0")` (a non-routable value that will never match a real router) so that "happy path" sync tests must use `--force` to bypass the gate — and the gate test (TEST 10) implicitly verifies it works without any per-test config swap.
