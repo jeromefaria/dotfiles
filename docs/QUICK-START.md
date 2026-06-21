@@ -246,7 +246,6 @@ Now that you're set up, explore the full documentation:
 
 ### Learn the System
 - [Architecture](ARCHITECTURE.md) - Understand how everything fits together
-- [Configuration Index](../CONFIGURATION-INDEX.md) - Browse all 50+ configurations
 
 ### Deep Dive into Components
 - [Shell Documentation](../terminal/zsh/README.md) - Learn all aliases and functions

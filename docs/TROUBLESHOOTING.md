@@ -726,7 +726,6 @@ If you're still stuck:
    - [Shell README](../terminal/zsh/README.md)
    - [Neovim README](../editors/neovim/README.md)
    - [Mail README](../mail/README.md)
-   - [See all docs](../CONFIGURATION-INDEX.md)
 
 4. **Review architecture:**
    - [Architecture Guide](ARCHITECTURE.md)

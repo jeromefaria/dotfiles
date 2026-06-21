@@ -542,9 +542,8 @@ Both are included in this dotfiles. Choose based on your needs:
 ## Related Documentation
 
 - [Yazi Configuration](../yazi/README.md) - Alternative modern file manager
-- [Shell Configuration](../../shell/README.md) - Shell aliases and functions
+- [Shell Configuration](../../terminal/zsh/README.md) - Shell aliases and functions
 - [Vim Configuration](../../editors/vim/README.md) - Text editor integration
-- [Configuration Index](../../CONFIGURATION-INDEX.md) - All configurations
 
 ## Resources
 
@@ -558,9 +557,8 @@ Both are included in this dotfiles. Choose based on your needs:
 ## Related Documentation
 
 - [Yazi Configuration](../yazi/README.md) - Alternative modern file manager
-- [Shell Configuration](../../shell/README.md) - Shell aliases and functions
+- [Shell Configuration](../../terminal/zsh/README.md) - Shell aliases and functions
 - [Vim Configuration](../../editors/vim/README.md) - Text editor integration
-- [Configuration Index](../../CONFIGURATION-INDEX.md) - All configurations
 - [Troubleshooting](../../docs/TROUBLESHOOTING.md) - Common issues
 
 ## Getting Help

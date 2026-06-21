@@ -115,7 +115,6 @@ Currently manual testing. Future: Add automated tests for:
 ```
 dotfiles/
 ├── README.md                    # Main entry point
-├── CONFIGURATION-INDEX.md       # Master catalog
 ├── .gitignore                   # Ignored files
 │
 ├── shell/                       # Shell configuration
@@ -241,34 +240,21 @@ dotfiles/
    nvim config/newtool/README.md
    ```
 
-4. **Update CONFIGURATION-INDEX.md:**
-   ```markdown
-   ### NewTool (`config/newtool/`)
-
-   **Documentation:** ✅ Complete - [config/newtool/README.md](config/newtool/README.md)
-
-   **Features:**
-   - Feature 1
-   - Feature 2
-
-   **Configuration:** `config-file` (XX lines)
-   ```
-
-5. **Add to appropriate package Brewfile:**
+4. **Add to appropriate package Brewfile:**
    ```bash
    # Edit packages/Brewfile.utilities (or appropriate category)
    brew "newtool"
    ```
 
-6. **Test installation:**
+5. **Test installation:**
    ```bash
    ./scripts/install.sh
    brew install newtool
    ```
 
-7. **Commit changes:**
+6. **Commit changes:**
    ```bash
-   git add config/newtool/ scripts/install.sh packages/Brewfile.utilities CONFIGURATION-INDEX.md
+   git add config/newtool/ scripts/install.sh packages/Brewfile.utilities
    git commit -m "feat(config): add newtool configuration"
    ```
 
@@ -289,18 +275,12 @@ dotfiles/
 
 3. **Update cross-references:**
    - Add to main README.md navigation
-   - Add to CONFIGURATION-INDEX.md if component doc
    - Link from related documentation
 
 4. **Add to main README.md:**
    ```markdown
    ### Component Documentation
    - [NewTool](config/newtool/README.md) - Description
-   ```
-
-5. **Update CONFIGURATION-INDEX.md status:**
-   ```markdown
-   **Documentation:** ✅ Complete - [config/newtool/README.md](config/newtool/README.md)
    ```
 
 ### Making Breaking Changes
@@ -400,7 +380,6 @@ dotfiles/
 ## Related Documentation
 
 - [Main README](../../README.md)
-- [Configuration Index](../../CONFIGURATION-INDEX.md)
 - [Other relevant docs]
 
 ## Resources
@@ -458,7 +437,6 @@ key: value
 
 - [ ] Review "Last Updated" dates in docs
 - [ ] Check for broken links (manual or use tool)
-- [ ] Update CONFIGURATION-INDEX.md coverage
 - [ ] Test health-check.sh
 - [ ] Review open GitHub issues
 
@@ -472,7 +450,6 @@ key: value
 
 ### Per New Feature
 
-- [ ] Add to CONFIGURATION-INDEX.md
 - [ ] Create README if new component
 - [ ] Update relevant cross-references
 - [ ] Add to troubleshooting if applicable
