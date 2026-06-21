@@ -363,6 +363,24 @@ else
   echo -e "  ${RED}✗${NC} status=$status, output: $output"; FAIL=$((FAIL+1))
 fi
 
+heading "TEST 21: Pull on a directory applies LIVE_JUNK excludes"
+# Audit gap: TEST 1 covers single-file pull (no excludes expected), TEST 2
+# covers folder pull but the fixture has no junk to filter, so a regression
+# that always took the file-branch would slip excludes silently. This puts
+# junk in the Drive copy and proves the directory-branch excludes fire.
+mkdir -p "$FAKE_DRIVE/Backup/Audio/Projects/JunkProj/Analysis Files"
+mkdir -p "$FAKE_DRIVE/Backup/Audio/Projects/JunkProj/Autosaves"
+echo "session content"          > "$FAKE_DRIVE/Backup/Audio/Projects/JunkProj/session.als"
+echo "cached"                   > "$FAKE_DRIVE/Backup/Audio/Projects/JunkProj/Analysis Files/cache.asd"
+echo "autosave"                 > "$FAKE_DRIVE/Backup/Audio/Projects/JunkProj/Autosaves/old.als"
+echo "trash"                    > "$FAKE_DRIVE/Backup/Audio/Projects/JunkProj/.DS_Store"
+rm -rf "$FAKE_LOCAL/JunkProj"
+run_manage pull "Projects/JunkProj" "$FAKE_LOCAL/JunkProj"
+assert "legit file pulled"           "[ -f \"$FAKE_LOCAL/JunkProj/session.als\" ]"
+assert "Analysis Files/ excluded"    "[ ! -d \"$FAKE_LOCAL/JunkProj/Analysis Files\" ]"
+assert "Autosaves/ excluded"         "[ ! -d \"$FAKE_LOCAL/JunkProj/Autosaves\" ]"
+assert ".DS_Store excluded"          "[ ! -f \"$FAKE_LOCAL/JunkProj/.DS_Store\" ]"
+
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}━━━ Summary ━━━${NC}"

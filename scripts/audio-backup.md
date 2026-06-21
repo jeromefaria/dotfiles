@@ -445,9 +445,9 @@ bash ~/dotfiles/scripts/test-audio-backup.sh           # quiet (test results onl
 bash ~/dotfiles/scripts/test-audio-backup.sh -v        # verbose (subcommand output)
 ```
 
-**Coverage (20 tests, 29 assertions):**
+**Coverage (21 tests, 33 assertions):**
 
-- **Pull** (file + folder)
+- **Pull** (file + folder, with-junk-and-excludes-applied)
 - **Push** (existing target, new path, refused when drive not mounted, respects rsync excludes)
 - **Argument validation** (missing args, non-existent source)
 - **Sync gates** (mount missing, untrusted router, filters file missing, rclone remote not configured)
