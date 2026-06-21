@@ -62,8 +62,9 @@ fi
 # shellcheck disable=SC1090
 source "$CONFIG"
 
-# Shared TTY-aware colors
+# Shared TTY-aware colors + launchd service primitives
 source "${SCRIPT_DIR}/lib/io.sh"
+source "${SCRIPT_DIR}/lib/launchd-svc.sh"
 
 usage() {
   # Print the leading comment block (everything after the shebang up to the
@@ -118,8 +119,7 @@ EOF
 cmd_start() {
   [ -f "$LAUNCHD_PLIST" ] || { echo -e "${RED}❌ Plist not found at $LAUNCHD_PLIST.${NC}"; echo "Run: $0 wizard --setup"; return 1; }
   echo -e "${BLUE}Starting $LAUNCHD_LABEL...${NC}"
-  launchctl load "$LAUNCHD_PLIST" 2>/dev/null
-  if launchctl list | grep -q "$LAUNCHD_LABEL"; then
+  if svc_start "$LAUNCHD_PLIST" "$LAUNCHD_LABEL"; then
     echo -e "${GREEN}✅ Service started — backup will run daily at ${SCHEDULE_HOUR}:$(printf "%02d" "$SCHEDULE_MINUTE")${NC}"
   else
     echo -e "${RED}❌ Failed to start${NC}"
@@ -129,8 +129,7 @@ cmd_start() {
 
 cmd_stop() {
   echo -e "${BLUE}Stopping $LAUNCHD_LABEL...${NC}"
-  launchctl unload "$LAUNCHD_PLIST" 2>/dev/null
-  if ! launchctl list | grep -q "$LAUNCHD_LABEL"; then
+  if svc_stop "$LAUNCHD_PLIST" "$LAUNCHD_LABEL"; then
     echo -e "${GREEN}✅ Service stopped${NC}"
   else
     echo -e "${RED}❌ Failed to stop${NC}"
@@ -146,7 +145,7 @@ cmd_restart() {
 
 cmd_status() {
   echo -e "${BLUE}$LAUNCHD_LABEL status:${NC}"
-  if launchctl list | grep -q "$LAUNCHD_LABEL"; then
+  if svc_is_loaded "$LAUNCHD_LABEL"; then
     echo -e "${GREEN}✅ Service loaded (scheduled daily at ${SCHEDULE_HOUR}:$(printf "%02d" "$SCHEDULE_MINUTE"))${NC}"
   else
     echo -e "${YELLOW}⚪ Service not loaded${NC}"
