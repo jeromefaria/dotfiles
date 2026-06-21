@@ -247,14 +247,14 @@ Comprehensive documentation organized by category for easy navigation.
   - [Auto-Sync Setup](mail/AUTO-SYNC-SETUP.md) - Background sync with launchd
 
 **Window Management**
-- [Yabai](config/yabai/README.md) - Tiling window manager for macOS (418+ lines)
-- [SKHD](config/skhd/README.md) - Hotkey daemon with window management shortcuts (244+ lines)
-- [Karabiner](config/karabiner/README.md) - Advanced keyboard remapping (650+ lines)
+- [Yabai](config/yabai/README.md) - Tiling window manager for macOS
+- [SKHD](config/skhd/README.md) - Hotkey daemon with window management shortcuts
+- [Karabiner](config/karabiner/README.md) - Advanced keyboard remapping
 
 **File & Media Management**
-- [Yazi](config/yazi/README.md) - Modern file manager with rich previews (770+ lines)
+- [Yazi](config/yazi/README.md) - Modern file manager with rich previews
 - [Vifm](config/vifm/README.md) - Vim-like dual-pane file manager
-- [Beets](config/beets/README.md) - Music library management and organization (880+ lines)
+- [Beets](config/beets/README.md) - Music library management and organization
 - [Musikcube](config/musikcube/README.md) - Terminal-based music player
 - [Aria2](config/aria2/README.md) - Download manager with torrent support
 
@@ -264,16 +264,7 @@ Comprehensive documentation organized by category for easy navigation.
 
 ### Documentation Status
 
-📊 **Coverage:** 100% of major configurations documented
-📚 **Total Documentation:** 45+ comprehensive guides, 15,000+ lines
-✅ **All Major Components:** Complete READMEs with examples, keybindings, and troubleshooting
-
-**Recent Additions (December 2024):**
-- Quick Start Guide for new users
-- Comprehensive Troubleshooting organized by symptom
-- Migration Guide for version upgrades
-- Developer Documentation (ROADMAP, CONTRIBUTING)
-- Component docs: Musikcube, Vifm, Starship, Aria2, enhanced Vim
+Each top-level directory and the major `config/` subdirectories have their own README. Use those as the source of truth — they live with the code they document and don't drift independently.
 
 ## 🛠 Configuration Files
 

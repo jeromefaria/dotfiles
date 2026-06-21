@@ -115,86 +115,94 @@ Currently manual testing. Future: Add automated tests for:
 ```
 dotfiles/
 ├── README.md                    # Main entry point
-├── .gitignore                   # Ignored files
+├── PERFORMANCE.md               # Shell-startup performance notes
+├── .gitignore
 │
-├── shell/                       # Shell configuration
-│   ├── zshrc                    # Main ZSH config
-│   ├── aliases/                 # Modular aliases (7 files)
-│   ├── functions/               # Modular functions (4 files)
-│   ├── README.md                # Shell documentation
-│   ├── QUICK_REFERENCE.md       # Daily use cheat sheet
-│   ├── CHANGELOG.md             # Shell change history
-│   └── PORTABLE.md              # Portable bash config
+├── terminal/                    # Shell + terminal multiplexer
+│   ├── zsh/                     # Zsh (primary)
+│   │   ├── zshrc                # Main config
+│   │   ├── aliases/             # Modular aliases (8 files)
+│   │   ├── functions/           # Modular functions (10 files)
+│   │   └── README.md
+│   ├── bash/                    # Portable bash (Git Bash / restricted envs)
+│   │   ├── bashrc.portable
+│   │   └── PORTABLE.md
+│   └── tmux/                    # Tmux + tmuxinator templates
+│       ├── tmux.conf
+│       └── README.md
 │
-├── editors/                     # Editor configurations
-│   ├── neovim/                  # Neovim (primary)
-│   │   ├── init.lua             # Entry point
-│   │   ├── lua/                 # Lua configuration
-│   │   │   ├── config/          # Core settings
-│   │   │   └── plugins/         # Plugin configs
-│   │   └── README.md            # Neovim documentation
+├── editors/                     # Editor configs
+│   ├── neovim/                  # Neovim (primary, lua + lazy.nvim)
+│   │   ├── init.lua
+│   │   ├── lua/{config,plugins}/
+│   │   └── README.md
 │   └── vim/                     # Vim (fallback)
-│       ├── vimrc                # Vim config
-│       └── README.md            # Vim documentation
+│       ├── vimrc
+│       └── README.md
 │
-├── terminal/                    # Terminal multiplexer
-│   ├── tmux.conf                # Tmux configuration
-│   ├── tmuxinator/              # Session templates
-│   └── README.md                # Tmux documentation
+├── git/                         # Git (gitconfig + portable + local-overrides example)
+│   ├── gitconfig                # Symlinked to ~/.gitconfig
+│   ├── gitconfig.portable
+│   ├── gitconfig.local.example
+│   └── README.md
 │
-├── git/                         # Version control
-│   ├── gitconfig                # Git configuration
-│   ├── gitconfig.local.example  # Machine-specific template
-│   └── README.md                # Git documentation
+├── ssh/                         # SSH client config (split portable / local)
+│   ├── config                   # Symlinked to ~/.ssh/config
+│   ├── config.local.example
+│   └── README.md
 │
-├── config/                      # XDG-compliant configs
-│   ├── README.md                # Config directory overview
-│   ├── aria2/                   # Download manager
-│   ├── beets/                   # Music library
-│   ├── karabiner/               # Keyboard remapping
-│   ├── musikcube/               # Music player
-│   ├── skhd/                    # Hotkey daemon
-│   ├── starship/                # Shell prompt
-│   ├── vifm/                    # File manager
-│   ├── yabai/                   # Window manager
-│   ├── yazi/                    # File manager
-│   └── [20+ other tools]/
+├── claude/                      # Claude Code config
+│   ├── CLAUDE.md                # Global instructions
+│   └── README.md
 │
-├── mail/                        # Email configuration
-│   ├── README.md                # Mail overview
-│   ├── FEATURES.md              # Feature documentation
-│   ├── QUICK-REFERENCE.md       # Keybinding reference
-│   ├── GMAIL-SYNC-SETUP.md      # Gmail setup guide
-│   ├── AUTO-SYNC-SETUP.md       # Background sync
-│   ├── TESTING-GUIDE.md         # Testing guide
-│   └── mutt/                    # Neomutt configs
+├── config/                      # XDG-compliant tool configs (~/.config/*)
+│   ├── README.md                # Overview
+│   └── <34 subdirs>             # 10 have their own README (aria2, beets,
+│                                # jerome-tooling, karabiner, musikcube, skhd,
+│                                # starship, vifm, yabai, yazi)
 │
-├── packages/                    # Package management
-│   ├── README.md                # Package system docs
-│   ├── Brewfile.*               # Categorized packages
-│   ├── profiles/                # Installation profiles
-│   ├── install-profile.sh       # Profile installer
-│   └── sync-packages.sh         # Package sync tool
+├── mail/                        # Mbsync + notmuch + neomutt offline mail
+│   ├── README.md
+│   ├── FEATURES.md
+│   ├── QUICK-REFERENCE.md
+│   ├── GMAIL-SYNC-SETUP.md
+│   ├── AUTO-SYNC-SETUP.md
+│   ├── TESTING-GUIDE.md
+│   ├── mutt/                    # Neomutt config
+│   └── scripts/                 # sync-mail.sh + manage-sync.sh
 │
-├── scripts/                     # Automation scripts
-│   ├── bootstrap.sh             # One-line installer
-│   ├── install.sh               # Main installer
-│   ├── uninstall.sh             # Uninstaller
-│   ├── health-check.sh          # System verification
-│   ├── restore.sh               # Backup restore
-│   └── macos-setup.sh           # macOS preferences
+├── packages/                    # Homebrew Brewfiles + install profiles
+│   ├── README.md
+│   ├── Brewfile.*               # Categorised package lists
+│   ├── profiles/                # Installation profiles (minimal, full, etc.)
+│   └── install-profile.sh
 │
-└── docs/                        # Documentation
-    ├── QUICK-START.md           # 5-minute setup
-    ├── TROUBLESHOOTING.md       # Common issues
-    ├── MIGRATION-GUIDE.md       # Version upgrades
-    ├── ARCHITECTURE.md          # System design
-    ├── MACHINE-SPECIFIC-OVERRIDES.md  # Per-machine setup
-    └── dev/                     # Developer docs
+├── scripts/                     # Automation
+│   ├── README.md
+│   ├── install.sh               # Main installer (BASH_SOURCE-guarded for tests)
+│   ├── bootstrap.sh             # `curl | bash` one-liner — self-contained
+│   ├── uninstall.sh
+│   ├── health-check.sh
+│   ├── restore.sh / config.sh
+│   ├── macos-setup.sh + macos/  # Modular macOS defaults setup
+│   ├── audio-backup-*.sh, *.conf, *.md  # Drive → rclone backup w/ launchd
+│   ├── test-*.sh                # Integration tests (mocked launchctl + drives)
+│   └── lib/                     # Shared bash libs (io.sh, launchd-svc.sh)
+│
+├── bootstrap/                   # Git Bash-only setup helper
+│   └── gitbash-setup.sh
+│
+└── docs/                        # Cross-cutting documentation
+    ├── QUICK-START.md
+    ├── ARCHITECTURE.md
+    ├── TROUBLESHOOTING.md
+    ├── macos-configuration.md
+    ├── MACHINE-SPECIFIC-OVERRIDES.md
+    └── dev/                     # Contributor docs
         ├── README.md            # This file
-        ├── CONTRIBUTING.md      # Contribution guide
-        ├── ROADMAP.md           # Future plans
-        └── session-notes/       # Archived notes
+        ├── CONTRIBUTING.md
+        ├── ROADMAP.md
+        └── session-notes/
 ```
 
 ### Key Integration Points
