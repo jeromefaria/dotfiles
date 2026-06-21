@@ -95,7 +95,6 @@ The script will:
 dotfiles/
 ├── scripts/
 │   ├── macos-setup.sh           # Main orchestrator script
-│   ├── macos-setup.sh.old       # Backup of original script
 │   └── macos/                   # Modular configuration scripts
 │       ├── backup-settings.sh   # Backup current settings
 │       ├── restore-settings.sh  # Restore from backup
@@ -449,7 +448,9 @@ If you're on an older macOS version:
 
 ## Migration from Old Script
 
-The original `macos-setup.sh` has been backed up to `macos-setup.sh.old`.
+The migration from the original single-file `macos-setup.sh` to the
+modular layout below is complete. The legacy script is preserved in git
+history if you ever need to look at it.
 
 ### Key Differences
 

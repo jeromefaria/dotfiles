@@ -110,30 +110,6 @@ execute() {
     return 0
 }
 
-# Safely set a default value
-safe_defaults_write() {
-    local domain="$1"
-    local key="$2"
-    local type="$3"
-    local value="$4"
-
-    if defaults write "$domain" "$key" -"$type" "$value" 2>/dev/null; then
-        return 0
-    else
-        log_warning "Could not set $domain $key"
-        return 1
-    fi
-}
-
-# Safely read a default value
-safe_defaults_read() {
-    local domain="$1"
-    local key="$2"
-    local default="${3:-(not set)}"
-
-    defaults read "$domain" "$key" 2>/dev/null || echo "$default"
-}
-
 # Create directory if it doesn't exist
 ensure_dir() {
     local dir="$1"
@@ -218,8 +194,6 @@ export -f get_macos_major_version
 export -f is_macos
 export -f safe_killall
 export -f execute
-export -f safe_defaults_write
-export -f safe_defaults_read
 export -f ensure_dir
 export -f backup_file
 export -f print_separator
