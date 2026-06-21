@@ -1,6 +1,9 @@
 -- Modern Keymaps Configuration
 -- Leader key: <Space>
--- This is the current lazy.nvim era configuration
+-- This is the current lazy.nvim era configuration.
+--
+-- Mode-agnostic bindings (window nav, move-line, paste, diagnostic nav,
+-- jk-escape, terminal-escape) live in config/keymaps-shared.lua.
 
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
@@ -9,14 +12,8 @@ local opts = { noremap = true, silent = true }
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Remap escape in insert mode
-keymap.set("i", "jk", "<Esc>", opts)
-
--- Better window navigation
-keymap.set("n", "<C-h>", "<C-w>h", opts)
-keymap.set("n", "<C-j>", "<C-w>j", opts)
-keymap.set("n", "<C-k>", "<C-w>k", opts)
-keymap.set("n", "<C-l>", "<C-w>l", opts)
+-- Mode-agnostic bindings (shared with classic)
+require("config.keymaps-shared").apply()
 
 -- Resize windows
 keymap.set("n", "<C-Up>", ":resize -2<CR>", opts)
@@ -35,15 +32,6 @@ keymap.set("n", "<leader>h", ":nohlsearch<CR>", opts)
 -- Better indenting
 keymap.set("v", "<", "<gv", opts)
 keymap.set("v", ">", ">gv", opts)
-
--- Move text up and down
-keymap.set("n", "<A-j>", ":m .+1<CR>==", opts)
-keymap.set("n", "<A-k>", ":m .-2<CR>==", opts)
-keymap.set("v", "<A-j>", ":m '>+1<CR>gv=gv", opts)
-keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", opts)
-
--- Better paste in visual mode (doesn't yank replaced text)
-keymap.set("v", "p", '"_dP', opts)
 
 -- Save file
 keymap.set("n", "<leader>w", ":w<CR>", opts)
@@ -68,9 +56,12 @@ keymap.set("n", "<leader>fr", ":Telescope oldfiles<CR>", opts)
 keymap.set("n", "<leader>fc", ":Telescope git_commits<CR>", opts)
 keymap.set("n", "<leader>fs", ":Telescope git_status<CR>", opts)
 
--- LSP keymaps (set when LSP attaches)
+-- LSP keymaps (set when LSP attaches).
+-- Single shared augroup name (KeymapLsp) with clear=true so re-loading
+-- after a mode toggle replaces the previous handler instead of stacking
+-- a second one on top of it.
 vim.api.nvim_create_autocmd("LspAttach", {
-	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+	group = vim.api.nvim_create_augroup("KeymapLsp", { clear = true }),
 	callback = function(ev)
 		local bufopts = { noremap = true, silent = true, buffer = ev.buf }
 		keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
@@ -88,12 +79,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- Diagnostic keymaps
-keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
+-- Diagnostic (modern-specific; [d / ]d / <leader>dl live in keymaps-shared)
 keymap.set("n", "<leader>d", vim.diagnostic.open_float, opts)
-keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, opts)
 
 -- Terminal
 keymap.set("n", "<leader>tt", ":terminal<CR>", opts)
-keymap.set("t", "<Esc>", "<C-\\><C-n>", opts) -- Exit terminal mode
