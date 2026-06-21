@@ -85,6 +85,8 @@ DOTFILES_SCRIPTS_DIR="$SCRIPT_DIR"
 FILTERS_FILE="$SCRIPT_DIR/audio-backup-filters.txt"
 LOG_DIR="$TEST_LOGDIR"
 LOG_FILE_PATTERN="audio-backup-%Y-%m-%d.log"
+LIVE_JUNK_DIRS=("Analysis Files" "Autosaves" "Backup" "Undo" "Freeze")
+LIVE_JUNK_GLOBS=("*.asd" ".DS_Store" "._*")
 LAUNCHD_LABEL="com.test.audiobackup"
 LAUNCHD_PLIST="$TESTROOT/test.plist"
 EOF

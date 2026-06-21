@@ -381,19 +381,16 @@ cmd_pull() {
   # to skip excludes when pulling a file.
   local rclone_filters=()
   if rclone lsjson --stat "$src" 2>/dev/null | grep -q '"IsDir": *true'; then
-    # Directory: apply path-independent excludes for Live regeneratables.
+    # Directory: build rclone-style excludes from LIVE_JUNK_* in audio-backup.conf.
     # (Not using --filter-from because the nightly filter file is anchored
     # at the drive root and breaks when applied to a sub-path.)
-    rclone_filters=(
-      --exclude='Analysis Files/**'
-      --exclude='Autosaves/**'
-      --exclude='Backup/**'
-      --exclude='Undo/**'
-      --exclude='Freeze/**'
-      --exclude='*.asd'
-      --exclude='.DS_Store'
-      --exclude='._*'
-    )
+    local d g
+    for d in "${LIVE_JUNK_DIRS[@]}"; do
+      rclone_filters+=(--exclude="${d}/**")
+    done
+    for g in "${LIVE_JUNK_GLOBS[@]}"; do
+      rclone_filters+=(--exclude="${g}")
+    done
   fi
 
   # copyto (not copy): preserves exact destination path semantics for both
@@ -462,15 +459,22 @@ cmd_push() {
     rsync_dst="${target%/}/"
   fi
 
+  # Build rsync-style excludes from LIVE_JUNK_* (same source of truth as
+  # cmd_pull). rsync wants trailing `/` on dir patterns, no trailing `**`.
+  local rsync_excludes=()
+  local d g
+  for d in "${LIVE_JUNK_DIRS[@]}"; do
+    rsync_excludes+=(--exclude="${d}/")
+  done
+  for g in "${LIVE_JUNK_GLOBS[@]}"; do
+    rsync_excludes+=(--exclude="${g}")
+  done
+
   echo -e "${BLUE}── Dry-run preview ──${NC}"
   if [ "$target_existed" -eq 0 ]; then
     echo -e "${YELLOW}⚠ Target does not exist on Audio drive — push will CREATE: $target${NC}"
   fi
-  # --filter from rclone-style is not rsync-compatible; instead use rsync's own exclude pattern set
-  rsync -a --dry-run --itemize-changes \
-    --exclude='Analysis Files/' --exclude='Autosaves/' --exclude='Backup/' \
-    --exclude='Undo/' --exclude='Freeze/' --exclude='*.asd' \
-    --exclude='.DS_Store' --exclude='._*' \
+  rsync -a --dry-run --itemize-changes "${rsync_excludes[@]}" \
     "$rsync_src" "$rsync_dst" | head -40
 
   echo ""
@@ -483,11 +487,7 @@ cmd_push() {
   fi
 
   mkdir -p "$(dirname "$target")"
-  if rsync -a --info=stats2 \
-    --exclude='Analysis Files/' --exclude='Autosaves/' --exclude='Backup/' \
-    --exclude='Undo/' --exclude='Freeze/' --exclude='*.asd' \
-    --exclude='.DS_Store' --exclude='._*' \
-    "$rsync_src" "$rsync_dst"; then
+  if rsync -a --info=stats2 "${rsync_excludes[@]}" "$rsync_src" "$rsync_dst"; then
     echo -e "${GREEN}✓ Push complete${NC} → $target"
   else
     echo -e "${RED}✗ Push failed${NC}" >&2
