@@ -521,5 +521,7 @@ main() {
   fi
 }
 
-# Run main installation
-main "$@"
+# Run main installation only when executed directly (not when sourced for tests)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+  main "$@"
+fi
