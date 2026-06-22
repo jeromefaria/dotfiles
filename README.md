@@ -259,8 +259,9 @@ Comprehensive documentation organized by category for easy navigation.
 - [Aria2](config/aria2/README.md) - Download manager with torrent support
 
 ### Advanced Topics
-- [Migration Guide](docs/MIGRATION-GUIDE.md) - Version upgrades and breaking changes
-- [Development](docs/dev/README.md) - Contributing, roadmap, and development workflows
+- [Security](docs/SECURITY.md) - Outstanding rotations and resolved-leak log
+- [Testing](docs/TESTING.md) - Test suite layout and how to run
+- [Development](docs/dev/README.md) - Contributing and development workflows
 
 ### Documentation Status
 
