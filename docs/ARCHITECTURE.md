@@ -433,7 +433,7 @@ This checks:
 - [Main README](../README.md) - Installation and overview
 - [Shell Documentation](../terminal/zsh/README.md) - Shell configuration details
 - [Package Management](../packages/README.md) - Package workflow
-- [Vim/Neovim Guide](vim-neovim-configuration-review.md) - Editor keybindings
+- [Editors](../editors/README.md) - Vim/Neovim split and keymap modes
 
 ---
 

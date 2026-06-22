@@ -96,7 +96,6 @@ Any other information that might be helpful.
 
 **Before suggesting:**
 - Check if it already exists
-- Check if it's in the [ROADMAP](ROADMAP.md)
 - Consider if it fits the scope of personal dotfiles
 
 **When suggesting:**
@@ -561,9 +560,7 @@ Closes #[issue number]
   - [ ] Branch is up to date with master
 
 - [ ] **Other:**
-  - [ ] Updated CHANGELOG.md if needed
-  - [ ] Updated MIGRATION-GUIDE.md if breaking change
-  - [ ] Added to ROADMAP.md if applicable
+  - [ ] Used `!` in the conventional commit if it's a breaking change, with the migration step in the body
 
 ### After PR is Merged
 

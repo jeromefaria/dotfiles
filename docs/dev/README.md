@@ -18,7 +18,6 @@ Documentation for contributing to and maintaining this dotfiles repository.
 
 This directory contains development-related documentation:
 
-- **[ROADMAP.md](ROADMAP.md)** - Planned improvements and infrastructure roadmap
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute to this repository
 - **session-notes/** - Archived development session logs (for reference)
 
@@ -201,7 +200,6 @@ dotfiles/
     └── dev/                     # Contributor docs
         ├── README.md            # This file
         ├── CONTRIBUTING.md
-        ├── ROADMAP.md
         └── session-notes/
 ```
 
@@ -293,31 +291,20 @@ dotfiles/
 
 ### Making Breaking Changes
 
-**Definition:** Breaking change affects existing users' workflow or requires manual intervention.
+**Definition:** Breaking change affects the live setup and requires a manual step on the next pull.
 
 **Process:**
 
-1. **Document in MIGRATION-GUIDE.md:**
-   ```markdown
-   ### Version X.Y (Date)
+1. **Write a clear conventional commit:** Use the `!` marker (e.g. `refactor(zsh)!: …`) and put the migration step in the commit body — `git log` is the canonical change record for this repo, not a separate guide.
 
-   #### Breaking Changes
-   - **Change description**
-     - Old behavior: ...
-     - New behavior: ...
-     - Migration: ...
-   ```
-
-2. **Update version number:** (if versioning implemented)
-
-3. **Provide migration script if possible:**
+2. **Provide a migration script if the step is non-trivial:**
    ```bash
-   # Create scripts/migrate-vX.Y.sh
+   # Create scripts/migrate-<topic>.sh
    ```
 
-4. **Test migration path:**
-   - Test on clean install
-   - Test upgrade from previous version
+3. **Test the migration path:**
+   - Test on a clean install
+   - Test the upgrade from the pre-change state
    - Verify rollback works
 
 5. **Update CHANGELOG:**
@@ -451,8 +438,6 @@ key: value
 ### Quarterly
 
 - [ ] Review session notes in `docs/dev/session-notes/`
-- [ ] Update ROADMAP.md with completed items
-- [ ] Consolidate CHANGELOG entries
 - [ ] Update dependency versions in docs
 - [ ] Check for deprecated Homebrew formulas
 
