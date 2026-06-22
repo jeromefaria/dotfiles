@@ -139,10 +139,12 @@ mbretry:
   log_level: info             # debug, info, or warning
   respect_ratelimit: true     # Honor existing rate limits
 
-discogs:
-  # user_token: set in a gitignored secrets file and pull in via `include:`,
-  # or via the $BEETS_DISCOGS_USER_TOKEN env var. Repo is public — never
-  # commit the literal token here.
+# Discogs auth uses the OAuth-cached token in `discogs_token.json` (gitignored)
+# from a prior `beet discogs` interactive auth. Do not put a literal user_token
+# here — this repo is public. To use a personal access token instead, set it
+# in a local `config/beets/secrets.yaml` (gitignored) under `discogs.user_token`
+# and add `include: [secrets.yaml]` at the top of this file.
+discogs: {}
 
 match:
   strong_rec_thresh: 0.04
