@@ -152,6 +152,13 @@ log_info "Setting fast keyboard repeat rate"
 defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 15
 
+# Use F1-F12 as standard function keys instead of media/hardware keys.
+# Critical for the tmux workflow: caps_lock is remapped to F12 as the tmux
+# prefix, so without this F12 triggers volume instead of sending a function key.
+# Takes effect after logout/restart.
+log_info "Using F1-F12 as standard function keys"
+defaults write -g com.apple.keyboard.fnState -bool true
+
 # Disable auto-correct
 log_info "Disabling auto-correct"
 defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
