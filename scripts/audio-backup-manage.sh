@@ -12,6 +12,8 @@
 #   audio-backup restart            Reload schedule (after config edits)
 #   audio-backup status             Show service state + last sync
 #   audio-backup logs               Tail recent sync logs
+#   audio-backup verify             Check the Drive backup matches the source
+#   audio-backup regenerate-filters Rebuild audio-backup-filters.txt from the conf
 #   audio-backup now [opts]         Run sync manually right now (passes opts to sync.sh)
 #   audio-backup now --dry-run      Preview transfer
 #   audio-backup now --force        Bypass router allowlist (warns on hotspot)
@@ -75,6 +77,7 @@ usage() {
 # ─── Helper: generate launchd plist from config ────────────────────────
 generate_plist() {
   mkdir -p "$(dirname "$LAUNCHD_PLIST")"
+  local watch_path; watch_path="$(dirname "$SOURCE")"   # Audio drive mount point
   cat > "$LAUNCHD_PLIST" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -95,6 +98,13 @@ generate_plist() {
         <key>Minute</key>
         <integer>${SCHEDULE_MINUTE}</integer>
     </dict>
+
+    <!-- Also fire when the Audio drive is (re)mounted, so a nightly run missed
+         because the drive was disconnected catches up as soon as it reappears. -->
+    <key>WatchPaths</key>
+    <array>
+        <string>${watch_path}</string>
+    </array>
 
     <key>RunAtLoad</key>
     <false/>
@@ -509,6 +519,46 @@ cmd_push() {
   echo "The next nightly backup run will reflect this to Drive."
 }
 
+# ─── Regenerate the rclone filter file from the conf arrays (single source) ─
+cmd_regenerate_filters() {
+  {
+    echo "# rclone --filter-from rules for the Audio drive backup."
+    echo "#"
+    echo "# GENERATED from audio-backup.conf (LIVE_JUNK_*, MACOS_CLUTTER, SCOPE_INCLUDE)."
+    echo "# Do NOT edit by hand — edit the conf, then run: audio-backup regenerate-filters"
+    echo "#"
+    echo "# Order matters: first match wins.  '+' include  '-' exclude  '**' any depth."
+    echo ""
+    echo "# ─── Live regeneratable artefacts inside projects (recreated by Live) ─"
+    for d in "${LIVE_JUNK_DIRS[@]}"; do echo "- Projects/**/${d}/**"; done
+    echo ""
+    echo "# ─── Loose junk globs anywhere in the tree ───────────────────────────"
+    for g in "${LIVE_JUNK_GLOBS[@]}"; do echo "- **/${g}"; done
+    echo ""
+    echo "# ─── Extra macOS filesystem clutter ──────────────────────────────────"
+    for c in "${MACOS_CLUTTER[@]}"; do echo "- **/${c}"; done
+    echo ""
+    echo "# ─── Include the in-scope top-level folders ───────────────────────────"
+    for s in "${SCOPE_INCLUDE[@]}"; do echo "+ ${s}"; done
+    echo ""
+    echo "# ─── Exclude everything else (Libraries/, Samples/, …) ────────────────"
+    echo "- *"
+  } > "$FILTERS_FILE"
+  echo -e "${GREEN}✓ Regenerated${NC} $FILTERS_FILE from audio-backup.conf"
+}
+
+# ─── Verify the Drive backup matches the (filtered) source ─────────────
+cmd_verify() {
+  if ! command -v rclone &>/dev/null; then
+    echo -e "${RED}rclone not installed${NC}" >&2; return 1
+  fi
+  local dest="${RCLONE_REMOTE}:${RCLONE_DEST_PATH}"
+  echo -e "${BLUE}Verifying${NC} $SOURCE  →  $dest  (filtered, one-way)…"
+  # --one-way: only flag source files missing/different at dest; ignore extra
+  # dest files (older versions, backup-dir contents), which are expected.
+  rclone check "$SOURCE" "$dest" --filter-from "$FILTERS_FILE" --one-way "$@"
+}
+
 # ─── Dispatch ──────────────────────────────────────────────────────────
 # Guarded so tests can source the file to call cmd_* / generate_plist
 # directly without triggering the case dispatch.
@@ -526,6 +576,8 @@ case "${1:-}" in
   wizard)   shift; cmd_wizard "$@" ;;
   pull)     shift; cmd_pull "$@" ;;
   push)     shift; cmd_push "$@" ;;
+  verify)   shift; cmd_verify "$@" ;;
+  regenerate-filters|filters) shift; cmd_regenerate_filters "$@" ;;
   ""|-h|--help)
     usage
     exit 0

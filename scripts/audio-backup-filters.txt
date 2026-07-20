@@ -1,28 +1,24 @@
 # rclone --filter-from rules for the Audio drive backup.
 #
-# Order matters: rules are evaluated top-to-bottom, first match wins.
-# `+` = include, `-` = exclude.
-# `**` matches any number of path segments.
+# GENERATED from audio-backup.conf (LIVE_JUNK_*, MACOS_CLUTTER, SCOPE_INCLUDE).
+# Do NOT edit by hand — edit the conf, then run: audio-backup regenerate-filters
 #
-# To preview what will be transferred:
-#   rclone copy /Volumes/Audio/Audio drive:Backup/Audio \
-#     --filter-from ~/dotfiles/scripts/audio-backup-filters.txt --dry-run
+# Order matters: first match wins.  '+' include  '-' exclude  '**' any depth.
 
-# ─── Exclude Live regeneratable artefacts inside any project ──────────
-# These are recreated automatically by Live on next open.
+# ─── Live regeneratable artefacts inside projects (recreated by Live) ─
 - Projects/**/Analysis Files/**
 - Projects/**/Autosaves/**
 - Projects/**/Backup/**
 - Projects/**/Undo/**
 - Projects/**/Freeze/**
 
-# Loose Ableton analysis cache files anywhere in the tree
+# ─── Loose junk globs anywhere in the tree ───────────────────────────
 - **/*.asd
-
-# macOS clutter
 - **/.DS_Store
-- **/Icon?
 - **/._*
+
+# ─── Extra macOS filesystem clutter ──────────────────────────────────
+- **/Icon?
 - **/.Trashes/**
 - **/.Spotlight-V100/**
 - **/.fseventsd/**
@@ -34,6 +30,5 @@
 + Recordings/**
 + Projects/**
 
-# ─── Exclude everything else (Libraries/, Samples/, etc.) ─────────────
-# Out of scope per backup design (vendor-redownloadable, large, low value)
+# ─── Exclude everything else (Libraries/, Samples/, …) ────────────────
 - *
