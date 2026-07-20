@@ -263,6 +263,24 @@ if command -v op &>/dev/null; then
   export OP_BIOMETRIC_UNLOCK_ENABLED=true
 fi
 
+# ============================================================================
+# SSH Agent (macOS launchd)
+# ============================================================================
+# The launchd ssh-agent gets a new socket path each boot, and a long-lived tmux
+# server freezes a stale SSH_AUTH_SOCK — leaving panes, and headless tools like
+# Claude Code, pointed at a dead socket. Keep a stable symlink at
+# ~/.ssh/agent.sock: whenever a shell inherits a real launchd socket (a login
+# shell, an SSH session), repoint the symlink at it and ensure id_rsa is loaded
+# (passphrase from the macOS Keychain). Every shell then exports the stable
+# path, so git over SSH resolves to the live agent with no prompt.
+if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
+  if [[ -S "$SSH_AUTH_SOCK" && ! -h "$SSH_AUTH_SOCK" ]]; then
+    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/agent.sock"
+    ssh-add -l &>/dev/null || ssh-add --apple-use-keychain "$HOME/.ssh/id_rsa" 2>/dev/null
+  fi
+  export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+fi
+
 # BEETS ENV VARIABLE
 if [[ -d "$HOME/.config/beets" ]]; then
   export BEETSDIR="$HOME/.config/beets/"

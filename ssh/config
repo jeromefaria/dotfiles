@@ -25,15 +25,18 @@ Host *
 Include ~/.ssh/config.local
 
 # ----------------------------------------------------------------------------
-# GitHub — opt out of 1Password for this host. Uses the macOS launchd agent
-# (SSH_AUTH_SOCK), with the key's passphrase cached in the macOS Keychain via
-# `ssh-add --apple-use-keychain ~/.ssh/id_rsa`. Survives reboot, no per-session
-# 1Password unlock required.
+# GitHub — opt out of 1Password for this host. Uses the macOS launchd agent via
+# a stable socket symlink (~/.ssh/agent.sock) that the shell keeps pointed at the
+# current launchd socket, so a reboot's new socket path never breaks auth —
+# including for headless tools (Claude Code) that can't answer a prompt. id_rsa
+# is loaded into the agent at login (passphrase from the macOS Keychain), with
+# IdentityFile + UseKeychain as a fallback when the agent is empty. Survives
+# reboot, no per-session 1Password unlock required.
 # Must appear BEFORE the Host * 1Password block.
 # ----------------------------------------------------------------------------
 Host github.com
   IdentityFile ~/.ssh/id_rsa
-  IdentityAgent SSH_AUTH_SOCK
+  IdentityAgent ~/.ssh/agent.sock
   UseKeychain yes
   AddKeysToAgent yes
 
