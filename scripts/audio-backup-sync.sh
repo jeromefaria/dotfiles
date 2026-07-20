@@ -164,6 +164,14 @@ if ! rclone listremotes | grep -q "^${RCLONE_REMOTE}:$"; then
   exit 1
 fi
 
+# ─── Concurrency lock (stop a manual run and the nightly run overlapping) ─
+LOCK_DIR="${TMPDIR:-/tmp}/audio-backup.lock"
+if ! mkdir "$LOCK_DIR" 2>/dev/null; then
+  log_warn "Another audio-backup run already holds the lock ($LOCK_DIR). Skipping."
+  exit 0
+fi
+trap 'rmdir "$LOCK_DIR" 2>/dev/null' EXIT
+
 # ─── Run rclone ────────────────────────────────────────────────────────
 DEST="${RCLONE_REMOTE}:${RCLONE_DEST_PATH}"
 VERSIONS_DEST="${RCLONE_REMOTE}:${RCLONE_VERSIONS_PATH}/$(date +%Y-%m-%d)"
@@ -174,17 +182,27 @@ log "Router: ${WIFI_ROUTER:-<none>}"
 log "BW:     $BWLIMIT"
 log "Filters: $FILTERS_FILE"
 
+# 'sync' mirrors SOURCE→DEST so source deletions/reorgs propagate; --backup-dir
+# first MOVES every overwritten/deleted file into the dated versions folder, so
+# the mirror stays clean while nothing is ever actually lost.
 RCLONE_ARGS=(
-  copy "$SOURCE" "$DEST"
+  sync "$SOURCE" "$DEST"
   --filter-from "$FILTERS_FILE"
   --backup-dir "$VERSIONS_DEST"
   --bwlimit "$BWLIMIT"
   --log-file "$LOG_FILE"
   --log-level INFO
-  --progress
   --transfers 4
   --checkers 8
 )
+
+# Live progress bar on a TTY; periodic one-line stats when unattended (launchd),
+# so the logfile gets heartbeats instead of thousands of progress redraws.
+if [ -t 1 ]; then
+  RCLONE_ARGS+=(--progress)
+else
+  RCLONE_ARGS+=(--stats 30s --stats-one-line)
+fi
 
 if [ "$DRY_RUN" -eq 1 ]; then
   log "DRY-RUN — no writes"
