@@ -181,7 +181,16 @@ audio-backup push --yes ~/work/MyAlbum "Projects/Albums/MyAlbum"
 
 ## What's in scope (filters)
 
-See `audio-backup-filters.txt`. Rules are evaluated top-to-bottom, first match wins.
+`audio-backup-filters.txt` is **generated** from `audio-backup.conf` (the
+`LIVE_JUNK_*`, `MACOS_CLUTTER`, and `SCOPE_INCLUDE` arrays) — one source of truth,
+shared with the pull/push excludes. Edit the conf, then run:
+
+```bash
+audio-backup regenerate-filters
+```
+
+Don't hand-edit `audio-backup-filters.txt` — it's overwritten on the next regenerate.
+Rules are evaluated top-to-bottom, first match wins.
 
 **Included (current scope):**
 
@@ -201,7 +210,7 @@ See `audio-backup-filters.txt`. Rules are evaluated top-to-bottom, first match w
 **To preview the actual scope before any transfer:**
 
 ```bash
-rclone copy /Volumes/Audio/Audio drive:Backup/Audio \
+rclone sync /Volumes/Audio/Audio drive:Backup/Audio \
   --filter-from ~/dotfiles/scripts/audio-backup-filters.txt --dry-run
 ```
 
@@ -229,11 +238,18 @@ audio-backup-manage now --bwlimit 50M
 
 ## Versioning + recovery
 
-`rclone copy --backup-dir` is configured (not `sync`), which means:
+`rclone sync --backup-dir` is configured, so the Drive backup **mirrors** the source
+while no version is ever lost:
 
 - **Files added locally** → uploaded to `drive:Backup/Audio/`
 - **Files modified locally** → new version uploaded; the **previous Drive version** is moved to `drive:Backup/Audio-versions/YYYY-MM-DD/<same-path>`
-- **Files deleted locally** → the Drive copy **stays** in `drive:Backup/Audio/` (additive-only behaviour). It is _not_ moved to versions.
+- **Files deleted / reorganised locally** → the Drive copy is **moved** to `drive:Backup/Audio-versions/YYYY-MM-DD/<same-path>` — the mirror stays clean and the old copy is recoverable from versions (not orphaned in the live backup)
+
+**To check the backup actually matches the source (integrity):**
+
+```bash
+audio-backup verify              # rclone check, source → Drive, one-way
+```
 
 **To restore a single file as it was on a given date:**
 
