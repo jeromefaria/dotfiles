@@ -87,6 +87,8 @@ LOG_DIR="$TEST_LOGDIR"
 LOG_FILE_PATTERN="audio-backup-%Y-%m-%d.log"
 LIVE_JUNK_DIRS=("Analysis Files" "Autosaves" "Backup" "Undo" "Freeze")
 LIVE_JUNK_GLOBS=("*.asd" ".DS_Store" "._*")
+SCOPE_INCLUDE=("SYSTEM.md" "Documents/**" "Releases/**" "Recordings/**" "Projects/**")
+MACOS_CLUTTER=("Icon?" ".Trashes/**" ".Spotlight-V100/**" ".fseventsd/**")
 LAUNCHD_LABEL="com.test.audiobackup"
 LAUNCHD_PLIST="$TESTROOT/test.plist"
 EOF
@@ -449,6 +451,36 @@ assert "legit file pulled"           "[ -f \"$FAKE_LOCAL/JunkProj/session.als\" 
 assert "Analysis Files/ excluded"    "[ ! -d \"$FAKE_LOCAL/JunkProj/Analysis Files\" ]"
 assert "Autosaves/ excluded"         "[ ! -d \"$FAKE_LOCAL/JunkProj/Autosaves\" ]"
 assert ".DS_Store excluded"          "[ ! -f \"$FAKE_LOCAL/JunkProj/.DS_Store\" ]"
+
+heading "TEST 26: regenerate-filters builds the filter file from the conf"
+# Generate into a throwaway path (never clobber the real filters file) using a
+# conf clone that only overrides FILTERS_FILE.
+GEN_OUT="$TESTROOT/filters-gen.txt"
+GEN_CONF="$TESTROOT/gen.conf"
+cp "$TEST_BACKUP_CONFIG" "$GEN_CONF"
+echo "FILTERS_FILE=\"$GEN_OUT\"" >> "$GEN_CONF"
+AUDIO_BACKUP_CONFIG="$GEN_CONF" "$MANAGE" regenerate-filters >/dev/null 2>&1
+assert "junk-dir rule generated (Autosaves)"     "grep -qF -- '- Projects/**/Autosaves/**' \"$GEN_OUT\""
+assert "junk-glob rule generated (*.asd)"        "grep -qF -- '- **/*.asd' \"$GEN_OUT\""
+assert "macOS clutter rule generated (.Trashes)" "grep -qF -- '- **/.Trashes/**' \"$GEN_OUT\""
+assert "scope include generated (Documents)"     "grep -qF -- '+ Documents/**' \"$GEN_OUT\""
+assert "final catch-all exclude present"         "grep -qxF -- '- *' \"$GEN_OUT\""
+assert "GENERATED header present"                "grep -q 'GENERATED from audio-backup.conf' \"$GEN_OUT\""
+
+heading "TEST 27: verify passes on a matching backup, fails on drift"
+# Isolated source/dest so the pull/push state above can't pollute the check.
+V_SRC="$TESTROOT/vsrc"; V_DST="$TESTROOT/vdst"
+mkdir -p "$V_SRC/Documents" "$V_DST/Documents"
+touch "$V_SRC/SYSTEM.md" "$V_DST/SYSTEM.md"
+echo "same" > "$V_SRC/Documents/a.md"; echo "same" > "$V_DST/Documents/a.md"
+V_CONF="$TESTROOT/verify.conf"
+cp "$TEST_BACKUP_CONFIG" "$V_CONF"
+printf 'SOURCE="%s"\nRCLONE_DEST_PATH="%s"\n' "$V_SRC" "$V_DST" >> "$V_CONF"
+assert "verify exits 0 when source ⊆ dest" \
+  "AUDIO_BACKUP_CONFIG=\"$V_CONF\" \"$MANAGE\" verify"
+echo "orphan" > "$V_SRC/Documents/only-in-source.md"   # in-scope file missing at dest
+assert "verify exits non-zero on drift (source file missing at dest)" \
+  "! AUDIO_BACKUP_CONFIG=\"$V_CONF\" \"$MANAGE\" verify"
 
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""
