@@ -331,6 +331,12 @@ defaults write com.apple.dock showhidden -bool true
 log_info "Hiding recent applications in Dock"
 defaults write com.apple.dock show-recents -bool false
 
+# Remove all pinned (persistent) apps from the Dock for a clean, launcher-driven
+# workflow (apps opened via Raycast/Spotlight). Dock is restarted by the
+# orchestrator after all settings are applied.
+log_info "Clearing pinned apps from Dock"
+defaults write com.apple.dock persistent-apps -array
+
 # Disable Dashboard
 log_info "Disabling Dashboard"
 defaults write com.apple.dashboard mcx-disabled -bool true
