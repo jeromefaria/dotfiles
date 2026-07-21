@@ -75,6 +75,7 @@ SENTINEL="\${SOURCE}/SYSTEM.md"
 RCLONE_REMOTE="testdrive"
 RCLONE_DEST_PATH="$FAKE_DRIVE/Backup/Audio"
 RCLONE_VERSIONS_PATH="$FAKE_DRIVE/Backup/Audio-versions"
+VERSION_RETENTION_DAYS=90
 TRUSTED_ROUTER_ALLOWLIST=("0.0.0.0")
 HOTSPOT_GATEWAY_PATTERN="172.20.10."
 BWLIMIT_DEFAULT="100M"
@@ -481,6 +482,23 @@ assert "verify exits 0 when source ⊆ dest" \
 echo "orphan" > "$V_SRC/Documents/only-in-source.md"   # in-scope file missing at dest
 assert "verify exits non-zero on drift (source file missing at dest)" \
   "! AUDIO_BACKUP_CONFIG=\"$V_CONF\" \"$MANAGE\" verify"
+
+heading "TEST 28: prune deletes version folders past retention, keeps recent ones"
+# Retention is 90d (test conf). Build one folder well past it, one well within,
+# and one non-date folder that must never be touched.
+VER_DIR="$FAKE_DRIVE/Backup/Audio-versions"
+OLD_VER="$(date -v-200d +%Y-%m-%d 2>/dev/null || date -d '-200 days' +%Y-%m-%d)"
+NEW_VER="$(date -v-10d  +%Y-%m-%d 2>/dev/null || date -d '-10 days'  +%Y-%m-%d)"
+mkdir -p "$VER_DIR/$OLD_VER/Projects" "$VER_DIR/$NEW_VER/Projects" "$VER_DIR/not-a-date"
+echo old  > "$VER_DIR/$OLD_VER/Projects/old.als"
+echo new  > "$VER_DIR/$NEW_VER/Projects/new.als"
+echo keep > "$VER_DIR/not-a-date/keep.txt"
+"$MANAGE" prune --dry-run >/dev/null 2>&1
+assert "dry-run leaves the old version folder in place" "[ -d \"$VER_DIR/$OLD_VER\" ]"
+"$MANAGE" prune >/dev/null 2>&1
+assert "old (>90d) version folder pruned"  "[ ! -d \"$VER_DIR/$OLD_VER\" ]"
+assert "recent (<90d) version folder kept" "[ -d \"$VER_DIR/$NEW_VER\" ]"
+assert "non-date folder left untouched"    "[ -d \"$VER_DIR/not-a-date\" ]"
 
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""

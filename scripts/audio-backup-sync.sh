@@ -212,6 +212,13 @@ fi
 log "Starting rclone..."
 if rclone "${RCLONE_ARGS[@]}"; then
   log_ok "Sync complete"
+  # Auto-prune version folders past the retention window (honours --dry-run).
+  log "Pruning versions older than ${VERSION_RETENTION_DAYS:-90}d..."
+  if [ "$DRY_RUN" -eq 1 ]; then
+    "${SCRIPT_DIR}/audio-backup-manage.sh" prune --dry-run 2>&1 | while IFS= read -r l; do log "$l"; done
+  else
+    "${SCRIPT_DIR}/audio-backup-manage.sh" prune 2>&1 | while IFS= read -r l; do log "$l"; done
+  fi
   exit 0
 else
   rc=$?
