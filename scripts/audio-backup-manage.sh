@@ -14,6 +14,7 @@
 #   audio-backup logs               Tail recent sync logs
 #   audio-backup verify             Check the Drive backup matches the source
 #   audio-backup regenerate-filters Rebuild audio-backup-filters.txt from the conf
+#   audio-backup prune [--dry-run]  Delete version folders older than retention
 #   audio-backup now [opts]         Run sync manually right now (passes opts to sync.sh)
 #   audio-backup now --dry-run      Preview transfer
 #   audio-backup now --force        Bypass router allowlist (warns on hotspot)
@@ -559,6 +560,46 @@ cmd_verify() {
   rclone check "$SOURCE" "$dest" --filter-from "$FILTERS_FILE" --one-way "$@"
 }
 
+# ─── Prune version folders older than the retention window ─────────────
+# Deletes whole Audio-versions/<YYYY-MM-DD> folders by their date (lexical ==
+# chronological), NOT by file mtime — so "90 days retention" keeps 90 days of
+# history regardless of how old the versioned files' contents are.
+cmd_prune() {
+  local dry=0
+  [ "${1:-}" = "--dry-run" ] && dry=1
+  if ! command -v rclone &>/dev/null; then
+    echo -e "${RED}rclone not installed${NC}" >&2; return 1
+  fi
+  local days="${VERSION_RETENTION_DAYS:-90}"
+  local versions="${RCLONE_REMOTE}:${RCLONE_VERSIONS_PATH}"
+  local cutoff
+  cutoff="$(date -v-"${days}"d +%Y-%m-%d 2>/dev/null)" || cutoff="$(date -d "-${days} days" +%Y-%m-%d 2>/dev/null)"
+  if [ -z "$cutoff" ]; then echo -e "${RED}could not compute cutoff date${NC}" >&2; return 1; fi
+
+  echo -e "${BLUE}Prune${NC} $versions — removing version folders dated before $cutoff (retention ${days}d)"
+  local removed=0
+  while IFS= read -r d; do
+    d="${d%/}"
+    [[ "$d" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || continue   # only dated folders
+    if [[ "$d" < "$cutoff" ]]; then
+      if [ "$dry" -eq 1 ]; then
+        echo "  would remove  $d"
+      else
+        rclone purge "${versions}/${d}" 2>/dev/null && echo "  removed  $d"
+      fi
+      removed=$((removed + 1))
+    fi
+  done < <(rclone lsf --dirs-only "$versions" 2>/dev/null)
+
+  if [ "$removed" -eq 0 ]; then
+    echo -e "  ${GREEN}nothing to prune${NC} (no version folders older than $cutoff)"
+  elif [ "$dry" -eq 1 ]; then
+    echo -e "  ${YELLOW}$removed folder(s) would be removed${NC} (dry-run)"
+  else
+    echo -e "  ${GREEN}✓ pruned $removed folder(s)${NC}"
+  fi
+}
+
 # ─── Dispatch ──────────────────────────────────────────────────────────
 # Guarded so tests can source the file to call cmd_* / generate_plist
 # directly without triggering the case dispatch.
@@ -578,6 +619,7 @@ case "${1:-}" in
   push)     shift; cmd_push "$@" ;;
   verify)   shift; cmd_verify "$@" ;;
   regenerate-filters|filters) shift; cmd_regenerate_filters "$@" ;;
+  prune)    shift; cmd_prune "$@" ;;
   ""|-h|--help)
     usage
     exit 0

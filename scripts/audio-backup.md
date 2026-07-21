@@ -264,16 +264,23 @@ rclone copy drive:Backup/Audio-versions/2026-06-17/Projects/SomeProject.als \
 rclone copy drive:Backup/Audio /Volumes/Audio/Audio --progress
 ```
 
-**Pruning old versions** (the `Audio-versions/` tree grows monotonically):
+**Pruning old versions.** The `Audio-versions/` tree grows monotonically — every
+sync moves overwritten/deleted/reorganised files into a dated folder and rclone
+never removes them on its own. Retention is handled by `audio-backup prune`,
+which deletes whole `Audio-versions/<date>` folders older than
+`VERSION_RETENTION_DAYS` (default **90**, in `audio-backup.conf`). It runs
+automatically after every nightly sync, so the tree self-bounds; run it by hand
+any time to preview or force a sweep:
 
 ```bash
-# List version dates
-rclone lsd drive:Backup/Audio-versions
-
-# Remove versions older than 90 days (example)
-rclone delete drive:Backup/Audio-versions --min-age 90d
-rclone rmdirs drive:Backup/Audio-versions --leave-root
+audio-backup prune --dry-run   # preview which dated folders would be removed
+audio-backup prune             # delete folders older than the retention window
 ```
+
+Retention is measured by the folder's **date** (`YYYY-MM-DD`), not by file
+mtime — so "90 days" means 90 days of history regardless of how old the
+versioned files' contents are. (Avoid `rclone delete --min-age`, which prunes by
+content mtime and would drop old-but-recently-versioned files too early.)
 
 ---
 
