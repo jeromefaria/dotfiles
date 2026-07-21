@@ -70,5 +70,9 @@ alias plugin-cleanup="$HOME/dotfiles/scripts/audio-plugin-cleanup.py"
 # Audio backup (Audio drive → Google Drive, scheduled by launchd)
 alias audio-backup="$HOME/dotfiles/scripts/audio-backup-manage.sh"
 
+# Time Machine (exclusion set + throttle-lifted fast backup — see time-machine.md)
+alias tm-exclusions="$HOME/dotfiles/scripts/tm-exclusions.sh"
+alias tm-fast-backup="$HOME/dotfiles/scripts/tm-fast-backup.sh"
+
 # GPG
 alias gpgrestart="gpgconf --kill gpg-agent"
