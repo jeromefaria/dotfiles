@@ -62,13 +62,22 @@ recreated and re-apply cleanly after erasing or swapping the backup disk.
 
 ```bash
 tm-fast-backup            # lift the I/O throttle, caffeinate, blocking backup, restore throttle
-tm-fast-backup --dry-run  # show what it would do
+tm-fast-backup --gentle   # blocking backup at normal priority (dock/hub-safe; no sudo)
+tm-fast-backup --dry-run  # show what it would do (combine with --gentle)
 ```
 
 The throttle (`debug.lowpri_throttle_enabled`) gates backupd's low-priority
-I/O. Lifting it for the run is the biggest single speedup on a slow/HDD
+I/O. Lifting it (default mode) is the biggest single speedup on a slow/HDD
 destination or a large first backup. It's restored afterwards (and resets on
 reboot regardless).
+
+**Direct-connect only for the throttle-lift.** When the destination is reached
+through a USB hub or dock, lifting the throttle maximises DMA transaction rate
+and can trigger a USB DART kernel panic on Apple Silicon (learned the hard way
+— a hub-nested HDD backup panicked the machine mid-copy). Behind a hub/dock,
+always use `--gentle`, which runs the same blocking backup at backupd's normal
+throttled priority. Automatic scheduled backups are already gentle by design,
+so `--gentle` just gives you a matching manual command.
 
 ## First-time setup on a new / erased disk
 
