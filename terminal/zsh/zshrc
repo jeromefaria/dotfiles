@@ -129,8 +129,10 @@ zstyle ':completion:*' menu yes select
 # Enable colors in completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
-# FZF - must be loaded before zsh-interactive-cd plugin
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# FZF - must be loaded before zsh-interactive-cd plugin.
+# stderr silenced: fzf's key-bindings.zsh does `setopt zle` in its options
+# save/restore chain, which errors in non-interactive `zsh -c` invocations.
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh 2>/dev/null
 
 # ZSH INTERACTIVE CD (requires fzf)
 [[ -f "$ZSH/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh" ]] && \
