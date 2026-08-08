@@ -31,18 +31,11 @@ export DOTFILES_PLATFORM
 # ============================================================================
 # Homebrew (manual PATH setup instead of shellenv for speed)
 # ============================================================================
-if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
-  if [[ -d "/opt/homebrew/bin" ]]; then
-    export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
-    export HOMEBREW_PREFIX="/opt/homebrew"
-    export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-    export HOMEBREW_REPOSITORY="/opt/homebrew"
-  elif [[ -d "/usr/local/bin" ]]; then
-    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-    export HOMEBREW_PREFIX="/usr/local"
-    export HOMEBREW_CELLAR="/usr/local/Cellar"
-    export HOMEBREW_REPOSITORY="/usr/local"
-  fi
+if [[ "$DOTFILES_PLATFORM" == "macos" && -d "/opt/homebrew/bin" ]]; then
+  export PATH="/opt/homebrew/bin:/opt/homebrew/sbin:$PATH"
+  export HOMEBREW_PREFIX="/opt/homebrew"
+  export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
+  export HOMEBREW_REPOSITORY="/opt/homebrew"
   export MANPATH="${HOMEBREW_PREFIX}/share/man${MANPATH+:$MANPATH}:"
   export INFOPATH="${HOMEBREW_PREFIX}/share/info:${INFOPATH:-}"
 fi
