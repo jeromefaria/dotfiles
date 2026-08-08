@@ -89,7 +89,7 @@ Common issues and solutions organized by symptom.
    eval "$(/opt/homebrew/bin/brew shellenv)"
    ```
 
-3. **Add to PATH (Intel):**
+3. **Add to PATH (Intel — Homebrew dropped Intel Mac support on macOS 26+):**
    ```bash
    echo 'eval "$(/usr/local/bin/brew shellenv)"' >> ~/.zprofile
    eval "$(/usr/local/bin/brew shellenv)"
@@ -641,7 +641,7 @@ Grant Full Disk Access to Terminal:
 
 **Solution:**
 Homebrew location differs:
-- Intel: `/usr/local`
+- Intel: `/usr/local` (deprecated on macOS 26+)
 - Apple Silicon: `/opt/homebrew`
 
 Update PATH:
