@@ -268,8 +268,6 @@ if [[ -d "$HOME/.config/beets" ]]; then
   export BEETSDIR="$HOME/.config/beets/"
 fi
 
-# fnm removed in favor of Volta
-
 # zoxide (lazy-loaded for faster shell startup)
 if command -v zoxide &>/dev/null; then
   _zoxide_lazy() {
