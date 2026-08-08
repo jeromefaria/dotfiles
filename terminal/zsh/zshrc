@@ -178,9 +178,7 @@ bindkey -M menuselect '^[[Z' reverse-menu-complete
 # ============================================================================
 # PATH Configuration
 # ============================================================================
-export PATH="$HOME/.local/bin:/usr/local/sbin:$PATH"
-export PATH="/usr/local/opt/node@22/bin:$PATH"
-export PATH="/usr/local/opt/ruby/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # Locale
 export LC_ALL=en_US.UTF-8
