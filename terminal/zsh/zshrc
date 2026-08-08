@@ -72,9 +72,6 @@ if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
   [[ -d "/opt/homebrew/opt/cyrus-sasl/sbin" ]] && \
     export PATH="/opt/homebrew/opt/cyrus-sasl/sbin:$PATH"
 
-  # Broot launcher
-  [[ -f "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br" ]] && \
-    source "$HOME/Library/Preferences/org.dystroy.broot/launcher/bash/br"
 fi
 
 # ============================================================================
@@ -228,11 +225,6 @@ if command -v starship &>/dev/null; then
     eval "$(command starship init zsh)"
   }
   precmd_functions+=(_starship_precmd)
-fi
-
-# Broot launcher (cross-platform fallback)
-if [[ -f "$HOME/.config/broot/launcher/bash/br" ]]; then
-  source "$HOME/.config/broot/launcher/bash/br"
 fi
 
 # Volta
