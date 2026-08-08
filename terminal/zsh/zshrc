@@ -1,3 +1,8 @@
+# Auto-dedupe PATH: any duplicate prepend silently no-ops, order preserved.
+# Without this, unconditional `export PATH="…:$PATH"` sites stack duplicates
+# on every re-entry (exec ${SHELL} -l, nvim :!zsh, inherited subshell).
+typeset -U path PATH
+
 # ============================================================================
 # Platform Detection
 # ============================================================================
