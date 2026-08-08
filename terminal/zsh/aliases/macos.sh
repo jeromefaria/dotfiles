@@ -61,8 +61,8 @@ alias cleanXcode="xcrun simctl delete unavailable"
 alias verifyvolumes="for v in /Volumes/*; do m disk verify volume $v; done"
 alias repairvolumes="for v in /Volumes/*; do m disk repair volume $v; done"
 
-# Max/MSP
-alias maxrebuilddb="rm ~/Library/Application\ Support/Cycling\ \'74/Max\ 9/Database/macintosh\ hd--applications-max.x64.maxdb* ~/Library/Application\ Support/Cycling\ \'74/Max\ 9/Database/macintosh\ hd--applications-ableton\ live\ 12\ suite.app-contents-app-resources-max-max.x64.maxdb*"
+# Max/MSP: `maxrebuilddb` lives in functions/macos.sh — needs zsh nullglob
+# so unmatched DB globs (e.g. Live 12's absent main .maxdb) don't abort rm.
 
 # Audio plugin cleanup
 alias plugin-cleanup="$HOME/dotfiles/scripts/audio-plugin-cleanup.py"

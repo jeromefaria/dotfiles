@@ -110,6 +110,32 @@ function restartTouchBar() {
   echo "Touch Bar restarted"
 }
 
+# Wipe Max 9's cached DB files so Max rebuilds them on next launch —
+# covers both standalone Max and Live 12's Max-for-Live. Use when Live 12
+# loads slowly because Max re-inits every time (a stale `_lock.maxdb`
+# with no main `.maxdb` is the signal — previous rebuild aborted mid-write).
+# Usage: maxrebuilddb
+function maxrebuilddb() {
+  local db="$HOME/Library/Application Support/Cycling '74/Max 9/Database"
+  if [[ ! -d "$db" ]]; then
+    echo "maxrebuilddb: Max 9 DB dir not found at $db"
+    return 1
+  fi
+
+  setopt local_options null_glob
+  local files=(
+    "$db"/macintosh\ hd--applications-max.x64*.maxdb*
+    "$db"/macintosh\ hd--applications-ableton\ live\ 12\ suite.app-contents-app-resources-max-max.x64*.maxdb*
+  )
+
+  if (( ${#files} == 0 )); then
+    echo "maxrebuilddb: nothing to remove — DBs already cleared."
+    return 0
+  fi
+
+  rm -v "${files[@]}"
+}
+
 # Spotifyd daemon management
 SPOTIFYD="/Library/LaunchDaemons/rustlang.spotifyd.plist"
 
