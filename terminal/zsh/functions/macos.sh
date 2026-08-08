@@ -136,27 +136,3 @@ function maxrebuilddb() {
   rm -v "${files[@]}"
 }
 
-# Spotifyd daemon management
-SPOTIFYD="/Library/LaunchDaemons/rustlang.spotifyd.plist"
-
-# Start spotifyd daemon
-# Usage: startspotifyd
-function startspotifyd() {
-  if [[ ! -f "$SPOTIFYD" ]]; then
-    echo "Error: Spotifyd plist not found at $SPOTIFYD"
-    return 1
-  fi
-  sudo launchctl load -w "$SPOTIFYD" && sudo launchctl start "$SPOTIFYD"
-  echo "Spotifyd started"
-}
-
-# Stop spotifyd daemon
-# Usage: stopspotifyd
-function stopspotifyd() {
-  if [[ ! -f "$SPOTIFYD" ]]; then
-    echo "Error: Spotifyd plist not found at $SPOTIFYD"
-    return 1
-  fi
-  sudo launchctl unload -w "$SPOTIFYD" && sudo launchctl stop "$SPOTIFYD"
-  echo "Spotifyd stopped"
-}
