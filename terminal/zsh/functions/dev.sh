@@ -353,3 +353,133 @@ function sel() {
   fi
   builtin cd "$target"
 }
+
+# Scaffold a new gig folder under $WORK. Client root is a plain dir (NOT a
+# repo), with doc/ + optional src/<project>/ inside. Claude Code picks up the
+# client-level CLAUDE.md when invoked from anywhere under the gig, layering
+# above per-project CLAUDE.md files inside the repos.
+# Usage: newgig <client> [project]
+function newgig() {
+  emulate -L zsh
+  setopt local_options err_return
+
+  local client="$1" project="$2"
+  if [[ -z "$client" ]]; then
+    echo "usage: newgig <client> [project]"
+    return 1
+  fi
+  if [[ "$client" == */* || "$client" == .* ]]; then
+    echo "invalid client name: '$client' (no slashes or leading dots)"
+    return 1
+  fi
+  if [[ -n "$project" && ( "$project" == */* || "$project" == .* ) ]]; then
+    echo "invalid project name: '$project' (no slashes or leading dots)"
+    return 1
+  fi
+
+  local root="${WORK:-$HOME/Work}/$client"
+  if [[ -e "$root" ]]; then
+    echo "already exists: $root"
+    return 1
+  fi
+
+  # Rollback any partial scaffold on error / interrupt.
+  trap "rm -rf ${(q)root}; trap - EXIT INT TERM" EXIT INT TERM
+
+  mkdir -p "$root/doc/archive"
+  [[ -n "$project" ]] && mkdir -p "$root/src/$project"
+
+  cat >"$root/README.md" <<EOF
+# $client
+
+## Contacts
+
+## Deliverables
+
+## Links
+EOF
+
+  cat >"$root/CLAUDE.md" <<EOF
+# CLAUDE.md — $client
+
+Gig-level context. Not versioned. Sits above the repo boundary so nothing
+here leaks on push. Per-project overrides live in \`src/<project>/CLAUDE.md\`.
+
+## The gig
+- Type:
+- Started: $(date +%Y-%m-%d)
+- Scope:
+
+## Contacts
+- {name} — {role} — {channel}
+
+## Ticket system
+- {Jira | Linear | GitHub Issues}: {URL}
+- Prefix: \`{KEY-}\`
+
+## Review
+- Default reviewer: {@handle}
+- PR body template: {URL}
+
+## Docs
+- \`doc/\` — see \`doc/README.md\` for conventions
+
+---
+> This dir isn't a repo — backups depend entirely on whatever backup layer
+> covers \`~/Work\` (Time Machine, etc.). Verify before treating anything
+> here as durable.
+EOF
+
+  cat >"$root/doc/README.md" <<'EOF'
+# Documentation conventions
+
+## Naming
+- `{TICKET-KEY}_{topic}.md` — per-ticket working notes
+- `{scope}_{topic}_{YYYY-MM-DD}.md` — dated snapshots (audits, reports, handoffs)
+- `{scope}_{topic}.md` — living reference (component_inventory, active_tasks)
+- `*.md.gpg` — encrypted (creds, tokens)
+
+## Optional subdirs — create on demand
+- `audits/`     — dated audit outputs (a11y, coverage, deps, i18n, perf, refactor)
+- `reports/`    — with `_raw/`, `_raw_baseline_{date}/` for before/after
+- `reviews/`    — code review notes
+- `pr-drafts/`  — PR body drafts
+- `screenshots/{figma,current,{ticket}/}` — reference images
+- `scripts/`    — doc-related tooling
+- `API doc/`    — external API references
+
+## Rotation
+- Move stale content into `archive/` on gig milestones.
+- On long-running gigs, further split `archive/{YYYY}/` per year.
+
+## Claude Code
+- Client-level CLAUDE.md lives at `../CLAUDE.md`.
+- Point Claude at specific docs with `@doc/{filename}` in prompts.
+EOF
+
+  cat >"$root/doc/active_tasks.md" <<EOF
+# Active tasks — $client
+
+_Living list. Add as work starts, prune as it lands._
+
+## In flight
+
+## Queued
+
+## Blocked
+EOF
+
+  # All writes succeeded — disarm the rollback trap.
+  trap - EXIT INT TERM
+
+  echo "Scaffolded $root."
+  echo ""
+  echo "Next:"
+  echo "  1. Set WORK_PROJECT_BASE in ~/.zshrc.local:"
+  echo "     export WORK_PROJECT_BASE=\"$root${project:+/src/$project}\""
+  if [[ -n "$project" ]]; then
+    echo "  2. cd $root/src/$project && git clone|init as needed."
+  else
+    echo "  2. mkdir -p $root/src/<project> when ready to start on code."
+  fi
+}
