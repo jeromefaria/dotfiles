@@ -1,9 +1,10 @@
 name: website
-root: /Users/jeromefaria/Work/jeromefaria.github.io/
+root: ~/Work/jeromefaria.github.io
 windows:
-  - website:
-      layout: 81fd,151x42,0,0[151x34,0,0,1,151x7,0,35{75x7,0,35,2,75x7,76,35,3}]
+  - code:
+      layout: 4cd7,255x64,0,0[255x51,0,0{127x51,0,0,6,127x51,128,0,11},255x12,0,52{127x12,0,52,12,127x12,128,52,13}]
       panes:
         - nvim
+        - claude --dangerously-skip-permissions --continue
         - sleep 5 && open http://localhost:5173 && clear
         - npm run dev
