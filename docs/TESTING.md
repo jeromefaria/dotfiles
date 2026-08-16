@@ -11,6 +11,7 @@ This repo ships test suites for the scripts that mutate external state — file 
 | `scripts/test-install-symlink.sh` | 7 tests / 14 assertions | `scripts/install.sh::create_symlink` — first-time creation, idempotency, file backup, `--dry-run`, source-is-symlink guard, and a known data-loss gap (TEST 7) |
 | `mail/scripts/test-manage-sync.sh` | 10 tests / 10 assertions | `mail/scripts/manage-sync.sh` lifecycle (status/start/stop/restart/logs) with a mocked `launchctl` |
 | `terminal/zsh/test-config.sh` | smoke | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
+| `terminal/zsh/test-newgig.sh` | 7 tests / 14 assertions | `functions/dev.sh::newgig` — scaffold shape (with/without project), refuses existing dir, input validation for client + project names, template interpolation, rollback on mid-write failure |
 
 ## Running
 
@@ -23,6 +24,7 @@ scripts/test-install-symlink.sh
 python3 scripts/test-audio-plugin-cleanup.py
 mail/scripts/test-manage-sync.sh
 terminal/zsh/test-config.sh
+terminal/zsh/test-newgig.sh
 ```
 
 Exit code is `0` on success, non-zero on any failure. The shell suites print per-test `PASS`/`FAIL` lines and end with a summary; the Python suite uses `unittest`'s default reporter.
@@ -44,6 +46,7 @@ Exit code is `0` on success, non-zero on any failure. The shell suites print per
 - launchd lifecycle for both `audio-backup` and `mail` sync via mocked `launchctl`
 - Symlink creation, idempotent re-link, file backup, dry-run, source-is-symlink rejection
 - Plugin-cleanup keep/dupe invariants — the 7 paid VST2 plugins (FM8 FX, Lounge Lizard, Reaktor 6 FX, Strum, Ultra Analog, VCV Rack 2 FX, ZOOM MS Decoder) live in the keep list and never appear in `--list`
+- `newgig` scaffold shape, input validation (rejects `../`, leading dots, slashes, empty), template interpolation (`$client`, today's date), and trap-based rollback when a heredoc write fails mid-scaffold — proven via a mocked `cat` that returns non-zero on the CLAUDE.md write
 
 **Not covered (by design):**
 - `defaults write` chains in `scripts/macos/*.sh` and `macos-setup.sh` — hard to mock, low return
