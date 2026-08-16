@@ -56,7 +56,7 @@ if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
   export VIDEO="/Volumes/Video"
   export CINEMA="$MEDIA/Cinema"
   export DRIVE="$ARCHIVE/Drive"
-  export MOBILE="$HOME/Library/Mobile\ Documents"
+  export MOBILE="$HOME/Library/Mobile Documents"
   export MUSIC="$MEDIA/Music/FLAC"
   export PROJECTS="$AUDIO/Audio/Projects"
   export SHARED="$DRIVE/Shared"
