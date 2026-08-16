@@ -358,14 +358,57 @@ function sel() {
 # repo), with doc/ + optional src/<project>/ inside. Claude Code picks up the
 # client-level CLAUDE.md when invoked from anywhere under the gig, layering
 # above per-project CLAUDE.md files inside the repos.
+#
 # Usage: newgig <client> [project]
+#
+# Args:
+#   client   Client/gig name (no slashes, no leading dots).
+#   project  Optional first project name; creates src/<project>/ ready for git.
+#
+# Examples:
+#   newgig acme                 # ~/Work/acme with README, CLAUDE, doc/
+#   newgig acme frontend        # ...plus src/frontend/ ready for git clone|init
+#   newgig -h                   # show this help
+#
+# Creates under $WORK/<client>/:
+#   README.md            local landing page (contacts, deliverables, links)
+#   CLAUDE.md            gig-level Claude Code context (stays above repo boundary)
+#   doc/                 unversioned knowledge base
+#     README.md            naming + subdir conventions cheat sheet
+#     active_tasks.md      living work list
+#     archive/             rotated-out stale content
+#   src/<project>/       only if project arg given; empty for git clone|init
+#
+# After scaffolding, paste the printed WORK_PROJECT_BASE line into
+# ~/.zshrc.local so `mux w` points at the new gig on next session start.
 function newgig() {
   emulate -L zsh
   setopt local_options err_return
 
   local client="$1" project="$2"
+  if [[ "$client" == "-h" || "$client" == "--help" ]]; then
+    cat <<'EOF'
+Usage: newgig <client> [project]
+
+Scaffold a new gig folder under $WORK. Client root is a plain dir (not a repo).
+
+Args:
+  client   Client/gig name (no slashes, no leading dots).
+  project  Optional first project name; creates src/<project>/ ready for git.
+
+Examples:
+  newgig acme                 # ~/Work/acme with README, CLAUDE, doc/
+  newgig acme frontend        # ...plus src/frontend/ ready for git clone|init
+
+Creates $WORK/<client>/ with README.md, CLAUDE.md (client-level Claude
+context), doc/{README.md,active_tasks.md,archive/}, and optionally
+src/<project>/. Post-scaffold, prints the WORK_PROJECT_BASE export line
+to paste into ~/.zshrc.local so `mux w` picks up the new gig.
+EOF
+    return 0
+  fi
   if [[ -z "$client" ]]; then
-    echo "usage: newgig <client> [project]"
+    echo "usage: newgig <client> [project]  (run 'newgig -h' for details)"
     return 1
   fi
   if [[ "$client" == */* || "$client" == .* ]]; then
