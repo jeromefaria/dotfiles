@@ -1,6 +1,13 @@
 #!/usr/bin/env zsh
 # Test script for the refactored shell configuration
 # Usage: zsh test-config.sh
+#
+# Simulates a normal interactive user shell: aliases in aliases/*.sh are
+# gated on CLAUDECODE being unset (they shadow POSIX commands with
+# eza/bat/fd/sd/zoxide, which break automation subshells). Clear the
+# variable up front so the suite exercises the full alias set even when
+# invoked from a Claude Code tool subshell.
+unset CLAUDECODE
 
 echo "==================================="
 echo "Shell Configuration Test Suite"
