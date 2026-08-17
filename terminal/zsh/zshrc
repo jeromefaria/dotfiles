@@ -143,16 +143,22 @@ fpath=("$HOME/.zsh/completions" $fpath)
 # SOURCES
 source "$ZSH/oh-my-zsh.sh"
 
-# Load modular aliases (platform-aware)
-# Skip macOS-specific files on non-macOS platforms
-local -a _macos_only=(macos.sh chrome.sh folders.sh)
-for alias_file in "$DOTFILES"/terminal/zsh/aliases/*.sh; do
-  _filename=${alias_file:t}
-  if (( ${_macos_only[(Ie)$_filename]} )) && [[ "$DOTFILES_PLATFORM" != "macos" ]]; then
-    continue
-  fi
-  source "$alias_file" || echo "Warning: Failed to load $alias_file" >&2
-done
+# Load modular aliases (platform-aware, interactive-only).
+# Skipped under Claude Code — aliases like ls→eza, cat→bat, find→fd, sed→sd,
+# cd→z shadow standard commands with tools that have different syntax, which
+# breaks tool subshells that expect POSIX-shaped behavior. Functions in
+# functions/*.sh below still load — those are the intended API (sel, newgig,
+# enc, etc.) and don't override standard commands.
+if [[ -z "$CLAUDECODE" ]]; then
+  local -a _macos_only=(macos.sh chrome.sh folders.sh)
+  for alias_file in "$DOTFILES"/terminal/zsh/aliases/*.sh; do
+    _filename=${alias_file:t}
+    if (( ${_macos_only[(Ie)$_filename]} )) && [[ "$DOTFILES_PLATFORM" != "macos" ]]; then
+      continue
+    fi
+    source "$alias_file" || echo "Warning: Failed to load $alias_file" >&2
+  done
+fi
 
 # Load modular functions (platform-aware)
 for func_file in "$DOTFILES"/terminal/zsh/functions/*.sh; do
