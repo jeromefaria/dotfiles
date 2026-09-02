@@ -1,5 +1,31 @@
 -- LSP Configuration
 
+-- Per-project JS/TS formatter selection: use ESLint for projects without a Prettier
+-- config (e.g. ones that format via ESLint's own rules), Prettier where a config
+-- exists. Any error falls back to Prettier, the previous default.
+local function js_ts_formatters(bufnr)
+  local ok, formatters = pcall(function()
+    local path = vim.api.nvim_buf_get_name(bufnr)
+    local dir = path ~= "" and vim.fs.dirname(path) or vim.fn.getcwd()
+    local prettier_cfg = vim.fs.find({
+      ".prettierrc", ".prettierrc.json", ".prettierrc.yml", ".prettierrc.yaml",
+      ".prettierrc.json5", ".prettierrc.js", ".prettierrc.cjs", ".prettierrc.mjs",
+      ".prettierrc.toml", "prettier.config.js", "prettier.config.cjs", "prettier.config.mjs",
+    }, { upward = true, path = dir })[1]
+    if not prettier_cfg then
+      local pkg = vim.fs.find({ "package.json" }, { upward = true, path = dir })[1]
+      if pkg then
+        local decoded = vim.json.decode(table.concat(vim.fn.readfile(pkg), "\n"))
+        if type(decoded) == "table" and decoded.prettier ~= nil then prettier_cfg = pkg end
+      end
+    end
+    if prettier_cfg then return { "prettierd", "prettier" } end
+    return { "eslint_d" }
+  end)
+  if ok then return formatters end
+  return { "prettierd", "prettier" }
+end
+
 return {
   -- Mason: LSP installer (must be loaded first)
   {
@@ -227,11 +253,11 @@ return {
     opts = {
       formatters_by_ft = {
         lua = { "stylua" },
-        javascript = { "prettierd", "prettier" },
-        typescript = { "prettierd", "prettier" },
-        javascriptreact = { "prettierd", "prettier" },
-        typescriptreact = { "prettierd", "prettier" },
-        vue = { "prettierd", "prettier" },
+        javascript = js_ts_formatters,
+        typescript = js_ts_formatters,
+        javascriptreact = js_ts_formatters,
+        typescriptreact = js_ts_formatters,
+        vue = js_ts_formatters,
         css = { "prettierd", "prettier" },
         scss = { "prettierd", "prettier" },
         html = { "prettierd", "prettier" },
