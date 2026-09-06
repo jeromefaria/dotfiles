@@ -136,6 +136,22 @@ Two layers reject executable-file releases (fake torrents disguised as media):
 - **Radarr/Sonarr** → `Junk-Executable` custom format (−10000, with profile `minFormatScore` 0)
   rejects any release with an executable extension in its title before it's grabbed.
 
+### 1337x download link MUST be "magnet" (not iTorrents.org)
+The Prowlarr 1337x indexer's **Download link** setting (`downloadlink`) has two options:
+`0` = iTorrents.org (a `.torrent` cache), `1` = magnet. **Keep it on `1` (magnet).** The
+iTorrents.org cache was compromised and returned the *same 877 MB `.exe` malware*
+(`0088F…exe`, infohash `d429a82c…`) for **every** 1337x release — search looked fine, but
+every grab pulled malware, which qB's `*.exe` filter then skipped, leaving the torrent
+stalled at 0%. The real magnet links on 1337x detail pages were always clean; the indexer
+just wasn't using them. **Symptom:** 1337x search works but every grab stalls / produces an
+~877 MB `.exe`. **Fix:** Prowlarr → Indexers → 1337x → Download link = magnet (or API:
+set field `downloadlink=1` on the indexer). Then remove any leftover `…exe` torrent from qB.
+
+**Stack-wide:** every indexer has **Prefer Magnet URL = on** (`torrentBaseSettings.preferMagnetUrl`),
+so Prowlarr hands Sonarr/Radarr the magnet whenever one exists and only falls back to a
+`.torrent` when an indexer offers no magnet — no grab routes through a third-party `.torrent`
+cache. Magnet is the preferred method everywhere; on 1337x it's effectively the only one.
+
 ## Queue tuning (avoids dead-torrent starvation)
 
 - qBittorrent `max_active_downloads=40`, `dont_count_slow_torrents=on` — so dead `metaDL`
@@ -159,15 +175,28 @@ Two layers reject executable-file releases (fake torrents disguised as media):
 
 ## Reboot survival
 
-- **Auto-start is configured:** Colima runs as a login LaunchAgent, and every container is
-  `restart: unless-stopped`, so after a reboot the whole stack comes back on its own — you
-  just need to **log in** once (LaunchAgents fire at login, not cold boot).
-- **`plex boot`** is a robust manual fallback/nudge: starts Colima + the stack, waits for
-  gluetun to be healthy, then restarts qBittorrent (a fresh VPN tunnel needs a qB reconnect
-  to rejoin swarms). Run it if auto-start hiccups, then `plex health` after ~30s.
-- **`plex halt`** is the mirror: gracefully stops the stack then Colima.
-- **Toggle auto-start:** `plex autostart on|off|status`. (Status reads the LaunchAgent plist —
-  the true "starts at next login" signal — not Colima's current running state.)
+- **Auto-start is a mount-aware guard agent, not the bare brew Colima agent.** Colima's VM
+  mounts the USB media drives (`/Volumes/Media`, `/Volumes/Archive`). macOS mounts external
+  USB drives a few seconds *after* login, and the old brew Colima login agent fired *before*
+  they mounted → the VM start aborted (`exit 1`) and the whole stack stayed down after every
+  reboot. The fix: a custom LaunchAgent **`com.jerome.plex-autoboot`** (script
+  `~/plex-stack/autoboot.sh`) that **waits for both drives to mount**, then runs
+  `colima start` + `docker compose up -d` + a qBittorrent reconnect. Containers are
+  `restart: unless-stopped`, so once Colima is up they follow. Boot progress/errors log to
+  `~/plex-stack/autoboot.log`.
+- **If the stack is still down after a reboot,** check `~/plex-stack/autoboot.log`. "media
+  drives NOT mounted after timeout" means the **docking station is wedged** — external USB
+  won't re-enumerate across a warm reboot (`system_profiler SPUSBDataType` returns empty
+  while drives are mounted is the tell). **Power-cycle the dock (switch off/on)**, then
+  `plex boot`.
+- **`plex boot`** is the manual start/nudge: `colima start` + the stack, waits for gluetun
+  healthy, then restarts qBittorrent (fresh VPN tunnel needs a qB reconnect). `plex health`
+  after ~30s to confirm.
+- **`plex halt`** is the mirror: gracefully stops the stack then Colima. It leaves auto-start
+  enabled — the guard brings it back at next login (or `plex boot` now).
+- **Toggle auto-start:** `plex autostart on|off|status` (manages the guard agent via
+  `launchctl`; status is the true "starts at next login" signal, independent of Colima's
+  current running state).
 
 ## Maintenance
 

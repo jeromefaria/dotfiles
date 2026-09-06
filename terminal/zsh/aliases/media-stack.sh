@@ -10,7 +10,7 @@ export PLEX_STACK="$HOME/plex-stack"
 
 _plex_boot() {
   echo "starting Colima…"
-  brew services start colima >/dev/null 2>&1            # (re)registers login auto-start + starts
+  colima start >/dev/null 2>&1                          # manual start; login auto-start is the guard agent (plex autostart)
   printf "waiting for Docker"
   for i in {1..40}; do docker info >/dev/null 2>&1 && break; printf "."; sleep 3; done
   docker info >/dev/null 2>&1 || { echo " — Docker not ready; try 'colima start' manually"; return 1; }
@@ -30,9 +30,8 @@ _plex_halt() {
   echo "stopping stack (gracefully — Bazarr may take up to 60s)…"
   ( cd "$PLEX_STACK" && docker compose stop )
   echo "stopping Colima…"
-  brew services stop colima >/dev/null 2>&1             # remove the KeepAlive agent first…
-  colima stop >/dev/null 2>&1                           # …then stop the VM (now safe — no agent to fight it)
-  echo "everything stopped (login auto-start disabled). bring it back with: plex boot"
+  colima stop >/dev/null 2>&1                           # stop the VM (the guard agent only fires at login, so nothing fights it)
+  echo "everything stopped. it comes back at next login (guard agent), or now with: plex boot"
 }
 
 _plex_health() {
@@ -59,14 +58,23 @@ PY
 }
 
 _plex_autostart() {
-  # Login auto-start = presence of the Colima brew LaunchAgent plist (RunAtLoad),
-  # which is the true "will it start at next login" signal — independent of whether
-  # Colima happens to be running right now.
-  local plist="$HOME/Library/LaunchAgents/homebrew.mxcl.colima.plist"
+  # Login auto-start is the custom guard agent (com.jerome.plex-autoboot), NOT the
+  # bare brew Colima agent. The brew agent fired at login BEFORE the USB media drives
+  # (/Volumes/Media, /Volumes/Archive) had mounted, so Colima's VM start aborted
+  # (exit 1) and the whole stack stayed down after every reboot. The guard waits for
+  # both drives to mount, then runs colima start + compose up + qB reconnect. Script:
+  # ~/plex-stack/autoboot.sh · plist: ~/Library/LaunchAgents/com.jerome.plex-autoboot.plist
+  local label="com.jerome.plex-autoboot"
+  local plist="$HOME/Library/LaunchAgents/$label.plist"
+  local domain="gui/$(id -u)"
   case "$1" in
-    on)  brew services start colima >/dev/null 2>&1 && echo "auto-start ENABLED — the stack comes up at each login";;
-    off) brew services stop colima >/dev/null 2>&1; colima stop >/dev/null 2>&1; echo "auto-start DISABLED (Colima also stopped — restart with: plex boot)";;
-    status|"") [ -f "$plist" ] && echo "auto-start: ENABLED" || echo "auto-start: DISABLED";;
+    on)  launchctl enable "$domain/$label" 2>/dev/null
+         launchctl bootstrap "$domain" "$plist" 2>/dev/null
+         echo "auto-start ENABLED — the guard boots the stack once the media drives mount at login";;
+    off) launchctl bootout "$domain/$label" 2>/dev/null
+         launchctl disable "$domain/$label" 2>/dev/null
+         echo "auto-start DISABLED (stack keeps running — use 'plex halt' to also stop it now)";;
+    status|"") launchctl print "$domain/$label" >/dev/null 2>&1 && echo "auto-start: ENABLED" || echo "auto-start: DISABLED";;
     *) echo "usage: plex autostart on|off|status";;
   esac
 }
