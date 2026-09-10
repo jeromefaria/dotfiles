@@ -76,7 +76,23 @@ return {
         },
       })
 
+      -- Vue Language Tools hybrid mode: vue_ls owns Vue structure/CSS/HTML;
+      -- ts_ls owns TypeScript in <script> blocks (including .vue gd) via
+      -- @vue/typescript-plugin. Requires vue-language-server installed by Mason.
+      local vue_language_server_path = vim.fn.stdpath("data")
+        .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+
       vim.lsp.config("ts_ls", {
+        init_options = {
+          plugins = {
+            {
+              name = "@vue/typescript-plugin",
+              location = vue_language_server_path,
+              languages = { "vue" },
+            },
+          },
+        },
+        filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" },
         settings = {
           typescript = {
             inlayHints = {
