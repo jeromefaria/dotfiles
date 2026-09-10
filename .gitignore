@@ -57,6 +57,9 @@ config/MusicBrainz/.Picard.ini.synclock
 config/MusicBrainz/Picard*.ini
 config/vifm/vifminfo
 
+# mole disk-cleaner: local config/logs, not tracked
+config/mole/
+
 # Large/build directories
 config/nvim/bundle/
 config/nvim/pack/nvim/start
