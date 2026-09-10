@@ -79,6 +79,63 @@ log_ok() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] OK: $*" >> "$LOG_FILE" 2>/dev/null || true
 }
 
+# ─── Alerting ──────────────────────────────────────────────────────────
+# Post a macOS notification. Best-effort: never fails the run, and is a no-op
+# when NOTIFY_ENABLED=0. Prefers terminal-notifier (its own app identity, so
+# the "Alerts" style toggle targets only these alerts and a shared -group id
+# means a new alert replaces the prior one); falls back to osascript, which
+# posts under "Script Editor". Both work from the launchd (gui) context.
+notify() {
+  [ "${NOTIFY_ENABLED:-1}" = "1" ] || return 0
+  local title="$1" message="$2"
+  # Try terminal-notifier; fall back to osascript if it's absent OR fails
+  # (e.g. its notifications are disabled), so an alert is never lost silently.
+  if command -v terminal-notifier >/dev/null 2>&1 \
+     && terminal-notifier -title "$title" -message "$message" \
+          -group "${NOTIFIER_GROUP:-audio-backup}" >/dev/null 2>&1; then
+    return 0
+  fi
+  local t="${title//\"/\\\"}" m="${message//\"/\\\"}"
+  osascript -e "display notification \"${m}\" with title \"${t}\"" >/dev/null 2>&1 || true
+}
+
+# Fire a staleness alert if the last SUCCESSFUL backup is older than the
+# threshold (or none is on record). Called on every unattended run — before
+# the gates below — so a job that keeps SKIPPING (drive unmounted, untrusted
+# network; all exit 0) still surfaces instead of rotting silently. A cooldown
+# marker prevents repeat spam when the drive's mount flaps (WatchPaths refire).
+check_staleness() {
+  local success_marker="${LAST_SUCCESS_FILE:-${LOG_DIR}/.last-success}"
+  local notify_marker="${LOG_DIR}/.last-stale-notify"
+  local max_days="${STALE_ALERT_DAYS:-3}"
+  local cooldown=$(( ${STALE_NOTIFY_COOLDOWN_HOURS:-12} * 3600 ))
+  local now last message last_notify
+  now="$(date +%s)"
+
+  last=""
+  [ -f "$success_marker" ] && last="$(cat "$success_marker" 2>/dev/null)"
+  if [[ "$last" =~ ^[0-9]+$ ]]; then
+    local age_days=$(( (now - last) / 86400 ))
+    [ "$age_days" -lt "$max_days" ] && return 0          # fresh enough — nothing to do
+    message="Last successful Audio backup was ${age_days}d ago (threshold ${max_days}d)."
+  else
+    message="No successful Audio backup on record yet."
+  fi
+
+  last_notify=0
+  [ -f "$notify_marker" ] && last_notify="$(cat "$notify_marker" 2>/dev/null)"
+  [[ "$last_notify" =~ ^[0-9]+$ ]] || last_notify=0
+  if [ $(( now - last_notify )) -ge "$cooldown" ]; then
+    notify "Audio backup stale" "$message"
+    log_warn "Staleness alert: $message"
+    echo "$now" > "$notify_marker" 2>/dev/null || true
+  fi
+}
+
+# Unattended (launchd) runs only — a manual run is the user actively looking,
+# so a popup would just be noise.
+[ -t 1 ] || check_staleness
+
 # ─── Gate 1: source drive mounted ──────────────────────────────────────
 if [ ! -f "$SENTINEL" ]; then
   log_warn "Source drive not mounted (sentinel $SENTINEL not found). Skipping."
@@ -212,6 +269,11 @@ fi
 log "Starting rclone..."
 if rclone "${RCLONE_ARGS[@]}"; then
   log_ok "Sync complete"
+  # Stamp the success marker the staleness watchdog reads (real runs only —
+  # a dry-run transferred nothing, so it must not reset the clock).
+  if [ "$DRY_RUN" -eq 0 ]; then
+    date +%s > "${LAST_SUCCESS_FILE:-${LOG_DIR}/.last-success}" 2>/dev/null || true
+  fi
   # Auto-prune version folders past the retention window (honours --dry-run).
   log "Pruning versions older than ${VERSION_RETENTION_DAYS:-90}d..."
   if [ "$DRY_RUN" -eq 1 ]; then
@@ -223,5 +285,6 @@ if rclone "${RCLONE_ARGS[@]}"; then
 else
   rc=$?
   log_err "rclone exited $rc"
+  notify "Audio backup FAILED" "rclone exited $rc. Check $LOG_FILE"
   exit "$rc"
 fi
