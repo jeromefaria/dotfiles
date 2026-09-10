@@ -89,7 +89,7 @@ return {
       })
 
       require("mason-lspconfig").setup({
-        ensure_installed = { "lua_ls", "ts_ls", "pyright" },
+        ensure_installed = { "lua_ls", "ts_ls", "pyright", "vue_ls" },
         automatic_enable = {
           exclude = { "stylua" },
         },
