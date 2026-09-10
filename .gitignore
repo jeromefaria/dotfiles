@@ -60,6 +60,9 @@ config/vifm/vifminfo
 # mole disk-cleaner: local config/logs, not tracked
 config/mole/
 
+# 1Password: local telemetry marker, not tracked
+config/1Password/
+
 # Large/build directories
 config/nvim/bundle/
 config/nvim/pack/nvim/start
