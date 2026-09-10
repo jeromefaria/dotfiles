@@ -34,34 +34,37 @@ overwrite_title = "Overwrite file: {url}?"
 
 [opener]
 edit = [
-	{ run = '$EDITOR "$@"', block = true, desc = "Edit", for = "unix" },
+	# Yazi 26 dropped Unix argv passing: files come in via `%s`/`%*` template
+	# substitution, not `$@`. `$EDITOR "$@"` therefore launched nvim empty.
+	# Hardcoded `nvim` also removes a footgun if $EDITOR ever drifts.
+	{ run = 'nvim "%s"',    block = true, desc = "Edit", for = "unix" },
 	{ run = 'code "%*"',    orphan = true, desc = "Code", for = "windows" },
 ]
 open = [
-	{ run = 'xdg-open "$@"',             desc = "Open", for = "linux" },
-	{ run = 'open "$@"',                 desc = "Open", for = "macos" },
+	{ run = 'xdg-open "%s"',             desc = "Open", for = "linux" },
+	{ run = 'open "%s"',                 desc = "Open", for = "macos" },
 	{ run = 'start "%1"', orphan = true, desc = "Open", for = "windows" },
 ]
 reveal = [
-	{ run = 'open -R "$1"',                       desc = "Reveal in Finder", for = "macos" },
+	{ run = 'open -R "%s"',                       desc = "Reveal in Finder", for = "macos" },
 	{ run = 'explorer /select,%1', orphan = true, desc = "Reveal", for = "windows" },
 ]
 extract = [
-	{ run = 'unar "$1"', desc = "Extract here", for = "unix" },
+	{ run = 'unar "%s"', desc = "Extract here", for = "unix" },
 	{ run = 'unar "%1"', desc = "Extract here", for = "windows" },
 ]
 play = [
-	{ run = 'mpv --force-window "$@"', orphan = true, desc = "Play", for = "unix" },
+	{ run = 'mpv --force-window "%s"', orphan = true, desc = "Play", for = "unix" },
 	{ run = 'mpv "%1"', orphan = true, desc = "Play", for = "windows" },
 ]
 exif = [
-	{ run = '''exiftool "$1"; echo "\nPress enter to exit"; read''', block = true, desc = "EXIF info", for = "unix" },
+	{ run = '''exiftool "%s"; echo "\nPress enter to exit"; read''', block = true, desc = "EXIF info", for = "unix" },
 ]
 mediainfo = [
-	{ run = '''mediainfo "$1"; echo "\nPress enter to exit"; read''', block = true, desc = "Media info", for = "unix" },
+	{ run = '''mediainfo "%s"; echo "\nPress enter to exit"; read''', block = true, desc = "Media info", for = "unix" },
 ]
 pager = [
-	{ run = '$PAGER "$@"', block = true, desc = "View in pager", for = "unix" },
+	{ run = 'less -R "%s"', block = true, desc = "View in pager", for = "unix" },
 ]
 
 [open]
