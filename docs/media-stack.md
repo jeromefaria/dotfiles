@@ -170,6 +170,14 @@ cache. Magnet is the preferred method everywhere; on 1337x it's effectively the 
 
 - 1080p preferred, 720p fallback, **no 4K/Remux** (USB space). Prefer **x265**; **Bluray>WEB**;
   TV favours **MeGusta**; **RARBG/RARTV** as a tiebreaker; RARBG-dump indexer deprioritised.
+- **RARBG Dump `minimumSeeders` = 3 (Radarr + Sonarr).** The dump shim stamps a *constant fake
+  `2` seeders* on every release (frozen May-2023 catalog, no live data). Because at 1080p YTS
+  is x264 while the dump offers 1080p x265, the x265 custom-format bonus (+100) made dead dump
+  releases *outscore* live YTS ones, so Radarr kept grabbing them and stalling on dead swarms
+  (poisoning blocklists). Setting the dump's min-seeders to 3 rejects all its releases from
+  *auto-grab* (fake 2 < 3) so live indexers win, while the dump stays visible in *interactive*
+  search as a manual last resort. Indexer priority alone can't fix this — priority only breaks
+  ties within equal score, and the x265 bonus makes scores unequal.
 - **Never rename** curated files (original release names aid subtitle matching).
 - Codec-only upgrades allowed (x264→x265); no quality/source churn.
 
