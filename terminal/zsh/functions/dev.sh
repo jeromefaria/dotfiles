@@ -14,11 +14,17 @@ function server() {
 # Usage: phpserver [port] (default: 4000)
 function phpserver() {
   local port="${1:-4000}"
-  local ip=$(ipconfig getifaddr en1)
+
+  local ip iface
+  for iface in en0 en1 en2 en3 en4; do
+    ip=$(ipconfig getifaddr "$iface" 2>/dev/null)
+    [[ -n "$ip" ]] && break
+  done
   if [[ -z "$ip" ]]; then
-    echo "Error: Could not determine IP address for en1"
+    echo "Error: no active IPv4 interface found (checked en0..en4)"
     return 1
   fi
+
   sleep 1 && open "http://${ip}:${port}/" &
   php -S "${ip}:${port}"
 }
