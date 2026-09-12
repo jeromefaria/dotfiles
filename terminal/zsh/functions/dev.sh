@@ -215,11 +215,18 @@ function update() {
   while true; do sudo -n true; sleep 50; done 2>/dev/null &
   local sudo_pid=$!
 
+  # Function-scoped cleanup — Ctrl+C or an unexpected exit would otherwise
+  # orphan the keepalive loop until the shell dies. TRAP* funcs defined
+  # inside update() only fire for this function's lifetime.
+  TRAPINT()  { kill "$sudo_pid" 2>/dev/null; return $((128 + 2)) }
+  TRAPTERM() { kill "$sudo_pid" 2>/dev/null; return $((128 + 15)) }
+  TRAPEXIT() { kill "$sudo_pid" 2>/dev/null }
+
   # Mac App Store
   if [[ "$skip_mas" == false ]] && command -v mas &> /dev/null; then
     echo ""
     echo "→ Updating Mac App Store apps..."
-    if sudo MAS_NO_AUTO_INDEX=1 mas upgrade; then
+    if MAS_NO_AUTO_INDEX=1 mas upgrade; then
       echo "✓ Mac App Store apps updated"
     else
       echo "✗ Mac App Store update failed (exit code: $?)"
@@ -334,8 +341,7 @@ function update() {
     fi
   fi
 
-  # Kill the sudo keep-alive process
-  kill "$sudo_pid" 2>/dev/null
+  # sudo keepalive is reaped by TRAPEXIT above.
 
   echo ""
   echo "=== Update Complete ==="
