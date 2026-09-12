@@ -15,7 +15,7 @@ Terminal-based music player with vim-style keybindings, Last.fm scrobbling, and 
 - Library indexing with metadata parsing
 
 **Configuration Files:**
-- `settings.json` - Main configuration (theme, library, playback)
+- `settings.json.template` - Main configuration defaults; copy to `settings.json` on first install (see [First Run](#first-run)). The live `settings.json` is gitignored because musikcube rewrites it and it holds credentials (Last.fm session token, etc.).
 - `hotkeys.json` - Vim-style keybindings
 - `plugins.json` - Enabled/disabled plugins
 - `themes/oceanic-next.json` - OceanicNext color theme
@@ -58,10 +58,15 @@ ln -s ~/dotfiles/config/musikcube ~/.config/musikcube
 
 ### First Run
 
-1. Launch: `musikcube`
-2. Press `s` to open settings
-3. Add your music library path
-4. Press `R` to rescan/index library
+1. Seed the live settings file from the template (once, if it doesn't exist):
+   ```bash
+   cp ~/dotfiles/config/musikcube/settings.json.template ~/.config/musikcube/settings.json
+   ```
+2. Launch: `musikcube`
+3. Press `s` to open settings
+4. Add your music library path
+5. Press `R` to rescan/index library
+6. Log in to Last.fm from the settings menu to populate `LastFmToken` / `LastFmSessionId` locally (these stay in the gitignored `settings.json`, never in the tracked template).
 
 ---
 

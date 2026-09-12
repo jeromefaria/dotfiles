@@ -51,6 +51,7 @@ config/**/node_modules/
 config/musikcube/*.txt
 config/musikcube/session.json
 config/musikcube/playback.json
+config/musikcube/settings.json
 config/musikcube/1/
 config/nvim/sessions/
 config/MusicBrainz/.Picard.ini.synclock
