@@ -63,6 +63,9 @@ config/mole/
 # 1Password: local telemetry marker, not tracked
 config/1Password/
 
+# Raycast: extension state and per-extension endpoint tokens (e.g. Aster)
+config/raycast/
+
 # Large/build directories
 config/nvim/bundle/
 config/nvim/pack/nvim/start
