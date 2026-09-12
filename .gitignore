@@ -66,6 +66,9 @@ config/1Password/
 # Raycast: extension state and per-extension endpoint tokens (e.g. Aster)
 config/raycast/
 
+# mpv Last.fm scrobbler: live credentials file (see lastfm.env.template)
+config/mpv/lastfmscrobbler/lastfm.env
+
 # Large/build directories
 config/nvim/bundle/
 config/nvim/pack/nvim/start

@@ -10,10 +10,28 @@ sleep(3);
 $ua = LWP::UserAgent->new();
 $lfmUrl = "http://ws.audioscrobbler.com/2.0";
 
-$USERNAME = 'earational'; # CHANGE ME
-$PASSWORD = '***REMOVED***'; # CHANGE ME
-$APIKEY = "3176eb0bd0ff5d1c8f15d94e3b3c98a8"; # Change this if it stops working
-$APISECRET = "2918fac730f44f543d2568f9976ec276"; # Change this if it stops working
+# Last.fm user credentials come from ~/.config/mpv/lastfm.env — a gitignored
+# key=value file. Copy lastfm.env.template next to this script to that location
+# and fill in LASTFM_USERNAME / LASTFM_PASSWORD.
+my $env_file = "$ENV{HOME}/.config/mpv/lastfm.env";
+open(my $envfh, '<', $env_file)
+    or die "scrobble: cannot read $env_file (create it from lastfm.env.template): $!\n";
+while (my $line = <$envfh>) {
+    chomp $line;
+    next if $line =~ /^\s*(#|$)/;
+    my ($k, $v) = split /=/, $line, 2;
+    next unless defined $k && defined $v;
+    if    ($k eq 'LASTFM_USERNAME') { $USERNAME = $v }
+    elsif ($k eq 'LASTFM_PASSWORD') { $PASSWORD = $v }
+}
+close($envfh);
+die "scrobble: LASTFM_USERNAME missing in $env_file\n" unless $USERNAME;
+die "scrobble: LASTFM_PASSWORD missing in $env_file\n" unless $PASSWORD;
+
+# Public Last.fm API app credentials — this script came from a community snippet
+# using shared keys. Rotate here if Last.fm ever revokes them.
+$APIKEY = "3176eb0bd0ff5d1c8f15d94e3b3c98a8";
+$APISECRET = "2918fac730f44f543d2568f9976ec276";
 
 
 # read from socket
