@@ -86,8 +86,18 @@ main() {
 
     if [ -d "$INSTALL_DIR/.git" ]; then
       print_info "Existing installation detected"
-      read -p "Update existing installation? (y/N) " -n 1 -r
-      echo
+
+      # When invoked via `curl | bash` stdin is not a TTY, so `read` returns
+      # EOF and REPLY stays empty — the old code silently took the "skip"
+      # branch and left the repo unchanged. On a non-TTY, auto-update so
+      # the intended semantics of the bootstrap URL still hold.
+      if [ ! -t 0 ]; then
+        print_info "No TTY (curl|bash) — updating repository automatically"
+        REPLY="y"
+      else
+        read -p "Update existing installation? (y/N) " -n 1 -r
+        echo
+      fi
 
       if [[ $REPLY =~ ^[Yy]$ ]]; then
         print_info "Updating repository..."
