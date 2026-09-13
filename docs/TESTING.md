@@ -12,7 +12,7 @@ This repo ships test suites for the scripts that mutate external state — file 
 | `mail/scripts/test-manage-sync.sh` | 10 tests / 10 assertions | `mail/scripts/manage-sync.sh` lifecycle (status/start/stop/restart/logs) with a mocked `launchctl` |
 | `terminal/zsh/test-config.sh` | smoke | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
 | `terminal/zsh/test-newgig.sh` | 7 tests / 14 assertions | `functions/dev.sh::newgig` — scaffold shape (with/without project), refuses existing dir, input validation for client + project names, template interpolation, rollback on mid-write failure |
-| `terminal/zsh/test-media-stack.sh` | 29 tests | `aliases/media-stack.sh::plex` — subcommand dispatch routing (boot/halt/up/down/restart/status/update/fix/web/autostart), help & per-command usage, unknown-command handling, with `docker`/`colima`/`brew`/`open` mocked |
+| `terminal/zsh/test-media-stack.sh` | 28 tests | `aliases/media-stack.sh::plex` — subcommand dispatch routing (boot/halt/up/down/restart/status/update/fix/web/autostart), help & per-command usage, unknown-command handling, with `docker`/`colima`/`brew`/`open`/`launchctl` mocked |
 
 ## Running
 

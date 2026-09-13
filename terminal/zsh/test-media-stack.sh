@@ -26,11 +26,12 @@ docker() {
     ps)      echo "radarr Up 1m" ;;
   esac
 }
-colima()  { echo "colima $*"  >> "$CALL_LOG"; [ "$1" = status ] && return 0; }
-brew()    { echo "brew $*"    >> "$CALL_LOG"; }
-open()    { echo "open $*"    >> "$CALL_LOG"; }
-sleep()   { : ; }                              # no-op so poll loops don't wait
-python3() { cat >/dev/null 2>&1; echo "python3 $*" >> "$CALL_LOG"; }  # swallow heredoc stdin
+colima()    { echo "colima $*"    >> "$CALL_LOG"; [ "$1" = status ] && return 0; }
+brew()      { echo "brew $*"      >> "$CALL_LOG"; }
+open()      { echo "open $*"      >> "$CALL_LOG"; }
+launchctl() { echo "launchctl $*" >> "$CALL_LOG"; [ "$1" = print ] && return 0; }
+sleep()     { : ; }                              # no-op so poll loops don't wait
+python3()   { cat >/dev/null 2>&1; echo "python3 $*" >> "$CALL_LOG"; }  # swallow heredoc stdin
 
 echo "==================================="
 echo "plex media-stack command test suite"
@@ -74,18 +75,21 @@ reset_calls; plex status;         grep -qF "docker ps" "$CALL_LOG" && test_pass 
 
 echo; echo "5. boot / halt sequences"; echo "------------------------"
 reset_calls; plex boot >/dev/null 2>&1
-grep -qF "brew services start colima" "$CALL_LOG" && test_pass "boot starts Colima service" || test_fail "boot missing colima start"
+grep -qF "colima start" "$CALL_LOG"                && test_pass "boot starts Colima directly (not via brew)" || test_fail "boot missing colima start"
 grep -qF "docker compose up -d" "$CALL_LOG"        && test_pass "boot brings up the stack" || test_fail "boot missing compose up"
 grep -qF "docker restart qbittorrent" "$CALL_LOG"  && test_pass "boot reconnects qBittorrent" || test_fail "boot missing qb reconnect"
 reset_calls; plex halt >/dev/null 2>&1
-grep -qF "docker compose stop" "$CALL_LOG"     && test_pass "halt stops the stack gracefully" || test_fail "halt missing compose stop"
-grep -qF "brew services stop colima" "$CALL_LOG" && test_pass "halt stops the Colima service" || test_fail "halt missing brew stop"
-grep -qF "colima stop" "$CALL_LOG"             && test_pass "halt stops the VM (agent-safe)" || test_fail "halt missing colima stop"
+grep -qF "docker compose stop" "$CALL_LOG"         && test_pass "halt stops the stack gracefully" || test_fail "halt missing compose stop"
+grep -qF "colima stop" "$CALL_LOG"                 && test_pass "halt stops the VM directly (no brew services fight)" || test_fail "halt missing colima stop"
 
 echo; echo "6. autostart"; echo "------------"
 [[ "$(plex autostart bogus 2>&1)" == *"usage: plex autostart"* ]] && test_pass "autostart bad arg → usage" || test_fail "autostart usage missing"
-reset_calls; plex autostart on;  grep -qF "brew services start colima" "$CALL_LOG" && test_pass "autostart on → brew start" || test_fail "autostart on routing"
-reset_calls; plex autostart off; grep -qF "brew services stop colima" "$CALL_LOG" && test_pass "autostart off → brew stop" || test_fail "autostart off routing"
+reset_calls; plex autostart on
+grep -qF "launchctl bootstrap"      "$CALL_LOG" && grep -qF "com.jerome.plex-autoboot" "$CALL_LOG" \
+  && test_pass "autostart on → launchctl bootstrap plex-autoboot plist" || test_fail "autostart on routing"
+reset_calls; plex autostart off
+grep -qF "launchctl bootout"        "$CALL_LOG" && grep -qF "com.jerome.plex-autoboot" "$CALL_LOG" \
+  && test_pass "autostart off → launchctl bootout plex-autoboot" || test_fail "autostart off routing"
 
 echo; echo "==================================="
 echo -e "Passed: ${GREEN}${pass_count}${NC}   Failed: ${RED}${fail_count}${NC}"
