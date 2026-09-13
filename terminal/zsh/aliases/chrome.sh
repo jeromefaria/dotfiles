@@ -13,5 +13,11 @@ alias cdvi="open /Applications/Google\ Chrome\ Canary.app --args --incognito --d
 alias newchromedev="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security"
 alias ncd="open -n -a /Applications/Google\ Chrome.app --args --user-data-dir=\"/tmp/chrome_dev_session\" --incognito --disable-web-security --auto-open-devtools-for-tabs"
 
+# Chrome control script — JXA tab manager (Renan Cakirerk's chrome-control,
+# paired with an Alfred workflow). Guard on existence so a fresh clone
+# without the external repo just silently skips the alias.
+[[ -x "$HOME/Work/github/chrome-control/chrome.js" ]] && \
+  alias chromectrl="$HOME/Work/github/chrome-control/chrome.js"
+
 # Kill Chrome tabs to free memory
 alias chromekill="ps ux | grep '[C]hrome Helper --type=renderer' | grep -v extension-process | tr -s ' ' | cut -d ' ' -f2 | xargs kill"
