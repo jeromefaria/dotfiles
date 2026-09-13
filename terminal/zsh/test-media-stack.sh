@@ -29,7 +29,7 @@ docker() {
 colima()    { echo "colima $*"    >> "$CALL_LOG"; [ "$1" = status ] && return 0; }
 brew()      { echo "brew $*"      >> "$CALL_LOG"; }
 open()      { echo "open $*"      >> "$CALL_LOG"; }
-launchctl() { echo "launchctl $*" >> "$CALL_LOG"; [ "$1" = print ] && return 0; }
+launchctl() { echo "launchctl $*" >> "$CALL_LOG"; }
 sleep()     { : ; }                              # no-op so poll loops don't wait
 python3()   { cat >/dev/null 2>&1; echo "python3 $*" >> "$CALL_LOG"; }  # swallow heredoc stdin
 
