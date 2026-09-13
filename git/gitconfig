@@ -3,6 +3,7 @@
 [user]
   name = Jerome Faria
   email = jerome.faria@gmail.com
+  signingkey = ~/.ssh/id_ed25519.pub
 [color]
   ui = true
 [mergetool]
@@ -55,3 +56,7 @@
 [credential "https://gist.github.com"]
 	helper = 
 	helper = !/opt/homebrew/bin/gh auth git-credential
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	allowedSignersFile = ~/.ssh/allowed_signers
