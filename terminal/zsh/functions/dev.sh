@@ -210,17 +210,16 @@ function update() {
 
   # Refresh sudo timestamp and keep it alive throughout the update
   echo "→ Refreshing sudo credentials..."
-  sudo -v
-  # Keep sudo alive in background until this script finishes
-  while true; do sudo -n true; sleep 50; done 2>/dev/null &
-  local sudo_pid=$!
+  # shellcheck disable=SC1091
+  source "$DOTFILES/scripts/lib/sudo-keepalive.sh"
+  sudo_keepalive_start || return 1
 
   # Function-scoped cleanup — Ctrl+C or an unexpected exit would otherwise
   # orphan the keepalive loop until the shell dies. TRAP* funcs defined
   # inside update() only fire for this function's lifetime.
-  TRAPINT()  { kill "$sudo_pid" 2>/dev/null; return $((128 + 2)) }
-  TRAPTERM() { kill "$sudo_pid" 2>/dev/null; return $((128 + 15)) }
-  TRAPEXIT() { kill "$sudo_pid" 2>/dev/null }
+  TRAPINT()  { sudo_keepalive_stop; return $((128 + 2)) }
+  TRAPTERM() { sudo_keepalive_stop; return $((128 + 15)) }
+  TRAPEXIT() { sudo_keepalive_stop }
 
   # Mac App Store
   if [[ "$skip_mas" == false ]] && command -v mas &> /dev/null; then
