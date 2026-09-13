@@ -63,7 +63,9 @@ else
 fi
 
 # Archive operations (standard utilities)
-alias zi="zipinfo"
+# (`zi` was previously aliased to zipinfo here; it always collided with
+# zoxide's interactive-selector `zi` and lost. Use `unzip -l file.zip` for
+# the zipinfo-shaped listing.)
 alias uz="unzip -o"
 command -v unrar &> /dev/null && alias ux="unrar x"
 command -v unrar &> /dev/null && alias ui="unrar l"

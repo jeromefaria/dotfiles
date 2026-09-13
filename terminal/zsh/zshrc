@@ -206,8 +206,15 @@ _lazy_wrap() {
 
   command -v "$tool" &>/dev/null || return 0
 
+  # Zsh refuses `foo() {...}` when `foo` is an active alias, so clear any
+  # existing alias on each wrapper name before defining the function. The
+  # lazy body also re-clears them for the eval — after the first call the
+  # tool's own bindings (function or alias) take over.
+  unalias "${wrappers[@]}" 2>/dev/null
+
   eval "
     ${lazy}() {
+      unalias ${wrappers[*]} 2>/dev/null
       unset -f ${lazy} ${wrappers[*]}
       eval \"\$(command ${init_expr})\"
     }
