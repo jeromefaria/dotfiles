@@ -178,12 +178,6 @@ All in `~/dotfiles/shell/functions/fzf-enhancements.sh`:
 - `fzf-kill` - Kill process with fuzzy finder
 - `fzf-man` - Search man pages
 
-### Git Leader Widget
-
-In `~/dotfiles/shell/functions/git-leader.sh`:
-- Custom ZLE widget that handles 'g' prefix in normal mode
-- Waits for second keypress (b/l/s) and dispatches to git functions
-
 ### Command Palette
 
 All in `~/dotfiles/shell/functions/command-palette.sh` (60+ commands)
@@ -208,7 +202,6 @@ All in `~/dotfiles/shell/functions/clipboard.sh`:
 - `~/dotfiles/shell/zshrc` - Main config (plugins, keybindings)
 - `~/dotfiles/config/starship.toml` - Vi mode indicator
 - `~/dotfiles/shell/functions/fzf-enhancements.sh` - FZF fuzzy finding functions
-- `~/dotfiles/shell/functions/git-leader.sh` - Git prefix widget (gb/gl/gs)
 - `~/dotfiles/shell/functions/command-palette.sh` - Command palette
 - `~/dotfiles/shell/functions/vim-commands.sh` - Text manipulation widgets
 - `~/dotfiles/shell/functions/clipboard.sh` - Clipboard operations
@@ -225,16 +218,6 @@ echo $ZVM_VI_ESCAPE_BINDKEY  # Should show: jk
 
 # Reload shell
 source ~/.zshrc
-```
-
-### Git bindings (gb/gl/gs) not working
-```bash
-# Must be in normal mode first - press Esc or jk
-# Check if widget exists
-zle -la | grep git-leader
-
-# Check if 'g' is bound in normal mode
-bindkey -M vicmd | grep "\"g\""
 ```
 
 ### Keybinding not working
@@ -257,8 +240,7 @@ ls ~/.oh-my-zsh/custom/plugins/zsh-autopair
 
 ## 💡 Tips
 
-1. **Master normal mode** - Press jk to enter normal mode, then use gb/gl/gs for git operations
-2. **Ctrl-P is your friend** - Quick file navigation (works in both modes)
+1. **Ctrl-P is your friend** - Quick file navigation (works in both modes)
 3. **Ctrl-F for searching** - Live grep with preview (works in both modes)
 4. **Explore command palette** - Press Ctrl-X Ctrl-P to discover 60+ commands
 5. **Git aliases** - Run `alias | grep git` to see omz-git shortcuts (gst, gco, etc.)
@@ -270,10 +252,9 @@ ls ~/.oh-my-zsh/custom/plugins/zsh-autopair
 
 1. Reload your shell: `source ~/.zshrc`
 2. Test jk to enter normal mode
-3. Try git bindings: **gb**, **gl**, **gs** (in normal mode)
-4. Test fuzzy finding: **Ctrl-P**, **Ctrl-F**
-5. Explore command palette: **Ctrl-X Ctrl-P**
-6. Enjoy your vim-like zsh experience! 🎉
+3. Test fuzzy finding: **Ctrl-P**, **Ctrl-F**
+4. Explore command palette: **Ctrl-X Ctrl-P**
+5. Enjoy your vim-like zsh experience! 🎉
 
 ## 🔗 Files
 

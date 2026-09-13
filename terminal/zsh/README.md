@@ -21,7 +21,6 @@ terminal/zsh/
 │   ├── core.sh                # Utility functions
 │   ├── dev.sh                 # Development utilities
 │   ├── fzf-enhancements.sh    # Extra fzf bindings/widgets
-│   ├── git-leader.sh          # Leader-key git workflow
 │   ├── macos.sh               # macOS functions
 │   ├── media.sh               # Audio/video conversion
 │   ├── ps5-detect.sh          # PS5 LAN detection
