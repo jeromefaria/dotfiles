@@ -62,6 +62,9 @@ Exit code is `0` on success, non-zero on any failure. The shell suites print per
 
 The shape is deliberate: every script that mutates external state has a test; the ones that wrap `defaults write` or one-shot install commands don't.
 
+**Known gaps (worth a suite, not yet written):**
+- `scripts/tm-fast-backup.sh` — real branching around the destination-info gate (`timeout` vs the portable-bash fallback in `run_with_timeout`), the `--gentle`/`--fast` path split, and the pre-run throttle knob capture/restore. A hermetic suite would mock `tmutil`, `sysctl`, `timeout`, and `sudo` in a `TESTROOT_BIN` directory the same way the audio-backup suite does, then drive the entry point through the happy path, the gate-wedge fallback, and each early-exit.
+
 ## Adding a suite
 
 1. Name it `test-<thing>.sh` (or `.py`) and put it next to the script under test.

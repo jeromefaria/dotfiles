@@ -35,10 +35,20 @@ Sourced by `macos-setup.sh`; can also be run individually.
 - **`personal.sh`** - Per-machine personal preferences
 - **`backup-settings.sh`** / **`restore-settings.sh`** / **`export-settings.sh`** - Backup, restore, and export of macOS defaults
 - **`helpers.sh`** - Shared `log_*` / `print_*` helpers + macOS-specific utilities
+- **`README.md`** - Reference for the modules, run order, and per-script settings inventory
 
 ### Shared Library (`lib/`)
 
 - **`io.sh`** - TTY-aware colors + `print_header` / `print_success` / `print_error` / `print_warning` / `print_info` / `print_step` helpers, sourced by `install.sh`, `health-check.sh`, `config.sh`, `audio-backup-*.sh`, and `mail/scripts/manage-sync.sh`
+- **`launchd-svc.sh`** - Thin `launchctl load|unload|list` wrappers so service scripts don't reinvent the load-and-verify dance; consumers keep their own dispatch and messages
+
+### Time Machine
+
+Version-controlled exclusion set + fast-backup runner that keep Time Machine on a healthy history chain instead of thrashing into fresh full backups. See [`time-machine.md`](time-machine.md) for the disk-sizing rationale.
+
+- **`tm-backup.conf`** - Single source of truth: the exclusion list plus fast-backup tunables (throttle knob, gate timeout)
+- **`tm-exclusions.sh`** - Applies the exclusion set via `tmutil addexclusion`; usually invoked as `tm-exclusions apply`
+- **`tm-fast-backup.sh`** - Blocking backup runner that lifts the low-priority I/O throttle for the run (fast mode) or leaves it in place (`--gentle`)
 
 ### Audio Backup
 
