@@ -195,33 +195,36 @@ export LANG=en_US.UTF-8
 # Tool Initialization (Platform-Aware)
 # ============================================================================
 
-# Define stub functions early to prevent "command not found" errors
-# These get overwritten by the real implementations below
-_zoxide_lazy() { :; }
-_zoxide_lazy_i() { :; }
-_thefuck_lazy() { :; }
-_rbenv_lazy() { :; }
-_fnm_lazy() { :; }
-_starship_precmd() { :; }
+# Lazy-load a tool by name + init expression + wrapper commands. Wrappers
+# trigger the eval on first call, then unset themselves and reinvoke the
+# real command (defined by the eval). Silent no-op if the tool binary
+# isn't on PATH — safe to call unconditionally.
+_lazy_wrap() {
+  local tool="$1" init_expr="$2"; shift 2
+  local wrappers=("$@")
+  local lazy="_${tool}_lazy"
 
-# rbenv (lazy-loaded for faster shell startup)
-if command -v rbenv &>/dev/null; then
-  _rbenv_lazy() {
-    unset -f _rbenv_lazy ruby rbenv gem irb
-    eval "$(command rbenv init - zsh)"
-  }
-  ruby()  { _rbenv_lazy; command ruby "$@"; }
-  rbenv() { _rbenv_lazy; command rbenv "$@"; }
-  gem()   { _rbenv_lazy; command gem "$@"; }
-  irb()   { _rbenv_lazy; command irb "$@"; }
-fi
+  command -v "$tool" &>/dev/null || return 0
 
-# Starship (lazy-loaded via precmd hook for faster startup)
+  eval "
+    ${lazy}() {
+      unset -f ${lazy} ${wrappers[*]}
+      eval \"\$(command ${init_expr})\"
+    }
+  "
+  local w
+  for w in "${wrappers[@]}"; do
+    eval "${w}() { ${lazy}; ${w} \"\$@\"; }"
+  done
+}
+
+_lazy_wrap rbenv   'rbenv init - zsh'  ruby rbenv gem irb
+
+# Starship (lazy-loaded via precmd hook — different shape from the
+# command-wrapper lazies above, so kept bespoke).
 if command -v starship &>/dev/null; then
   _starship_precmd() {
-    # Remove this hook after first execution
     precmd_functions=("${(@)precmd_functions:#_starship_precmd}")
-    # Now initialize starship
     eval "$(command starship init zsh)"
   }
   precmd_functions+=(_starship_precmd)
@@ -233,15 +236,7 @@ if [[ -d "$HOME/.volta" ]]; then
   export PATH="$VOLTA_HOME/bin:$PATH"
 fi
 
-# thefuck (lazy-loaded for faster shell startup)
-if command -v thefuck &>/dev/null; then
-  _thefuck_lazy() {
-    unset -f fuck _thefuck_lazy
-    eval "$(command thefuck --alias)"
-    fuck "$@"
-  }
-  alias fuck='_thefuck_lazy'
-fi
+_lazy_wrap thefuck 'thefuck --alias' fuck
 
 # Suppress Ruby warnings
 export RUBYOPT=-W0
@@ -274,23 +269,7 @@ if [[ -d "$HOME/.config/beets" ]]; then
   export BEETSDIR="$HOME/.config/beets/"
 fi
 
-# zoxide (lazy-loaded for faster shell startup)
-if command -v zoxide &>/dev/null; then
-  _zoxide_lazy() {
-    unalias z zi 2>/dev/null
-    unset -f _zoxide_lazy
-    eval "$(command zoxide init zsh)"
-    z "$@"
-  }
-  _zoxide_lazy_i() {
-    unalias z zi 2>/dev/null
-    unset -f _zoxide_lazy _zoxide_lazy_i
-    eval "$(command zoxide init zsh)"
-    zi "$@"
-  }
-  alias z='_zoxide_lazy'
-  alias zi='_zoxide_lazy_i'
-fi
+_lazy_wrap zoxide  'zoxide init zsh' z zi
 
 ##########
 # HISTORY
