@@ -6,7 +6,7 @@ This directory contains utility scripts for managing your dotfiles installation.
 
 ### Core Scripts
 
-- **`install.sh`** - Main installation script that sets up symlinks and dependencies
+- **`install.sh`** - Main installation script that sets up symlinks and dependencies; also seeds `config/**/*.template` files to their non-.template destinations on first install (gitignored live copies for gh, op, beets, musikcube, nicotine, and the mpv Last.fm scrobbler)
 - **`health-check.sh`** - Verifies installation and checks system health
 - **`bootstrap.sh`** - One-liner bootstrap for new system setup
 - **`restore.sh`** - Restores configuration from backups
@@ -39,8 +39,9 @@ Sourced by `macos-setup.sh`; can also be run individually.
 
 ### Shared Library (`lib/`)
 
-- **`io.sh`** - TTY-aware colors + `print_header` / `print_success` / `print_error` / `print_warning` / `print_info` / `print_step` helpers, sourced by `install.sh`, `health-check.sh`, `config.sh`, `audio-backup-*.sh`, and `mail/scripts/manage-sync.sh`
+- **`io.sh`** - TTY-aware colors + `print_header` / `print_success` / `print_error` / `print_warning` / `print_info` / `print_step` helpers, sourced by `install.sh`, `uninstall.sh`, `setup-portable-windows.sh`, `health-check.sh`, `config.sh`, `tm-fast-backup.sh`, `audio-backup-*.sh`, and `mail/scripts/manage-sync.sh`
 - **`launchd-svc.sh`** - Thin `launchctl load|unload|list` wrappers so service scripts don't reinvent the load-and-verify dance; consumers keep their own dispatch and messages
+- **`sudo-keepalive.sh`** - `sudo_keepalive_start` / `sudo_keepalive_stop` primitives — refresh sudo up-front, then keep the timestamp warm via a background `sudo -n true` loop that self-terminates when the parent shell dies. Caller owns the trap composition (bash `trap` vs zsh `TRAP{EXIT,INT,TERM}`); sourced by `tm-fast-backup.sh` and `terminal/zsh/functions/dev.sh::update()`
 
 ### Time Machine
 
