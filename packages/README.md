@@ -4,7 +4,7 @@ A profile-based package management system for macOS using categorized Brewfiles.
 
 ## Overview
 
-This system organizes packages into logical categories, allowing you to install only what you need for different types of systems. Instead of installing 200+ packages on every machine, you can select specific profiles or categories.
+This system organizes packages into logical categories, allowing you to install only what you need for different types of systems. Instead of installing the whole catalog on every machine, you can select specific profiles or categories.
 
 ## Structure
 

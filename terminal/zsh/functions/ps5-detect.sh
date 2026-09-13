@@ -15,8 +15,11 @@
 #   2. Optionally set up static IP for PS5 in your router
 # ============================================================================
 
-# CONFIGURATION - Update this with your PS5's IP address
-PS5_IP="${PS5_IP:-192.168.1.249}"  # PS5 IP address
+# Configure by setting PS5_IP in ~/.zshrc.local (or any shell startup file)
+# before this function file is sourced. The default is an RFC 5737
+# documentation-range address that will never route, so the helpers announce
+# "not reachable" clearly instead of leaking the author's LAN topology.
+PS5_IP="${PS5_IP:-192.0.2.10}"
 
 # Check if PS5 is currently reachable
 ps5-status() {

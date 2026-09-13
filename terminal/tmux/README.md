@@ -737,7 +737,7 @@ set -g @plugin 'tmux-plugins/tmux-sessionist'
 **Layout:**
 ```yaml
 name: blog
-root: /Users/jeromefaria/Work/jeromefaria.github.io/
+root: ~/Work/jeromefaria.github.io/
 windows:
   - blog:
       panes:
@@ -765,7 +765,7 @@ mux blog
 **Layout:**
 ```yaml
 name: dscgrm
-root: /Users/jeromefaria/Work/projects/dscgrm
+root: ~/Work/projects/dscgrm
 windows:
   - development:
       panes:

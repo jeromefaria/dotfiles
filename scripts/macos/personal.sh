@@ -38,10 +38,17 @@ log_info "Setting measurement units to metric"
 defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
 defaults write NSGlobalDomain AppleMetricUnits -bool true
 
-# Set the timezone
-# See `sudo systemsetup -listtimezones` for other values
-log_info "Setting timezone to Europe/Lisbon"
-sudo systemsetup -settimezone "Europe/Lisbon" > /dev/null 2>&1 || log_warning "Could not set timezone (may require manual setting)"
+# Set the timezone — opt-in via env var so this personal-preferences script
+# doesn't overwrite another user's system clock. Export DOTFILES_TZ (e.g.
+# `Europe/Lisbon`, `America/New_York`) before running `macos-setup.sh` to
+# apply. See `sudo systemsetup -listtimezones` for valid names.
+if [[ -n "${DOTFILES_TZ:-}" ]]; then
+  log_info "Setting timezone to $DOTFILES_TZ"
+  sudo systemsetup -settimezone "$DOTFILES_TZ" > /dev/null 2>&1 \
+    || log_warning "Could not set timezone (may require manual setting)"
+else
+  log_skip "Timezone unchanged (set DOTFILES_TZ to override)"
+fi
 
 ###############################################################################
 # Appearance Customizations
