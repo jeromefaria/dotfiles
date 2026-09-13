@@ -98,26 +98,6 @@ safe_killall() {
     fi
 }
 
-# Execute command with error handling
-execute() {
-    local cmd="$1"
-    local error_msg="${2:-Command failed}"
-
-    if ! eval "$cmd" 2>/dev/null; then
-        log_warning "$error_msg"
-        return 1
-    fi
-    return 0
-}
-
-# Create directory if it doesn't exist
-ensure_dir() {
-    local dir="$1"
-    if [ ! -d "$dir" ]; then
-        mkdir -p "$dir"
-    fi
-}
-
 # Backup a file before modifying
 backup_file() {
     local file="$1"
@@ -193,8 +173,6 @@ export -f get_macos_version
 export -f get_macos_major_version
 export -f is_macos
 export -f safe_killall
-export -f execute
-export -f ensure_dir
 export -f backup_file
 export -f print_separator
 export -f print_header
