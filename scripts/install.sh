@@ -459,6 +459,45 @@ run_health_check() {
   fi
 }
 
+# Seed *.template files: for each `foo.template` under config/, if `foo`
+# does not already exist, copy the template to `foo`. The live copy lives
+# alongside the template because ~/.config → DOTFILES_DIR/config via the
+# repo's install-time symlink, so in-place seeding IS the runtime location.
+# Every seeded destination is gitignored (verified) so no local credential
+# ever drifts back into tracking.
+seed_templates() {
+  print_header "Seeding config templates"
+
+  local template dest
+  local seeded=0
+  local skipped=0
+  while IFS= read -r template; do
+    dest="${template%.template}"
+    local rel="${dest#$DOTFILES_DIR/}"
+
+    if [ -e "$dest" ]; then
+      print_success "Already present: $rel"
+      skipped=$((skipped + 1))
+      continue
+    fi
+
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would seed: $rel"
+      seeded=$((seeded + 1))
+      continue
+    fi
+
+    if cp "$template" "$dest"; then
+      print_success "Seeded: $rel"
+      seeded=$((seeded + 1))
+    else
+      print_error "Failed to seed: $rel"
+    fi
+  done < <(find "$DOTFILES_DIR/config" -name "*.template" -type f 2>/dev/null)
+
+  print_info "Templates: $seeded seeded, $skipped already present"
+}
+
 # Main installation flow
 main() {
   # Parse command-line arguments
@@ -491,6 +530,7 @@ main() {
   install_vim_plug
   install_tpm
   link_dotfiles
+  seed_templates
   install_packages
   apply_macos_settings
   set_zsh_shell

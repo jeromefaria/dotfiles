@@ -68,7 +68,7 @@ config/1Password/
 config/raycast/
 
 # mpv Last.fm scrobbler: live credentials file (see lastfm.env.template)
-config/mpv/lastfmscrobbler/lastfm.env
+config/mpv/lastfm.env
 
 # Large/build directories
 config/nvim/bundle/

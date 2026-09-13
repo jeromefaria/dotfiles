@@ -11,8 +11,8 @@ $ua = LWP::UserAgent->new();
 $lfmUrl = "http://ws.audioscrobbler.com/2.0";
 
 # Last.fm user credentials come from ~/.config/mpv/lastfm.env — a gitignored
-# key=value file. Copy lastfm.env.template next to this script to that location
-# and fill in LASTFM_USERNAME / LASTFM_PASSWORD.
+# key=value file. Seeded from ../lastfm.env.template by scripts/install.sh
+# (or copy manually and fill in LASTFM_USERNAME / LASTFM_PASSWORD).
 my $env_file = "$ENV{HOME}/.config/mpv/lastfm.env";
 open(my $envfh, '<', $env_file)
     or die "scrobble: cannot read $env_file (create it from lastfm.env.template): $!\n";
