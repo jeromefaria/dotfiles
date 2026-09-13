@@ -105,17 +105,21 @@ fi
 # ─── Fast: sudo up-front + keep-alive so the post-backup restore never re-prompts ─
 print_step "Requesting sudo (needed to lift the I/O throttle)..."
 sudo -v || { print_error "sudo required."; exit 1; }
-( while kill -0 "$$" 2>/dev/null; do sudo -n true; sleep 60; done ) &
-KEEPALIVE_PID=$!
 
 ORIG_THROTTLE="$(sysctl -n "$THROTTLE_KNOB" 2>/dev/null || echo 1)"
 
+# Install cleanup BEFORE launching the keepalive so a Ctrl+C in the launch
+# window still restores the throttle and reaps the loop via the EXIT trap.
+# KEEPALIVE_PID may be unset at trap-fire time; `kill ""` errors silently.
 cleanup() {
   sudo sysctl -w "${THROTTLE_KNOB}=${ORIG_THROTTLE}" >/dev/null 2>&1
-  kill "$KEEPALIVE_PID" 2>/dev/null
+  kill "${KEEPALIVE_PID:-}" 2>/dev/null
   print_success "Throttle restored (${THROTTLE_KNOB}=${ORIG_THROTTLE})."
 }
 trap cleanup EXIT INT TERM
+
+( while kill -0 "$$" 2>/dev/null; do sudo -n true; sleep 60; done ) &
+KEEPALIVE_PID=$!
 
 print_step "Lifting I/O throttle (${THROTTLE_KNOB}: ${ORIG_THROTTLE} -> 0)..."
 sudo sysctl -w "${THROTTLE_KNOB}=0" >/dev/null
