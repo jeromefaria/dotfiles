@@ -227,7 +227,7 @@ Settings optimized for software development:
 User-specific preferences (customize this file!):
 
 - **Regional Settings**
-  - Timezone (Europe/Lisbon by default)
+  - Timezone (opt-in via `DOTFILES_TZ` env, e.g. `DOTFILES_TZ=Europe/Lisbon`; skipped otherwise)
   - Metric units
   - Language preferences
 

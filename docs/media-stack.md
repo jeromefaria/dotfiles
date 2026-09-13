@@ -97,10 +97,11 @@ because remote access uses raw `100.x` IPs, not MagicDNS names.
 
 ## Remote access
 
-- **Tailscale** (Mac app — real interface, not the Homebrew userspace daemon). Mac IP
-  `100.117.188.79`. Reach any service at `http://100.117.188.79:<port>`.
+- **Tailscale** (Mac app — real interface, not the Homebrew userspace daemon).
+  Find this Mac's Tailnet IP with `tailscale ip -4`; reach any service at
+  `http://<mac-tailnet-ip>:<port>`.
 - **Phone:** Ruddarr (add/search) + Pocket-for-Seerr (browse/request) → point at the
-  Tailscale IP + API keys. Termius for SSH; Files app → `smb://100.117.188.79` for drives.
+  Tailscale IP + API keys. Termius for SSH; Files app → `smb://<mac-tailnet-ip>` for drives.
 - **Web login** for the *arr apps: user `jerome`, password in `~/plex-stack/.arr-credentials`.
 
 ## VPN architecture (important constraints)

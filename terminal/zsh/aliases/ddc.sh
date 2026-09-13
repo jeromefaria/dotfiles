@@ -23,7 +23,7 @@
 #   Both monitors → DisplayPort: M1 MacBook Pro via UGREEN Revodok Pro 209
 #
 # Network Monitoring (Available Now):
-#   ps5-status    - Check if PS5 is on (IP: 192.168.1.249)
+#   ps5-status    - Check if PS5 is on (uses $PS5_IP, see functions/ps5-detect.sh)
 #   ps5-watch     - Monitor PS5 and get notifications
 #
 # Input source codes for Dell U2515H:
