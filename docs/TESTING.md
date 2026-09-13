@@ -9,6 +9,7 @@ This repo ships test suites for the scripts that mutate external state — file 
 | `scripts/test-audio-backup.sh` | 25 tests / 37 assertions | `scripts/audio-backup-sync.sh` end-to-end + `audio-backup-manage.sh` dispatch and plist generation |
 | `scripts/test-audio-plugin-cleanup.py` | 22 unittest cases | `scripts/audio-plugin-cleanup.py` suffix stripping, dupe detection, no-twin invariant, scan/candidate filtering |
 | `scripts/test-install-symlink.sh` | 7 tests / 14 assertions | `scripts/install.sh::create_symlink` — first-time creation, idempotency, file backup, `--dry-run`, source-is-symlink guard, and a known data-loss gap (TEST 7) |
+| `scripts/test-install-seed-templates.sh` | 6 tests / 13 assertions | `scripts/install.sh::seed_templates` — new-destination copy + content fidelity, destination-exists skip, `DRY_RUN` no-write, mixed-state counts + summary, filenames-with-spaces round-trip, cp-failure isolation (one failure doesn't abort the loop) |
 | `mail/scripts/test-manage-sync.sh` | 10 tests / 10 assertions | `mail/scripts/manage-sync.sh` lifecycle (status/start/stop/restart/logs) with a mocked `launchctl` |
 | `terminal/zsh/test-config.sh` | smoke | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
 | `terminal/zsh/test-newgig.sh` | 7 tests / 14 assertions | `functions/dev.sh::newgig` — scaffold shape (with/without project), refuses existing dir, input validation for client + project names, template interpolation, rollback on mid-write failure |
@@ -22,6 +23,7 @@ Each suite is self-contained — no shared fixtures, no test runner, no install 
 # From repo root
 scripts/test-audio-backup.sh
 scripts/test-install-symlink.sh
+scripts/test-install-seed-templates.sh
 python3 scripts/test-audio-plugin-cleanup.py
 mail/scripts/test-manage-sync.sh
 terminal/zsh/test-config.sh
@@ -47,6 +49,7 @@ Exit code is `0` on success, non-zero on any failure. The shell suites print per
 - Plist generation (`plutil -lint` on the emitted file)
 - launchd lifecycle for both `audio-backup` and `mail` sync via mocked `launchctl`
 - Symlink creation, idempotent re-link, file backup, dry-run, source-is-symlink rejection
+- Template seeding — copy-on-empty, destination-exists skip, dry-run no-write, mixed-state counter accuracy, filenames-with-spaces round-trip, cp-failure isolation
 - Plugin-cleanup keep/dupe invariants — the 7 paid VST2 plugins (FM8 FX, Lounge Lizard, Reaktor 6 FX, Strum, Ultra Analog, VCV Rack 2 FX, ZOOM MS Decoder) live in the keep list and never appear in `--list`
 - `newgig` scaffold shape, input validation (rejects `../`, leading dots, slashes, empty), template interpolation (`$client`, today's date), and trap-based rollback when a heredoc write fails mid-scaffold — proven via a mocked `cat` that returns non-zero on the CLAUDE.md write
 - `plex` media-stack dispatcher — every subcommand routes to the correct `docker`/`colima`/`brew`/`open` invocation (verified against a call-log of mocked binaries); help/usage/unknown-command paths; and the composite `boot` (Colima → compose up → gluetun-health wait → qB reconnect) and `halt` (graceful stop → brew stop → agent-safe `colima stop`) sequences
