@@ -260,13 +260,16 @@ fi
 # server freezes a stale SSH_AUTH_SOCK — leaving panes, and headless tools like
 # Claude Code, pointed at a dead socket. Keep a stable symlink at
 # ~/.ssh/agent.sock: whenever a shell inherits a real launchd socket (a login
-# shell, an SSH session), repoint the symlink at it and ensure id_rsa is loaded
-# (passphrase from the macOS Keychain). Every shell then exports the stable
-# path, so git over SSH resolves to the live agent with no prompt.
+# shell, an SSH session), repoint the symlink at it and warm the Keychain
+# passphrases for id_ed25519 (git commit signing) and id_rsa (auth). ssh-add
+# deduplicates so re-adding an already-loaded key is a silent no-op — cheaper
+# than fingerprint-matching and immune to false positives when other agents
+# (1Password, forwarded sessions) contribute keys of the same type.
 if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
   if [[ -S "$SSH_AUTH_SOCK" && ! -h "$SSH_AUTH_SOCK" ]]; then
     ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/agent.sock"
-    ssh-add -l &>/dev/null || ssh-add --apple-use-keychain "$HOME/.ssh/id_rsa" 2>/dev/null
+    [[ -f "$HOME/.ssh/id_ed25519" ]] && ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519" 2>/dev/null
+    [[ -f "$HOME/.ssh/id_rsa" ]]     && ssh-add --apple-use-keychain "$HOME/.ssh/id_rsa"     2>/dev/null
   fi
   export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 fi
