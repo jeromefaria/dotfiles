@@ -150,7 +150,7 @@ source "$ZSH/oh-my-zsh.sh"
 # functions/*.sh below still load — those are the intended API (sel, newgig,
 # enc, etc.) and don't override standard commands.
 if [[ -z "$CLAUDECODE" ]]; then
-  local -a _macos_only=(macos.sh chrome.sh folders.sh)
+  typeset -a _macos_only=(macos.sh chrome.sh folders.sh)
   for alias_file in "$DOTFILES"/terminal/zsh/aliases/*.sh; do
     _filename=${alias_file:t}
     if (( ${_macos_only[(Ie)$_filename]} )) && [[ "$DOTFILES_PLATFORM" != "macos" ]]; then
