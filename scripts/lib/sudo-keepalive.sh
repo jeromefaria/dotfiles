@@ -33,8 +33,10 @@ sudo_keepalive_start() {
 }
 
 # Reap the keepalive loop. Safe to call when none is running and safe to
-# call more than once — the second kill is a no-op.
+# call more than once — the second kill is a no-op. The `|| true` guards
+# `set -e` callers (install.sh already runs `set -euo pipefail`) against
+# a kill that fails because the PID has already exited.
 sudo_keepalive_stop() {
-  [ -n "$_SUDO_KEEPALIVE_PID" ] && kill "$_SUDO_KEEPALIVE_PID" 2>/dev/null
+  [ -n "$_SUDO_KEEPALIVE_PID" ] && kill "$_SUDO_KEEPALIVE_PID" 2>/dev/null || true
   _SUDO_KEEPALIVE_PID=""
 }

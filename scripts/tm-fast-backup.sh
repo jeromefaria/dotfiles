@@ -106,17 +106,22 @@ fi
 # shellcheck disable=SC1091
 source "${SCRIPT_DIR}/lib/sudo-keepalive.sh"
 
+# Define cleanup and install the trap BEFORE requesting sudo / spawning the
+# keepalive, so a Ctrl+C in that window still routes through cleanup. Both
+# ORIG_THROTTLE (unset here) and $_SUDO_KEEPALIVE_PID (empty here) are
+# guarded inside cleanup, so an early trap-fire is a safe no-op.
+ORIG_THROTTLE=""
+cleanup() {
+  [ -n "$ORIG_THROTTLE" ] && sudo sysctl -w "${THROTTLE_KNOB}=${ORIG_THROTTLE}" >/dev/null 2>&1
+  sudo_keepalive_stop
+  [ -n "$ORIG_THROTTLE" ] && print_success "Throttle restored (${THROTTLE_KNOB}=${ORIG_THROTTLE})."
+}
+trap cleanup EXIT INT TERM
+
 print_step "Requesting sudo (needed to lift the I/O throttle)..."
 sudo_keepalive_start || { print_error "sudo required."; exit 1; }
 
 ORIG_THROTTLE="$(sysctl -n "$THROTTLE_KNOB" 2>/dev/null || echo 1)"
-
-cleanup() {
-  sudo sysctl -w "${THROTTLE_KNOB}=${ORIG_THROTTLE}" >/dev/null 2>&1
-  sudo_keepalive_stop
-  print_success "Throttle restored (${THROTTLE_KNOB}=${ORIG_THROTTLE})."
-}
-trap cleanup EXIT INT TERM
 
 print_step "Lifting I/O throttle (${THROTTLE_KNOB}: ${ORIG_THROTTLE} -> 0)..."
 sudo sysctl -w "${THROTTLE_KNOB}=0" >/dev/null
