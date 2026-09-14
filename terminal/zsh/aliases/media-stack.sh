@@ -109,12 +109,34 @@ plex — media automation stack control (full docs: ~/dotfiles/docs/media-stack.
 
   Fixes (runbooks — see docs)
     plex fix qb            all torrents 0 seeds at once ⇒ restart qBittorrent
+    plex fix vpn           downloads crawl / peers won't connect ⇒ reset tunnel (gluetun + qB)
     plex fix sonarr        new series stuck at 0 episodes ⇒ restart Sonarr
     plex fix ts-dns        remote access/DNS broke ⇒ Tailscale accept-dns=false
 
   Web UIs
     plex web <svc>         open a UI (plex|radarr|sonarr|prowlarr|bazarr|qbit|overseerr)
 EOF
+}
+
+_plex_fix_vpn() {
+  # Reset the torrent VPN tunnel: restart gluetun (fresh WireGuard connection,
+  # usually a new server in the configured country), then restart qBittorrent —
+  # qB shares gluetun's network namespace, so it MUST reconnect after the tunnel
+  # changes or it silently loses peer connectivity. Use when downloads crawl /
+  # peers won't connect despite gluetun showing healthy (P2P throughput degraded
+  # while HTTP still works — the tunnel has gone stale).
+  echo "resetting the VPN tunnel — restarting gluetun…"
+  docker restart gluetun >/dev/null 2>&1
+  printf "waiting for gluetun to be healthy"
+  for i in {1..30}; do
+    [ "$(docker inspect --format '{{.State.Health.Status}}' gluetun 2>/dev/null)" = "healthy" ] && break
+    printf "."; sleep 4
+  done
+  echo " ok"
+  local ip; ip=$(docker exec gluetun sh -c "wget -qO- -T10 https://ipinfo.io/ip" 2>/dev/null)
+  echo "new exit IP: ${ip:-unknown}"
+  docker restart qbittorrent >/dev/null 2>&1   # reconnect qB to the fresh tunnel
+  echo "qBittorrent reconnected. give it a few min to re-announce, then 'plex health'."
 }
 
 # ---- dispatcher ----------------------------------------------------------
@@ -136,9 +158,10 @@ plex() {
     ts)       /Applications/Tailscale.app/Contents/MacOS/Tailscale status ;;
     fix)      case "$1" in
                 qb)     docker restart qbittorrent ;;
+                vpn)    _plex_fix_vpn ;;
                 sonarr) docker restart sonarr ;;
                 ts-dns) /Applications/Tailscale.app/Contents/MacOS/Tailscale set --accept-dns=false && echo "Tailscale accept-dns disabled" ;;
-                *) echo "usage: plex fix qb|sonarr|ts-dns" ;;
+                *) echo "usage: plex fix qb|vpn|sonarr|ts-dns" ;;
               esac ;;
     web)      _plex_web "$1" ;;
     help|"")  _plex_help ;;
@@ -154,7 +177,7 @@ _plex_complete() {
   elif (( CURRENT == 3 )); then
     case "${words[2]}" in
       autostart) _describe 'option' '(on off status)' ;;
-      fix)       _describe 'fix' '(qb sonarr ts-dns)' ;;
+      fix)       _describe 'fix' '(qb vpn sonarr ts-dns)' ;;
       web)       _describe 'service' '(plex radarr sonarr prowlarr bazarr qbit overseerr)' ;;
       restart|logs) _describe 'service' '(radarr sonarr prowlarr bazarr qbittorrent gluetun overseerr decluttarr flaresolverr rarbg-shim)' ;;
     esac
