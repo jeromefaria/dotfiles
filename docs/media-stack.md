@@ -182,6 +182,26 @@ cache. Magnet is the preferred method everywhere; on 1337x it's effectively the 
 - **Never rename** curated files (original release names aid subtitle matching).
 - Codec-only upgrades allowed (x264→x265); no quality/source churn.
 
+## Library auto-scan (imports appear instantly)
+
+Radarr and Sonarr each have a **media-server connection** (`notification` id 2 in both) that
+fires a **targeted partial scan of only the affected section** the moment an item imports —
+new movie → rescans just *Cinema*, new episode → just *Television*. Near-instant, near-zero
+load (not a full library sweep). Triggers: on import, on upgrade, on rename, plus
+file-delete / delete-for-upgrade (so a replaced file doesn't leave a ghost entry). Verified
+end-to-end: an import and its media-server `addedAt` timestamp match to the second.
+
+- **Host is `host.docker.internal:32400`, not a bare `plex` name.** The server is a native
+  macOS app, not a container, so the containers can't resolve a container name for it on
+  `plex-stack_default`. `host.docker.internal` (Colima-provided, stable across restarts)
+  reaches the host; a bare name fails with ".NET: Name does not resolve" (a shell `wget` in
+  the container can *look* like it resolves — that's a pipe exit-status false positive).
+- **Auth token:** the native macOS server keeps prefs in the `defaults` store, not a
+  `Preferences.xml` — read it with `defaults read com.plexapp.plexmediaserver PlexOnlineToken`.
+- **The server's own filesystem-watch stays OFF** — unreliable on USB/network volumes, risks
+  runaway rescans. The import-triggered push is the single deterministic mechanism; don't
+  enable both.
+
 ## Reboot survival
 
 - **Auto-start is a mount-aware guard agent, not the bare brew Colima agent.** Colima's VM
