@@ -73,6 +73,7 @@ alias audio-backup="$HOME/dotfiles/scripts/audio-backup-manage.sh"
 # Time Machine (exclusion set + throttle-lifted fast backup — see time-machine.md)
 alias tm-exclusions="$HOME/dotfiles/scripts/tm-exclusions.sh"
 alias tm-fast-backup="$HOME/dotfiles/scripts/tm-fast-backup.sh"
+alias tm-backup="$HOME/dotfiles/scripts/tm-backup-manage.sh"
 
 # GPG
 alias gpgrestart="gpgconf --kill gpg-agent"

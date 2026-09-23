@@ -47,9 +47,12 @@ Sourced by `macos-setup.sh`; can also be run individually.
 
 Version-controlled exclusion set + fast-backup runner that keep Time Machine on a healthy history chain instead of thrashing into fresh full backups. See [`time-machine.md`](time-machine.md) for the disk-sizing rationale.
 
-- **`tm-backup.conf`** - Single source of truth: the exclusion list plus fast-backup tunables (throttle knob, gate timeout)
+- **`tm-backup.conf`** - Single source of truth: the exclusion list, fast-backup tunables (throttle knob, gate timeout), and the staleness-check thresholds
 - **`tm-exclusions.sh`** - Applies the exclusion set via `tmutil addexclusion`; usually invoked as `tm-exclusions apply`
 - **`tm-fast-backup.sh`** - Blocking backup runner that lifts the low-priority I/O throttle for the run (fast mode) or leaves it in place (`--gentle`)
+- **`tm-backup-staleness-check.sh`** - Reads `tmutil latestbackup`, notifies via terminal-notifier / osascript when no successful backup has landed within `TM_STALE_ALERT_HOURS` (or when the destination isn't mountable). Cooldown-guarded to avoid spam
+- **`tm-backup-manage.sh`** - Launchd lifecycle for the staleness check — `install`/`uninstall`/`status`/`check`/`verify`/`logs`. Usually invoked via the `tm-backup` shell alias
+- **`test-tm-backup-staleness.sh`** - Test suite for the staleness check (mocked `tmutil` + `terminal-notifier`)
 
 ### Audio Backup
 
