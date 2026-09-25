@@ -105,8 +105,18 @@ notify() {
 # network; all exit 0) still surfaces instead of rotting silently. A cooldown
 # marker prevents repeat spam when the drive's mount flaps (WatchPaths refire).
 check_staleness() {
-  local success_marker="${LAST_SUCCESS_FILE:-${LOG_DIR}/.last-success}"
-  local notify_marker="${LOG_DIR}/.last-stale-notify"
+  local state_dir="${STATE_DIR:-${HOME}/Library/Application Support/audio-backup}"
+  mkdir -p "$state_dir" 2>/dev/null || true
+  local success_marker="${LAST_SUCCESS_FILE:-${state_dir}/last-success}"
+  local notify_marker="${state_dir}/.last-stale-notify"
+
+  # One-time migration: if the pre-relocation markers still exist under
+  # LOG_DIR (which cleaners like mole periodically wipe), move them to the
+  # persistent STATE_DIR so history isn't lost on the next cleaner sweep.
+  [ -f "${LOG_DIR}/.last-success" ] && [ ! -f "$success_marker" ] \
+    && mv "${LOG_DIR}/.last-success" "$success_marker" 2>/dev/null
+  [ -f "${LOG_DIR}/.last-stale-notify" ] && [ ! -f "$notify_marker" ] \
+    && mv "${LOG_DIR}/.last-stale-notify" "$notify_marker" 2>/dev/null
   local max_days="${STALE_ALERT_DAYS:-3}"
   local cooldown=$(( ${STALE_NOTIFY_COOLDOWN_HOURS:-12} * 3600 ))
   local now last message last_notify
@@ -270,9 +280,12 @@ log "Starting rclone..."
 if rclone "${RCLONE_ARGS[@]}"; then
   log_ok "Sync complete"
   # Stamp the success marker the staleness watchdog reads (real runs only —
-  # a dry-run transferred nothing, so it must not reset the clock).
+  # a dry-run transferred nothing, so it must not reset the clock). Lives
+  # under STATE_DIR so cleaners that sweep ~/Library/Logs/ leave it alone.
   if [ "$DRY_RUN" -eq 0 ]; then
-    date +%s > "${LAST_SUCCESS_FILE:-${LOG_DIR}/.last-success}" 2>/dev/null || true
+    local state_dir="${STATE_DIR:-${HOME}/Library/Application Support/audio-backup}"
+    mkdir -p "$state_dir" 2>/dev/null || true
+    date +%s > "${LAST_SUCCESS_FILE:-${state_dir}/last-success}" 2>/dev/null || true
   fi
   # Auto-prune version folders past the retention window (honours --dry-run).
   log "Pruning versions older than ${VERSION_RETENTION_DAYS:-90}d..."

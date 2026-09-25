@@ -30,12 +30,18 @@ COOLDOWN_HOURS="${TM_STALE_NOTIFY_COOLDOWN_HOURS:-12}"
 NOTIFY_ENABLED="${TM_NOTIFY_ENABLED:-1}"
 NOTIFIER_GROUP="${TM_NOTIFIER_GROUP:-tm-backup}"
 LOG_DIR="${TM_STALENESS_LOG_DIR:-${HOME}/Library/Logs/tm-backup}"
+STATE_DIR="${TM_STALENESS_STATE_DIR:-${HOME}/Library/Application Support/tm-backup}"
 
 MODE="notify"
 [ "${1:-}" = "--check" ] && MODE="check"
 
-mkdir -p "$LOG_DIR" 2>/dev/null || true
+mkdir -p "$LOG_DIR" "$STATE_DIR" 2>/dev/null || true
 LOG_FILE="$LOG_DIR/staleness-check.log"
+
+# One-time migration: relocate the cooldown marker from LOG_DIR (where a
+# disk cleaner can wipe it) to STATE_DIR (which cleaners leave alone).
+[ -f "${LOG_DIR}/.last-stale-notify" ] && [ ! -f "${STATE_DIR}/.last-stale-notify" ] \
+  && mv "${LOG_DIR}/.last-stale-notify" "${STATE_DIR}/.last-stale-notify" 2>/dev/null
 
 log() {
   printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$LOG_FILE" 2>/dev/null || true
@@ -100,8 +106,8 @@ if [ "$MODE" = "check" ]; then
   exit 1
 fi
 
-# Cooldown-guarded notify.
-notify_marker="$LOG_DIR/.last-stale-notify"
+# Cooldown-guarded notify. Marker lives in STATE_DIR (cleaner-safe), not LOG_DIR.
+notify_marker="$STATE_DIR/.last-stale-notify"
 cooldown_seconds=$(( COOLDOWN_HOURS * 3600 ))
 last_notify=0
 [ -f "$notify_marker" ] && last_notify="$(cat "$notify_marker" 2>/dev/null || echo 0)"

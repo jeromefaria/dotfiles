@@ -30,6 +30,7 @@ FAIL=0
 TESTROOT="$(mktemp -d -t tm-staleness-test-XXXXXX)"
 BIN_DIR="$TESTROOT/bin"
 LOG_DIR="$TESTROOT/logs"
+STATE_DIR="$TESTROOT/state"
 CONFIG_FILE="$TESTROOT/tm-backup.conf"
 NOTIFY_CAPTURE="$TESTROOT/notify.log"
 TMUTIL_MODE_FILE="$TESTROOT/tmutil.mode"
@@ -41,7 +42,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-mkdir -p "$BIN_DIR" "$LOG_DIR"
+mkdir -p "$BIN_DIR" "$LOG_DIR" "$STATE_DIR"
 
 # ─── Mock: tmutil ──────────────────────────────────────────────────────
 # Behaviour is driven by the mode file so tests can flip between fresh,
@@ -100,6 +101,7 @@ TM_STALE_NOTIFY_COOLDOWN_HOURS=12
 TM_NOTIFY_ENABLED=1
 TM_NOTIFIER_GROUP="tm-backup-test"
 TM_STALENESS_LOG_DIR="$LOG_DIR"
+TM_STALENESS_STATE_DIR="$STATE_DIR"
 EOF
 
 export TM_BACKUP_CONFIG="$CONFIG_FILE"
@@ -121,7 +123,7 @@ heading() { echo; echo -e "${BLUE}── $1 ──${NC}"; }
 set_mode()  { echo "$1" > "$TMUTIL_MODE_FILE"; }
 reset_state() {
   : > "$NOTIFY_CAPTURE" 2>/dev/null || true
-  rm -f "$LOG_DIR/.last-stale-notify" "$LOG_DIR/staleness-check.log"
+  rm -f "$STATE_DIR/.last-stale-notify" "$LOG_DIR/.last-stale-notify" "$LOG_DIR/staleness-check.log"
 }
 
 run_check() {
@@ -179,8 +181,11 @@ heading "TEST 5: cooldown-expired, second run notifies again"
 reset_state
 set_mode "fresh:$(( $(date +%s) - 200 * 3600 ))"
 run_check                                     # first
+[ -f "$STATE_DIR/.last-stale-notify" ] \
+  && pass "cooldown marker lands in STATE_DIR (not LOG_DIR, so cleaners can't wipe it)" \
+  || fail "cooldown marker not written to STATE_DIR" "$(ls -la "$STATE_DIR" "$LOG_DIR")"
 # Rewind the notify-marker so cooldown looks expired.
-echo $(( $(date +%s) - 100 * 3600 )) > "$LOG_DIR/.last-stale-notify"
+echo $(( $(date +%s) - 100 * 3600 )) > "$STATE_DIR/.last-stale-notify"
 run_check                                     # second
 count=$(grep -c "^title=" "$NOTIFY_CAPTURE" 2>/dev/null || echo 0)
 [ "$count" = "2" ] \
@@ -207,8 +212,35 @@ fi
   && pass "--check never triggers a notification" \
   || fail "--check leaked a notification"
 
-# ─── TEST 7: NOTIFY_ENABLED=0 silences everything ─────────────────────
-heading "TEST 7: TM_NOTIFY_ENABLED=0 silences notifications"
+# ─── TEST 7: one-time migration moves the marker from LOG_DIR → STATE_DIR
+heading "TEST 7: pre-relocation marker in LOG_DIR migrates to STATE_DIR"
+reset_state
+set_mode "fresh:$(( $(date +%s) - 200 * 3600 ))"
+# Seed the old-location marker with a fresh timestamp — if migration works,
+# it becomes STATE_DIR's marker and cooldown suppresses the notify.
+now_ts=$(date +%s)
+echo "$now_ts" > "$LOG_DIR/.last-stale-notify"
+run_check
+[ ! -f "$LOG_DIR/.last-stale-notify" ] \
+  && pass "old-location marker removed from LOG_DIR" \
+  || fail "old marker still in LOG_DIR — migration didn't fire"
+if [ -f "$STATE_DIR/.last-stale-notify" ] && [ "$(cat "$STATE_DIR/.last-stale-notify")" = "$now_ts" ]; then
+  pass "marker relocated to STATE_DIR with original timestamp preserved"
+else
+  fail "marker missing from STATE_DIR or timestamp lost"
+fi
+# Use `wc -l` on filtered lines instead of `grep -c || echo 0` — grep prints
+# `0` AND exits non-zero when there are no matches, doubling the fallback.
+count=$(grep -c "^title=" "$NOTIFY_CAPTURE" 2>/dev/null; true)
+count=${count:-0}
+if [ "$count" = "0" ]; then
+  pass "cooldown honoured post-migration (no fresh notify fired)"
+else
+  fail "migration lost the cooldown timestamp — expected 0 notifications, got $count"
+fi
+
+# ─── TEST 8: NOTIFY_ENABLED=0 silences everything ─────────────────────
+heading "TEST 8: TM_NOTIFY_ENABLED=0 silences notifications"
 reset_state
 # Rewrite fixture to disable notifications.
 sed -i.bak 's/^TM_NOTIFY_ENABLED=.*/TM_NOTIFY_ENABLED=0/' "$CONFIG_FILE"
