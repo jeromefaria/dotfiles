@@ -6,5 +6,5 @@ windows:
       panes:
         - nvim
         - claude --dangerously-skip-permissions --continue
-        - sleep 5 && open http://localhost:5173 && clear
+        - sleep 5 && open https://localhost:5173 && clear
         - npm run dev:i18n -- --host
