@@ -112,6 +112,7 @@ plex — media automation stack control (full docs: ~/dotfiles/docs/media-stack.
     plex fix vpn           downloads crawl / peers won't connect ⇒ reset tunnel (gluetun + qB)
     plex fix indexers      titles suddenly unfindable ⇒ refresh Cloudflare solver + re-test 1337x/EZTV
     plex fix sonarr        new series stuck at 0 episodes ⇒ restart Sonarr
+    plex fix overseerr     title in Plex but no checkmark in the request app ⇒ Overseerr library re-scan
     plex fix ts-dns        remote access/DNS broke ⇒ Tailscale accept-dns=false
 
   Web UIs
@@ -162,8 +163,10 @@ plex() {
                 vpn)    _plex_fix_vpn ;;
                 indexers) /bin/zsh "$PLEX_STACK/flaresolverr-refresh.sh"; tail -3 "$PLEX_STACK/flaresolverr-refresh.log" 2>/dev/null; echo "Cloudflare-gated indexers refreshed (solver restarted, 1337x/EZTV re-tested)" ;;
                 sonarr) docker restart sonarr ;;
+                overseerr) local okey; okey=$(python3 -c "import json;print(json.load(open('$PLEX_STACK/config/overseerr/settings.json'))['main']['apiKey'])" 2>/dev/null)
+                           curl -s -o /dev/null -w "Overseerr full library scan triggered (HTTP %{http_code}). Availability re-syncs in ~1-2 min — fixes a title that is in Plex/Radarr but shows no checkmark in the request app.\n" -X POST -H "X-Api-Key: $okey" "http://localhost:5055/api/v1/settings/jobs/plex-full-scan/run" ;;
                 ts-dns) /Applications/Tailscale.app/Contents/MacOS/Tailscale set --accept-dns=false && echo "Tailscale accept-dns disabled" ;;
-                *) echo "usage: plex fix qb|vpn|indexers|sonarr|ts-dns" ;;
+                *) echo "usage: plex fix qb|vpn|indexers|sonarr|overseerr|ts-dns" ;;
               esac ;;
     web)      _plex_web "$1" ;;
     help|"")  _plex_help ;;
@@ -179,7 +182,7 @@ _plex_complete() {
   elif (( CURRENT == 3 )); then
     case "${words[2]}" in
       autostart) _describe 'option' '(on off status)' ;;
-      fix)       _describe 'fix' '(qb vpn indexers sonarr ts-dns)' ;;
+      fix)       _describe 'fix' '(qb vpn indexers sonarr overseerr ts-dns)' ;;
       web)       _describe 'service' '(plex radarr sonarr prowlarr bazarr qbit overseerr)' ;;
       restart|logs) _describe 'service' '(radarr sonarr prowlarr bazarr qbittorrent gluetun overseerr decluttarr flaresolverr rarbg-shim)' ;;
     esac
