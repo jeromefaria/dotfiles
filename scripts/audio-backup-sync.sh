@@ -231,6 +231,17 @@ if ! rclone listremotes | grep -q "^${RCLONE_REMOTE}:$"; then
   exit 1
 fi
 
+# ─── Gate 6: Time Machine not mid-backup ───────────────────────────────
+# The Time Machine destination hangs off the same USB hub chain as the source
+# drive. Running both at once saturates the bus and is how each of them ends up
+# interrupted, so defer instead of competing — launchd retries on its next fire,
+# and a manual run says so plainly rather than failing halfway.
+if [ "${DEFER_WHILE_TIME_MACHINE_RUNS:-1}" = "1" ] \
+   && tmutil status 2>/dev/null | grep -q 'Running = 1'; then
+  log_warn "Time Machine is mid-backup — deferring to avoid contending for the same USB bus. Skipping."
+  exit 0
+fi
+
 # ─── Concurrency lock (stop a manual run and the nightly run overlapping) ─
 LOCK_DIR="${TMPDIR:-/tmp}/audio-backup.lock"
 if ! mkdir "$LOCK_DIR" 2>/dev/null; then
@@ -259,8 +270,8 @@ RCLONE_ARGS=(
   --bwlimit "$BWLIMIT"
   --log-file "$LOG_FILE"
   --log-level INFO
-  --transfers 4
-  --checkers 8
+  --transfers "${RCLONE_TRANSFERS:-2}"
+  --checkers "${RCLONE_CHECKERS:-4}"
 )
 
 # Live progress bar on a TTY; periodic one-line stats when unattended (launchd),
@@ -276,8 +287,62 @@ if [ "$DRY_RUN" -eq 1 ]; then
   RCLONE_ARGS+=(--dry-run)
 fi
 
-log "Starting rclone..."
-if rclone "${RCLONE_ARGS[@]}"; then
+# Pre-flight read probe. The failure mode this guards against is the source
+# volume disappearing under read load: the mount still looks present, but
+# traversal throws "directory not found" en masse. Finding that out in seconds
+# beats finding out ten minutes into a transfer.
+source_survives_probe() {
+  local probe_dirs="${PREFLIGHT_PROBE_DIRS:-200}"
+  [ "$probe_dirs" -gt 0 ] || return 0
+
+  # -mindepth 1 is load-bearing: without it `find` prints $SOURCE itself (it can
+  # stat the root) and the probe passes even when the directory cannot be read
+  # at all. The question is "can I enumerate the contents", not "does the root
+  # exist" — Gate 1 already answered the latter. Any entry counts; the sentinel
+  # alone is proof enough that enumeration works.
+  local found
+  found="$(find "$SOURCE" -mindepth 1 -print 2>/dev/null | head -n "$probe_dirs" | wc -l | tr -d ' ')"
+  [ "${found:-0}" -gt 0 ]
+}
+
+if ! source_survives_probe; then
+  log_err "Pre-flight read probe failed — the source is mounted but unreadable (bus or drive fault)."
+  notify "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
+  exit 1
+fi
+
+# Whole-sync retry. rclone is idempotent, so a second pass completes whatever
+# the first dropped — but only attempt it when the source has actually come
+# back, otherwise we just spin up another doomed run.
+run_rclone_with_retries() {
+  local attempts=$(( ${SYNC_RETRY_ATTEMPTS:-1} + 1 ))
+  local delay="${SYNC_RETRY_DELAY_SECONDS:-30}"
+  local attempt=1
+
+  while :; do
+    log "Starting rclone (attempt ${attempt}/${attempts})..."
+    rclone "${RCLONE_ARGS[@]}" && return 0
+
+    local status=$?
+    [ "$attempt" -ge "$attempts" ] && return "$status"
+
+    log_warn "rclone exited ${status} — waiting ${delay}s before retrying"
+    sleep "$delay"
+
+    if [ ! -f "$SENTINEL" ]; then
+      log_err "Source drive is gone (sentinel $SENTINEL missing) — not retrying."
+      return "$status"
+    fi
+    if ! source_survives_probe; then
+      log_err "Source still unreadable after ${delay}s — not retrying."
+      return "$status"
+    fi
+
+    attempt=$(( attempt + 1 ))
+  done
+}
+
+if run_rclone_with_retries; then
   log_ok "Sync complete"
   # Stamp the success marker the staleness watchdog reads (real runs only —
   # a dry-run transferred nothing, so it must not reset the clock). Lives

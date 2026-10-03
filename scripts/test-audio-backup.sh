@@ -146,6 +146,22 @@ exit 0
 MOCKEOF
 chmod +x "$TESTROOT_BIN/networksetup"
 
+# Mock tmutil so the Time-Machine-overlap gate can be driven without touching
+# real backups. MOCK_TM_RUNNING=1 makes it claim a backup is in progress.
+cat > "$TESTROOT_BIN/tmutil" <<'MOCKEOF'
+#!/bin/bash
+if [ "$1" = "status" ]; then
+  if [ "${MOCK_TM_RUNNING:-0}" = "1" ]; then
+    printf 'Backup session status:\n{\n    Running = 1;\n}\n'
+  else
+    printf 'Backup session status:\n{\n    Running = 0;\n}\n'
+  fi
+  exit 0
+fi
+exit 0
+MOCKEOF
+chmod +x "$TESTROOT_BIN/tmutil"
+
 export PATH="$TESTROOT_BIN:$PATH"
 
 # ─── Test helpers ──────────────────────────────────────────────────────
@@ -499,6 +515,68 @@ assert "dry-run leaves the old version folder in place" "[ -d \"$VER_DIR/$OLD_VE
 assert "old (>90d) version folder pruned"  "[ ! -d \"$VER_DIR/$OLD_VER\" ]"
 assert "recent (<90d) version folder kept" "[ -d \"$VER_DIR/$NEW_VER\" ]"
 assert "non-date folder left untouched"    "[ -d \"$VER_DIR/not-a-date\" ]"
+
+heading "TEST 29: Time Machine mid-backup → defer, exit 0"
+# The TM destination shares the USB hub chain with the source drive; running
+# both saturates the bus and is how each ends up interrupted.
+output=$(MOCK_TM_RUNNING=1 MOCK_ROUTER="10.0.0.1" "$MANAGE" now --force --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && echo "$output" | grep -qi "Time Machine is mid-backup"; then
+  echo -e "  ${GREEN}✓${NC} defers with exit 0 while Time Machine runs"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 30: DEFER_WHILE_TIME_MACHINE_RUNS=0 overrides the gate"
+cp "$TEST_BACKUP_CONFIG" "$TESTROOT/noDefer.conf"
+echo 'DEFER_WHILE_TIME_MACHINE_RUNS=0' >> "$TESTROOT/noDefer.conf"
+output=$(AUDIO_BACKUP_CONFIG="$TESTROOT/noDefer.conf" MOCK_TM_RUNNING=1 MOCK_ROUTER="10.0.0.1" \
+          "$MANAGE" now --force --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && ! echo "$output" | grep -qi "Time Machine is mid-backup"; then
+  echo -e "  ${GREEN}✓${NC} gate is skippable via the conf"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 31: pre-flight probe fails on a mounted-but-unreadable source"
+# Faithful to the real failure: the sentinel is still statable through an
+# execute-only directory, so Gate 1 passes, but traversal returns nothing —
+# exactly what a drive falling off the bus under load looks like.
+chmod 111 "$FAKE_AUDIO"
+output=$(MOCK_ROUTER="10.0.0.1" "$MANAGE" now --force --dry-run 2>&1); status=$?
+chmod 755 "$FAKE_AUDIO"
+if [ "$status" -ne 0 ] && echo "$output" | grep -qi "Pre-flight read probe failed"; then
+  echo -e "  ${GREEN}✓${NC} aborts before transferring when the source is unreadable"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 32: concurrency values come from the conf"
+cp "$TEST_BACKUP_CONFIG" "$TESTROOT/conc.conf"
+printf 'RCLONE_TRANSFERS=7\nRCLONE_CHECKERS=9\n' >> "$TESTROOT/conc.conf"
+output=$(AUDIO_BACKUP_CONFIG="$TESTROOT/conc.conf" MOCK_ROUTER="10.0.0.1" \
+          "$MANAGE" now --force --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ]; then
+  echo -e "  ${GREEN}✓${NC} run with conf-supplied concurrency succeeds"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 33: a failing rclone is retried, and the attempt count is bounded"
+# A bogus --bwlimit makes rclone exit non-zero immediately. The source stays
+# mounted and readable, so the retry path engages and must stop at the
+# configured attempt ceiling rather than looping.
+cp "$TEST_BACKUP_CONFIG" "$TESTROOT/retry.conf"
+printf 'SYNC_RETRY_ATTEMPTS=1\nSYNC_RETRY_DELAY_SECONDS=1\n' >> "$TESTROOT/retry.conf"
+output=$(AUDIO_BACKUP_CONFIG="$TESTROOT/retry.conf" MOCK_ROUTER="10.0.0.1" \
+          "$MANAGE" now --force --bwlimit "not-a-rate" 2>&1); status=$?
+if [ "$status" -ne 0 ] \
+   && echo "$output" | grep -q "attempt 1/2" \
+   && echo "$output" | grep -q "attempt 2/2" \
+   && ! echo "$output" | grep -q "attempt 3/2"; then
+  echo -e "  ${GREEN}✓${NC} retried exactly once, then gave up"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 8 lines):"; echo "$output" | tail -8; FAIL=$((FAIL+1))
+fi
 
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""
