@@ -20,7 +20,7 @@ This directory contains utility scripts for managing your dotfiles installation.
 
 ### Utility Scripts
 
-- **`update-music-plugins.sh`** - Updates music plugin managers (Logic Pro, Ableton, etc.)
+- **`update-music-plugins.sh`** - Updates music plugin managers (Logic Pro, Ableton, etc.); pre-flights the Audio volume before opening any manager that installs onto it
 - **`macos-setup.sh`** - macOS-specific system configuration; orchestrates the modular `macos/` scripts below
 - **`arturia-fix-presets.py`** - Reorganizes the Arturia preset library on the external audio drive
 - **`audio-plugin-cleanup.py`** - Detects and removes VST2 plugins that have a VST3 twin (dry-run / trash / rm modes)
@@ -53,6 +53,18 @@ Version-controlled exclusion set + fast-backup runner that keep Time Machine on 
 - **`tm-backup-staleness-check.sh`** - Reads `tmutil latestbackup`, notifies via terminal-notifier / osascript when no successful backup has landed within `TM_STALE_ALERT_HOURS` (or when the destination isn't mountable). Cooldown-guarded to avoid spam
 - **`tm-backup-manage.sh`** - Launchd lifecycle for the staleness check — `install`/`uninstall`/`status`/`check`/`verify`/`logs`. Usually invoked via the `tm-backup` shell alias
 - **`test-tm-backup-staleness.sh`** - Test suite for the staleness check (mocked `tmutil` + `terminal-notifier`)
+
+### Audio Volume Guard
+
+Protects the `/Volumes/Audio` mount point. Several vendors keep their libraries on the audio drive via symlinks out of `/Library` (`Arturia`, `Application Support/Softube`, `Application Support/iZotope`). When an installer runs as root while the volume is unmounted, macOS silently creates `/Volumes/Audio` on the boot disk, the payload lands on the internal SSD, and the real volume is pushed to `/Volumes/Audio 1` — so every one of those symlinks resolves to the wrong place until the squatting directory is removed.
+
+- **`audio-volume-guard.conf`** - Configuration (single source of truth). Assigns with `:=` so an exported environment variable wins, which is what lets the test suite drive the guard against a sandboxed mount point
+- **`audio-volume-guard.sh`** - Resolves four states: `mounted` / `unverified` / `squatter` / `absent`. `st_dev` against `/Volumes` separates a real mount from a squatting directory; a sentinel marker file (same mount-gate idea as `home-mirror.conf`) then separates the real drive from any other volume mounted at the same path, because a USB stick named `Audio` passes the `st_dev` test just as well. `--check` is the installer pre-flight and fails closed on anything but `mounted`; bare invocation is the launchd watcher (notifies on `squatter` and `unverified`, never on `absent`, so an unplugged drive doesn't cry wolf); `--repair` removes a squatter while it is still empty and refuses once it holds payload; `--init` writes the sentinel onto the mounted volume. `install`/`uninstall`/`--status` manage the `WatchPaths` agent
+- **`test-audio-volume-guard.sh`** - Test suite (mocked `terminal-notifier` + `osascript`; attaches a throwaway disk image so mounted-state detection is exercised against a real mount)
+
+`update-music-plugins.sh` calls `--check` before opening Arturia, iZotope, or Softube, and says so when the guard is missing rather than skipping silently.
+
+Two properties worth preserving if you touch this: the content probe is deliberately **tri-state** (`empty` / `occupied` / `unreadable`) because a root-owned squatter this user cannot read must neither be reported as empty — which invites deleting an installer's payload — nor as occupied, which asserts a write that was never observed; and the notification cooldown must be armed **only** by a delivered notification — a launchd agent with no GUI session fails every delivery, and arming the cooldown there would swallow the next window of real alerts while the log claimed success. Both are covered by regression tests.
 
 ### Audio Backup
 

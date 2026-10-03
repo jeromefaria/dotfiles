@@ -28,6 +28,20 @@ PLUGIN_MANAGERS=(
     "soundthread|SoundThread.app"
 )
 
+# Managers whose vendor library lives on the Audio volume, reached through a
+# symlink out of /Library. Launching one of these while the volume is unmounted
+# lets the installer write its payload to the boot disk and leaves a directory
+# squatting on /Volumes/Audio, which then blocks the real volume from mounting.
+# scripts/audio-volume-guard.sh --check refuses that state before it happens.
+VOLUME_DEPENDENT_MANAGERS=(
+    "arturia"
+    "izotope"
+    "softube"
+)
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AUDIO_VOLUME_GUARD="${SCRIPT_DIR}/audio-volume-guard.sh"
+
 # Function to print colored output
 print_info() {
     echo -e "${BLUE}ℹ${NC} $1"
@@ -210,6 +224,32 @@ list_managers() {
     echo ""
 }
 
+# True (0) iff this manager installs into the Audio volume.
+is_volume_dependent() {
+    local key="$1"
+    for dependent in "${VOLUME_DEPENDENT_MANAGERS[@]}"; do
+        [ "$dependent" = "$key" ] && return 0
+    done
+    return 1
+}
+
+# Refuse to launch a volume-dependent manager unless the Audio volume is
+# actually mounted. Absent the guard script the check is skipped rather than
+# blocking, so a partial checkout cannot make the whole script unusable — but
+# it says so, because a silent skip looks identical to a passing pre-flight.
+audio_volume_is_ready() {
+    local key="$1"
+
+    is_volume_dependent "$key" || return 0
+
+    if [ ! -x "$AUDIO_VOLUME_GUARD" ]; then
+        print_warning "Audio volume pre-flight skipped — $AUDIO_VOLUME_GUARD not executable"
+        return 0
+    fi
+
+    "$AUDIO_VOLUME_GUARD" --check
+}
+
 # Open a plugin manager and wait for it to close
 open_plugin_manager() {
     local key="$1"
@@ -228,6 +268,12 @@ open_plugin_manager() {
 
     if ! check_app_exists "$app_name" "$custom_path"; then
         print_warning "$app_name is not installed, skipping..."
+        return 1
+    fi
+
+    if ! audio_volume_is_ready "$key"; then
+        echo ""
+        print_error "Refusing to open $app_name — the Audio volume is not ready"
         return 1
     fi
 
