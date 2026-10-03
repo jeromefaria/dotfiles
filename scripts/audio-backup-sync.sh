@@ -283,7 +283,12 @@ if rclone "${RCLONE_ARGS[@]}"; then
   # a dry-run transferred nothing, so it must not reset the clock). Lives
   # under STATE_DIR so cleaners that sweep ~/Library/Logs/ leave it alone.
   if [ "$DRY_RUN" -eq 0 ]; then
-    local state_dir="${STATE_DIR:-${HOME}/Library/Application Support/audio-backup}"
+    # NOT `local`: this block runs at top level, not inside a function, where
+    # `local` is a runtime error that `set -u` then escalates into an abort on
+    # the next line. Every successful sync therefore lost its success marker AND
+    # skipped the prune below, so the staleness watchdog kept firing even though
+    # rclone had completed cleanly.
+    state_dir="${STATE_DIR:-${HOME}/Library/Application Support/audio-backup}"
     mkdir -p "$state_dir" 2>/dev/null || true
     date +%s > "${LAST_SUCCESS_FILE:-${state_dir}/last-success}" 2>/dev/null || true
   fi
