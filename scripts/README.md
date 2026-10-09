@@ -54,6 +54,13 @@ Version-controlled exclusion set + fast-backup runner that keep Time Machine on 
 - **`tm-backup-manage.sh`** - Launchd lifecycle for the staleness check — `install`/`uninstall`/`status`/`check`/`verify`/`logs`. Usually invoked via the `tm-backup` shell alias
 - **`test-tm-backup-staleness.sh`** - Test suite for the staleness check (mocked `tmutil` + `terminal-notifier`)
 
+### Home Mirror (design only — not built)
+
+A nightly local rsync mirror to the re-shelled EVO, as defence-in-depth beside Time Machine. **Config only:** the consumer scripts named in its header do not exist and `/Volumes/Mirror` has never been mounted. See [`home-mirror.md`](home-mirror.md) for the case, what it does *not* add (most of its roots are already in Time Machine — the value is format and mechanism independence), and the preconditions before building.
+
+- **`home-mirror.conf`** - Scope, excludes, schedule and staleness threshold. Footprint ~102 GB, sizes from 2026-07-30 and spot-checked current on 2026-10-09
+- **`home-mirror.md`** - Why it is worth finishing, what would make it fail, and the open question of whether the boot volume or the audio masters are the better target for the disk
+
 ### Audio Volume Guard
 
 Protects the `/Volumes/Audio` mount point. Several vendors keep their libraries on the audio drive via symlinks out of `/Library` (`Arturia`, `Application Support/Softube`, `Application Support/iZotope`). When an installer runs as root while the volume is unmounted, macOS silently creates `/Volumes/Audio` on the boot disk, the payload lands on the internal SSD, and the real volume is pushed to `/Volumes/Audio 1` — so every one of those symlinks resolves to the wrong place until the squatting directory is removed.
