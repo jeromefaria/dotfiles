@@ -163,7 +163,7 @@ title_format = "Yazi: {cwd}"          # Window title
 | `d` | Delete | Move to trash |
 | `D` | Delete permanently | Permanently delete (no trash) |
 | `a` | Create | Create file or directory (end with `/`) |
-| `r` | Rename | Rename file or directory |
+| `r` | Rename | Rename the hovered file; with a multi-selection this is Yazi's **bulk rename** — filenames open in `$EDITOR`, and your edits are applied on save |
 
 ### Selection
 
@@ -215,7 +215,6 @@ title_format = "Yazi: {cwd}"          # Window title
 | Key | Action | Description |
 |-----|--------|-------------|
 | `c m` | Chmod | Change file permissions |
-| `b r` | Bulk rename | Edit filenames with $EDITOR |
 
 ### Copy Operations
 
@@ -670,15 +669,19 @@ t
 
 ### Bulk Renaming
 
+Built in — no shell loop needed. `rename` bulk-renames whenever more than one
+file is selected.
+
 ```text
 # Select files
 <Space> on each file
 OR
 <C-a> to select all
 
-# Rename
-: (shell command)
-Type: for f in *.txt; do mv "$f" "prefix_$f"; done
+# Bulk rename
+r
+# $EDITOR (nvim) opens with one filename per line.
+# Edit the names, save and quit — Yazi applies the renames.
 ```
 
 ### Shell Integration

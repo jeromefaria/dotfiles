@@ -72,6 +72,13 @@ rules = [
 	# Directories
 	{ url = "*/", use = [ "edit", "open", "reveal" ] },
 
+	# iCloud Drive. Matched on `url`, which needs no mime — and that is the
+	# whole point: every rule below matches on `mime`, and resolving a mime
+	# reads the file's magic bytes, which makes iCloud materialise a dataless
+	# file before any opener appears. Measured ~9.6s for 21MB, so a large file
+	# looks like `O` simply doing nothing.
+	{ url = "**/com~apple~CloudDocs/**", use = [ "reveal", "open", "edit" ] },
+
 	# Text files
 	{ mime = "text/*",        use = [ "edit", "pager", "reveal" ] },
 	{ mime = "inode/x-empty", use = [ "edit", "reveal" ] },
