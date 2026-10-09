@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-# Test suite for the `plex` media-stack command (aliases/media-stack.sh).
+# Test suite for the `plex` media-stack command (functions/media-stack.sh).
 # Usage: zsh test-media-stack.sh
 #
 # Hermetic: docker/colima/brew/open/sleep/python3 are stubbed to record their
@@ -39,7 +39,7 @@ echo "==================================="
 echo
 
 # --- load the command under test ---
-if source "$DOTFILES/terminal/zsh/aliases/media-stack.sh" 2>/dev/null; then
+if source "$DOTFILES/terminal/zsh/functions/media-stack.sh" 2>/dev/null; then
   test_pass "media-stack.sh sources without error"
 else
   test_fail "media-stack.sh failed to source"; echo; echo "aborting"; exit 1

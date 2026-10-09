@@ -2,7 +2,7 @@
 
 Plex + the *arr suite, Dockerised (via Colima), for automated movie/TV acquisition,
 subtitles, and remote access. Lives at `~/plex-stack`. Aliases in
-`terminal/zsh/aliases/media-stack.sh`.
+`terminal/zsh/functions/media-stack.sh`.
 
 ---
 
@@ -55,7 +55,7 @@ Overseerr / Pocket / Ruddarr (phone)         Radarr (movies) / Sonarr (TV)
 ## The `plex` command
 
 Everything is driven by one command — `plex help` lists it all. Defined in
-`terminal/zsh/aliases/media-stack.sh`; tab-completion included.
+`terminal/zsh/functions/media-stack.sh`; tab-completion included.
 
 ```
 plex boot                  # start Colima + stack, wait for VPN, reconnect qBittorrent

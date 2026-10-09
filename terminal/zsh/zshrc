@@ -160,15 +160,22 @@ if [[ -z "$CLAUDECODE" ]]; then
   done
 fi
 
-# Load modular functions (platform-aware)
+# Load modular functions (platform-aware).
+# Unlike aliases/, these load under Claude Code too: functions are the intended
+# API and are inert until called, so they cannot shadow a standard command the
+# way `ls`→eza or `cd`→z do. media-stack.sh lives here rather than in aliases/
+# for exactly that reason — it defines `plex` plus `_plex_*` helpers and not a
+# single alias, so the aliases/ guard was skipping it for no benefit and leaving
+# `plex` undefined in every tool subshell.
+typeset -a _macos_only_funcs=(macos.sh media-stack.sh)
 for func_file in "$DOTFILES"/terminal/zsh/functions/*.sh; do
   _filename=${func_file:t}
-  if [[ "$_filename" == "macos.sh" && "$DOTFILES_PLATFORM" != "macos" ]]; then
+  if (( ${_macos_only_funcs[(Ie)$_filename]} )) && [[ "$DOTFILES_PLATFORM" != "macos" ]]; then
     continue
   fi
   source "$func_file" || echo "Warning: Failed to load $func_file" >&2
 done
-unset _filename _macos_only
+unset _filename _macos_only _macos_only_funcs
 
 # EDITOR
 export VISUAL=nvim
