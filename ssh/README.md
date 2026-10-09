@@ -9,6 +9,7 @@ SSH client configuration with split portable / machine-local layout, mirroring t
 | `ssh/config` | Portable defaults: agent settings, host-agnostic identity, GitHub-specific bypass of 1Password | yes |
 | `ssh/config.local.example` | Template for personal/per-machine host blocks | yes |
 | `~/.ssh/config.local` | Actual personal hosts (LAN boxes, work hosts, etc.) | **no** |
+| `ssh/keychain-askpass.sh` | `SSH_ASKPASS` helper: serves key passphrases from the Keychain, with `--store` / `--status` / `--forget` | yes |
 
 `~/.ssh/config` is a symlink to `~/dotfiles/ssh/config`. The tracked config pulls in `~/.ssh/config.local` via SSH's `Include` directive, so private hosts stay local while the structural config is versioned.
 
@@ -22,15 +23,56 @@ ln -sf ~/dotfiles/ssh/config ~/.ssh/config
 cp ~/dotfiles/ssh/config.local.example ~/.ssh/config.local
 nvim ~/.ssh/config.local
 
-# 3. Cache the GitHub key's passphrase in the macOS Keychain and load the agent.
-#    The zsh config repeats this automatically on every login shell; running it
-#    once here primes the Keychain so the automated load stays prompt-free.
-ssh-add --apple-use-keychain ~/.ssh/id_rsa
+# 3. Store each key's passphrase in the macOS Keychain, once. The zsh config
+#    then loads both keys silently on the first login shell after every boot.
+#    NOT `ssh-add --apple-use-keychain` — see "Why not --apple-use-keychain".
+~/dotfiles/ssh/keychain-askpass.sh --store
+~/dotfiles/ssh/keychain-askpass.sh --status
 
 # 4. Verify
 ssh -G github.com | grep -i 'identityagent\|identityfile'
 # identityagent ~/.ssh/agent.sock    ← github bypasses 1Password
 # identityfile ~/.ssh/id_rsa
+```
+
+## Why not `--apple-use-keychain`
+
+On macOS 26.7.1 / OpenSSH 10.3p1 that flag reports `Identity added` and loads
+the key, but **persists nothing**. Verified three ways:
+
+- an `ssh-add` with every input path blocked (`SSH_ASKPASS_REQUIRE=never`,
+  `</dev/null`) still prints `Enter passphrase for …` and fails to load
+- `ssh-add --apple-load-keychain` loads nothing at all
+- no Keychain item appears under any service name `ssh-add` uses, and the
+  generic-password count is unchanged across a "successful" add
+
+So the agent was empty after every reboot and the first login shell prompted on
+the TTY — and the old `2>/dev/null` on those adds hid the only diagnostic that
+would have explained it.
+
+`ssh_config`'s own `UseKeychain yes` is a different code path and may well work,
+but it would not be enough: `commit.gpgsign true` with `gpg.format ssh` makes
+git sign via `ssh-keygen -Y sign`, which reads the agent and does **not** honour
+`UseKeychain`. The signing key has to be loaded proactively, which means
+`ssh-add`, which means the prompt. Hence an explicit askpass helper.
+
+Passphrases are stored base64-encoded, because `security -w` returns a
+hex-encoded blob for any secret containing non-ASCII bytes and that hex is
+indistinguishable from a passphrase made only of hex digits.
+
+### Sessions where this cannot work
+
+The login keychain is unlocked by `loginwindow` at GUI login only. In an SSH
+session, or any `launchctl managername: Background` context, it stays locked and
+there is no UI to prompt for the unlock — so `--store` fails with
+`errSecInteractionNotAllowed` (36) and askpass reads return nothing.
+
+That is a deliberate boundary, not a bug: `SSH_ASKPASS_REQUIRE=force` means a
+failed read fails fast into `~/.ssh/agent-load.log` rather than blocking the
+shell on a prompt nothing can answer. To use it over SSH, unlock first:
+
+```bash
+security unlock-keychain ~/Library/Keychains/login.keychain-db
 ```
 
 ## Why the block order matters

@@ -275,8 +275,25 @@ fi
 if [[ "$DOTFILES_PLATFORM" == "macos" ]]; then
   if [[ -S "$SSH_AUTH_SOCK" && ! -h "$SSH_AUTH_SOCK" ]]; then
     ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/agent.sock"
-    [[ -f "$HOME/.ssh/id_ed25519" ]] && ssh-add --apple-use-keychain "$HOME/.ssh/id_ed25519" 2>/dev/null
-    [[ -f "$HOME/.ssh/id_rsa" ]]     && ssh-add --apple-use-keychain "$HOME/.ssh/id_rsa"     2>/dev/null
+
+    # Passphrases come from the Keychain via askpass, NOT --apple-use-keychain:
+    # that flag reports success and loads the key but persists nothing on macOS
+    # 26.7.1 / OpenSSH 10.3p1, so every reboot prompted on the TTY. See
+    # ssh/keychain-askpass.sh for the evidence and the one-time --store setup.
+    #
+    # SSH_ASKPASS_REQUIRE=force plus </dev/null removes every interactive path,
+    # so a missing Keychain item fails fast and lands in the log instead of
+    # blocking a new terminal on a prompt.
+    #
+    # Failures go to a log rather than /dev/null. The previous 2>/dev/null hid
+    # the one diagnostic that would have explained months of reboot prompts.
+    # ssh-add dedupes, so re-adding a loaded key is still a silent no-op.
+    for _ssh_key in "$HOME/.ssh/id_ed25519" "$HOME/.ssh/id_rsa"; do
+      [[ -f "$_ssh_key" ]] || continue
+      SSH_ASKPASS="$DOTFILES/ssh/keychain-askpass.sh" SSH_ASKPASS_REQUIRE=force \
+        ssh-add "$_ssh_key" </dev/null >/dev/null 2>>"$HOME/.ssh/agent-load.log"
+    done
+    unset _ssh_key
   fi
   export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
 fi
