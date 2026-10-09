@@ -9,6 +9,8 @@ Common issues and solutions organized by symptom.
 - [Editor Issues](#editor-issues)
 - [Git Configuration](#git-configuration)
 - [Mail Configuration](#mail-configuration)
+- [SSH & Keychain](#ssh--keychain)
+- [External Drives & Backups](#external-drives--backups)
 - [Window Management](#window-management)
 - [Package Management](#package-management)
 - [Performance Issues](#performance-issues)
@@ -469,6 +471,125 @@ brew install diff-so-fancy
    - Or in neomutt, press `?` for help
 
 ---
+
+## SSH & Keychain
+
+### Symptom: Prompted for an SSH key passphrase in every new terminal after a reboot
+
+The agent is empty after boot and `zshrc` loads the keys on the first login
+shell. If no passphrase is stored, that load prompts on the TTY.
+
+`ssh-add --apple-use-keychain` does **not** persist on macOS 26.7.1 /
+OpenSSH 10.3p1 — it reports `Identity added`, loads the key, and stores nothing.
+
+**Check what is stored:**
+
+```bash
+~/dotfiles/ssh/keychain-askpass.sh --status
+```
+
+**Store it (once per key):**
+
+```bash
+~/dotfiles/ssh/keychain-askpass.sh --store
+```
+
+**Verify a cold load is silent** — this is the post-reboot condition:
+
+```bash
+ssh-add -d ~/.ssh/id_ed25519
+SSH_ASKPASS=~/dotfiles/ssh/keychain-askpass.sh SSH_ASKPASS_REQUIRE=force \
+  ssh-add ~/.ssh/id_ed25519 </dev/null
+```
+
+Failures are logged to `~/.ssh/agent-load.log` rather than prompting. See
+[`ssh/README.md`](../ssh/README.md) for the evidence behind this.
+
+### Symptom: `--store` fails with "User interaction is not allowed" (exit 36)
+
+The login keychain is unlocked by `loginwindow` at GUI login only. Over SSH, or
+in any `launchctl managername: Background` session, it stays locked and there is
+no UI to prompt for the unlock.
+
+```bash
+security unlock-keychain ~/Library/Keychains/login.keychain-db
+```
+
+Then retry, or run `--store` from a terminal on the machine itself.
+
+### Symptom: Commit signing fails with "incorrect passphrase supplied to decrypt private key"
+
+`commit.gpgsign true` with `gpg.format ssh` signs via `ssh-keygen -Y sign`,
+which reads the **agent** and does not honour `ssh_config`'s `UseKeychain`. If
+`id_ed25519` is not loaded, git falls back to the key file and needs a
+passphrase it cannot obtain.
+
+```bash
+ssh-add -l                       # confirm the signing key is absent
+ssh-add ~/.ssh/id_ed25519        # or run --store so it loads silently
+```
+
+Note the agent's socket path changes whenever launchd restarts it, which drops
+every loaded key — `~/.ssh/agent.sock` tracks the live socket, but the key
+*contents* do not survive. That is why the Keychain store matters.
+
+---
+
+## External Drives & Backups
+
+### Symptom: The Audio volume mounts as `/Volumes/Audio 1`
+
+A plain directory is squatting on `/Volumes/Audio`. Installers that follow
+`/Library/Arturia` (and the Softube / iZotope symlinks) while the volume is
+unmounted make macOS create that path on the **boot disk**, and the real volume
+then cannot claim its mount point.
+
+```bash
+~/dotfiles/scripts/audio-volume-guard.sh --status
+~/dotfiles/scripts/audio-volume-guard.sh --repair   # refuses if it holds data
+```
+
+If `--repair` reports the squatter as populated, that payload exists **only
+there** — merge it onto the volume before deleting anything. A `WatchPaths`
+agent catches this the moment it appears; install with
+`audio-volume-guard.sh install`.
+
+### Symptom: Time Machine has not completed a backup for days
+
+Check whether attempts are accumulating rather than finishing:
+
+```bash
+tmutil status | grep -E 'BackupPhase|Running'
+ls -d /Volumes/Backup/*.inprogress /Volumes/Backup/*.interrupted 2>/dev/null | wc -l
+df -h /Volumes/Backup
+```
+
+Interrupted attempts consume the space a backup needs to finish, which is
+self-reinforcing: each full attempt fills the remainder, is interrupted, and
+leaves another corpse. Time Machine's own `LazyThinning` may dig itself out
+given room; if free space keeps falling while attempt directories persist, the
+dead ones have to be cleared by hand (keep every `*.previous` — one of them is
+the live backup's directory form).
+
+A repeated **full** copy rather than an incremental means the chain is broken;
+compare `_raw_totalBytes` from `tmutil status` against the Data volume's used
+space to tell which is happening.
+
+### Symptom: Drives drop off the bus under load
+
+USB contention, typically a capture device or DisplayLink dock sharing a hub
+with storage. Map the actual topology before changing cables:
+
+```bash
+# which bus each device is on, and how deep behind hubs
+ioreg -w0 -rc IOUSBHostDevice -n "<product name>" | grep locationID
+diskutil info <volume> | grep Protocol
+```
+
+`locationID` reads as `0xCCPPPPPP` — controller byte, then one nibble per hub
+port down the chain. Devices sharing a prefix share a hub. Separate storage from
+capture devices; a free Mac port is a different USB controller and the strongest
+isolation available.
 
 ## Window Management
 

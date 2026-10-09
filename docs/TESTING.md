@@ -6,7 +6,8 @@ This repo ships test suites for the scripts that mutate external state — file 
 
 | Suite | Cases | Target |
 |---|---|---|
-| `scripts/test-audio-backup.sh` | 25 tests / 37 assertions | `scripts/audio-backup-sync.sh` end-to-end + `audio-backup-manage.sh` dispatch and plist generation |
+| `scripts/test-audio-backup.sh` | 33 tests / 54 assertions | `scripts/audio-backup-sync.sh` end-to-end + `audio-backup-manage.sh` dispatch and plist generation |
+| `scripts/test-audio-volume-guard.sh` | 14 tests / 35 assertions | `scripts/audio-volume-guard.sh` — four-state resolution (mounted/unverified/squatter/absent), fail-closed `--check`, `--repair` refusing a populated *or* unreadable squatter, notification cooldown armed only by a delivered notification, honest `--status` during a squatter; mocks `terminal-notifier` + `osascript` and attaches a throwaway disk image so mounted-state detection runs against a real mount |
 | `scripts/test-audio-plugin-cleanup.py` | 22 unittest cases | `scripts/audio-plugin-cleanup.py` suffix stripping, dupe detection, no-twin invariant, scan/candidate filtering |
 | `scripts/test-install-symlink.sh` | 7 tests / 14 assertions | `scripts/install.sh::create_symlink` — first-time creation, idempotency, file backup, `--dry-run`, source-is-symlink guard, and a known data-loss gap (TEST 7) |
 | `scripts/test-install-seed-templates.sh` | 6 tests / 13 assertions | `scripts/install.sh::seed_templates` — new-destination copy + content fidelity, destination-exists skip, `DRY_RUN` no-write, mixed-state counts + summary, filenames-with-spaces round-trip, cp-failure isolation (one failure doesn't abort the loop) |

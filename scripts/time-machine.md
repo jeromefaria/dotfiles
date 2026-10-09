@@ -28,6 +28,12 @@ Internal Data volume: **~370 GB**. Where it lives:
 
 Tier-1 exclusions total **~57 GB**, taking the footprint to **~313 GB**.
 
+> **Drift check, 2026-10.** The Data volume has grown from ~370 GB to **423 GB**,
+> so the live footprint is nearer **~366 GB** and the 1 TB target now sits at
+> **~2.7x** rather than the 3.2x it was bought for. Still inside the healthy
+> 2-3x band, but the headroom is no longer generous — re-run this table if it
+> keeps climbing.
+
 ### Sizing math
 
 | Destination | Footprint | Ratio | Verdict |
