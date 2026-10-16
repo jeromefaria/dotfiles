@@ -60,6 +60,8 @@ Everything is driven by one command — `plex help` lists it all. Defined in
 ```
 plex boot                  # start Colima + stack, wait for VPN, reconnect qBittorrent
 plex halt                  # gracefully stop the stack + Colima
+plex recover               # drives dropped ⇒ cycle, recheck affected torrents, then resume
+plex reclaim               # deleted downloads still use space ⇒ stop torrents, cycle, resume them
 plex up | down             # start / stop containers (Colima left running)
 plex restart <svc>         # restart one container (e.g. plex restart radarr)
 plex status                # health overview of all stack containers
@@ -92,6 +94,38 @@ which Decluttarr removes + re-searches on its own.
 The Tailscale app enables DNS override by default, which clashes with NordVPN and breaks
 all DNS. **Fix (persistent):** `plex fix ts-dns` (= `tailscale set --accept-dns=false`). Safe
 because remote access uses raw `100.x` IPs, not MagicDNS names.
+
+### 4. Drives dropped: torrents in `error`, "No space left on device", notification "drives lost"
+**Cause:** the USB drives disconnected and remounted on the Mac (their `diskN` numbers change).
+The Colima VM keeps stale virtiofs handles, so inside the containers `/media` and `/archive`
+fail with "Bad file descriptor". qBittorrent's writes fail, and pieces it already counted as
+done are corrupt. A season pack once "completed" with 560 MiB of bad pieces, and the bad
+episodes were then blocked by Sonarr as "Unable to determine if file is a sample".
+**Guard:** the `com.jerome.mount-watchdog` agent (`~/plex-stack/mount-watchdog.py`, every
+3 min) probes both mounts from inside qBittorrent. On failure it stops all torrents, saves
+what was running to `~/plex-stack/.mount-outage.json`, and raises a notification.
+qBittorrent also rechecks every torrent on completion, so a damaged download is caught
+before import.
+**Fix:** `plex recover`. It checks the drives are mounted and the internal disk has room,
+cycles the stack, verifies the mounts, **rechecks every torrent that was incomplete or
+completed during the outage**, and only then resumes and re-forces what was running. Bad
+pieces re-download, and hardlinked library copies are repaired in place. Log:
+`~/plex-stack/plex-recover.log`. If it aborts, fix the reason it gives and run it again.
+
+### 5. Space doesn't come back after deleting or swapping a film: "No space left on device"
+**Cause:** a library file is a hardlink to a download that is still seeding. Deleting
+the library file, or replacing it with another release in Radarr/Sonarr, leaves the
+download and all its bytes on the drive. Even deleted downloads only show up in `df`
+after the Colima VM releases its mount.
+**Guard:** the `com.jerome.swap-sweeper` agent (`~/plex-stack/swap-sweeper.py`, every
+5 min) reads the Radarr/Sonarr history for deleted library files and deletes the download
+each one came from. It skips downloads that are YggReborn, tagged `Keep`, still in an
+*arr queue, incomplete, or still linked from any library file. `seed-manager.py` sweeps
+any other orphans every 2 h. Both add what they delete to a tally, and when Media is
+below 50 GiB free a notification says how much is waiting. Log: `~/plex-stack/swap-sweeper.log`.
+**Fix:** `plex reclaim` (from a terminal — an unattended cycle fails, see seeding notes).
+It saves which torrents are running, stops them, cycles the stack, then resumes exactly
+those and re-applies force-starts. Log: `~/plex-stack/plex-reclaim.log`.
 
 ---
 

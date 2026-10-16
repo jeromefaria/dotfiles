@@ -93,6 +93,8 @@ plex — media automation stack control (full docs: ~/dotfiles/docs/media-stack.
   Lifecycle
     plex boot              start Colima + stack, wait for VPN, reconnect qBittorrent
     plex halt              gracefully stop the stack + Colima
+    plex recover           drives dropped ⇒ cycle, RECHECK affected torrents, then resume
+    plex reclaim           deleted downloads still use space ⇒ stop torrents, cycle, resume them
     plex up | down         start / stop containers (Colima left running)
     plex restart <svc>     restart one container (e.g. plex restart radarr)
 
@@ -148,6 +150,8 @@ plex() {
   case "$cmd" in
     boot)     _plex_boot ;;
     halt)     _plex_halt ;;
+    recover)  python3 "$PLEX_STACK/plex-recover.py" "$@" ;;
+    reclaim)  python3 "$PLEX_STACK/plex-reclaim.py" "$@" ;;
     up)       ( cd "$PLEX_STACK" && docker compose up -d ) ;;
     down)     ( cd "$PLEX_STACK" && docker compose down ) ;;
     restart)  docker restart "${1:?usage: plex restart <service>}" ;;
