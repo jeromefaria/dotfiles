@@ -92,6 +92,8 @@ SCOPE_INCLUDE=("SYSTEM.md" "Documents/**" "Releases/**" "Recordings/**" "Project
 MACOS_CLUTTER=("Icon?" ".Trashes/**" ".Spotlight-V100/**" ".fseventsd/**")
 LAUNCHD_LABEL="com.test.audiobackup"
 LAUNCHD_PLIST="$TESTROOT/test.plist"
+STATE_DIR="$TESTROOT/state"
+LAST_SUCCESS_FILE="$TESTROOT/state/last-success"
 EOF
 export AUDIO_BACKUP_CONFIG="$TEST_BACKUP_CONFIG"
 
@@ -574,6 +576,88 @@ if [ "$status" -ne 0 ] \
    && echo "$output" | grep -q "attempt 2/2" \
    && ! echo "$output" | grep -q "attempt 3/2"; then
   echo -e "  ${GREEN}✓${NC} retried exactly once, then gave up"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 8 lines):"; echo "$output" | tail -8; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 34: a success inside MIN_RESYNC_INTERVAL_HOURS skips the run"
+# WatchPaths wakes the agent on every mount change, so most fires have nothing
+# to do. Answering those from the success marker costs one stat, where letting
+# them through costs a full-tree rclone scan each time. The marker lives in the
+# workspace STATE_DIR set by the test conf, so the real one is never touched.
+mkdir -p "$TESTROOT/state"
+cp "$TEST_BACKUP_CONFIG" "$TESTROOT/recent.conf"
+echo 'MIN_RESYNC_INTERVAL_HOURS=6' >> "$TESTROOT/recent.conf"
+date +%s > "$TESTROOT/state/last-success"
+output=$(AUDIO_BACKUP_CONFIG="$TESTROOT/recent.conf" "$MANAGE" now --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && echo "$output" | grep -qi "under 6h old"; then
+  echo -e "  ${GREEN}✓${NC} redundant run skipped with exit 0"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 35: --force runs anyway inside the resync window"
+# The window is a courtesy to the bus, not a lock. An operator asking for a run
+# has a reason, and silently declining would be the worse failure.
+output=$(AUDIO_BACKUP_CONFIG="$TESTROOT/recent.conf" MOCK_ROUTER="0.0.0.0" \
+          "$MANAGE" now --force --dry-run 2>&1); status=$?
+if [ "$status" -eq 0 ] && ! echo "$output" | grep -qi "under 6h old"; then
+  echo -e "  ${GREEN}✓${NC} window ignored with --force"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 36: a remount that clears the fault lets the run continue"
+# The real fault is a mounted-but-unreadable source: the 02:55 wake leaves the
+# bus endpoint wedged. The stub stands in for diskutil, and "repairs" the
+# source on mount, so the recovery path is exercised without touching a real
+# disk. Unreadability is reproduced exactly as in TEST 31.
+RECOVER_BIN="$TESTROOT/recover-bin"
+mkdir -p "$RECOVER_BIN"
+cat > "$RECOVER_BIN/diskutil" <<'STUB'
+#!/bin/bash
+case "$1" in
+  info)    echo "   Device Identifier:         disk99s1" ;;
+  unmount) exit 0 ;;
+  mount)   chmod 755 "$MOCK_RECOVER_PATH" ;;
+esac
+exit 0
+STUB
+chmod +x "$RECOVER_BIN/diskutil"
+
+cp "$TEST_BACKUP_CONFIG" "$TESTROOT/recover.conf"
+printf 'RECOVER_SOURCE_ON_PROBE_FAILURE=1\nSOURCE_VOLUME_MOUNT="%s"\nSOURCE_REMOUNT_SETTLE_SECONDS=1\n' \
+  "$FAKE_AUDIO" >> "$TESTROOT/recover.conf"
+
+chmod 111 "$FAKE_AUDIO"
+output=$(PATH="$RECOVER_BIN:$PATH" MOCK_RECOVER_PATH="$FAKE_AUDIO" \
+          AUDIO_BACKUP_CONFIG="$TESTROOT/recover.conf" MOCK_ROUTER="0.0.0.0" \
+          "$MANAGE" now --force --dry-run 2>&1); status=$?
+chmod 755 "$FAKE_AUDIO"
+if [ "$status" -eq 0 ] && echo "$output" | grep -qi "recovered after remount"; then
+  echo -e "  ${GREEN}✓${NC} run continues once the source comes back"; PASS=$((PASS+1))
+else
+  echo -e "  ${RED}✗${NC} status=$status, output (last 8 lines):"; echo "$output" | tail -8; FAIL=$((FAIL+1))
+fi
+
+heading "TEST 37: an unrecoverable source still aborts rather than hanging"
+# Same wedged source, but the stub never repairs it. The run must give up with
+# a non-zero status instead of looping or blocking on the Keychain.
+cat > "$RECOVER_BIN/diskutil" <<'STUB'
+#!/bin/bash
+case "$1" in
+  info) echo "   Device Identifier:         disk99s1" ;;
+esac
+exit 0
+STUB
+chmod +x "$RECOVER_BIN/diskutil"
+
+chmod 111 "$FAKE_AUDIO"
+output=$(PATH="$RECOVER_BIN:$PATH" AUDIO_BACKUP_CONFIG="$TESTROOT/recover.conf" \
+          MOCK_ROUTER="0.0.0.0" "$MANAGE" now --force --dry-run 2>&1); status=$?
+chmod 755 "$FAKE_AUDIO"
+if [ "$status" -ne 0 ] && echo "$output" | grep -qi "Pre-flight read probe failed"; then
+  echo -e "  ${GREEN}✓${NC} aborts when the remount cannot clear the fault"; PASS=$((PASS+1))
 else
   echo -e "  ${RED}✗${NC} status=$status, output (last 8 lines):"; echo "$output" | tail -8; FAIL=$((FAIL+1))
 fi

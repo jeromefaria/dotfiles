@@ -79,7 +79,7 @@ Automated rclone-based backup of `/Volumes/Audio/Audio` to Google Drive, schedul
 
 - **`audio-backup.conf`** - Configuration (single source of truth)
 - **`audio-backup-filters.txt`** - rclone include/exclude rules
-- **`audio-backup-sync.sh`** - One-shot sync action (called by launchd or `audio-backup-manage now`). Six gates: source mounted, trusted router, filters present, rclone installed, remote configured, and Time Machine not mid-backup (its destination shares the same USB hub chain, so the two jobs starve each other). Then a pre-flight read probe, and a whole-sync retry for when the bus drops the source mid-run
+- **`audio-backup-sync.sh`** - One-shot sync action (called by launchd or `audio-backup-manage now`). Six gates: source mounted, trusted router, filters present, rclone installed, remote configured, and Time Machine not mid-backup (its destination shares the same USB hub chain, so the two jobs starve each other). Then a pre-flight read probe, which now cycles the mount to clear a wedged bus endpoint before writing the night off — the 02:55 wake can leave the drive mounted but unreadable, and every step of the recovery is time-bounded so a hung `diskutil` or an unanswered Keychain prompt cannot stall the run. Finally a whole-sync retry for when the bus drops the source mid-run. The agent fires on mount changes as well as on the clock, so a run missed while the drive was away catches up the moment it returns; `MIN_RESYNC_INTERVAL_HOURS` stops those extra wake-ups each costing a full-tree scan
 - **`audio-backup-manage.sh`** - Service controller — `start`/`stop`/`status`/`logs`/`now`/`wizard`/`pull`/`push`
 - **`test-audio-backup.sh`** - Integration test suite (mocked Drive + launchctl)
 

@@ -146,6 +146,29 @@ check_staleness() {
 # so a popup would just be noise.
 [ -t 1 ] || check_staleness
 
+# The agent fires on mount changes as well as on the clock, so most wake-ups
+# have nothing to do. Answering those from the success marker costs one stat,
+# where letting them through costs a full-tree rclone scan each time.
+sync_is_recent_enough() {
+  local window_hours="${MIN_RESYNC_INTERVAL_HOURS:-0}"
+  [ "$window_hours" -gt 0 ] || return 1
+
+  local state_dir="${STATE_DIR:-${HOME}/Library/Application Support/audio-backup}"
+  local success_marker="${LAST_SUCCESS_FILE:-${state_dir}/last-success}"
+  [ -f "$success_marker" ] || return 1
+
+  local last_success
+  last_success="$(cat "$success_marker" 2>/dev/null)"
+  [[ "$last_success" =~ ^[0-9]+$ ]] || return 1
+
+  [ $(( ($(date +%s) - last_success) / 3600 )) -lt "$window_hours" ]
+}
+
+if [ ! -t 1 ] && [ "$FORCE" -eq 0 ] && sync_is_recent_enough; then
+  log "Last successful sync is under ${MIN_RESYNC_INTERVAL_HOURS}h old — nothing to do."
+  exit 0
+fi
+
 # ─── Gate 1: source drive mounted ──────────────────────────────────────
 if [ ! -f "$SENTINEL" ]; then
   log_warn "Source drive not mounted (sentinel $SENTINEL not found). Skipping."
@@ -305,10 +328,103 @@ source_survives_probe() {
   [ "${found:-0}" -gt 0 ]
 }
 
+# Bound a recovery step. A wedged bus endpoint can make diskutil block with no
+# timeout of its own, and a Keychain item whose ACL does not yet trust
+# `security` opens a GUI prompt that nobody is awake to answer — either would
+# hang the nightly run indefinitely while holding the lock. Degrades to running
+# unbounded if coreutils is not installed, since a bounded step is an
+# improvement on hanging but not worth a hard dependency.
+run_bounded() {
+  local limit_seconds="$1"
+  shift
+
+  if command -v timeout >/dev/null 2>&1; then
+    timeout "$limit_seconds" "$@"
+    return $?
+  fi
+
+  "$@"
+}
+
+source_volume_device() {
+  run_bounded "${RECOVERY_STEP_TIMEOUT_SECONDS:-60}" diskutil info "$1" 2>/dev/null \
+    | awk -F': *' '/^ *Device Identifier/ { print $2; exit }'
+}
+
+# Unlocks the FileVault-encrypted source without ever putting its passphrase on
+# a command line, where `ps` would expose it to every user on the machine.
+# `security` prints a stored blob as hex whenever it is not valid UTF-8, which
+# is the case here, so the decoded form is tried first and the literal one kept
+# as a fallback rather than guessing from the shape of the string.
+unlock_source_volume() {
+  local device="$1"
+  local keychain_item="${SOURCE_VOLUME_UUID:-}"
+  [ -n "$keychain_item" ] || return 1
+
+  local step_timeout="${RECOVERY_STEP_TIMEOUT_SECONDS:-60}"
+  local keychain_timeout="${KEYCHAIN_READ_TIMEOUT_SECONDS:-10}"
+
+  local stored_passphrase
+  if ! stored_passphrase="$(run_bounded "$keychain_timeout" \
+       security find-generic-password -w -s "$keychain_item" 2>/dev/null)"; then
+    log_warn "Could not read the volume passphrase from the Keychain within ${keychain_timeout}s — see audio-backup.conf."
+    return 1
+  fi
+  [ -n "$stored_passphrase" ] || return 1
+
+  if [[ "$stored_passphrase" =~ ^([0-9a-fA-F]{2})+$ ]] \
+     && printf '%s' "$stored_passphrase" | xxd -r -p 2>/dev/null \
+          | run_bounded "$step_timeout" \
+              diskutil apfs unlockVolume "$device" -stdinpassphrase >/dev/null 2>&1; then
+    return 0
+  fi
+
+  printf '%s' "$stored_passphrase" \
+    | run_bounded "$step_timeout" \
+        diskutil apfs unlockVolume "$device" -stdinpassphrase >/dev/null 2>&1
+}
+
+# Cycle the mount to re-establish a wedged bus endpoint. Unlocking an APFS
+# volume mounts it as a side effect, so the plain mount is attempted first and
+# the unlock only covers the case where the volume relocked on unmount.
+remount_source() {
+  local mount_point="${SOURCE_VOLUME_MOUNT:-$(dirname "$SOURCE")}"
+  local settle_seconds="${SOURCE_REMOUNT_SETTLE_SECONDS:-10}"
+
+  local device
+  device="$(source_volume_device "$mount_point")"
+  if [ -z "$device" ]; then
+    log_warn "Could not resolve a device for ${mount_point} — skipping recovery."
+    return 1
+  fi
+
+  local step_timeout="${RECOVERY_STEP_TIMEOUT_SECONDS:-60}"
+
+  log "Source unreadable — cycling ${device} to clear the fault..."
+  run_bounded "$step_timeout" diskutil unmount force "$mount_point" >/dev/null 2>&1 || true
+  sleep "$settle_seconds"
+
+  # A plain mount is tried first because macOS resolves the passphrase itself
+  # for a volume it already remembers, which needs no Keychain read at all.
+  if ! run_bounded "$step_timeout" diskutil mount "$device" >/dev/null 2>&1 \
+     && ! unlock_source_volume "$device"; then
+    log_warn "${device} would not remount — the volume is left unmounted and locked."
+    return 1
+  fi
+  sleep "$settle_seconds"
+
+  [ -f "$SENTINEL" ]
+}
+
 if ! source_survives_probe; then
-  log_err "Pre-flight read probe failed — the source is mounted but unreadable (bus or drive fault)."
-  notify "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
-  exit 1
+  if [ "${RECOVER_SOURCE_ON_PROBE_FAILURE:-1}" = "1" ] \
+     && remount_source && source_survives_probe; then
+    log "Source recovered after remount — continuing."
+  else
+    log_err "Pre-flight read probe failed — the source is mounted but unreadable (bus or drive fault)."
+    notify "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
+    exit 1
+  fi
 fi
 
 # Whole-sync retry. rclone is idempotent, so a second pass completes whatever
