@@ -120,7 +120,11 @@ after the Colima VM releases its mount.
 **Guard:** the `com.jerome.swap-sweeper` agent (`~/plex-stack/swap-sweeper.py`, every
 5 min) reads the Radarr/Sonarr history for deleted library files and deletes the download
 each one came from. It skips downloads that are YggReborn, tagged `Keep`, still in an
-*arr queue, incomplete, or still linked from any library file. `seed-manager.py` sweeps
+*arr queue, incomplete, or still linked from any library file. It also deletes **abandoned**
+downloads: unfinished torrents in the `radarr`/`sonarr` categories that neither app tracks any
+more (the title was deleted or the download ignored mid-download), once they are an hour old;
+more than 30 at once only notifies. If Radarr or Sonarr can't answer, every sweep skips its
+run rather than mistake that for an empty queue. `seed-manager.py` sweeps
 any other orphans every 2 h. Both add what they delete to a tally, and when Media is
 below 50 GiB free a notification says how much is waiting. Log: `~/plex-stack/swap-sweeper.log`.
 **Fix:** `plex reclaim` (from a terminal — an unattended cycle fails, see seeding notes).
