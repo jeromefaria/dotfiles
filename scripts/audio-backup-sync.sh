@@ -310,22 +310,60 @@ if [ "$DRY_RUN" -eq 1 ]; then
   RCLONE_ARGS+=(--dry-run)
 fi
 
-# Pre-flight read probe. The failure mode this guards against is the source
-# volume disappearing under read load: the mount still looks present, but
-# traversal throws "directory not found" en masse. Finding that out in seconds
-# beats finding out ten minutes into a transfer.
-source_survives_probe() {
-  local probe_dirs="${PREFLIGHT_PROBE_DIRS:-200}"
-  [ "$probe_dirs" -gt 0 ] || return 0
+# Pre-flight read probe. Two unrelated faults present identically from here, so
+# the probe's job is not just to fail but to say which one it hit:
+#   • the volume fell off a loaded bus — the mount lingers, traversal throws en
+#     masse, and cycling the mount can genuinely clear it;
+#   • macOS refused access to the removable volume — enumeration returns EPERM
+#     immediately, and no amount of remounting will ever change that.
+#
+# The probe deliberately runs through rclone. rclone performs the transfer and
+# therefore holds the volume's privacy grant; probing with any other binary
+# tests a permission the real work never needs. A shell-side `find` here
+# discarded stderr and reported EPERM as "zero entries", which is
+# indistinguishable from a dead bus — that cost sixteen nights of backups.
+PROBE_DIAGNOSIS=""
 
-  # -mindepth 1 is load-bearing: without it `find` prints $SOURCE itself (it can
-  # stat the root) and the probe passes even when the directory cannot be read
-  # at all. The question is "can I enumerate the contents", not "does the root
-  # exist" — Gate 1 already answered the latter. Any entry counts; the sentinel
-  # alone is proof enough that enumeration works.
-  local found
-  found="$(find "$SOURCE" -mindepth 1 -print 2>/dev/null | head -n "$probe_dirs" | wc -l | tr -d ' ')"
-  [ "${found:-0}" -gt 0 ]
+source_survives_probe() {
+  [ "${PREFLIGHT_PROBE_ENABLED:-1}" = "1" ] || return 0
+
+  PROBE_DIAGNOSIS=""
+
+  local listing status
+  listing="$(run_bounded "${PROBE_TIMEOUT_SECONDS:-120}" \
+    rclone lsf "$SOURCE" --max-depth 1 --retries 1 --low-level-retries 1 2>&1)"
+  status=$?
+
+  # Any entry proves enumeration works. The question is "can the contents be
+  # listed", not "does the root exist" — Gate 1 already answered the latter.
+  if [ "$status" -eq 0 ] && [ -n "$listing" ]; then
+    return 0
+  fi
+
+  if printf '%s\n' "$listing" | grep -qiE 'operation not permitted|permission denied'; then
+    PROBE_DIAGNOSIS="permission"
+  else
+    PROBE_DIAGNOSIS="unreadable"
+  fi
+
+  return 1
+}
+
+# A permission denial and a bus fault need opposite responses — one needs a
+# human in System Settings, the other needs the mount cycled — so the abort
+# names the one it actually saw rather than guessing at hardware.
+abort_unreadable_source() {
+  if [ "${PROBE_DIAGNOSIS:-}" = "permission" ]; then
+    log_err "Pre-flight read probe failed — macOS denied access to ${SOURCE}."
+    log_err "Grant Full Disk Access to $(command -v rclone) under System Settings → Privacy & Security."
+    log_err "Homebrew installs each rclone version to its own path, so upgrading rclone revokes the grant."
+    notify "Audio backup blocked" "macOS denied rclone access to the Audio volume — re-grant Full Disk Access."
+  else
+    log_err "Pre-flight read probe failed — the source is mounted but unreadable (bus or drive fault)."
+    notify "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
+  fi
+
+  exit 1
 }
 
 # Bound a recovery step. A wedged bus endpoint can make diskutil block with no
@@ -417,13 +455,17 @@ remount_source() {
 }
 
 if ! source_survives_probe; then
+  # Remounting cannot grant a permission, so a denial skips recovery entirely
+  # rather than cycling a healthy volume and breaking its symlinks for nothing.
+  if [ "$PROBE_DIAGNOSIS" = "permission" ]; then
+    abort_unreadable_source
+  fi
+
   if [ "${RECOVER_SOURCE_ON_PROBE_FAILURE:-1}" = "1" ] \
      && remount_source && source_survives_probe; then
     log "Source recovered after remount — continuing."
   else
-    log_err "Pre-flight read probe failed — the source is mounted but unreadable (bus or drive fault)."
-    notify "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
-    exit 1
+    abort_unreadable_source
   fi
 fi
 
@@ -450,7 +492,7 @@ run_rclone_with_retries() {
       return "$status"
     fi
     if ! source_survives_probe; then
-      log_err "Source still unreadable after ${delay}s — not retrying."
+      log_err "Source still unreadable after ${delay}s (${PROBE_DIAGNOSIS}) — not retrying."
       return "$status"
     fi
 

@@ -423,6 +423,19 @@ Quick map from symptom → where to look.
 **"Audio drive not mounted (sentinel `SYSTEM.md` missing)"** (exit 0, silent skip)
 - Drive is genuinely unplugged, OR the sentinel file at the configured `SENTINEL` path was deleted. Re-mount the drive; if it's mounted but the sentinel is missing, `touch /Volumes/Audio/Audio/SYSTEM.md` to restore it.
 
+**"macOS denied access to `/Volumes/Audio/Audio`"** (fatal, exit 1)
+- macOS privacy control (TCC) is refusing rclone permission to read the removable volume. Grant it under System Settings → Privacy & Security → Full Disk Access, adding the binary that `readlink -f "$(command -v rclone)"` resolves to.
+- **This recurs on every `brew upgrade rclone`.** Grants are keyed to an exact binary path and Homebrew installs each version under its own `Cellar/rclone/<version>/`, so an upgrade silently revokes access. The giveaway is scheduled runs failing while manual ones still work: a run started from a terminal inherits the terminal's grant, a launchd run has only its own.
+- Check what the scheduler sees rather than what your shell sees:
+  ```sh
+  sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" \
+    "select client, auth_value from access
+      where service='kTCCServiceSystemPolicyRemovableVolumes' and client like '%rclone%';"
+  # auth_value 2 = allowed, 0 = denied. A missing row means it will prompt —
+  # and a launchd job gets no visible prompt, it just blocks until killed.
+  ```
+- Historical note: from 2026-10-03 to 2026-10-19 this denial was misreported as "mounted but unreadable (bus or drive fault)", because the probe enumerated the volume with a shell `find` and discarded its stderr, turning `Operation not permitted` into an indistinguishable "zero entries". Sixteen scheduled runs failed against a perfectly healthy drive. The probe now goes through rclone and names the fault.
+
 **"Router not in trusted allowlist"** (exit 0, silent skip)
 - The SSID's gateway IP isn't listed in `TRUSTED_ROUTER_ALLOWLIST`. Either you're on a different network than usual, or your router got a new LAN IP after a reboot. Check with `ipconfig getoption en0 router` (or `en1`) and add the IP to the allowlist in `audio-backup.conf`. Pass `--force` for a one-off override on an untrusted network.
 
