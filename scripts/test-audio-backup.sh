@@ -542,15 +542,16 @@ fi
 heading "TEST 31: a denied source aborts and names the permission, not the drive"
 # Faithful to the real 2026-10-03..19 outage: the sentinel is still statable
 # through an execute-only directory, so Gate 1 passes, but listing the contents
-# returns EPERM. That must be reported as a permission problem — and must NOT
-# cycle the mount, since remounting cannot grant an access right.
+# returns EPERM. The outage lasted sixteen nights because that was reported as a
+# drive fault, so the test pins the attribution in both directions — it must
+# name the permission and must not blame the hardware.
 chmod 111 "$FAKE_AUDIO"
 output=$(MOCK_ROUTER="10.0.0.1" "$MANAGE" now --force --dry-run 2>&1); status=$?
 chmod 755 "$FAKE_AUDIO"
 if [ "$status" -ne 0 ] \
    && echo "$output" | grep -qi "macOS denied access" \
-   && ! echo "$output" | grep -qi "cycling"; then
-  echo -e "  ${GREEN}✓${NC} aborts naming the denial, without remounting"; PASS=$((PASS+1))
+   && ! echo "$output" | grep -qi "bus or drive fault"; then
+  echo -e "  ${GREEN}✓${NC} aborts naming the denial, not the drive"; PASS=$((PASS+1))
 else
   echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
 fi
@@ -610,76 +611,49 @@ else
   echo -e "  ${RED}✗${NC} status=$status, output (last 5 lines):"; echo "$output" | tail -5; FAIL=$((FAIL+1))
 fi
 
-heading "TEST 36: a remount that clears the fault lets the run continue"
-# A wedged bus, which is the only fault a remount can actually fix. It cannot
-# be reproduced with chmod — that produces EPERM, which the probe classifies as
-# a permission denial and deliberately refuses to remount (TEST 31). So the
-# probe listing is stubbed to fail the way a dropped device does, and the
-# diskutil stub "repairs" it on mount by dropping a flag the stub looks for.
-RECOVER_BIN="$TESTROOT/recover-bin"
-mkdir -p "$RECOVER_BIN"
+heading "TEST 36: an unreadable source aborts without touching the mount"
+# A wedged bus cannot be reproduced with chmod — that produces EPERM, which the
+# probe classifies as a permission denial (TEST 31). So the probe listing is
+# stubbed to fail the way a dropped device does. The run must blame the drive,
+# exit non-zero, and leave the volume alone: the mount-cycling "recovery" this
+# replaces force-unmounted a healthy encrypted volume three nights running.
+STUB_BIN="$TESTROOT/stub-bin"
+mkdir -p "$STUB_BIN"
 REAL_RCLONE="$(command -v rclone)"
-RECOVER_FLAG="$TESTROOT/recovered.flag"
+DISKUTIL_CALLS="$TESTROOT/diskutil-calls"
 
-cat > "$RECOVER_BIN/rclone" <<STUB
+cat > "$STUB_BIN/rclone" <<STUB
 #!/bin/bash
-# Only the probe's listing is faked, and only until the flag appears; every
-# other rclone call goes to the real binary so the run is otherwise genuine.
-if [ "\$1" = "lsf" ] && [ ! -f "$RECOVER_FLAG" ]; then
+# Only the probe's listing is faked; every other rclone call goes to the real
+# binary so the run is otherwise genuine.
+if [ "\$1" = "lsf" ]; then
   echo "error listing: directory not found" >&2
   exit 3
 fi
 exec "$REAL_RCLONE" "\$@"
 STUB
-chmod +x "$RECOVER_BIN/rclone"
+chmod +x "$STUB_BIN/rclone"
 
-cat > "$RECOVER_BIN/diskutil" <<STUB
+# Records any invocation rather than emulating one, so the assertion below can
+# tell "did not need to" apart from "tried and failed".
+cat > "$STUB_BIN/diskutil" <<STUB
 #!/bin/bash
-case "\$1" in
-  info)    echo "   Device Identifier:         disk99s1" ;;
-  unmount) exit 0 ;;
-  mount)   touch "$RECOVER_FLAG" ;;
-esac
+echo "\$@" >> "$DISKUTIL_CALLS"
 exit 0
 STUB
-chmod +x "$RECOVER_BIN/diskutil"
+chmod +x "$STUB_BIN/diskutil"
 
-cp "$TEST_BACKUP_CONFIG" "$TESTROOT/recover.conf"
-printf 'RECOVER_SOURCE_ON_PROBE_FAILURE=1\nSOURCE_VOLUME_MOUNT="%s"\nSOURCE_REMOUNT_SETTLE_SECONDS=1\n' \
-  "$FAKE_AUDIO" >> "$TESTROOT/recover.conf"
-
-rm -f "$RECOVER_FLAG"
-output=$(PATH="$RECOVER_BIN:$PATH" \
-          AUDIO_BACKUP_CONFIG="$TESTROOT/recover.conf" MOCK_ROUTER="0.0.0.0" \
+rm -f "$DISKUTIL_CALLS"
+output=$(PATH="$STUB_BIN:$PATH" MOCK_ROUTER="0.0.0.0" \
           "$MANAGE" now --force --dry-run 2>&1); status=$?
-if [ "$status" -eq 0 ] && echo "$output" | grep -qi "recovered after remount"; then
-  echo -e "  ${GREEN}✓${NC} run continues once the source comes back"; PASS=$((PASS+1))
-else
-  echo -e "  ${RED}✗${NC} status=$status, output (last 8 lines):"; echo "$output" | tail -8; FAIL=$((FAIL+1))
-fi
-
-heading "TEST 37: an unrecoverable source still aborts rather than hanging"
-# Same wedged source, but the stub never repairs it. The run must give up with
-# a non-zero status instead of looping or blocking on the Keychain, and must
-# blame the drive rather than a permission, since EPERM was never seen.
-cat > "$RECOVER_BIN/diskutil" <<'STUB'
-#!/bin/bash
-case "$1" in
-  info) echo "   Device Identifier:         disk99s1" ;;
-esac
-exit 0
-STUB
-chmod +x "$RECOVER_BIN/diskutil"
-
-rm -f "$RECOVER_FLAG"
-output=$(PATH="$RECOVER_BIN:$PATH" AUDIO_BACKUP_CONFIG="$TESTROOT/recover.conf" \
-          MOCK_ROUTER="0.0.0.0" "$MANAGE" now --force --dry-run 2>&1); status=$?
 if [ "$status" -ne 0 ] \
    && echo "$output" | grep -qi "bus or drive fault" \
-   && ! echo "$output" | grep -qi "macOS denied access"; then
-  echo -e "  ${GREEN}✓${NC} aborts blaming the drive when the remount cannot clear it"; PASS=$((PASS+1))
+   && ! echo "$output" | grep -qi "macOS denied access" \
+   && [ ! -f "$DISKUTIL_CALLS" ]; then
+  echo -e "  ${GREEN}✓${NC} aborts blaming the drive, leaving the volume mounted"; PASS=$((PASS+1))
 else
-  echo -e "  ${RED}✗${NC} status=$status, output (last 8 lines):"; echo "$output" | tail -8; FAIL=$((FAIL+1))
+  echo -e "  ${RED}✗${NC} status=$status, diskutil calls: $(cat "$DISKUTIL_CALLS" 2>/dev/null | tr '\n' ';')"
+  echo "$output" | tail -8; FAIL=$((FAIL+1))
 fi
 
 # ─── Summary ───────────────────────────────────────────────────────────
