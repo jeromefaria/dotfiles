@@ -7,4 +7,4 @@ windows:
         - nvim
         - claude --dangerously-skip-permissions --continue
         - sleep 5 && open https://localhost:5173 && clear
-        - npm run dev:i18n -- --host
+        - npm run dev -- --host
