@@ -7,7 +7,10 @@
 # ============================================================================
 
 # Dotfiles directory location
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+# Repo root, derived from this script's own location so the checkout works from
+# any directory. An explicit DOTFILES_DIR still wins, which is how bootstrap.sh
+# hands down its --dir value.
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 # Backup directory pattern
 BACKUP_DIR_PREFIX="$HOME/.dotfiles-backup"

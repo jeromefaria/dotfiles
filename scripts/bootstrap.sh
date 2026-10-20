@@ -140,7 +140,10 @@ main() {
   print_info "Starting installation..."
   echo ""
 
-  if bash scripts/install.sh "$@"; then
+  # install.sh derives the repo root from its own path, but --dir may have put
+  # the checkout somewhere else entirely; pass the resolved location down so the
+  # two never disagree.
+  if DOTFILES_DIR="$INSTALL_DIR" bash scripts/install.sh "$@"; then
     print_header "Bootstrap Complete!"
     print_success "Dotfiles installed successfully"
     echo ""

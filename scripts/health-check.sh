@@ -11,7 +11,10 @@ set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe 
 # error/warning variants tally counters.
 source "$(dirname "${BASH_SOURCE[0]}")/lib/io.sh"
 
-DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+# Repo root, derived from this script's own location so the checkout works from
+# any directory. An explicit DOTFILES_DIR still wins, which is how bootstrap.sh
+# hands down its --dir value.
+DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 ISSUES_FOUND=0
 WARNINGS_FOUND=0
 
@@ -124,6 +127,7 @@ if [ -L "$HOME/.config" ]; then
             fi
         done
     else
+        # shellcheck disable=SC2088  # the tilde is prose in a message, not a path to expand
         print_error "~/.config is a symlink but points to: $config_target (expected: $DOTFILES_DIR/config)"
     fi
 else
