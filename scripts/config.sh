@@ -12,9 +12,6 @@
 # hands down its --dir value.
 DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
-# Backup directory pattern
-BACKUP_DIR_PREFIX="$HOME/.dotfiles-backup"
-
 # Required system commands
 REQUIRED_COMMANDS=(
   "git"
@@ -30,41 +27,18 @@ OPTIONAL_COMMANDS=(
 )
 
 # ============================================================================
-# Symlink Definitions
+# Symlink Definitions — deliberately absent
 # ============================================================================
-# Format: "target:source_relative_to_dotfiles"
-# Target is the symlink location, source is relative to $DOTFILES_DIR
-
-# Home directory symlinks
-HOME_SYMLINKS=(
-  "$HOME/.zshrc:terminal/zsh/zshrc"
-  "$HOME/.vimrc:editors/vim/vimrc"
-  "$HOME/.tmux.conf:terminal/tmux/tmux.conf"
-  "$HOME/.gitconfig:git/gitconfig"
-)
-
-# XDG config directory symlinks
-CONFIG_SYMLINKS=(
-  "$HOME/.config/nvim:editors/neovim"
-  "$HOME/.config/starship.toml:config/starship.toml"
-  "$HOME/.config/aria2:config/aria2"
-  "$HOME/.config/bat:config/bat"
-  "$HOME/.config/beets:config/beets"
-  "$HOME/.config/gh:config/gh"
-  "$HOME/.config/mpv:config/mpv"
-  "$HOME/.config/neomutt:mail/mutt"
-  "$HOME/.config/musikcube:config/musikcube"
-  "$HOME/.config/ncmpcpp:config/ncmpcpp"
-  "$HOME/.config/neofetch:config/neofetch"
-  "$HOME/.config/ranger:config/ranger"
-  "$HOME/.config/skhd:config/skhd"
-  "$HOME/.config/tmuxinator:config/tmuxinator"
-  "$HOME/.config/yabai:config/yabai"
-  "$HOME/.config/yarn:config/yarn"
-)
-
-# All symlinks combined
-ALL_SYMLINKS=("${HOME_SYMLINKS[@]}" "${CONFIG_SYMLINKS[@]}")
+# This file used to carry HOME_SYMLINKS, CONFIG_SYMLINKS and ALL_SYMLINKS
+# arrays describing every link the installer creates. Nothing ever read them:
+# install.sh declares its own list inline, so the arrays here were a second
+# source of truth that silently drifted out of agreement with the first — by
+# the time they were removed they still named ncmpcpp, neofetch, ranger and
+# yarn (none of which exist in config/) and pointed .config/nvim at
+# editors/neovim rather than config/nvim. A stale map of the filesystem is
+# worse than no map, because it reads like documentation. If this ever needs to
+# be shared, move install.sh's list here and have install.sh source it, so
+# there is exactly one definition.
 
 # ============================================================================
 # Color Output Functions — provided by lib/io.sh
