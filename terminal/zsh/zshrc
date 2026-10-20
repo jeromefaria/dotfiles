@@ -100,7 +100,7 @@ plugins=(
   git-flow-completion zsh-syntax-highlighting
   zsh-autopair         # Auto-close brackets/quotes
   zsh-autosuggestions
-  git-open brew omz-git
+  git-open brew
   zsh-vi-mode          # MUST be last
 )
 

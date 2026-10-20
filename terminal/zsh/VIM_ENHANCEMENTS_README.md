@@ -71,7 +71,7 @@ Press **Esc** or **jk** to enter normal mode, then:
 - **gl** - Browse git commit history with previews
 - **gs** - Interactively stage files with git status
 
-### 2. Git Aliases (omz-git plugin)
+### 2. Git Aliases (git plugin)
 
 Common git aliases available (type and press Enter):
 
@@ -243,7 +243,7 @@ ls ~/.oh-my-zsh/custom/plugins/zsh-autopair
 1. **Ctrl-P is your friend** - Quick file navigation (works in both modes)
 3. **Ctrl-F for searching** - Live grep with preview (works in both modes)
 4. **Explore command palette** - Press Ctrl-X Ctrl-P to discover 60+ commands
-5. **Git aliases** - Run `alias | grep git` to see omz-git shortcuts (gst, gco, etc.)
+5. **Git aliases** - Run `alias | grep git` to see the git plugin shortcuts (gst, gco, etc.)
 6. **hjkl in menus** - Use vim keys in completion menus
 7. **Vi mode indicator** - Watch the prompt: `❯` (insert) vs `❮` (normal)
 8. **Quick escape** - jk is faster than reaching for Esc key
