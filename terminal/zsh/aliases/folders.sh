@@ -14,21 +14,27 @@ alias pics="cd $HOME/Pictures"
 # Work directories
 alias work="cd $HOME/Work"
 alias blog="cd $WORK/jeromefaria.github.io"
-alias projects="cd $PROJECTS"
+# $PROJECTS lives on the audio volume, so it is personal-only like the block
+# further down; on a work machine use the repo you are actually working in.
+[[ "$DOTFILES_PROFILE" == "personal" ]] && alias projects="cd $PROJECTS"
 
 # System directories
 alias tmp="cd /private/tmp"
 alias dotfiles="cd $DOTFILES"
 
-# External volumes (environment variables defined in zshrc for macOS)
-alias archive="cd $ARCHIVE"
-alias audio="cd $AUDIO"
-alias media="cd $MEDIA"
-alias portable="cd $PORTABLE"
-alias video="cd $VIDEO"
+# External volumes and cloud storage. Only on this user's own machine: the
+# variables behind them are set in zshrc under the same profile gate, and an
+# alias built on an unset variable expands to a bare `cd`, which silently goes
+# home instead of failing. The generic shortcuts above stay everywhere.
+if [[ "$DOTFILES_PROFILE" == "personal" ]]; then
+  alias archive="cd $ARCHIVE"
+  alias audio="cd $AUDIO"
+  alias media="cd $MEDIA"
+  alias portable="cd $PORTABLE"
+  alias video="cd $VIDEO"
 
-# Cloud storage
-alias drive="cd $DRIVE"
-alias shared="cd $DRIVE/Shared"
-alias mobile="cd $MOBILE"
-alias icloud="cd $MOBILE/com~apple~CloudDocs"
+  alias drive="cd $DRIVE"
+  alias shared="cd $DRIVE/Shared"
+  alias mobile="cd $MOBILE"
+  alias icloud="cd $MOBILE/com~apple~CloudDocs"
+fi
