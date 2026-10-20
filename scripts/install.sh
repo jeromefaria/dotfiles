@@ -27,6 +27,10 @@ DOTFILES_DIR="${DOTFILES_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 BACKUP_DIR="$HOME/.dotfiles-backup-$(date +%Y%m%d-%H%M%S)"
 
 # Command-line flags
+# Which machine this is. personal installs everything; work installs the
+# development environment only. Defaults to personal so that an install with no
+# --profile behaves exactly as it always has.
+PROFILE="personal"
 INTERACTIVE=true
 SKIP_PACKAGES=false
 SKIP_MACOS=false
@@ -70,6 +74,17 @@ parse_args() {
         SKIP_MACOS=true
         shift
         ;;
+      --profile)
+        PROFILE="${2:-}"
+        case "$PROFILE" in
+          personal|work) ;;
+          *)
+            print_error "Unknown profile: '${PROFILE}'. Expected 'personal' or 'work'."
+            exit 1
+            ;;
+        esac
+        shift 2
+        ;;
       --dry-run)
         DRY_RUN=true
         shift
@@ -96,16 +111,37 @@ Usage: $0 [OPTIONS]
 
 Options:
   -y, --yes             Non-interactive mode (answer yes to all prompts)
+  --profile NAME        personal (default) or work
   --skip-packages       Skip Homebrew package installation
   --skip-macos          Skip macOS system settings
   --dry-run             Show what would be done without making changes
   -h, --help            Show this help message
 
+Profiles:
+  personal  Everything. The default, so an install with no --profile is
+            unchanged from before profiles existed.
+
+  work      A development environment on a machine that is not your own
+            setup. Installs the 'work' package profile (base + dev +
+            browsers) and leaves out:
+              - music production and the media stack
+              - personal backup tooling (none of which install.sh ever
+                installed anyway — each has its own manage script)
+              - the personal git identity; a ~/.gitconfig.local stub is
+                seeded for you to fill in instead
+              - the neomutt mail configuration
+              - window and input managers (yabai, skhd, aerospace,
+                karabiner-elements and friends)
+              - media tool configs (beets, mpv, musikcube, aria2)
+            The choice is written to ~/.dotfiles-profile so later shells
+            apply the same gating.
+
 Examples:
-  $0                    # Interactive installation
-  $0 --yes              # Automated installation
-  $0 --skip-packages    # Install without packages
-  $0 --yes --skip-macos # Automated, skip macOS settings
+  $0                      # Interactive, personal
+  $0 --yes                # Automated, personal
+  $0 --profile work --yes # Automated work machine
+  $0 --skip-packages      # Install without packages
+  $0 --yes --skip-macos   # Automated, skip macOS settings
 
 EOF
 }
@@ -186,6 +222,27 @@ backup_file() {
 }
 
 # Create symlink (idempotent)
+# True when installing this user's own machine. Reads better at the call sites
+# than repeating the comparison, and mirrors the same helper in the zshrc.
+is_personal_profile() {
+  [ "$PROFILE" = "personal" ]
+}
+
+# Record the profile where the shell can find it. The zshrc reads this file on
+# every start, so without it a work machine would install trimmed and then come
+# up with the full personal surface anyway.
+persist_profile() {
+  local marker="$HOME/.dotfiles-profile"
+
+  if [ "$DRY_RUN" = true ]; then
+    print_info "[DRY RUN] Would record profile '$PROFILE' in $marker"
+    return 0
+  fi
+
+  echo "$PROFILE" > "$marker"
+  print_success "Profile '$PROFILE' recorded in ~/.dotfiles-profile"
+}
+
 # Create a directory unless this is a dry run. Pulled out because the two
 # call sites below both had to repeat the existence test and the DRY_RUN check,
 # and the dry-run half kept being the one that got forgotten.
@@ -356,18 +413,29 @@ link_dotfiles() {
   print_info "Linking XDG-compliant configurations..."
 
   # Symlink each config directory/file individually
+  # Configs every machine gets.
   local config_items=(
     "nvim"
     "starship.toml"
-    "aria2"
     "bat"
-    "beets"
     "gh"
-    "mpv"
-    "musikcube"
-    "skhd"
-    "yabai"
   )
+
+  # Personal-only configs. beets/mpv/musikcube/aria2 serve the music and media
+  # work; skhd/yabai are window and input management, which on managed hardware
+  # usually cannot get the accessibility permissions they need anyway.
+  if is_personal_profile; then
+    config_items+=(
+      "aria2"
+      "beets"
+      "mpv"
+      "musikcube"
+      "skhd"
+      "yabai"
+    )
+  else
+    print_info "Profile '$PROFILE': skipping media and window-manager configs"
+  fi
 
   for item in "${config_items[@]}"; do
     local source="$DOTFILES_DIR/config/$item"
@@ -384,8 +452,12 @@ link_dotfiles() {
   # whole-directory strategy — ~/.config symlinked to config/ — picks them up.
   # Here we link the real directories instead: create_symlink refuses a symlink
   # as its source, and pointing a symlink at a symlink gains nothing anyway.
-  if [ -e "$DOTFILES_DIR/mail/mutt" ]; then
+  # The neomutt configuration is a personal Gmail account setup; it has no use
+  # on a machine that is not this user's own.
+  if [ -e "$DOTFILES_DIR/mail/mutt" ] && is_personal_profile; then
     create_symlink "$DOTFILES_DIR/mail/mutt" "$HOME/.config/neomutt"
+  elif [ -e "$DOTFILES_DIR/mail/mutt" ]; then
+    print_info "Profile '$PROFILE': skipping the neomutt mail configuration"
   fi
 
   if [ -e "$DOTFILES_DIR/terminal/tmux/tmuxinator" ]; then
@@ -419,13 +491,22 @@ install_packages() {
     fi
   fi
 
+  # There is no plain `Brewfile` in packages/ — only Brewfile.<category> — so
+  # bare `brew bundle install` here failed with "No Brewfile found" and took the
+  # whole install down with it via the ERR trap. install-packages.sh is the
+  # interface that understands the categories, and routing through it is also
+  # what lets the profile pick a package set.
+  local package_profile="full"
+  if ! is_personal_profile; then
+    package_profile="work"
+  fi
+
   if [ "$install_packages" = true ]; then
     if [ "$DRY_RUN" = true ]; then
-      print_info "[DRY RUN] Would install Homebrew packages from Brewfile"
+      print_info "[DRY RUN] Would install the '$package_profile' package profile"
     else
-      print_info "Installing Homebrew packages..."
-      cd "$DOTFILES_DIR/packages"
-      brew bundle install
+      print_info "Installing Homebrew packages ($package_profile profile)..."
+      bash "$DOTFILES_DIR/packages/install-packages.sh" --profile "$package_profile"
       print_success "Packages installed"
     fi
   else
@@ -467,8 +548,15 @@ apply_macos_settings() {
     if [ "$DRY_RUN" = true ]; then
       print_info "[DRY RUN] Would apply macOS system settings"
     else
-      print_info "Applying macOS settings..."
-      bash "$DOTFILES_DIR/scripts/macos-setup.sh"
+      print_info "Applying macOS settings ($PROFILE)..."
+      # Bare macos-setup.sh prompts interactively for which groups to apply.
+      # On a work machine say so explicitly instead: --dev covers base plus the
+      # developer settings and never touches personal.sh or apps.sh.
+      if is_personal_profile; then
+        bash "$DOTFILES_DIR/scripts/macos-setup.sh"
+      else
+        bash "$DOTFILES_DIR/scripts/macos-setup.sh" --dev
+      fi
       print_success "macOS settings applied"
       print_warning "Some changes may require a logout or restart"
     fi
@@ -550,6 +638,61 @@ seed_templates() {
   done < <(find "$DOTFILES_DIR/config" -name "*.template" -type f 2>/dev/null)
 
   print_info "Templates: $seeded seeded, $skipped already present"
+
+  seed_work_git_identity
+}
+
+# git/gitconfig sets this user's personal address, and gitconfig includes
+# ~/.gitconfig.local last so anything there wins. On a work machine that
+# override is the difference between commits going out as the right author and
+# going out as a personal address, so seed it rather than relying on the
+# installer's reader noticing the comment in gitconfig.
+#
+# The seeded address is a deliberate sentinel in the RFC 2606 .invalid TLD, not
+# a blank. Two things that look like they would be safer are not:
+#   - `email =` (empty) still commits, authored as `Name <>`
+#   - user.useConfigOnly only disables auto-detection; an explicitly set value,
+#     empty included, still counts as configured, so it does not block either
+# Nothing in git refuses a commit here, so the next best thing is an author
+# that cannot be mistaken for real and cannot receive mail.
+seed_work_git_identity() {
+  if is_personal_profile; then
+    return 0
+  fi
+
+  local local_config="$HOME/.gitconfig.local"
+
+  if [ -e "$local_config" ]; then
+    print_success "Already present: ~/.gitconfig.local"
+    return 0
+  fi
+
+  if [ "$DRY_RUN" = true ]; then
+    print_info "[DRY RUN] Would seed ~/.gitconfig.local with a blank work identity"
+    return 0
+  fi
+
+  cat > "$local_config" <<'GITLOCAL'
+# Machine-specific git settings for a work machine.
+#
+# git/gitconfig in the dotfiles sets a personal name and email, then includes
+# this file last, so whatever is set here wins. Replace the address below with
+# your work one before committing anything.
+#
+# The placeholder is in the .invalid TLD, which RFC 2606 reserves so it can
+# never resolve. It is a sentinel, not a safety net: git will happily commit
+# with it, so the protection is that it is impossible to miss in `git log`,
+# obviously not a real person, and rejected or flagged by most forges. A blank
+# email would NOT have been safer — git commits anyway, authored as `Name <>`.
+
+[user]
+	email = replace-with-work-address@invalid
+	# name = Your Name As Work Expects It
+	# signingkey = ABCD1234
+GITLOCAL
+
+  print_success "Seeded ~/.gitconfig.local with a placeholder work identity"
+  print_warning "Commits will be authored as replace-with-work-address@invalid until you edit it"
 }
 
 # Main installation flow
@@ -577,7 +720,14 @@ main() {
     echo
   fi
 
+  print_info "Profile: $PROFILE"
+  if ! is_personal_profile; then
+    print_info "Development environment only — no music, media, personal identity or window managers"
+  fi
+  echo
+
   check_os
+  persist_profile
   check_required_commands
   check_homebrew
   install_oh_my_zsh
