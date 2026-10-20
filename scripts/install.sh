@@ -148,9 +148,13 @@ check_homebrew() {
   print_header "Checking Dependencies"
 
   if ! command -v brew &> /dev/null; then
-    print_warning "Homebrew not found. Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    print_success "Homebrew installed"
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would install Homebrew"
+    else
+      print_warning "Homebrew not found. Installing Homebrew..."
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+      print_success "Homebrew installed"
+    fi
   else
     print_success "Homebrew is already installed"
   fi
@@ -158,6 +162,11 @@ check_homebrew() {
 
 # Create backup directory
 create_backup_dir() {
+  if [ "$DRY_RUN" = true ]; then
+    print_info "[DRY RUN] Would create backup directory: $BACKUP_DIR"
+    return 0
+  fi
+
   if [ ! -d "$BACKUP_DIR" ]; then
     mkdir -p "$BACKUP_DIR"
     print_success "Created backup directory: $BACKUP_DIR"
@@ -179,6 +188,22 @@ backup_file() {
 }
 
 # Create symlink (idempotent)
+# Create a directory unless this is a dry run. Pulled out because the two
+# call sites below both had to repeat the existence test and the DRY_RUN check,
+# and the dry-run half kept being the one that got forgotten.
+ensure_dir() {
+  local dir=$1
+
+  [ -d "$dir" ] && return 0
+
+  if [ "$DRY_RUN" = true ]; then
+    print_info "[DRY RUN] Would create directory: $dir"
+    return 0
+  fi
+
+  mkdir -p "$dir"
+}
+
 create_symlink() {
   local source=$1
   local target=$2
@@ -228,9 +253,13 @@ install_oh_my_zsh() {
   print_header "Installing Oh My Zsh"
 
   if [ ! -d "$HOME/.oh-my-zsh" ]; then
-    print_info "Installing Oh My Zsh..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    print_success "Oh My Zsh installed"
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would install Oh My Zsh"
+    else
+      print_info "Installing Oh My Zsh..."
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      print_success "Oh My Zsh installed"
+    fi
   else
     print_success "Oh My Zsh is already installed"
   fi
@@ -259,10 +288,14 @@ install_vim_plug() {
   print_header "Installing Vim Plug"
 
   if [ ! -f "$HOME/.vim/autoload/plug.vim" ]; then
-    print_info "Installing vim-plug for Vim..."
-    curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
-      https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-    print_success "vim-plug installed"
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would install vim-plug to ~/.vim/autoload/plug.vim"
+    else
+      print_info "Installing vim-plug for Vim..."
+      curl -fLo "$HOME/.vim/autoload/plug.vim" --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      print_success "vim-plug installed"
+    fi
   else
     print_success "vim-plug is already installed"
   fi
@@ -276,9 +309,13 @@ install_tpm() {
   print_header "Installing Tmux Plugin Manager"
 
   if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-    print_info "Installing TPM..."
-    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
-    print_success "TPM installed"
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would install TPM to ~/.tmux/plugins/tpm"
+    else
+      print_info "Installing TPM..."
+      git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+      print_success "TPM installed"
+    fi
   else
     print_success "TPM is already installed"
   fi
@@ -298,15 +335,11 @@ link_dotfiles() {
   create_symlink "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 
   # Vim directory (separate from Neovim for systems without Neovim)
-  if [ ! -d "$HOME/.vim" ]; then
-    mkdir -p "$HOME/.vim"
-  fi
+  ensure_dir "$HOME/.vim"
   create_symlink "$DOTFILES_DIR/editors/vim" "$HOME/.vim/config"
 
   # Create .config directory if it doesn't exist
-  if [ ! -d "$HOME/.config" ]; then
-    mkdir -p "$HOME/.config"
-  fi
+  ensure_dir "$HOME/.config"
 
   # XDG-compliant configs - symlink individual directories from config/
   print_info "Linking XDG-compliant configurations..."
@@ -436,10 +469,14 @@ set_zsh_shell() {
   print_header "Setting Default Shell"
 
   if [ "$SHELL" != "$(which zsh)" ]; then
-    print_info "Setting ZSH as default shell..."
-    chsh -s "$(which zsh)"
-    print_success "ZSH set as default shell"
-    print_warning "Restart your terminal for changes to take effect"
+    if [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would set default shell to $(which zsh)"
+    else
+      print_info "Setting ZSH as default shell..."
+      chsh -s "$(which zsh)"
+      print_success "ZSH set as default shell"
+      print_warning "Restart your terminal for changes to take effect"
+    fi
   else
     print_success "ZSH is already the default shell"
   fi
