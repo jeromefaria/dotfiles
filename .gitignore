@@ -79,3 +79,12 @@ config/raycast/extensions
 config/raycast/ai/
 config/iterm2/AppSupport
 
+# Tool-generated state that was tracked by accident
+# Karabiner writes these itself on every config change; they are its backups of
+# karabiner.json, which IS tracked.
+config/karabiner/automatic_backups/
+# npm-ecosystem update-notifier/telemetry state — recreated on demand, and the
+# tracked copies had gone stale (timestamps from 2018-2023, tools since dropped).
+config/configstore/
+# cmus library cache — a generated index of audio file paths, not configuration.
+config/cmus/lib.pl
