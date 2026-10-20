@@ -9,6 +9,11 @@
 #   bash test-install-symlink.sh           # quiet
 #   bash test-install-symlink.sh -v        # verbose
 
+# shellcheck disable=SC2034
+# DOTFILES_DIR, BACKUP_DIR, INTERACTIVE and DRY_RUN are inputs to the
+# install.sh functions sourced below, not locals of this script; shellcheck
+# cannot see across the source boundary.
+
 set -uo pipefail
 
 VERBOSE=0
@@ -72,7 +77,10 @@ DRY_RUN=false
 # ─── Test helpers ──────────────────────────────────────────────────────
 assert() {
   local desc="$1"; shift
-  if eval "$@" > /dev/null 2>&1; then
+  # The assertion is a shell expression passed as a single string (test
+  # brackets, pipelines, command substitution), so it has to be evaluated as
+  # one rather than run as an argv.
+  if eval "$*" > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} $desc"
     PASS=$((PASS + 1))
   else

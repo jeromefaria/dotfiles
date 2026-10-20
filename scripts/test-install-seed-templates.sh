@@ -10,6 +10,11 @@
 #   bash test-install-seed-templates.sh          # quiet
 #   bash test-install-seed-templates.sh -v       # verbose
 
+# shellcheck disable=SC2034
+# DOTFILES_DIR, BACKUP_DIR, INTERACTIVE and DRY_RUN are inputs to the
+# install.sh functions sourced below, not locals of this script; shellcheck
+# cannot see across the source boundary.
+
 set -uo pipefail
 
 VERBOSE=0

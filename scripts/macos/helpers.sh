@@ -136,7 +136,8 @@ print_completion() {
 # Validate macOS version
 check_macos_version() {
     local min_version="${1:-11}"  # Default to Big Sur (11)
-    local current_version=$(get_macos_major_version)
+    local current_version
+    current_version=$(get_macos_major_version)
 
     if [ "$current_version" -lt "$min_version" ]; then
         log_warning "Some settings may not work on macOS versions older than $min_version"

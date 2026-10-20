@@ -131,6 +131,19 @@ exit 0
 MOCKEOF
 chmod +x "$TESTROOT_BIN/launchctl"
 
+# Count loaded-service markers without piping ls: the mock launchctl touches one
+# file per label, so a glob answers directly and copes with any filename.
+count_loaded() {
+  local label="$1"
+  local matches=("$LAUNCHCTL_STATE_DIR"/*"$label"*)
+
+  if [ -e "${matches[0]}" ]; then
+    echo "${#matches[@]}"
+  else
+    echo 0
+  fi
+}
+
 # Mock networksetup so router-gate tests can choose what `current_wifi_router`
 # returns. Reads MOCK_ROUTER env var; empty = "no Wi-Fi" simulation.
 cat > "$TESTROOT_BIN/networksetup" <<'MOCKEOF'
@@ -177,7 +190,10 @@ run_manage() {
 
 assert() {
   local desc="$1"; shift
-  if eval "$@" > /dev/null 2>&1; then
+  # The assertion is a shell expression passed as a single string (test
+  # brackets, pipelines, command substitution), so it has to be evaluated as
+  # one rather than run as an argv.
+  if eval "$*" > /dev/null 2>&1; then
     echo -e "  ${GREEN}✓${NC} $desc"
     PASS=$((PASS + 1))
   else
@@ -283,7 +299,6 @@ else
 fi
 
 heading "TEST 11: Sync gate — filters file missing → fatal (exit 1)"
-ORIG_FILTERS="$SCRIPT_DIR/audio-backup-filters.txt"
 # Point the test config at a non-existent filters file
 sed -i.bak "s|^FILTERS_FILE=.*|FILTERS_FILE=\"/nope/does/not/exist.txt\"|" "$TEST_BACKUP_CONFIG"
 output=$("$MANAGE" now --force --dry-run 2>&1); status=$?
@@ -331,7 +346,7 @@ rm -f "$FAKE_AUDIO/Documents/POSTBACKUP.md"
 # ─── launchctl lifecycle (uses mocked launchctl) ───────────────────────
 
 heading "TEST 15: status — service not loaded (clean state)"
-rm -rf "$LAUNCHCTL_STATE_DIR"/*  # ensure no loaded services
+rm -rf "${LAUNCHCTL_STATE_DIR:?}"/*  # ensure no loaded services
 output=$("$MANAGE" status 2>&1); status=$?
 if [ "$status" -eq 0 ] && echo "$output" | grep -qi "not loaded"; then
   echo -e "  ${GREEN}✓${NC} status reports 'not loaded' when stopped"; PASS=$((PASS+1))
@@ -361,7 +376,7 @@ cat > "$TESTROOT/test.plist" <<EOF
 </plist>
 EOF
 output=$("$MANAGE" start 2>&1); start_status=$?
-loaded=$(ls "$LAUNCHCTL_STATE_DIR" 2>/dev/null | grep -c "com.test.audiobackup")
+loaded=$(count_loaded "com.test.audiobackup")
 if [ "$start_status" -eq 0 ] && [ "$loaded" -eq 1 ]; then
   echo -e "  ${GREEN}✓${NC} start loaded the service via mock launchctl"; PASS=$((PASS+1))
 else
@@ -369,7 +384,7 @@ else
 fi
 
 output=$("$MANAGE" stop 2>&1); stop_status=$?
-loaded_after=$(ls "$LAUNCHCTL_STATE_DIR" 2>/dev/null | grep -c "com.test.audiobackup")
+loaded_after=$(count_loaded "com.test.audiobackup")
 if [ "$stop_status" -eq 0 ] && [ "$loaded_after" -eq 0 ]; then
   echo -e "  ${GREEN}✓${NC} stop unloaded the service via mock launchctl"; PASS=$((PASS+1))
 else

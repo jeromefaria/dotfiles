@@ -120,16 +120,25 @@ log_info "Backing up system-level settings..."
 mkdir -p "${BACKUP_PATH}/system"
 
 # Firewall settings
+# shellcheck disable=SC2024  # sudo is for reading the system plist; the redirect
+# target is the user-owned backup dir, so writing via `sudo tee` would only
+# leave root-owned files behind.
 if sudo defaults read /Library/Preferences/com.apple.alf >/dev/null 2>&1; then
     sudo defaults read /Library/Preferences/com.apple.alf > "${BACKUP_PATH}/system/alf.plist" 2>/dev/null || log_warning "Could not backup firewall settings"
 fi
 
 # Login window settings
+# shellcheck disable=SC2024  # sudo is for reading the system plist; the redirect
+# target is the user-owned backup dir, so writing via `sudo tee` would only
+# leave root-owned files behind.
 if sudo defaults read /Library/Preferences/com.apple.loginwindow >/dev/null 2>&1; then
     sudo defaults read /Library/Preferences/com.apple.loginwindow > "${BACKUP_PATH}/system/loginwindow.plist" 2>/dev/null || log_warning "Could not backup login window settings"
 fi
 
 # Spotlight settings
+# shellcheck disable=SC2024  # sudo is for reading the system plist; the redirect
+# target is the user-owned backup dir, so writing via `sudo tee` would only
+# leave root-owned files behind.
 if sudo defaults read /.Spotlight-V100/VolumeConfiguration >/dev/null 2>&1; then
     sudo defaults read /.Spotlight-V100/VolumeConfiguration > "${BACKUP_PATH}/system/spotlight-volume.plist" 2>/dev/null || log_warning "Could not backup Spotlight settings"
 fi

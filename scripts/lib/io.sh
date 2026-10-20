@@ -12,6 +12,10 @@
 # ============================================================================
 
 # Idempotency: sourcing twice is a no-op.
+# shellcheck disable=SC2034
+# The colour palette is defined complete in both branches; MAGENTA is not
+# referenced yet and is kept so the set stays symmetrical.
+
 [ -n "${_DOTFILES_IO_LOADED:-}" ] && return 0
 _DOTFILES_IO_LOADED=1
 

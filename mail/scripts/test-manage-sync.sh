@@ -9,10 +9,12 @@
 #   bash test-manage-sync.sh           # quiet
 #   bash test-manage-sync.sh -v        # verbose
 
+# shellcheck disable=SC2034
+# The colour palette is defined complete in both branches; YELLOW is not
+# referenced yet and is kept so the set stays symmetrical.
+
 set -uo pipefail
 
-VERBOSE=0
-[ "${1:-}" = "-v" ] && VERBOSE=1
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MANAGE="$SCRIPT_DIR/manage-sync.sh"
@@ -79,6 +81,19 @@ esac
 exit 0
 MOCKEOF
 chmod +x "$TESTROOT_BIN/launchctl"
+
+# Count loaded-service markers without piping ls: the mock launchctl touches one
+# file per label, so a glob answers directly and copes with any filename.
+count_loaded() {
+  local label="$1"
+  local matches=("$LAUNCHCTL_STATE_DIR"/*"$label"*)
+
+  if [ -e "${matches[0]}" ]; then
+    echo "${#matches[@]}"
+  else
+    echo 0
+  fi
+}
 export PATH="$TESTROOT_BIN:$PATH"
 export HOME="$FAKE_HOME"
 
@@ -91,7 +106,7 @@ heading() {
 # ─── Tests ─────────────────────────────────────────────────────────────
 
 heading "TEST 1: status with no service loaded"
-rm -rf "$LAUNCHCTL_STATE_DIR"/*
+rm -rf "${LAUNCHCTL_STATE_DIR:?}"/*
 output=$("$MANAGE" status 2>&1); status=$?
 if [ "$status" -eq 0 ] && echo "$output" | grep -qi "Stopped"; then
   echo -e "  ${GREEN}✓${NC} status reports 'Stopped' when not loaded"; PASS=$((PASS+1))
@@ -122,7 +137,7 @@ EOF
 
 heading "TEST 3: start loads the service via mock launchctl"
 output=$("$MANAGE" start 2>&1); status=$?
-loaded=$(ls "$LAUNCHCTL_STATE_DIR" 2>/dev/null | grep -c "com.jeromefaria.mailsync" || true)
+loaded=$(count_loaded "com.jeromefaria.mailsync")
 if [ "$status" -eq 0 ] && [ "$loaded" -eq 1 ] && echo "$output" | grep -qi "started successfully"; then
   echo -e "  ${GREEN}✓${NC} start loaded the service"; PASS=$((PASS+1))
 else
@@ -148,7 +163,7 @@ fi
 
 heading "TEST 6: restart cycles unload + load via mock launchctl"
 output=$("$MANAGE" restart 2>&1); status=$?
-loaded=$(ls "$LAUNCHCTL_STATE_DIR" 2>/dev/null | grep -c "com.jeromefaria.mailsync" || true)
+loaded=$(count_loaded "com.jeromefaria.mailsync")
 if [ "$status" -eq 0 ] && [ "$loaded" -eq 1 ] && echo "$output" | grep -qi "restarted"; then
   echo -e "  ${GREEN}✓${NC} restart succeeded and service still loaded"; PASS=$((PASS+1))
 else
@@ -157,7 +172,7 @@ fi
 
 heading "TEST 7: stop unloads the service"
 output=$("$MANAGE" stop 2>&1); status=$?
-loaded_after=$(ls "$LAUNCHCTL_STATE_DIR" 2>/dev/null | grep -c "com.jeromefaria.mailsync" || true)
+loaded_after=$(count_loaded "com.jeromefaria.mailsync")
 if [ "$status" -eq 0 ] && [ "$loaded_after" -eq 0 ] && echo "$output" | grep -qi "Service stopped"; then
   echo -e "  ${GREEN}✓${NC} stop unloaded the service"; PASS=$((PASS+1))
 else
