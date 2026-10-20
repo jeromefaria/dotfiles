@@ -41,9 +41,6 @@ This script will:
 4. Help you categorize new packages
 
 OPTIONS:
-    --auto-update       Automatically update existing packages in their categories
-                       (doesn't add new packages, only updates versions/taps)
-
     -h, --help          Show this help message
 
 WORKFLOW:
@@ -55,9 +52,6 @@ EXAMPLES:
     # See what's changed
     $0
 
-    # Auto-update existing categories
-    $0 --auto-update
-
 EOF
 }
 
@@ -67,15 +61,15 @@ if ! command -v brew &> /dev/null; then
     exit 1
 fi
 
-# Parse arguments
-AUTO_UPDATE=false
-
+# Parse arguments.
+# There was an --auto-update flag here, documented as updating "versions/taps"
+# of already-categorised packages. Nothing ever read the variable it set, so it
+# silently did nothing — and there is nothing for it to do: this script only
+# reports, and the Brewfiles pin no versions (`brew "name"`, not `brew "name",
+# version:`). Reinstating it would mean deciding what it should write, which is
+# a new feature, not a fix.
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --auto-update)
-            AUTO_UPDATE=true
-            shift
-            ;;
         -h|--help)
             show_usage
             exit 0
