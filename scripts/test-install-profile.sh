@@ -214,8 +214,10 @@ reset_home
 PROFILE="work"
 seed_work_git_identity > /dev/null 2>&1
 if [ -f "$FAKE_HOME/.gitconfig.local" ]; then
+  # shellcheck disable=SC2088  # tildes here are prose in the test name, not paths
   pass "~/.gitconfig.local seeded"
 else
+  # shellcheck disable=SC2088
   fail "~/.gitconfig.local seeded"
 fi
 
