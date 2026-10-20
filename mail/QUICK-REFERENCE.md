@@ -8,7 +8,7 @@ Print this or keep it open in another window while testing!
 
 | Feature | Key | What It Does |
 |---------|-----|--------------|
-| **Command Palette** | `Space p` | Search all 70+ commands (like :Commands) |
+| **Command Palette** | `Space p` | Search all 60+ commands (like :Commands) |
 | **FZF Mailbox Picker** | `gm` | Fuzzy find folders |
 | **Notmuch Search** | `\` | Full-text search all mail |
 | **Virtual Mailboxes** | `c` → "Search:" | Smart folders (Today, Unread, etc.) |

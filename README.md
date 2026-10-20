@@ -344,16 +344,21 @@ Each top-level directory and the major `config/` subdirectories have their own R
   - Starship prompt
   - Custom key bindings
 
-- **`terminal/zsh/aliases.sh`** - Shell aliases
-  - Navigation shortcuts
-  - Modern tool replacements (eza, bat, fd, ripgrep)
-  - Git aliases
-  - macOS-specific utilities
+- **`terminal/zsh/aliases/`** - Shell aliases, one file per category
+  - `core`, `folders` - navigation shortcuts
+  - `tools` - modern tool replacements (eza, bat, fd, sd, ripgrep, zoxide)
+  - `git`, `dev` - version control and development
+  - `macos`, `chrome`, `ddc` - platform and hardware specific
+  - Loaded only in interactive shells, and skipped under Claude Code: these
+    shadow standard commands with tools that take different arguments.
 
-- **`terminal/zsh/functions.sh`** - Custom shell functions
-  - HTTP server utilities
-  - File operations
-  - Development helpers
+- **`terminal/zsh/functions/`** - Custom shell functions, one file per category
+  - `core`, `dev` - utilities and development helpers
+  - `fzf-enhancements`, `command-palette`, `vim-commands` - fuzzy finding and
+    vim-like editing
+  - `clipboard`, `macos` - platform integration
+  - `media`, `media-stack`, `ps5-detect` - personal only, see Profiles above
+  - Loaded in every shell, since functions are inert until called.
 
 ### Editor (Vim/Neovim)
 
@@ -430,15 +435,21 @@ See `config/README.md` for detailed information about each configuration.
 
 ### Adding Custom Aliases
 
-Edit `terminal/zsh/aliases.sh` and add your aliases:
+Add to the matching file in `terminal/zsh/aliases/` — or create a new one, as
+the whole directory is sourced:
 
 ```bash
 alias myalias="command"
 ```
 
+Anything personal to your own machine belongs in `~/.zshrc.local`, which is
+not tracked. To gate a whole file on the personal profile instead, add its
+name to `_personal_only` in the zshrc.
+
 ### Adding Custom Functions
 
-Edit `terminal/zsh/functions.sh` and add your functions:
+Add to the matching file in `terminal/zsh/functions/` (or a new one) and add
+your functions:
 
 ```bash
 function myfunction() {

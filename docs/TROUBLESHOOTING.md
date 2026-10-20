@@ -680,7 +680,7 @@ brew doctor
 
 3. **Skip failing packages:**
    ```bash
-   brew bundle install --no-upgrade
+   brew bundle install --no-upgrade --file=Brewfile.base
    ```
 
 ### Symptom: brew bundle says packages are missing

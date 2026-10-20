@@ -262,7 +262,25 @@ See [Windows Setup Guide](../docs/WINDOWS-SETUP.md) for detailed instructions.
 
 ## Testing
 
-After making changes to scripts, run the health check:
+Every script here that mutates external state has a suite next to it. They are
+self-contained — a `mktemp -d` sandbox, mocked binaries on `$PATH`, no network
+and nothing under `$HOME` touched:
+
+```bash
+scripts/test-install-symlink.sh          # install.sh::create_symlink
+scripts/test-install-seed-templates.sh   # install.sh::seed_templates
+scripts/test-install-profile.sh          # install.sh profile gating + packages
+scripts/test-audio-backup.sh             # audio-backup-sync.sh end-to-end
+scripts/test-audio-volume-guard.sh       # audio-volume-guard.sh state machine
+scripts/test-tm-backup-staleness.sh      # tm-backup-staleness-check.sh
+python3 scripts/test-audio-plugin-cleanup.py
+```
+
+See [../docs/TESTING.md](../docs/TESTING.md) for what each covers, what is
+deliberately uncovered, and how to add a suite.
+
+Then run the health check, which looks at the installed state rather than the
+scripts:
 
 ```bash
 ./scripts/health-check.sh
@@ -274,6 +292,11 @@ This verifies:
 - Required tools are installed
 - Shell performance (startup time)
 - No broken symlinks
+
+Note that it checks *this* machine, so it cannot catch a defect that only
+shows on a fresh clone — an absolute symlink that happens to resolve here
+reads as healthy. For that, clone to a scratch directory and run
+`install.sh --dry-run` against a throwaway `$HOME`.
 
 ## Contributing
 

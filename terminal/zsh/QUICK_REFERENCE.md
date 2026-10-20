@@ -236,12 +236,12 @@ gdb
 
 Temporarily disable a category:
 ```bash
-mv ~/dotfiles/shell/aliases/chrome.sh ~/dotfiles/shell/aliases/chrome.sh.disabled
+mv ~/dotfiles/terminal/zsh/aliases/chrome.sh ~/dotfiles/terminal/zsh/aliases/chrome.sh.disabled
 reload
 ```
 
 Re-enable:
 ```bash
-mv ~/dotfiles/shell/aliases/chrome.sh.disabled ~/dotfiles/shell/aliases/chrome.sh
+mv ~/dotfiles/terminal/zsh/aliases/chrome.sh.disabled ~/dotfiles/terminal/zsh/aliases/chrome.sh
 reload
 ```

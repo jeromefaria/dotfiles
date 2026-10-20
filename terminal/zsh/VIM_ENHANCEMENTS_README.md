@@ -168,7 +168,7 @@ After reloading, test these:
 
 ### FZF Functions
 
-All in `~/dotfiles/shell/functions/fzf-enhancements.sh`:
+All in `~/dotfiles/terminal/zsh/functions/fzf-enhancements.sh`:
 - `fzf-git-files` - Find git-tracked files (Ctrl-P)
 - `fzf-ripgrep` - Live grep with preview (Ctrl-F)
 - `fzf-git-branch` - Checkout branch (gb in normal mode)
@@ -180,11 +180,11 @@ All in `~/dotfiles/shell/functions/fzf-enhancements.sh`:
 
 ### Command Palette
 
-All in `~/dotfiles/shell/functions/command-palette.sh` (60+ commands)
+All in `~/dotfiles/terminal/zsh/functions/command-palette.sh` (60+ commands)
 
 ### Vim Commands
 
-All in `~/dotfiles/shell/functions/vim-commands.sh`:
+All in `~/dotfiles/terminal/zsh/functions/vim-commands.sh`:
 - Text manipulation widgets
 - Case conversion
 - Line operations
@@ -192,19 +192,19 @@ All in `~/dotfiles/shell/functions/vim-commands.sh`:
 
 ### Clipboard
 
-All in `~/dotfiles/shell/functions/clipboard.sh`:
+All in `~/dotfiles/terminal/zsh/functions/clipboard.sh`:
 - Clipboard operations
 - History management
 - Path yanking
 
 ## 🔧 Configuration Files Modified
 
-- `~/dotfiles/shell/zshrc` - Main config (plugins, keybindings)
+- `~/dotfiles/terminal/zsh/zshrc` - Main config (plugins, keybindings)
 - `~/dotfiles/config/starship.toml` - Vi mode indicator
-- `~/dotfiles/shell/functions/fzf-enhancements.sh` - FZF fuzzy finding functions
-- `~/dotfiles/shell/functions/command-palette.sh` - Command palette
-- `~/dotfiles/shell/functions/vim-commands.sh` - Text manipulation widgets
-- `~/dotfiles/shell/functions/clipboard.sh` - Clipboard operations
+- `~/dotfiles/terminal/zsh/functions/fzf-enhancements.sh` - FZF fuzzy finding functions
+- `~/dotfiles/terminal/zsh/functions/command-palette.sh` - Command palette
+- `~/dotfiles/terminal/zsh/functions/vim-commands.sh` - Text manipulation widgets
+- `~/dotfiles/terminal/zsh/functions/clipboard.sh` - Clipboard operations
 
 ## 🐛 Troubleshooting
 
@@ -258,7 +258,7 @@ ls ~/.oh-my-zsh/custom/plugins/zsh-autopair
 
 ## 🔗 Files
 
-- This guide: `~/dotfiles/shell/VIM_ENHANCEMENTS_README.md`
-- Functions: `~/dotfiles/shell/functions/*.sh`
-- Config: `~/dotfiles/shell/zshrc`
+- This guide: `~/dotfiles/terminal/zsh/VIM_ENHANCEMENTS_README.md`
+- Functions: `~/dotfiles/terminal/zsh/functions/*.sh`
+- Config: `~/dotfiles/terminal/zsh/zshrc`
 - Starship: `~/dotfiles/config/starship.toml`

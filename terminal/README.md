@@ -8,8 +8,8 @@ Complete terminal environment configuration including shell, multiplexer, and te
 terminal/
 ├── zsh/        # Zsh shell configuration
 │   ├── zshrc                      # Main Zsh config
-│   ├── aliases/                   # Modular aliases (7 categories)
-│   ├── functions/                 # Modular functions (9 categories)
+│   ├── aliases/                   # Modular aliases (8 categories)
+│   ├── functions/                 # Modular functions (10 categories)
 │   └── *.md                       # Documentation
 ├── bash/       # Bash portable configuration
 │   ├── bashrc.portable            # Git Bash/restricted environments
@@ -71,8 +71,8 @@ ln -sf ~/dotfiles/terminal/mintty/minttyrc ~/.minttyrc
 
 - **Oh My Zsh** framework with curated plugins
 - **zsh-vi-mode** with `jk` escape binding
-- **Modular aliases** - 7 categories (git, dev, tools, folders, macos, chrome, core)
-- **Modular functions** - 9 categories including FZF enhancements, clipboard ops, command palette
+- **Modular aliases** - 8 categories (chrome, core, ddc, dev, folders, git, macos, tools)
+- **Modular functions** - 10 categories including FZF enhancements, clipboard ops, command palette
 - **Starship prompt** with git integration
 - **Auto-suggestions** and **syntax highlighting**
 - **Platform detection** - adapts to macOS, Linux, WSL

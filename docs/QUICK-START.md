@@ -188,15 +188,22 @@ This file is `.gitignore`d so your personal settings stay private.
 This dotfiles includes a profile-based package system:
 
 ```bash
-cd ~/dotfiles/packages
+cd ~/dotfiles
 
-# See available profiles
-cat profiles/minimal.txt      # Essential tools only
-cat profiles/dev.txt           # Development tools
-cat profiles/full.txt          # Everything
+# See available profiles and categories
+./packages/install-packages.sh --list
 
-# Install a profile
-./install-profile.sh dev      # Installs development tools
+# minimal  base only                               (30 packages)
+# work     base + dev + browsers                   (147)
+# dev      base + dev + browsers + utilities       (181)
+# music    base + music + media + utilities        (150)
+# full     everything                              (333)
+
+# Check before committing to it
+./packages/install-packages.sh --profile dev --dry-run
+
+# Install
+./packages/install-packages.sh --profile dev
 ```
 
 ### 2. Configure Git Identity

@@ -224,17 +224,23 @@ Sessions defined in terminal/tmux/tmuxinator/
 ```
 packages/Brewfile.* categories define software
     ↓
-scripts/install.sh offers to install packages
+packages/profiles/*.txt combine categories (minimal, dev, work, music, full)
     ↓
-User runs: brew bundle --file=packages/Brewfile.<category>
+scripts/install.sh picks a profile from its own --profile and delegates
+    ↓
+packages/install-packages.sh --profile <name> runs brew bundle per category
     ↓
 Tools become available to shell aliases
 ```
 
+There is no single `Brewfile`, only `Brewfile.<category>`, so bare `brew
+bundle` fails with "No Brewfile found" — always go through
+`install-packages.sh`, or pass `--file` explicitly.
+
 **Workflow:**
 1. Edit package categories in `packages/Brewfile.*`
-2. Run `packages/sync-packages.sh` to verify
-3. Run `brew bundle` to install
+2. Run `packages/sync-packages.sh` to find anything uncategorised
+3. Run `packages/install-packages.sh --profile <name>` to install
 4. Shell aliases auto-detect and activate
 
 ---

@@ -300,7 +300,7 @@ echo $STARSHIP_SHELL
 **Solution:** Ensure `eval "$(starship init zsh)"` is in your `.zshrc`
 
 ```bash
-grep "starship init" ~/dotfiles/shell/zshrc
+grep "starship init" ~/dotfiles/terminal/zsh/zshrc
 ```
 
 ### Issue: Vi mode indicator not working

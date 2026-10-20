@@ -180,7 +180,7 @@ nbump       # Bump version (major|minor|patch)
 **832 lines** of feature-rich vim configuration.
 
 **Key Features:**
-- **65 plugins** (pure Vimscript, no compilation needed)
+- **46 plugins** (pure Vimscript, no compilation needed)
 - **NERDTree** for file exploration (no fzf needed)
 - **CoC.nvim** for LSP/autocomplete (if Node.js available)
 - **vim-fugitive** for git integration

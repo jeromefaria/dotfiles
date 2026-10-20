@@ -58,7 +58,7 @@ Modern, Neovim-inspired terminal email client with offline sync, full-text searc
 - **Offline Mail Sync** - Fast, local Maildir storage with mbsync
 - **Full-Text Search** - Telescope-like search with notmuch
 - **FZF Integration** - Fuzzy find mailboxes, commands, and directories
-- **Command Palette** - Searchable list of 70+ commands (`Space p`)
+- **Command Palette** - Searchable list of 60+ commands (`Space p`)
 - **Space Leader Pattern** - Neovim-style leader key
 - **OceanicNext Theme** - Matching your Tmux color scheme
 - **Vim Navigation** - j/k/gg/G and all the classics

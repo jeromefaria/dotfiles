@@ -93,7 +93,7 @@ Try these space-based shortcuts:
 **Expected Results:**
 - ✅ FZF window opens
 - ✅ Header says "Neomutt Command Palette (like :Commands in Neovim)"
-- ✅ Shows 70+ commands
+- ✅ Shows 60+ commands
 - ✅ Type "delete" - filters to delete operations
 - ✅ Type "sync" - shows sync operations
 - ✅ Arrow keys to select, Enter to execute

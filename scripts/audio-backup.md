@@ -481,7 +481,7 @@ bash ~/dotfiles/scripts/test-audio-backup.sh           # quiet (test results onl
 bash ~/dotfiles/scripts/test-audio-backup.sh -v        # verbose (subcommand output)
 ```
 
-**Coverage (25 tests, 37 assertions):**
+**Coverage (36 tests, 57 assertions):**
 
 - **Pull** (file + folder, with-junk-and-excludes-applied)
 - **Push** (existing target, new path, refused when drive not mounted, respects rsync excludes)
