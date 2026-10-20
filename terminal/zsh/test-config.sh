@@ -172,6 +172,73 @@ else
 fi
 echo
 
+echo "9. Testing Profile Gating"
+echo "-------------------------"
+# The profile decides whether this machine gets the personal surface. Each
+# case runs a fresh login shell with a clean environment, because an inherited
+# $AUDIO from the calling shell would mask a broken gate.
+_profile_probe() {
+  local profile_env="$1" expr="$2"
+  if [[ -n "$profile_env" ]]; then
+    env -i HOME="$HOME" PATH="$PATH" TERM=dumb DOTFILES_PROFILE="$profile_env" \
+      zsh -i -c "$expr" 2>/dev/null
+  else
+    env -i HOME="$HOME" PATH="$PATH" TERM=dumb \
+      zsh -i -c "$expr" 2>/dev/null
+  fi
+}
+
+if [[ "$(_profile_probe "" 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
+  test_pass "an undeclared profile defaults to personal"
+else
+  test_fail "an undeclared profile defaults to personal"
+fi
+
+if [[ "$(_profile_probe work 'echo $DOTFILES_PROFILE')" == "work" ]]; then
+  test_pass "DOTFILES_PROFILE=work is honoured"
+else
+  test_fail "DOTFILES_PROFILE=work is honoured"
+fi
+
+if [[ "$(_profile_probe nonsense 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
+  test_pass "an unknown profile falls back to personal"
+else
+  test_fail "an unknown profile falls back to personal"
+fi
+
+if [[ -z "$(_profile_probe work 'echo $AUDIO')" ]]; then
+  test_pass "work leaves the volume shortcuts unset"
+else
+  test_fail "work leaves the volume shortcuts unset"
+fi
+
+if [[ -n "$(_profile_probe personal 'echo $AUDIO')" ]]; then
+  test_pass "personal still exports the volume shortcuts"
+else
+  test_fail "personal still exports the volume shortcuts"
+fi
+
+if [[ "$(_profile_probe work 'type -w plex 2>/dev/null | cut -d: -f2')" != *function* ]]; then
+  test_pass "work does not define plex"
+else
+  test_fail "work does not define plex"
+fi
+
+if [[ "$(_profile_probe personal 'type -w plex 2>/dev/null | cut -d: -f2')" == *function* ]]; then
+  test_pass "personal defines plex"
+else
+  test_fail "personal defines plex"
+fi
+
+# $DOTFILES must resolve from the zshrc's own location, or the alias and
+# function loops have nothing to iterate when the checkout is not ~/dotfiles.
+if [[ "$(_profile_probe "" 'echo $DOTFILES')" == "$DOTFILES" ]]; then
+  test_pass "\$DOTFILES self-resolves to the checkout"
+else
+  test_fail "\$DOTFILES self-resolves to the checkout"
+fi
+echo
+
 echo "==================================="
 echo "Test Summary"
 echo "==================================="
