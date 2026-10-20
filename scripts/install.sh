@@ -32,14 +32,12 @@ SKIP_PACKAGES=false
 SKIP_MACOS=false
 DRY_RUN=false
 
-# Error tracking
-INSTALLATION_FAILED=false
+# Names the step in progress so on_error can say where it died.
 CURRENT_STEP=""
 
 # Error handler
 on_error() {
   local line_number=$1
-  INSTALLATION_FAILED=true
 
   print_error "Installation failed at line $line_number during: $CURRENT_STEP"
 
@@ -367,13 +365,8 @@ link_dotfiles() {
     "gh"
     "mpv"
     "musikcube"
-    "ncmpcpp"
-    "neofetch"
-    "ranger"
     "skhd"
-    "tmuxinator"
     "yabai"
-    "yarn"
   )
 
   for item in "${config_items[@]}"; do
@@ -386,9 +379,17 @@ link_dotfiles() {
     fi
   done
 
-  # Handle mail configuration separately (moved to mail/ directory)
+  # Configs whose real home is outside config/. Inside the repo these are
+  # relative symlinks (config/neomutt, config/tmuxinator) so that the
+  # whole-directory strategy — ~/.config symlinked to config/ — picks them up.
+  # Here we link the real directories instead: create_symlink refuses a symlink
+  # as its source, and pointing a symlink at a symlink gains nothing anyway.
   if [ -e "$DOTFILES_DIR/mail/mutt" ]; then
     create_symlink "$DOTFILES_DIR/mail/mutt" "$HOME/.config/neomutt"
+  fi
+
+  if [ -e "$DOTFILES_DIR/terminal/tmux/tmuxinator" ]; then
+    create_symlink "$DOTFILES_DIR/terminal/tmux/tmuxinator" "$HOME/.config/tmuxinator"
   fi
 
   print_success "All dotfiles linked successfully"
