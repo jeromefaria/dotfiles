@@ -59,6 +59,16 @@ copy_config \
   "$HOME/.vimrc" \
   ".vimrc (vim config)"
 
+# The dispatcher above self-detects portable mode on Git Bash and then has to
+# find vimrc.portable. Copy it next to ~/.vimrc so that works without relying
+# on $DOTFILES being exported or the checkout sitting at ~/dotfiles — this is
+# the no-symlink path, so ~/.vim/config does not exist here.
+mkdir -p "$HOME/.vim"
+copy_config \
+  "$DOTFILES_DIR/editors/vim/vimrc.portable" \
+  "$HOME/.vim/vimrc.portable" \
+  "vimrc.portable (restricted-environment vim config)"
+
 # Optional: Sync minttyrc if it exists
 if [[ -f "$DOTFILES_DIR/terminal/mintty/minttyrc" ]]; then
   copy_config \

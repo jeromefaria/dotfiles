@@ -41,12 +41,33 @@ endif
 
 if g:vim_portable_mode
   " Use portable configuration (no external dependencies)
-  if filereadable(expand('~/.vim/config/vimrc.portable'))
-    source ~/.vim/config/vimrc.portable
-  elseif filereadable(expand('~/dotfiles/editors/vim/vimrc.portable'))
-    source ~/dotfiles/editors/vim/vimrc.portable
+  " Candidates in order of preference. $DOTFILES is first because it is the
+  " only one that holds wherever the checkout lives — setup-portable-windows.sh
+  " writes it into .bash_profile, which is the environment Git Bash starts vim
+  " from. The ~/.vim/config path needs a symlink, and symlinks are exactly what
+  " the no-admin Windows case cannot create; ~/dotfiles needs the checkout to
+  " be at that one path. Either can be true, neither reliably is.
+  let s:portable_candidates = [
+        \ '$DOTFILES/editors/vim/vimrc.portable',
+        \ '~/.vim/vimrc.portable',
+        \ '~/.vim/config/vimrc.portable',
+        \ '~/dotfiles/editors/vim/vimrc.portable',
+        \ ]
+
+  let s:portable_found = ''
+  for s:candidate in s:portable_candidates
+    let s:expanded = expand(s:candidate)
+    if s:expanded !~# '^\$' && filereadable(s:expanded)
+      let s:portable_found = s:expanded
+      break
+    endif
+  endfor
+
+  if !empty(s:portable_found)
+    execute 'source' fnameescape(s:portable_found)
   else
-    echom "Portable mode enabled but vimrc.portable not found"
+    echom "Portable mode enabled but vimrc.portable not found."
+    echom "Set $DOTFILES to the checkout, or copy editors/vim/vimrc.portable to ~/.vim/vimrc.portable"
   endif
   finish
 endif

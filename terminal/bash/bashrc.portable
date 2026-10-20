@@ -16,10 +16,10 @@
 #
 # Usage:
 #   Source this file from your .bashrc:
-#   [ -f ~/dotfiles/shell/bashrc.portable ] && source ~/dotfiles/shell/bashrc.portable
+#   [ -f ~/dotfiles/terminal/bash/bashrc.portable ] && source ~/dotfiles/terminal/bash/bashrc.portable
 #
 #   Or symlink it:
-#   ln -s ~/dotfiles/shell/bashrc.portable ~/.bashrc
+#   ln -s ~/dotfiles/terminal/bash/bashrc.portable ~/.bashrc
 # ============================================================================
 
 # ============================================================================
