@@ -11,6 +11,73 @@ This dotfiles repository supports machine-specific configuration overrides, allo
 - Set machine-specific environment variables
 - Override settings without modifying the main configs
 
+## Profiles
+
+Override files tune a machine one setting at a time. A **profile** is the
+coarse switch underneath them: it decides whether this machine gets the
+personal surface at all.
+
+| Profile | Meaning |
+|---|---|
+| `personal` | Everything. The default, so a machine that declares nothing behaves as it always has. |
+| `work` | Development only. No music production, media stack, personal backup tooling, personal git identity, mail config, or window/input managers. |
+
+Set at install time:
+
+```bash
+./scripts/install.sh --profile work
+```
+
+That writes `~/.dotfiles-profile`, which the zshrc reads on every start. The
+env var wins over the file, so a single shell can be flipped for a one-off:
+
+```bash
+DOTFILES_PROFILE=work zsh
+```
+
+An unrecognised value warns and falls back to `personal` rather than failing
+the shell.
+
+### What the profile gates
+
+In `terminal/zsh/zshrc`, alongside the existing platform gating:
+
+- the `/Volumes/*` exports (`$AUDIO`, `$MEDIA`, `$ARCHIVE`, `$PROJECTS`, …)
+- `_personal_only` aliases — `ddc.sh`
+- `_personal_only_funcs` — `media-stack.sh` (`plex`), `media.sh`, `ps5-detect.sh`
+- the volume and cloud aliases inside `aliases/folders.sh`; the generic
+  shortcuts (`desk`, `docs`, `down`, `work`) load everywhere
+
+In `scripts/install.sh`:
+
+- which configs get symlinked
+- whether the neomutt mail config is linked
+- whether `~/.gitconfig.local` is seeded with a placeholder work identity
+- which package profile is installed (`full` vs `work`)
+- whether macOS settings run interactively or as `--dev`
+
+### Profile vs. platform
+
+They're independent. A work laptop is still `macos`, so it gets the
+macOS-only aliases and functions while skipping the personal ones. The two
+gates compose; neither implies the other.
+
+### Git identity on a work machine
+
+The `work` profile seeds `~/.gitconfig.local` with a placeholder address in
+the RFC 2606 `.invalid` TLD. It is a sentinel, not a safety net — git will
+commit with it quite happily. Two things that look safer are not:
+
+- `email =` (empty) still commits, authored as `Name <>`
+- `user.useConfigOnly` only disables *auto-detection*; an explicitly set
+  value, empty included, still counts as configured
+
+Nothing in git refuses the commit, so the protection is that the author is
+impossible to miss in `git log`, obviously not a person, and flagged or
+rejected by most forges. Fill it in before committing.
+
+An existing `~/.gitconfig.local` is never overwritten.
+
 ## Available Override Files
 
 ### 1. Shell Configuration

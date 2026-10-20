@@ -64,6 +64,45 @@ cd ~/dotfiles
 ./scripts/install.sh
 ```
 
+### Profiles
+
+These dotfiles carry a personal setup — music production, a media stack,
+backup tooling, a personal git identity. On a machine that isn't yours, pick
+the `work` profile:
+
+```bash
+./scripts/install.sh --profile work
+```
+
+| | `personal` (default) | `work` |
+|---|---|---|
+| Packages | `full` — 333 | `work` — 147 (base + dev + browsers) |
+| Music production, media stack | yes | no |
+| beets / mpv / musikcube / aria2 configs | yes | no |
+| Window + input managers (yabai, skhd, aerospace, karabiner) | yes | no |
+| neomutt mail config | yes | no |
+| Git identity | personal address | `~/.gitconfig.local` seeded with a placeholder |
+| macOS settings | interactive, all groups | `--dev` only (never `personal.sh` or `apps.sh`) |
+| Volume shortcuts (`$AUDIO`, `$MEDIA`, …) | exported | unset |
+| `plex`, media conversion, PS5 detection | loaded | not loaded |
+
+The choice is written to `~/.dotfiles-profile`, which the zshrc reads on every
+start, so the shell gating matches what was installed. Override for a single
+shell with `DOTFILES_PROFILE=work zsh`.
+
+**The default is `personal`**, so an existing machine that knows nothing about
+profiles behaves exactly as before. The trade-off is that a forgotten
+`--profile work` shows up as personal config appearing on a work machine
+rather than tooling silently missing on yours. To correct it after the fact:
+
+```bash
+echo work > ~/.dotfiles-profile   # then restart the shell
+```
+
+Personal backup tooling (audio backup, Time Machine helpers, home mirror, mail
+sync) is never installed by `install.sh` under any profile — each has its own
+`*-manage.sh install`. Nothing scheduled arrives by accident.
+
 ### Prerequisites
 
 - macOS (tested on macOS Sonoma and later)
@@ -187,31 +226,42 @@ This will copy (not symlink) the portable configs and set up the `DOTFILES` envi
 
 ## 📦 Package Management
 
-### Install All Packages
+### Install Packages
+
+Packages live in categorised Brewfiles (`Brewfile.base`, `Brewfile.dev`, …),
+with profiles combining them. There is no single `Brewfile`, so `brew bundle
+install` on its own will not work — go through the installer:
 
 ```bash
-# Install from Brewfile
-cd ~/dotfiles/packages
-brew bundle install
+# A profile
+./packages/install-packages.sh --profile dev     # base + dev + browsers + utilities
+./packages/install-packages.sh --profile work    # base + dev + browsers
+./packages/install-packages.sh --profile full    # everything
 
-# Or use specific package types
-brew bundle install --file=Brewfile
+# Or pick categories directly
+./packages/install-packages.sh --categories base,dev,browsers
+
+# See what would happen first
+./packages/install-packages.sh --profile dev --dry-run
+
+# List profiles and categories
+./packages/install-packages.sh --list
 ```
 
-### Export Current Packages
+`scripts/install.sh` calls this for you, choosing `full` or `work` from the
+install profile.
+
+### Find Uncategorised Packages
 
 ```bash
-cd ~/dotfiles/packages
-./get-packages.sh
+./packages/sync-packages.sh
 ```
 
-This will export lists of installed packages to:
-- `brew.log` - Homebrew formulae
-- `cask.log` - Homebrew casks
-- `gem.log` - Ruby gems
-- `mas.log` - Mac App Store apps
-- `npm.log` - NPM global packages
-- `pip.log` - Python packages
+Compares what's installed against the Brewfiles and reports packages in
+neither — and packages in a Brewfile that are no longer installed. It only
+reports; adding them to the right category is a manual edit.
+
+See [packages/README.md](packages/README.md) for the category breakdown.
 
 ## 📚 Documentation
 

@@ -84,6 +84,33 @@ The sync script copies these files from your dotfiles repo to your home director
 | `editors/vim/vimrc` | `~/.vimrc` | Vim configuration |
 | `terminal/mintty/minttyrc` | `~/.minttyrc` | Mintty terminal config (if exists) |
 
+## How Vim Finds the Portable Config
+
+`~/.vimrc` is a dispatcher, not the configuration. It detects Git Bash via
+`has('win32unix')`, and if `fzf` is absent it switches on portable mode and
+sources `vimrc.portable` — 832 lines written for exactly this environment
+(Vim 7.4+, no package manager, vim-plug from GitHub only, CoC when Node is
+available).
+
+It looks for that file in this order:
+
+1. `$DOTFILES/editors/vim/vimrc.portable` — works wherever the checkout lives.
+   `setup-portable-windows.sh` exports `DOTFILES` into `.bash_profile`, which
+   is the environment Git Bash starts vim from.
+2. `~/.vim/vimrc.portable` — a copy placed by `sync-portable-configs.sh`, so
+   it works even if `DOTFILES` is not exported.
+3. `~/.vim/config/vimrc.portable` — needs a symlink, so not this path.
+4. `~/dotfiles/editors/vim/vimrc.portable` — needs the checkout at that exact
+   location.
+
+The first two are the ones that hold here. Earlier only the last two existed,
+so a checkout anywhere other than `~/dotfiles` switched portable mode on and
+then could not find the config, leaving a bare vim and a one-line message.
+
+If you do see *"Portable mode enabled but vimrc.portable not found"*, either
+`export DOTFILES=/path/to/checkout` in `.bash_profile` or re-run
+`./scripts/sync-portable-configs.sh`.
+
 ## Why Not Symlinks?
 
 On Windows, creating symlinks requires:
