@@ -264,22 +264,35 @@ install_oh_my_zsh() {
     print_success "Oh My Zsh is already installed"
   fi
 
-  # Install ZSH plugins
+  # Custom plugins. Every entry here is named in the plugins=() list in
+  # terminal/zsh/zshrc and is NOT bundled with Oh My Zsh, so omitting one costs
+  # a `plugin not found` line on every shell start and silently drops whatever
+  # it provided — zsh-vi-mode in particular is load-bearing, with its own
+  # keybindings, post-init hooks and ZVM_* settings in the zshrc.
   local ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+  local custom_plugins=(
+    "zsh-syntax-highlighting:https://github.com/zsh-users/zsh-syntax-highlighting.git"
+    "zsh-autosuggestions:https://github.com/zsh-users/zsh-autosuggestions"
+    "zsh-autopair:https://github.com/hlissner/zsh-autopair"
+    "git-open:https://github.com/paulirish/git-open"
+    "zsh-vi-mode:https://github.com/jeffreytse/zsh-vi-mode"
+  )
 
-  # zsh-syntax-highlighting
-  if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
-    print_info "Installing zsh-syntax-highlighting..."
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-    print_success "zsh-syntax-highlighting installed"
-  fi
+  local entry plugin_name plugin_url
+  for entry in "${custom_plugins[@]}"; do
+    plugin_name="${entry%%:*}"
+    plugin_url="${entry#*:}"
 
-  # zsh-autosuggestions
-  if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
-    print_info "Installing zsh-autosuggestions..."
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-    print_success "zsh-autosuggestions installed"
-  fi
+    if [ -d "$ZSH_CUSTOM/plugins/$plugin_name" ]; then
+      print_success "$plugin_name is already installed"
+    elif [ "$DRY_RUN" = true ]; then
+      print_info "[DRY RUN] Would clone $plugin_name"
+    else
+      print_info "Installing $plugin_name..."
+      git clone --quiet "$plugin_url" "$ZSH_CUSTOM/plugins/$plugin_name"
+      print_success "$plugin_name installed"
+    fi
+  done
 }
 
 # Install Vim Plug (for Vim only, not Neovim)
