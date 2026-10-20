@@ -1,0 +1,21 @@
+# Work Profile
+# Software development on a machine that is not your own setup.
+#
+# Deliberately omits:
+#   music  - music production (DAWs, plugins, audio tooling)
+#   media  - media stack, players, transcoding
+#   utilities - window/input managers (aerospace, skhd, rectangle-pro,
+#               karabiner-elements, linearmouse, alt-tab, bartender) and
+#               personal desktop apps. Several need input-monitoring or
+#               accessibility permissions that managed hardware blocks.
+#   communication, productivity, security - personal accounts and apps
+#
+# The CLI tools the shell aliases depend on (eza, bat, fd, sd, zoxide,
+# ripgrep) are all in base, so the shell is fully functional without
+# utilities. If you do want htop, aspell and friends on a work machine,
+# add the category explicitly:
+#   ./packages/install-packages.sh --categories base,dev,browsers,utilities
+
+base
+dev
+browsers

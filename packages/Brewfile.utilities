@@ -47,7 +47,6 @@ brew "sc-im"                     # Spreadsheet calculator
 brew "highlight", link: false
 brew "lzlib"                     # Compression library
 brew "s-search"                  # Web search from terminal
-brew "sd"                        # Find & replace
 brew "picard-tools"              # Genomics tools
 brew "tokyo-cabinet"             # Database library
 brew "xmlrpc-c"                  # XML-RPC library

@@ -37,6 +37,7 @@ brew "bat"             # Better cat
 brew "eza"             # Better ls (replaces exa)
 brew "fd"              # Better find
 brew "ripgrep"         # Better grep
+brew "sd"               # Find & replace (backs alias sed=sd)
 brew "fzf"             # Fuzzy finder
 brew "zoxide"          # Better z (replaces fasd/z)
 brew "atuin"           # Shell history sync and search
