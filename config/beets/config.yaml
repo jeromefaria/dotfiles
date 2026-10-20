@@ -68,7 +68,7 @@ overwrite_null:
 
 plugins: mbretry musicbrainz discogs lastgenre fetchart embedart albumtypes mbsync duplicates missing
 pluginpath:
-  - /Users/jeromefaria/dotfiles/config/beets/plugins
+  - ~/.config/beets/plugins
 
 duplicates:
   format: $albumartist - $album

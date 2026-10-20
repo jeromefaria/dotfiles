@@ -91,9 +91,9 @@ commands = True
 [logging]
 debug = False
 debugmodes = []
-debuglogsdir = /Users/jeromefaria/.local/share/nicotine/logs/debug
+debuglogsdir = $HOME/.local/share/nicotine/logs/debug
 logcollapsed = True
-transferslogsdir = /Users/jeromefaria/.local/share/nicotine/logs/transfers
+transferslogsdir = $HOME/.local/share/nicotine/logs/transfers
 rooms_timestamp = %H:%M:%S
 private_timestamp = %Y-%m-%d %H:%M:%S
 log_timestamp = %Y-%m-%d %H:%M:%S
