@@ -51,15 +51,11 @@ Each subdirectory represents a different application or tool:
 - **beets/** - Beets music library manager configuration
 - **gh/** - GitHub CLI configuration
 - **musikcube/** - Musikcube terminal music player settings
-- **ncmpcpp/** - NCurses Music Player Client (Plus Plus) configuration
-- **neofetch/** - Neofetch system information tool config
 - **nvim/** - Neovim editor configuration (symlinks to ../neovim/)
-- **ranger/** - Ranger file manager configuration
 - **skhd/** - Simple Hotkey Daemon for macOS window management
 - **starship.toml** - Starship cross-shell prompt configuration
 - **tmuxinator/** - Tmuxinator session management templates
 - **yabai/** - Yabai tiling window manager for macOS
-- **yarn/** - Yarn package manager global configuration
 
 ## Installation
 

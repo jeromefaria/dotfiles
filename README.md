@@ -349,7 +349,7 @@ Each top-level directory and the major `config/` subdirectories have their own R
 ### XDG-Compliant Configurations
 
 The `config/` directory contains application configurations following the XDG Base Directory Specification. Includes configurations for:
-- Aria2, Bat, Beets, GitHub CLI, Mutt, Musikcube, ncmpcpp, Neofetch, Ranger, SKHD, Tmuxinator, Yabai, Yarn, and more
+- Aria2, Bat, Beets, GitHub CLI, Mutt, Musikcube, Neovim, SKHD, Starship, Tmuxinator, Yabai, and more
 
 See `config/README.md` for detailed information about each configuration.
 

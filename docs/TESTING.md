@@ -6,14 +6,14 @@ This repo ships test suites for the scripts that mutate external state — file 
 
 | Suite | Cases | Target |
 |---|---|---|
-| `scripts/test-audio-backup.sh` | 33 tests / 54 assertions | `scripts/audio-backup-sync.sh` end-to-end + `audio-backup-manage.sh` dispatch and plist generation |
+| `scripts/test-audio-backup.sh` | 36 tests / 57 assertions | `scripts/audio-backup-sync.sh` end-to-end + `audio-backup-manage.sh` dispatch and plist generation |
 | `scripts/test-audio-volume-guard.sh` | 14 tests / 35 assertions | `scripts/audio-volume-guard.sh` — four-state resolution (mounted/unverified/squatter/absent), fail-closed `--check`, `--repair` refusing a populated *or* unreadable squatter, notification cooldown armed only by a delivered notification, honest `--status` during a squatter; mocks `terminal-notifier` + `osascript` and attaches a throwaway disk image so mounted-state detection runs against a real mount |
 | `scripts/test-audio-plugin-cleanup.py` | 22 unittest cases | `scripts/audio-plugin-cleanup.py` suffix stripping, dupe detection, no-twin invariant, scan/candidate filtering |
 | `scripts/test-install-symlink.sh` | 7 tests / 14 assertions | `scripts/install.sh::create_symlink` — first-time creation, idempotency, file backup, `--dry-run`, source-is-symlink guard, and a known data-loss gap (TEST 7) |
 | `scripts/test-install-seed-templates.sh` | 6 tests / 13 assertions | `scripts/install.sh::seed_templates` — new-destination copy + content fidelity, destination-exists skip, `DRY_RUN` no-write, mixed-state counts + summary, filenames-with-spaces round-trip, cp-failure isolation (one failure doesn't abort the loop) |
 | `scripts/test-tm-backup-staleness.sh` | 8 tests / 14 assertions | `scripts/tm-backup-staleness-check.sh` — fresh-within-threshold no-op, stale-beyond-threshold notify (title + body), destination-unreachable path, cooldown suppression within window, cooldown-expired re-notify + marker-lives-in-STATE_DIR assertion, `--check` mode exit code by freshness + no notify, one-time LOG_DIR → STATE_DIR marker migration (old marker removed, new marker keeps original timestamp, cooldown honoured post-migration), `TM_NOTIFY_ENABLED=0` silences everything, with `tmutil` and `terminal-notifier` mocked |
 | `mail/scripts/test-manage-sync.sh` | 10 tests / 10 assertions | `mail/scripts/manage-sync.sh` lifecycle (status/start/stop/restart/logs) with a mocked `launchctl` |
-| `terminal/zsh/test-config.sh` | smoke | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
+| `terminal/zsh/test-config.sh` | 43 assertions | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
 | `terminal/zsh/test-newgig.sh` | 7 tests / 14 assertions | `functions/dev.sh::newgig` — scaffold shape (with/without project), refuses existing dir, input validation for client + project names, template interpolation, rollback on mid-write failure |
 | `terminal/zsh/test-media-stack.sh` | 28 tests | `functions/media-stack.sh::plex` — subcommand dispatch routing (boot/halt/up/down/restart/status/update/fix/web/autostart), help & per-command usage, unknown-command handling, with `docker`/`colima`/`brew`/`open`/`launchctl` mocked |
 
@@ -33,6 +33,9 @@ terminal/zsh/test-config.sh
 terminal/zsh/test-newgig.sh
 terminal/zsh/test-media-stack.sh
 ```
+
+The three `terminal/zsh/` suites are zsh scripts and declare it in their
+shebang; invoking them with `bash` will report spurious failures.
 
 Exit code is `0` on success, non-zero on any failure. The shell suites print per-test `PASS`/`FAIL` lines and end with a summary; the Python suite uses `unittest`'s default reporter.
 

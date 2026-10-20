@@ -409,7 +409,7 @@ key: value
 ### Cross-References
 
 - **Use relative paths:** `[link](../path/to/file.md)`
-- **Descriptive link text:** `[Neovim Configuration](../editors/neovim/README.md)` not `[click here](../editors/neovim/README.md)`
+- **Descriptive link text:** `[Neovim Configuration](../../editors/neovim/README.md)` not `[click here](../../editors/neovim/README.md)`
 - **Verify links work:** Test links after adding
 
 ### Table of Contents

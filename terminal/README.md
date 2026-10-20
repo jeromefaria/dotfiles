@@ -201,7 +201,6 @@ ls ~/.tmux/plugins/
 - [Vim Enhancements](zsh/VIM_ENHANCEMENTS_README.md)
 - [Bash Portable Guide](bash/PORTABLE.md)
 - [Tmux Complete Guide](tmux/README.md)
-- [Shell Changelog](zsh/CHANGELOG.md)
 
 ## See Also
 
