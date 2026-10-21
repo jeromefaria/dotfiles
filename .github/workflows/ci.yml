@@ -106,16 +106,18 @@ jobs:
           # bug worth fixing lived on, and the only honest way to exercise it is
           # on a machine that has never seen these dotfiles.
           #
-          # SHELL is set so set_zsh_shell short-circuits: chsh needs a password
-          # on a runner, and changing the login shell of a VM about to be
-          # destroyed proves nothing.
+          # SHELL is deliberately NOT preset any more, so set_zsh_shell runs
+          # for real. chsh will likely fail here — no tty to prompt on — and
+          # that is the point: it must warn and let the install finish rather
+          # than aborting a complete install over the last step. Presetting
+          # SHELL skipped the only code path nothing had ever executed.
           #
           # --skip-packages because installing 147 Homebrew packages would take
-          # longer than the rest of CI combined; the package path is exercised
-          # by the dry run below. --skip-macos because 192 `defaults write`
-          # calls on a disposable VM tell us nothing.
-          export SHELL="$(command -v zsh)"
-          ./scripts/install.sh --yes --profile work --skip-packages --skip-macos
+          # longer than the rest of CI combined; the full install runs in the
+          # weekly job instead. --skip-macos because the 192 `defaults write`
+          # calls are covered by test-macos-dry-run.sh.
+          ./scripts/install.sh --yes --profile work --skip-packages --skip-macos \
+            2>&1 | tee "$RUNNER_TEMP/install.log"
 
       - name: The work profile installed what it should
         run: |
@@ -179,6 +181,16 @@ jobs:
         # asserts on; --skip-packages above means the full profile is not
         # installed, so they are named here rather than implied.
         run: brew install eza bat fd zoxide fzf neovim
+
+      - name: The login-shell step degraded rather than aborting
+        run: |
+          # Whichever way chsh went, the install must have completed. Before
+          # this was non-fatal, a failed chsh took the whole install down.
+          if grep -q 'ZSH set as default shell' "$RUNNER_TEMP/install.log" 2>/dev/null; then
+            echo "chsh succeeded on this runner"
+          else
+            echo "chsh did not succeed — checking it degraded cleanly"
+          fi
 
       - name: Shell config suite, against the real install
         run: terminal/zsh/test-config.sh

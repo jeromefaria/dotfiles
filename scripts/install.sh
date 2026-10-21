@@ -582,9 +582,18 @@ set_zsh_shell() {
       print_info "[DRY RUN] Would set default shell to $(which zsh)"
     else
       print_info "Setting ZSH as default shell..."
-      chsh -s "$(which zsh)"
-      print_success "ZSH set as default shell"
-      print_warning "Restart your terminal for changes to take effect"
+      # Non-fatal on purpose. chsh prompts for a password, and fails outright
+      # where there is no tty to prompt on or the account is directory-managed
+      # — common on corporate hardware, and the case on a CI runner. Letting
+      # the ERR trap abort here would discard a complete, successful install
+      # over the one step a person can finish by hand in five seconds.
+      if chsh -s "$(which zsh)"; then
+        print_success "ZSH set as default shell"
+        print_warning "Restart your terminal for changes to take effect"
+      else
+        print_warning "Could not change the login shell automatically."
+        print_info "Everything else is installed. To finish: chsh -s $(which zsh)"
+      fi
     fi
   else
     print_success "ZSH is already the default shell"
