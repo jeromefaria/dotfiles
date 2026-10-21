@@ -1,0 +1,120 @@
+# The install nothing else runs: packages included.
+#
+# ci.yml's fresh-install job passes --skip-packages, because installing the
+# work profile's 147 formulae and casks takes longer than everything else in
+# CI put together, and a push gate that slow stops being used. The package
+# step is the one that was broken for months without anyone noticing — bare
+# `brew bundle install` in a directory holding no Brewfile — so leaving it
+# entirely unexercised is not an option either.
+#
+# Hence: weekly, and on demand. Not a push gate. A failure here is a report,
+# not a block, and it is expected to be flaky in a way the other jobs are not
+# — upstream casks move, download mirrors go down, Homebrew changes its own
+# behaviour. Read a red run here as "go and look", not "the repo is broken".
+
+name: Full install
+
+on:
+  schedule:
+    # Mondays, 05:00 UTC. Nothing depends on the time; it just wants to be
+    # off the hour everything else in the world runs on.
+    - cron: '17 5 * * 1'
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Which profile to install'
+        required: false
+        default: 'work'
+        type: choice
+        options: [work, personal]
+
+jobs:
+  install:
+    name: Install the ${{ github.event.inputs.profile || 'work' }} profile
+    runs-on: macos-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Record what was already here
+        run: |
+          # A runner arrives with Homebrew and a pile of preinstalled packages,
+          # so "did it install?" has to be read against this baseline rather
+          # than against an empty machine.
+          brew list --formula | sort > "$RUNNER_TEMP/before-formula.txt"
+          brew list --cask 2>/dev/null | sort > "$RUNNER_TEMP/before-cask.txt"
+          echo "formulae: $(wc -l < "$RUNNER_TEMP/before-formula.txt" | tr -d ' ')"
+          echo "casks:    $(wc -l < "$RUNNER_TEMP/before-cask.txt" | tr -d ' ')"
+
+      - name: Install, packages and all
+        run: |
+          # --skip-macos stays: the 192 `defaults write` calls are covered by
+          # test-macos-dry-run.sh, and applying them to a VM about to be
+          # destroyed proves nothing. Everything else runs.
+          ./scripts/install.sh --yes --profile "${{ github.event.inputs.profile || 'work' }}" --skip-macos \
+            2>&1 | tee "$RUNNER_TEMP/install.log"
+
+      - name: Did the packages actually land?
+        run: |
+          set -e
+          brew list --formula | sort > "$RUNNER_TEMP/after-formula.txt"
+          added=$(comm -13 "$RUNNER_TEMP/before-formula.txt" "$RUNNER_TEMP/after-formula.txt" | wc -l | tr -d ' ')
+          echo "formulae added: $added"
+
+          # The tools the shell aliases depend on are the ones whose absence is
+          # actually felt, so assert on those by name rather than on a count
+          # that shifts with whatever the runner image happens to ship.
+          missing=""
+          for tool in eza bat fd sd zoxide rg git zsh; do
+            command -v "$tool" >/dev/null 2>&1 || missing="$missing $tool"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::these never arrived:$missing"
+            exit 1
+          fi
+          echo "every alias-backing tool is present"
+
+      - name: Does the installed shell work?
+        run: |
+          set -e
+          warnings=$(zsh -i -c exit 2>&1 | grep -i 'not found' || true)
+          if [ -n "$warnings" ]; then
+            echo "::error::shell start emitted warnings:"
+            echo "$warnings"
+            exit 1
+          fi
+          # With packages present the aliases exist, which is the difference
+          # between this job and ci.yml's.
+          zsh -i -c 'alias ls' >/dev/null
+          zsh -i -c 'alias cat' >/dev/null
+          echo "shell starts clean and the aliases are live"
+
+      - name: macOS settings, dry run only
+        run: |
+          # Proves the modules parse and route under a profile selection
+          # without touching a single preference.
+          ./scripts/macos-setup.sh --dev --dry-run 2>&1 | tail -20
+
+      - name: Every suite, against a fully installed machine
+        run: |
+          set -e
+          scripts/test-install-symlink.sh
+          scripts/test-install-seed-templates.sh
+          scripts/test-install-profile.sh
+          scripts/test-macos-dry-run.sh
+          scripts/test-audio-backup.sh
+          scripts/test-audio-volume-guard.sh
+          scripts/test-tm-backup-staleness.sh
+          mail/scripts/test-manage-sync.sh
+          python3 scripts/test-audio-plugin-cleanup.py
+          terminal/zsh/test-config.sh
+          terminal/zsh/test-newgig.sh
+          terminal/zsh/test-media-stack.sh
+
+      - name: Keep the log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: install-log
+          path: ${{ runner.temp }}/install.log
+          if-no-files-found: warn
