@@ -76,7 +76,7 @@ case "$1" in
 
   now)
     echo -e "${BLUE}Running sync manually...${NC}"
-    "${DOTFILES:-$HOME/dotfiles}/mail/scripts/sync-mail.sh"
+    "${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/mail/scripts/sync-mail.sh"
     ;;
 
   *)

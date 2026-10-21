@@ -15,6 +15,9 @@ set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe 
 
 # Configuration
 REPO_URL="${DOTFILES_REPO:-https://github.com/jeromefaria/dotfiles.git}"
+# $HOME/dotfiles here is a destination, not a lookup: this script runs before
+# any checkout exists and is choosing where to clone. Unlike the scripts inside
+# the repo, it has no own-location to derive from. --dir overrides it.
 INSTALL_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 BRANCH="${DOTFILES_BRANCH:-master}"
 

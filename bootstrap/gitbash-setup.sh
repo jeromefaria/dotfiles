@@ -43,6 +43,9 @@ echo ""
 # 2. Clone or Update Dotfiles Repository
 # ============================================================================
 
+# $HOME/dotfiles here is a destination, not a lookup: this script runs before
+# any checkout exists and is choosing where to clone. Unlike the scripts inside
+# the repo, it has no own-location to derive from. --dir overrides it.
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
 DOTFILES_REPO="${DOTFILES_REPO:-https://github.com/jeromefaria/dotfiles.git}"
 

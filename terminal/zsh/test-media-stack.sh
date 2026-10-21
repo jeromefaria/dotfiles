@@ -7,7 +7,11 @@
 # VM, or VPN is ever touched. Tests assert the dispatcher routes each subcommand
 # to the right underlying command with the right arguments.
 unset CLAUDECODE
-: "${DOTFILES:=$HOME/dotfiles}"
+# Repo root from this script's own location. $HOME/dotfiles is wrong anywhere
+# the checkout lives elsewhere — a CI runner clones to a workspace path, and
+# sourcing media-stack.sh from a path that does not exist is how this suite
+# failed there while passing locally.
+: "${DOTFILES:=${${(%):-%N}:A:h:h:h}}"
 
 GREEN='\033[0;32m'; RED='\033[0;31m'; YELLOW='\033[1;33m'; NC='\033[0m'
 pass_count=0; fail_count=0
@@ -17,6 +21,7 @@ test_info() { echo -e "${YELLOW}ℹ${NC} $1"; }
 
 # --- stubs: record calls to a file (subshells from `( … )` can append to it) ---
 CALL_LOG=$(mktemp)
+trap 'rm -f "$CALL_LOG"; [ -n "${PLEX_STACK:-}" ] && rm -rf "$PLEX_STACK"' EXIT
 reset_calls() { : > "$CALL_LOG"; }
 docker() {
   echo "docker $*" >> "$CALL_LOG"
@@ -39,6 +44,12 @@ echo "==================================="
 echo
 
 # --- load the command under test ---
+# The subcommands cd into $PLEX_STACK before invoking the mocked docker, so it
+# has to exist or the mock is never reached and the routing assertions fail for
+# the wrong reason. A sandbox directory rather than the real ~/plex-stack,
+# which exists on the machine this was written on and nowhere else.
+export PLEX_STACK=$(mktemp -d -t plex-stack-test-XXXXXX)
+
 if source "$DOTFILES/terminal/zsh/functions/media-stack.sh" 2>/dev/null; then
   test_pass "media-stack.sh sources without error"
 else

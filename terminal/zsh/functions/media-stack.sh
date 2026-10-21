@@ -4,7 +4,11 @@
 # Secrets stay in ~/plex-stack/{.env,.qb-credentials,.arr-credentials} (gitignored),
 # read at runtime — never embedded here.
 
-export PLEX_STACK="$HOME/plex-stack"
+# Where the compose stack lives. Overridable so the suite can point it at a
+# sandbox: the subcommands `cd` into it, and with an unconditional assignment
+# every routing test silently depended on this directory existing in the real
+# $HOME — which it does here and does not on a clean machine.
+export PLEX_STACK="${PLEX_STACK:-$HOME/plex-stack}"
 
 # ---- internal helpers (prefixed _plex_) ----------------------------------
 
