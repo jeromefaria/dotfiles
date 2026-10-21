@@ -15,7 +15,10 @@ echo "==================================="
 echo
 
 # Set DOTFILES if not set
-: "${DOTFILES:=$HOME/dotfiles}"
+# Repo root from this script's own location, so the suite works from any
+# checkout — a CI runner clones to a workspace path, not ~/dotfiles. Same
+# reason the zshrc resolves it this way.
+: "${DOTFILES:=${${(%):-%N}:A:h:h:h}}"
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -174,57 +177,83 @@ echo
 
 echo "9. Testing Profile Gating"
 echo "-------------------------"
-# The profile decides whether this machine gets the personal surface. Each
-# case runs a fresh login shell with a clean environment, because an inherited
-# $AUDIO from the calling shell would mask a broken gate.
+# Each probe runs a login shell against a throwaway $HOME holding nothing but
+# a .zshrc symlink into this checkout. That makes the result independent of
+# whether THIS machine has a ~/.dotfiles-profile — the first version of these
+# tests asserted "undeclared means personal" and passed here only because no
+# marker file existed, then failed the moment it ran after a work install.
+#
+# Resolving $DOTFILES through that symlink is also part of what is under test,
+# so it is deliberately not passed in.
 _profile_probe() {
-  local profile_env="$1" expr="$2"
+  local marker="$1" profile_env="$2" expr="$3"
+  local probe_home
+  probe_home="$(mktemp -d -t zprofile-XXXXXX)"
+  ln -s "$DOTFILES/terminal/zsh/zshrc" "$probe_home/.zshrc"
+  [[ -n "$marker" ]] && print -r -- "$marker" > "$probe_home/.dotfiles-profile"
+
   if [[ -n "$profile_env" ]]; then
-    env -i HOME="$HOME" PATH="$PATH" TERM=dumb DOTFILES_PROFILE="$profile_env" \
+    env -i HOME="$probe_home" PATH="$PATH" TERM=dumb DOTFILES_PROFILE="$profile_env" \
       zsh -i -c "$expr" 2>/dev/null
   else
-    env -i HOME="$HOME" PATH="$PATH" TERM=dumb \
+    env -i HOME="$probe_home" PATH="$PATH" TERM=dumb \
       zsh -i -c "$expr" 2>/dev/null
   fi
+
+  rm -rf "$probe_home"
 }
 
-if [[ "$(_profile_probe "" 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
-  test_pass "an undeclared profile defaults to personal"
+# Precedence: environment variable, then marker file, then the default.
+if [[ "$(_profile_probe "" "" 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
+  test_pass "no marker and no env var defaults to personal"
 else
-  test_fail "an undeclared profile defaults to personal"
+  test_fail "no marker and no env var defaults to personal"
 fi
 
-if [[ "$(_profile_probe work 'echo $DOTFILES_PROFILE')" == "work" ]]; then
-  test_pass "DOTFILES_PROFILE=work is honoured"
+if [[ "$(_profile_probe work "" 'echo $DOTFILES_PROFILE')" == "work" ]]; then
+  test_pass "a work marker file is honoured"
 else
-  test_fail "DOTFILES_PROFILE=work is honoured"
+  test_fail "a work marker file is honoured"
 fi
 
-if [[ "$(_profile_probe nonsense 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
-  test_pass "an unknown profile falls back to personal"
+if [[ "$(_profile_probe work personal 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
+  test_pass "the env var overrides the marker file"
 else
-  test_fail "an unknown profile falls back to personal"
+  test_fail "the env var overrides the marker file"
 fi
 
-if [[ -z "$(_profile_probe work 'echo $AUDIO')" ]]; then
+if [[ "$(_profile_probe "" work 'echo $DOTFILES_PROFILE')" == "work" ]]; then
+  test_pass "the env var alone is honoured"
+else
+  test_fail "the env var alone is honoured"
+fi
+
+if [[ "$(_profile_probe nonsense "" 'echo $DOTFILES_PROFILE')" == "personal" ]]; then
+  test_pass "an unrecognised marker falls back to personal"
+else
+  test_fail "an unrecognised marker falls back to personal"
+fi
+
+# What the profile actually gates.
+if [[ -z "$(_profile_probe work "" 'echo $AUDIO')" ]]; then
   test_pass "work leaves the volume shortcuts unset"
 else
   test_fail "work leaves the volume shortcuts unset"
 fi
 
-if [[ -n "$(_profile_probe personal 'echo $AUDIO')" ]]; then
-  test_pass "personal still exports the volume shortcuts"
+if [[ -n "$(_profile_probe personal "" 'echo $AUDIO')" ]]; then
+  test_pass "personal exports the volume shortcuts"
 else
-  test_fail "personal still exports the volume shortcuts"
+  test_fail "personal exports the volume shortcuts"
 fi
 
-if [[ "$(_profile_probe work 'type -w plex 2>/dev/null | cut -d: -f2')" != *function* ]]; then
+if [[ "$(_profile_probe work "" 'type -w plex 2>/dev/null | cut -d: -f2')" != *function* ]]; then
   test_pass "work does not define plex"
 else
   test_fail "work does not define plex"
 fi
 
-if [[ "$(_profile_probe personal 'type -w plex 2>/dev/null | cut -d: -f2')" == *function* ]]; then
+if [[ "$(_profile_probe personal "" 'type -w plex 2>/dev/null | cut -d: -f2')" == *function* ]]; then
   test_pass "personal defines plex"
 else
   test_fail "personal defines plex"
@@ -232,7 +261,7 @@ fi
 
 # $DOTFILES must resolve from the zshrc's own location, or the alias and
 # function loops have nothing to iterate when the checkout is not ~/dotfiles.
-if [[ "$(_profile_probe "" 'echo $DOTFILES')" == "$DOTFILES" ]]; then
+if [[ "$(_profile_probe "" "" 'echo $DOTFILES')" == "$DOTFILES" ]]; then
   test_pass "\$DOTFILES self-resolves to the checkout"
 else
   test_fail "\$DOTFILES self-resolves to the checkout"
