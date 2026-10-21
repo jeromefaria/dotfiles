@@ -212,10 +212,10 @@ list_managers() {
         custom_path=$(get_custom_path_from_entry "$entry")
         if check_app_exists "$app_name" "$custom_path"; then
             print_success "$app_name (${key})"
-            ((available_count++))
+            available_count=$((available_count + 1))
         else
             print_error "$app_name (${key}) - Not installed"
-            ((missing_count++))
+            missing_count=$((missing_count + 1))
         fi
     done
 
@@ -317,7 +317,7 @@ run_updates() {
     echo ""
 
     for manager in "${managers[@]}"; do
-        ((current++))
+        current=$((current + 1))
 
         local app_name
         app_name=$(get_app_name "$manager")
@@ -333,14 +333,14 @@ run_updates() {
             break
         elif [[ $REPLY =~ ^[Nn]$ ]]; then
             print_warning "Skipped $app_name"
-            ((skipped++))
+            skipped=$((skipped + 1))
             continue
         fi
 
         if open_plugin_manager "$manager"; then
-            ((success++))
+            success=$((success + 1))
         else
-            ((skipped++))
+            skipped=$((skipped + 1))
         fi
     done
 

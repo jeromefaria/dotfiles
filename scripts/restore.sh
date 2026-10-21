@@ -86,7 +86,7 @@ list_backups() {
     echo "    Path: $backup"
     echo ""
 
-    ((count++))
+    count=$((count + 1))
   done
 
   return 0
@@ -198,9 +198,9 @@ restore_from_backup() {
     local target_file="$HOME/$rel_path"
 
     if restore_file "$backup_file" "$target_file"; then
-      ((success_count++))
+      success_count=$((success_count + 1))
     else
-      ((fail_count++))
+      fail_count=$((fail_count + 1))
     fi
   done
 

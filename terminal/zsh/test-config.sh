@@ -31,12 +31,12 @@ fail_count=0
 
 test_pass() {
   echo -e "${GREEN}✓${NC} $1"
-  ((pass_count++))
+  pass_count=$((pass_count + 1))
 }
 
 test_fail() {
   echo -e "${RED}✗${NC} $1"
-  ((fail_count++))
+  fail_count=$((fail_count + 1))
 }
 
 test_info() {

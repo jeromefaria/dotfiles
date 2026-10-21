@@ -15,8 +15,8 @@ unset CLAUDECODE
 
 GREEN='\033[0;32m'; RED='\033[0;31m'; YELLOW='\033[1;33m'; NC='\033[0m'
 pass_count=0; fail_count=0
-test_pass() { echo -e "${GREEN}✓${NC} $1"; ((pass_count++)); }
-test_fail() { echo -e "${RED}✗${NC} $1"; ((fail_count++)); }
+test_pass() { echo -e "${GREEN}✓${NC} $1"; pass_count=$((pass_count + 1)); }
+test_fail() { echo -e "${RED}✗${NC} $1"; fail_count=$((fail_count + 1)); }
 test_info() { echo -e "${YELLOW}ℹ${NC} $1"; }
 
 # --- stubs: record calls to a file (subshells from `( … )` can append to it) ---

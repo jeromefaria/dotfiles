@@ -36,14 +36,14 @@ copy_config() {
   if [[ -f "$source" ]]; then
     if cp -v "$source" "$target"; then
       echo "✓ Synced $description"
-      ((SUCCESS_COUNT++))
+      SUCCESS_COUNT=$((SUCCESS_COUNT + 1))
     else
       echo "✗ Failed to sync $description"
-      ((FAIL_COUNT++))
+      FAIL_COUNT=$((FAIL_COUNT + 1))
     fi
   else
     echo "✗ Source not found: $source"
-    ((FAIL_COUNT++))
+    FAIL_COUNT=$((FAIL_COUNT + 1))
   fi
 }
 

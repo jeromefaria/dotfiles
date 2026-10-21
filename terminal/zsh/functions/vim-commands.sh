@@ -88,7 +88,7 @@ toggle-case() {
     elif [[ "$char" =~ [A-Z] ]]; then
       BUFFER="${BUFFER:0:$CURSOR}${(L)char}${BUFFER:$CURSOR+1}"
     fi
-    ((CURSOR++))
+    CURSOR=$((CURSOR + 1))
   fi
 }
 zle -N toggle-case
@@ -159,9 +159,9 @@ transpose-words() {
   local word1="${BUFFER:$word1_start:$((word1_end - word1_start + 1))}"
 
   # Skip whitespace
-  ((CURSOR++))
+  CURSOR=$((CURSOR + 1))
   while [[ "${BUFFER:$CURSOR:1}" =~ [[:space:]] ]]; do
-    ((CURSOR++))
+    CURSOR=$((CURSOR + 1))
   done
   local word2_start=$CURSOR
 
@@ -204,7 +204,7 @@ beginning-of-line-text() {
   # Skip leading whitespace
   CURSOR=0
   while [[ "${BUFFER:$CURSOR:1}" =~ [[:space:]] ]]; do
-    ((CURSOR++))
+    CURSOR=$((CURSOR + 1))
   done
 }
 zle -N beginning-of-line-text
@@ -234,9 +234,9 @@ jump-to-matching-bracket() {
     local next_char="${BUFFER:$pos:1}"
 
     if [[ "$next_char" == "$char" ]]; then
-      ((count++))
+      count=$((count + 1))
     elif [[ "$next_char" == "$match_char" ]]; then
-      ((count--))
+      count=$((count - 1))
     fi
   done
 

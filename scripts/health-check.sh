@@ -24,12 +24,12 @@ print_success() {
 
 print_error() {
     echo -e "  ${RED}✗${NC} $1"
-    ((ISSUES_FOUND++))
+    ISSUES_FOUND=$((ISSUES_FOUND + 1))
 }
 
 print_warning() {
     echo -e "  ${YELLOW}⚠${NC} $1"
-    ((WARNINGS_FOUND++))
+    WARNINGS_FOUND=$((WARNINGS_FOUND + 1))
 }
 
 print_info() {

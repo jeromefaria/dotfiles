@@ -14,7 +14,7 @@ function flac2mp3() {
     if [[ -f "$a" ]]; then
       echo "Converting: $a"
       < /dev/null ffmpeg -i "$a" -qscale:a 0 "${a[@]/%flac/mp3}"
-      ((count++))
+      count=$((count + 1))
     fi
   done
 
@@ -39,7 +39,7 @@ function flac2alac() {
     if [[ -f "$a" ]]; then
       echo "Converting: $a"
       < /dev/null ffmpeg -i "$a" -vn -c:a alac "${a[@]/%flac/m4a}"
-      ((count++))
+      count=$((count + 1))
     fi
   done
 
