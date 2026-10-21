@@ -15,6 +15,7 @@
 # Usage:
 #   ./macos-setup.sh              # Interactive mode
 #   ./macos-setup.sh --all        # Apply all settings
+#   ./macos-setup.sh --dry-run    # Report every change without making one
 #   ./macos-setup.sh --base       # Apply only base settings
 #   ./macos-setup.sh --dev        # Apply base + developer settings
 #   ./macos-setup.sh --backup     # Create backup only
@@ -51,6 +52,10 @@ Usage:
   ./macos-setup.sh [OPTIONS]
 
 Options:
+  --dry-run           Print every setting that would change and write nothing.
+                      Combines with the selection flags, e.g. --dev --dry-run.
+                      Skips the sudo prompt and the pre-apply backup, since
+                      neither is needed when nothing is written.
   --all               Apply all settings (base, developer, personal, apps)
   --base              Apply only base settings
   --dev               Apply base + developer settings
@@ -83,6 +88,18 @@ EOF
 }
 
 # Parse command line arguments
+# Dry run. Exported so the modules, which run as separate bash processes and
+# source helpers.sh themselves, pick up the command shadows that turn every
+# mutation into a printed line.
+MACOS_DRY_RUN="${MACOS_DRY_RUN:-0}"
+export MACOS_DRY_RUN
+
+# Shared tally so the summary can count mutations reported by the modules,
+# which run as separate processes.
+MACOS_DRY_RUN_TALLY="$(mktemp -t macos-dry-run-XXXXXX)"
+export MACOS_DRY_RUN_TALLY
+trap 'rm -f "$MACOS_DRY_RUN_TALLY"' EXIT
+
 APPLY_BASE=false
 APPLY_DEVELOPER=false
 APPLY_PERSONAL=false
@@ -104,6 +121,11 @@ while [[ $# -gt 0 ]]; do
             APPLY_PERSONAL=true
             APPLY_APPS=true
             INTERACTIVE=false
+            shift
+            ;;
+        --dry-run)
+            MACOS_DRY_RUN=1
+            export MACOS_DRY_RUN
             shift
             ;;
         --base)
@@ -258,8 +280,9 @@ $APPLY_PERSONAL && echo "  ✓ Personal settings (regional, appearance, etc.)"
 $APPLY_APPS && echo "  ✓ Third-party app settings"
 echo ""
 
-# Create automatic backup unless skipped
-if ! $SKIP_BACKUP; then
+# Create automatic backup unless skipped. A dry run changes nothing, so there
+# is nothing to roll back to and a backup would only add minutes and noise.
+if ! $SKIP_BACKUP && ! macos_dry_run; then
     if $INTERACTIVE; then
         if confirm "Create backup before applying settings?" "y"; then
             log_section "Creating Automatic Backup"
@@ -282,8 +305,16 @@ if $INTERACTIVE; then
     echo ""
 fi
 
-# Request sudo access
-request_sudo
+# Request sudo access. Not in a dry run: nothing will be written, and asking
+# for a password to change nothing trains people to type it without reading.
+if ! macos_dry_run; then
+    request_sudo
+fi
+
+if macos_dry_run; then
+    log_warning "DRY RUN — reporting what would change, writing nothing"
+    echo ""
+fi
 
 # Apply settings
 if $APPLY_BASE; then
@@ -346,10 +377,21 @@ for app in "${APPS_TO_RESTART[@]}"; do
 done
 
 # Final summary
-print_completion "macOS configuration complete!"
+if macos_dry_run; then
+    echo ""
+    log_warning "DRY RUN — nothing was written."
+    log_info "Re-run without --dry-run to apply."
+    echo ""
+else
+    print_completion "macOS configuration complete!"
+fi
 
 echo "Summary:"
-echo "  ✓ Settings applied successfully"
+if macos_dry_run; then
+    echo "  ⚠ Nothing applied — this was a dry run ($(macos_dry_run_count) changes reported)"
+else
+    echo "  ✓ Settings applied successfully"
+fi
 echo ""
 echo "Next steps:"
 echo "  1. Log out and log back in for all changes to take effect"

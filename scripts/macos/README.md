@@ -2,6 +2,30 @@
 
 This directory contains modular scripts for configuring macOS settings.
 
+## Dry run
+
+Every module's mutations go through shell-function shadows defined in
+`helpers.sh`, so the whole thing can be previewed:
+
+```sh
+../macos-setup.sh --dry-run          # interactive selection, writes nothing
+../macos-setup.sh --dev --dry-run    # base + developer, writes nothing
+```
+
+It prints one line per change, counts them, and skips both the sudo prompt and
+the pre-apply backup — neither is needed when nothing is written, and asking
+for a password to change nothing teaches people to type it without reading.
+
+Reads pass through: `defaults read`, `scutil --get` and `systemsetup -get*`
+reach the real binaries, because some logic branches on current state and a dry
+run that misreported it would be worse than none.
+
+`sudo` is shadowed too. It execs the real binary, so a function named
+`defaults` can never intercept `sudo defaults write` — and four of those exist
+in `base.sh` and `personal.sh`.
+
+Covered by `scripts/test-macos-dry-run.sh`.
+
 ## Quick Reference
 
 ### Main Scripts

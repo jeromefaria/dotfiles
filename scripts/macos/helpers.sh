@@ -13,6 +13,117 @@ export MAGENTA='\033[0;35m'
 export CYAN='\033[0;36m'
 export NC='\033[0m' # No Color
 
+# ============================================================================
+# Dry run
+# ============================================================================
+# These modules apply 192 `defaults write` calls plus systemsetup, pmset,
+# scutil, nvram and friends. Until now there was no way to see what they would
+# do without doing it, which is a poor property for the one part of this repo
+# that rewrites system preferences with no undo.
+#
+# Rather than edit 192 call sites, the mutating commands are shadowed by shell
+# functions. Every module sources this file, so the shadows are in scope for
+# all of them, and each call site stays exactly as it reads today.
+#
+# `sudo` is shadowed for the same reason: it execs the real binary, so a
+# function named `defaults` cannot intercept `sudo defaults write`. In a dry
+# run nothing needs root, so the whole call is reported and skipped.
+#
+# Reads pass through, because some logic branches on current state and a
+# dry run that lies about what is set would be worse than none.
+
+MACOS_DRY_RUN="${MACOS_DRY_RUN:-0}"
+
+macos_dry_run() {
+    [ "$MACOS_DRY_RUN" = "1" ]
+}
+
+# Report a skipped mutation, and record it where the caller can count it.
+#
+# The modules run as separate bash processes, so a shell variable incremented
+# here cannot be read back by macos-setup.sh — the first version of this
+# reported 4 skips out of 95 for exactly that reason. A file shared via the
+# environment is the simplest thing that actually counts.
+_macos_skip() {
+    if [ -n "${MACOS_DRY_RUN_TALLY:-}" ]; then
+        echo "$*" >> "$MACOS_DRY_RUN_TALLY" 2>/dev/null || true
+    fi
+    echo -e "${YELLOW}[DRY RUN]${NC} $*"
+}
+
+# How many mutations have been reported so far.
+macos_dry_run_count() {
+    if [ -n "${MACOS_DRY_RUN_TALLY:-}" ] && [ -f "$MACOS_DRY_RUN_TALLY" ]; then
+        wc -l < "$MACOS_DRY_RUN_TALLY" | tr -d ' '
+    else
+        echo 0
+    fi
+}
+
+defaults() {
+    if macos_dry_run; then
+        case "${1:-}" in
+            write|delete|import|rename)
+                _macos_skip "defaults $*"
+                return 0
+                ;;
+        esac
+    fi
+    command defaults "$@"
+}
+
+sudo() {
+    if macos_dry_run; then
+        _macos_skip "sudo $*"
+        return 0
+    fi
+    command sudo "$@"
+}
+
+# systemsetup is the one of these with reads worth preserving (-get*).
+systemsetup() {
+    if macos_dry_run; then
+        case "${1:-}" in
+            -get*) ;;
+            *)
+                _macos_skip "systemsetup $*"
+                return 0
+                ;;
+        esac
+    fi
+    command systemsetup "$@"
+}
+
+# scutil reads the machine's names with --get and sets them with --set. The
+# reads feed the "Computer:" lines in the summary, so swallowing them made a
+# dry run misreport the current hostname rather than just the pending change.
+scutil() {
+    if macos_dry_run; then
+        case "${1:-}" in
+            --get) ;;
+            *)
+                _macos_skip "scutil $*"
+                return 0
+                ;;
+        esac
+    fi
+    command scutil "$@"
+}
+
+# The rest appear only as mutations in the apply modules.
+for _macos_cmd in killall pmset nvram mdutil chflags spctl diskutil; do
+    eval "
+${_macos_cmd}() {
+    if macos_dry_run; then
+        _macos_skip \"${_macos_cmd} \$*\"
+        return 0
+    fi
+    command ${_macos_cmd} \"\$@\"
+}
+"
+done
+unset _macos_cmd
+
 # Logging functions
 log_section() {
     echo ""
