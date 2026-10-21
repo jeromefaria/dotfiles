@@ -19,7 +19,7 @@ jobs:
     name: Lint and docs
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install shellcheck
         run: brew install shellcheck
@@ -60,7 +60,7 @@ jobs:
     name: Test suites
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install rclone and rsync
         # Both are driven for real by test-audio-backup.sh. rsync matters
@@ -97,7 +97,7 @@ jobs:
     name: Fresh-machine install
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install, for real, as a new machine would
         run: |
