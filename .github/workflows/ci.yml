@@ -62,12 +62,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install rclone
+        run: brew install rclone
+
       - name: Hermetic suites
         run: |
-          # Each creates its own mktemp -d sandbox and mocks the binaries it
-          # drives (rclone, launchctl, tmutil, docker, terminal-notifier), so
-          # these need nothing installed. test-audio-volume-guard attaches a
-          # throwaway disk image via hdiutil, which runners permit.
+          # "Hermetic" means no network and nothing outside a mktemp -d sandbox,
+          # not that every binary is faked. launchctl, tmutil, networksetup,
+          # docker, colima and terminal-notifier are stubbed, but rclone is the
+          # real thing pointed at a `type = local` remote — that is deliberate,
+          # since the suite is checking rclone's actual sync, filter and
+          # backup-dir semantics, which a stub cannot reproduce. Hence the
+          # install step above; it was the one thing CI lacked on its first run.
+          #
+          # test-audio-volume-guard attaches a throwaway disk image via
+          # hdiutil, which runners permit.
           set -e
           scripts/test-install-symlink.sh
           scripts/test-install-seed-templates.sh

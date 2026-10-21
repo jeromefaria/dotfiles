@@ -707,7 +707,13 @@ main() {
   # Parse command-line arguments
   parse_args "$@"
 
-  clear
+  # Only when there is a terminal to clear. `clear` exits non-zero with "TERM
+  # environment variable not set." anywhere TERM is absent — CI, cron, a
+  # curl|bash in a bare environment — and the ERR trap turns that into an
+  # aborted install before a single line of work has run.
+  if [ -t 1 ] && [ -n "${TERM:-}" ]; then
+    clear
+  fi
 
   echo -e "${BLUE}"
   echo "╔═══════════════════════════════════════════════════════════╗"

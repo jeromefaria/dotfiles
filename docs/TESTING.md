@@ -90,8 +90,9 @@ Exit code is `0` on success, non-zero on any failure. The shell suites print per
 ## Conventions
 
 - **Sandboxed tempdirs.** Every suite creates a `mktemp -d` workspace and runs entirely inside it. Nothing under `$HOME` or the live filesystem is touched.
-- **Mock binaries on `$PATH`.** `launchctl`, `rclone`, `rsync`, `networksetup`, and `route` are shadowed by shell-script stubs in the sandbox's `bin/` so the script-under-test runs unmodified but talks to fakes.
-- **No network.** The mock `rclone` synthesises responses from a fake remote directory; no real Drive call is ever made.
+- **Mock binaries on `$PATH`.** `launchctl`, `tmutil`, `networksetup`, `route`, `docker`, `colima`, `terminal-notifier` and `osascript` are shadowed by shell-script stubs in the sandbox's `bin/`, so the script under test runs unmodified but talks to fakes.
+- **`rclone` is the exception, and is real.** `test-audio-backup.sh` writes an rclone config declaring `[testdrive] type = local` and exports `RCLONE_CONFIG`, so real rclone syncs between two directories inside the sandbox. That is deliberate: the suite is asserting rclone's own sync, `--filter-from` and `--backup-dir` semantics, which a stub would only restate. It does mean the suite needs rclone installed — CI installs it, and that absence is what made the first CI run fail.
+- **No network.** The local backend means no Drive call is ever made, despite rclone being genuine.
 - **Production-script BASH_SOURCE guards.** Scripts that get sourced for testing (`audio-backup-manage.sh`, `install.sh`) gate their dispatch on `[[ "${BASH_SOURCE[0]}" == "${0}" ]]` so the test can import internal functions without triggering the CLI.
 
 ## What's covered, what isn't

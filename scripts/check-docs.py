@@ -32,16 +32,37 @@ TOP_LEVEL = {
     "git", "ssh", "docs", "claude", "bootstrap", "task",
 }
 
-# Paths that are referenced precisely because they do NOT exist in the repo:
-# gitignored secret files, and placeholders in passages about writing docs.
-EXPECTED_ABSENT = {
-    "config/beets/secrets.yaml",
-    "ssh/config.local",
+# Placeholders in the passages that explain how to write docs. These are not
+# meant to resolve and never will.
+PLACEHOLDERS = {
     "docs/TOPIC.md",
     "docs/dev/TOPIC.md",
     "path/file.md",
     "path/to/file.md",
 }
+
+
+def is_gitignored(paths):
+    """Which of these are gitignored.
+
+    A gitignored path is legitimately absent from a clean checkout — secret
+    files seeded from templates, local overrides — so SECURITY.md naming
+    `config/op/config` is correct documentation, not a broken reference.
+
+    This is asked of git rather than listed by hand. The hand-written list it
+    replaces was assembled from what happened to exist on one machine, so it
+    exempted the two secret files that were missing there and not the four that
+    were present; CI, with a clean checkout, failed on all four.
+    """
+    if not paths:
+        return set()
+    result = subprocess.run(
+        ["git", "check-ignore", "--stdin"],
+        input="\n".join(paths),
+        capture_output=True,
+        text=True,
+    )
+    return {line for line in result.stdout.split("\n") if line}
 
 # Directories that were renamed. A reference to one is always stale.
 RENAMED = {
@@ -71,7 +92,7 @@ def body(path):
 
 
 def check_paths(files):
-    failures = []
+    absent = []
     checked = 0
     for doc in files:
         for match in PATH_REF.finditer(body(doc)):
@@ -79,8 +100,15 @@ def check_paths(files):
             if path.split("/")[0] not in TOP_LEVEL or "*" in path:
                 continue
             checked += 1
-            if not os.path.exists(path) and path not in EXPECTED_ABSENT:
-                failures.append(f"{doc}: `{path}` does not exist")
+            if not os.path.exists(path) and path not in PLACEHOLDERS:
+                absent.append((doc, path))
+
+    ignored = is_gitignored([path for _, path in absent])
+    failures = [
+        f"{doc}: `{path}` does not exist"
+        for doc, path in absent
+        if path not in ignored
+    ]
     return "path references", checked, failures
 
 
@@ -97,7 +125,7 @@ def check_links(files):
             # Placeholders are written relative to the doc, so compare on the
             # target with any leading ../ stripped rather than the resolved path.
             bare = re.sub(r"^(?:\.\./)+", "", target)
-            if not os.path.exists(resolved) and bare not in EXPECTED_ABSENT:
+            if not os.path.exists(resolved) and bare not in PLACEHOLDERS:
                 failures.append(f"{doc}: link -> {target}")
     return "relative links", checked, failures
 
