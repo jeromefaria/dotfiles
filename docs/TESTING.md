@@ -14,9 +14,54 @@ This repo ships test suites for the scripts that mutate external state — file 
 | `scripts/test-install-seed-templates.sh` | 6 tests / 13 assertions | `scripts/install.sh::seed_templates` — new-destination copy + content fidelity, destination-exists skip, `DRY_RUN` no-write, mixed-state counts + summary, filenames-with-spaces round-trip, cp-failure isolation (one failure doesn't abort the loop) |
 | `scripts/test-tm-backup-staleness.sh` | 8 tests / 14 assertions | `scripts/tm-backup-staleness-check.sh` — fresh-within-threshold no-op, stale-beyond-threshold notify (title + body), destination-unreachable path, cooldown suppression within window, cooldown-expired re-notify + marker-lives-in-STATE_DIR assertion, `--check` mode exit code by freshness + no notify, one-time LOG_DIR → STATE_DIR marker migration (old marker removed, new marker keeps original timestamp, cooldown honoured post-migration), `TM_NOTIFY_ENABLED=0` silences everything, with `tmutil` and `terminal-notifier` mocked |
 | `mail/scripts/test-manage-sync.sh` | 10 tests / 10 assertions | `mail/scripts/manage-sync.sh` lifecycle (status/start/stop/restart/logs) with a mocked `launchctl` |
-| `terminal/zsh/test-config.sh` | 51 assertions | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
+| `terminal/zsh/test-config.sh` | 53 assertions | zsh config loads cleanly with the modular `aliases/` + `functions/` layout |
 | `terminal/zsh/test-newgig.sh` | 7 tests / 14 assertions | `functions/dev.sh::newgig` — scaffold shape (with/without project), refuses existing dir, input validation for client + project names, template interpolation, rollback on mid-write failure |
 | `terminal/zsh/test-media-stack.sh` | 28 tests | `functions/media-stack.sh::plex` — subcommand dispatch routing (boot/halt/up/down/restart/status/update/fix/web/autostart), help & per-command usage, unknown-command handling, with `docker`/`colima`/`brew`/`open`/`launchctl` mocked |
+
+## Continuous integration
+
+`.github/workflows/ci.yml` runs all of this on push and on pull requests, in
+three jobs on `macos-latest`:
+
+| Job | What it does |
+|---|---|
+| `lint` | shellcheck at warning level, `bash -n` / `zsh -n`, `py_compile`, and `scripts/check-docs.py` |
+| `test` | the ten hermetic suites below |
+| `fresh-install` | a real `install.sh --yes --profile work` on the runner's own `$HOME`, then asserts what was linked, what was not, that the shell starts without plugin warnings, that profile gating holds, and that the package profile resolves |
+
+`fresh-install` is the job that justifies the rest. Every defect worth fixing
+in this repo has been one that could only fail on a machine that was not the
+author's, so a green local run proved nothing about it. A runner is a genuinely
+clean macOS install, which is the one thing a laptop cannot simulate.
+
+Two things it deliberately does not do: install the 147 packages of the `work`
+profile (it dry-runs the selection instead, which would have caught the bug
+that was there), and apply the 192 `defaults write` calls, which tell you
+nothing on a VM about to be destroyed. `chsh` is short-circuited by presetting
+`SHELL`, since changing the login shell of a disposable runner proves nothing
+and needs a password.
+
+Note that suites have to be machine-independent to run here. The profile cases
+in `test-config.sh` originally asserted that an undeclared profile means
+`personal`, which held only because the development machine had no
+`~/.dotfiles-profile`; it failed the first time it ran after a work install.
+They now build a throwaway `$HOME` per probe and test the precedence rule
+itself.
+
+## Documentation checks
+
+`scripts/check-docs.py` verifies the markdown against the tree: that
+repo-relative path references resolve, that relative links resolve, that every
+referenced script exists, and that nothing refers to a directory that has been
+renamed away. It runs in CI and takes under a second.
+
+It exists because a sweep of all 54 docs found drift in 14 of them — including
+17 references to a `shell/` directory renamed long ago and two scripts that
+had been deleted — all of it mechanically detectable.
+
+```sh
+python3 scripts/check-docs.py        # 0 clean, 1 on any problem
+```
 
 ## Running
 

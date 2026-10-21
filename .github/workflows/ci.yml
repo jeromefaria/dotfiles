@@ -1,0 +1,160 @@
+# Local gates, run on push instead of from memory.
+#
+# Everything here was previously a command someone had to remember. The bugs
+# that made this worth adding all had the same shape: they could only fail on a
+# machine that was not the author's, so a green local run proved nothing. The
+# fresh-install job exists for exactly that class — a GitHub macOS runner is a
+# genuinely clean machine, which is the one thing a laptop cannot simulate.
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    name: Lint and docs
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: brew install shellcheck
+
+      - name: Shell syntax
+        run: |
+          # Files under terminal/zsh/ are zsh, not bash: dev.sh uses ${(q)...}
+          # parameter expansion that bash cannot parse at all.
+          fail=0
+          while IFS= read -r f; do
+            bash -n "$f" || { echo "::error file=$f::bash syntax error"; fail=1; }
+          done < <(git ls-files '*.sh' '*.bash' | grep -v '^terminal/zsh/')
+          while IFS= read -r f; do
+            zsh -n "$f" || { echo "::error file=$f::zsh syntax error"; fail=1; }
+          done < <(git ls-files 'terminal/zsh/*.sh')
+          zsh -n terminal/zsh/zshrc || fail=1
+          exit $fail
+
+      - name: Shellcheck
+        run: |
+          # xargs rather than mapfile: runners execute run: steps with the
+          # system bash, which on macOS is 3.2 and has no mapfile builtin —
+          # a gotcha docs/TROUBLESHOOTING.md already records.
+          git ls-files '*.sh' '*.bash' \
+            | grep -v '^terminal/zsh/' \
+            | xargs shellcheck -S warning
+
+      - name: Python syntax
+        run: |
+          while IFS= read -r f; do
+            python3 -m py_compile "$f" || exit 1
+          done < <(git ls-files '*.py')
+
+      - name: Documentation matches the tree
+        run: python3 scripts/check-docs.py
+
+  test:
+    name: Test suites
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Hermetic suites
+        run: |
+          # Each creates its own mktemp -d sandbox and mocks the binaries it
+          # drives (rclone, launchctl, tmutil, docker, terminal-notifier), so
+          # these need nothing installed. test-audio-volume-guard attaches a
+          # throwaway disk image via hdiutil, which runners permit.
+          set -e
+          scripts/test-install-symlink.sh
+          scripts/test-install-seed-templates.sh
+          scripts/test-install-profile.sh
+          scripts/test-audio-backup.sh
+          scripts/test-audio-volume-guard.sh
+          scripts/test-tm-backup-staleness.sh
+          mail/scripts/test-manage-sync.sh
+          python3 scripts/test-audio-plugin-cleanup.py
+          terminal/zsh/test-newgig.sh
+          terminal/zsh/test-media-stack.sh
+
+  fresh-install:
+    name: Fresh-machine install
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install, for real, as a new machine would
+        run: |
+          # The runner's own $HOME, not a fake one. This is the path that every
+          # bug worth fixing lived on, and the only honest way to exercise it is
+          # on a machine that has never seen these dotfiles.
+          #
+          # SHELL is set so set_zsh_shell short-circuits: chsh needs a password
+          # on a runner, and changing the login shell of a VM about to be
+          # destroyed proves nothing.
+          #
+          # --skip-packages because installing 147 Homebrew packages would take
+          # longer than the rest of CI combined; the package path is exercised
+          # by the dry run below. --skip-macos because 192 `defaults write`
+          # calls on a disposable VM tell us nothing.
+          export SHELL="$(command -v zsh)"
+          ./scripts/install.sh --yes --profile work --skip-packages --skip-macos
+
+      - name: The work profile installed what it should
+        run: |
+          set -e
+          for c in nvim bat gh starship.toml tmuxinator; do
+            test -e "$HOME/.config/$c" || { echo "::error::$c was not linked"; exit 1; }
+          done
+          for f in .zshrc .vimrc .tmux.conf .gitconfig; do
+            test -L "$HOME/$f" || { echo "::error::$f is not a symlink"; exit 1; }
+          done
+          test "$(cat "$HOME/.dotfiles-profile")" = work
+          grep -q '@invalid' "$HOME/.gitconfig.local"
+          echo "linked: $(ls "$HOME/.config" | tr '\n' ' ')"
+
+      - name: The work profile left out what it should
+        run: |
+          set -e
+          for c in beets mpv musikcube aria2 skhd yabai neomutt; do
+            if [ -e "$HOME/.config/$c" ] || [ -L "$HOME/.config/$c" ]; then
+              echo "::error::$c leaked onto a work machine"
+              exit 1
+            fi
+          done
+          echo "no personal configs present"
+
+      - name: The shell comes up clean
+        run: |
+          # Every plugin the zshrc names must exist after a fresh install.
+          # A missing one is not fatal to zsh, it just prints `plugin not found`
+          # on every start forever, which is how two of them went unnoticed.
+          warnings=$(zsh -i -c exit 2>&1 | grep -i 'not found' || true)
+          if [ -n "$warnings" ]; then
+            echo "::error::shell start emitted warnings:"
+            echo "$warnings"
+            exit 1
+          fi
+          echo "no plugin warnings"
+
+      - name: Profile gating holds in the installed shell
+        run: |
+          set -e
+          test "$(zsh -i -c 'echo $DOTFILES_PROFILE' 2>/dev/null)" = work
+          test -z "$(zsh -i -c 'echo $AUDIO' 2>/dev/null)"
+          test "$(zsh -i -c 'type -w plex 2>/dev/null' || true)" = ""
+          echo "work gating correct: no volumes, no plex"
+
+      - name: Shell config suite, against the real install
+        run: terminal/zsh/test-config.sh
+
+      - name: Package selection resolves
+        run: |
+          # Not a real install — 147 packages would dominate the run. This
+          # proves the profile resolves to real categories and that nothing
+          # reaches for a bare `brew bundle`, which is what was broken.
+          ./packages/install-packages.sh --list
+          ./packages/install-packages.sh --profile work --dry-run

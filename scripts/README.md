@@ -277,7 +277,9 @@ python3 scripts/test-audio-plugin-cleanup.py
 ```
 
 See [../docs/TESTING.md](../docs/TESTING.md) for what each covers, what is
-deliberately uncovered, and how to add a suite.
+deliberately uncovered, and how to add a suite. All of them run in CI on push,
+along with `check-docs.py` and a real fresh-machine install — see the
+Continuous integration section there.
 
 Then run the health check, which looks at the installed state rather than the
 scripts:
