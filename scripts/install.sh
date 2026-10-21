@@ -324,6 +324,12 @@ install_oh_my_zsh() {
   # a `plugin not found` line on every shell start and silently drops whatever
   # it provided — zsh-vi-mode in particular is load-bearing, with its own
   # keybindings, post-init hooks and ZVM_* settings in the zshrc.
+  #
+  # git-flow-completion is on this list because upstream Oh My Zsh ships
+  # git-flow and git-flow-avh but not it. The copy on the machine this was
+  # written on sits in $ZSH/plugins rather than $ZSH_CUSTOM/plugins and is
+  # untracked there, so it looked stock when checked locally and was missing
+  # on a genuinely fresh install.
   local ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
   local custom_plugins=(
     "zsh-syntax-highlighting:https://github.com/zsh-users/zsh-syntax-highlighting.git"
@@ -331,6 +337,7 @@ install_oh_my_zsh() {
     "zsh-autopair:https://github.com/hlissner/zsh-autopair"
     "git-open:https://github.com/paulirish/git-open"
     "zsh-vi-mode:https://github.com/jeffreytse/zsh-vi-mode"
+    "git-flow-completion:https://github.com/bobthecow/git-flow-completion"
   )
 
   local entry plugin_name plugin_url
