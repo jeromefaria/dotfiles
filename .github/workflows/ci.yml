@@ -73,8 +73,11 @@ jobs:
         run: |
           # "Hermetic" means no network and nothing outside a mktemp -d sandbox,
           # not that every binary is faked. launchctl, tmutil, networksetup,
-          # docker, colima and terminal-notifier are stubbed, but rclone is the
-          # real thing pointed at a `type = local` remote — that is deliberate,
+          # docker, colima, osascript and terminal-notifier are stubbed in every
+          # suite that can reach them — test-audio-backup.sh was the exception
+          # until a real terminal-notifier on a fully installed machine wedged
+          # it for 81 minutes. rclone is the real thing pointed at a
+          # `type = local` remote — that is deliberate,
           # since the suite is checking rclone's actual sync, filter and
           # backup-dir semantics, which a stub cannot reproduce. Hence the
           # install step above; it was the one thing CI lacked on its first run.

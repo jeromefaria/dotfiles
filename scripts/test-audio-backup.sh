@@ -177,6 +177,22 @@ exit 0
 MOCKEOF
 chmod +x "$TESTROOT_BIN/tmutil"
 
+# Mock the notifiers. Unlike the sibling suites this one never did, which only
+# went unnoticed because CI had no terminal-notifier installed to find — on a
+# machine with the full package set, a real terminal-notifier waits on a
+# Notification Center callback that never comes without an Aqua session, and
+# the suite sat inside a notification for 81 minutes until the job timed out.
+# The bound in lib/notify.sh is the actual fix; stubbing here is what makes
+# the suite hermetic, as docs/TESTING.md already claimed it was.
+for mock_notifier in terminal-notifier osascript; do
+  cat > "$TESTROOT_BIN/$mock_notifier" <<'MOCKEOF'
+#!/bin/bash
+exit 0
+MOCKEOF
+  chmod +x "$TESTROOT_BIN/$mock_notifier"
+done
+unset mock_notifier
+
 export PATH="$TESTROOT_BIN:$PATH"
 
 # ─── Test helpers ──────────────────────────────────────────────────────
