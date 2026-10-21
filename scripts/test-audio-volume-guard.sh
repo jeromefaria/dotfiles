@@ -116,6 +116,17 @@ export AUDIO_VOLUME_NOTIFY_ENABLED=1
 export AUDIO_VOLUME_NOTIFIER_GROUP="audio-volume-guard-test"
 export AUDIO_VOLUME_NOTIFY_COOLDOWN_HOURS=1
 
+# Dependent symlinks, pointed at the sandbox. The shipped defaults are this
+# one machine's plugin directories under /Library, which do not exist on a
+# clean machine — so TEST 12's "resolving onto the boot disk" assertion passed
+# here and failed in CI, for want of any dependent link to report.
+DEP_LINK_ROOT="$TESTROOT/Library"
+mkdir -p "$DEP_LINK_ROOT"
+ln -sfn "$MOUNT_POINT/Audio/Libraries/Arturia" "$DEP_LINK_ROOT/Arturia"
+ln -sfn "$MOUNT_POINT/Audio/Libraries/Softube" "$DEP_LINK_ROOT/Softube"
+export AUDIO_VOLUME_DEPENDENT_LINKS="$DEP_LINK_ROOT/Arturia
+$DEP_LINK_ROOT/Softube"
+
 NOTIFY_MARKER="$STATE_DIR/.last-squatter-notify"
 
 echo -e "${BLUE}━━━ audio-volume-guard tests ━━━${NC}"

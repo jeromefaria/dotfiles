@@ -100,11 +100,20 @@ readonly NOTIFY_DELIVERED=0
 readonly NOTIFY_FAILED=1
 readonly NOTIFY_DISABLED=2
 
-DEPENDENT_LINKS=(
-  "/Library/Arturia"
-  "/Library/Application Support/Softube"
-  "/Library/Application Support/iZotope"
-)
+# Absolute paths that are symlinks onto the guarded volume. When a squatter
+# directory stands in for the real mount these resolve onto the boot disk, and
+# an installer following one writes to the wrong disk — which is the whole
+# reason this guard exists.
+#
+# Overridable, newline-delimited, for the same reason as every other tunable in
+# audio-volume-guard.conf: these are one machine's plugin directories, and the
+# test suite needs to point them at a sandbox. A plain array cannot be exported
+# to a subprocess, hence the string.
+DEPENDENT_LINKS=()
+while IFS= read -r _dep_link; do
+  [ -n "$_dep_link" ] && DEPENDENT_LINKS+=("$_dep_link")
+done <<< "${AUDIO_VOLUME_DEPENDENT_LINKS:-}"
+unset _dep_link
 
 mkdir -p "$LOG_DIR" "$STATE_DIR" 2>/dev/null || true
 

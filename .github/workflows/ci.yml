@@ -169,6 +169,16 @@ jobs:
           fi
           echo "work gating correct: no volumes, plex is '${plex_kind:-unset}'"
 
+      - name: Install the CLI tools the shell config expects
+        # test-config.sh is a post-install check, not a hermetic suite: the
+        # aliases in aliases/tools.sh are deliberately conditional on their
+        # target existing ("prevents errors when optional tools are not
+        # installed"), so without these the aliases legitimately do not exist
+        # and the suite correctly reports them missing. These six are what it
+        # asserts on; --skip-packages above means the full profile is not
+        # installed, so they are named here rather than implied.
+        run: brew install eza bat fd zoxide fzf neovim
+
       - name: Shell config suite, against the real install
         run: terminal/zsh/test-config.sh
 
