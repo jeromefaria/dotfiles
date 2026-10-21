@@ -95,7 +95,22 @@ jobs:
           # without touching a single preference.
           ./scripts/macos-setup.sh --dev --dry-run 2>&1 | tail -20
 
+      - name: Install what the suites need but no profile installs
+        run: |
+          # rclone is deliberately absent from every Brewfile: its remote needs
+          # an interactive `rclone config` OAuth round trip, so audio-backup
+          # gates on it at runtime and scripts/audio-backup.md tells the user to
+          # install it by hand. test-audio-backup.sh drives real rclone against
+          # a `type = local` remote, so this job has to supply it — installing
+          # the full profile is not the same as satisfying the test harness,
+          # which is what the first run of this workflow discovered.
+          brew install rclone
+
       - name: Every suite, against a fully installed machine
+        # A per-step bound, so a hung suite names itself. The first run of this
+        # workflow spent 81 of its 90 minutes inside one notification call and
+        # all the job could report was "cancelled".
+        timeout-minutes: 25
         run: |
           set -e
           scripts/test-install-symlink.sh

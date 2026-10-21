@@ -39,9 +39,10 @@ clean macOS install, which is the one thing a laptop cannot simulate.
 Two things it deliberately does not do: install the 147 packages of the `work`
 profile (it dry-runs the selection instead, which would have caught the bug
 that was there), and apply the 192 `defaults write` calls, which tell you
-nothing on a VM about to be destroyed. `chsh` is short-circuited by presetting
-`SHELL`, since changing the login shell of a disposable runner proves nothing
-and needs a password.
+nothing on a VM about to be destroyed. The packages are covered separately by
+`.github/workflows/full-install.yml` — see below. `chsh` is left to run and to fail: a runner has no
+password to give it, which is exactly the corporate-machine case, and the
+install is required to warn and finish rather than discard its own work.
 
 Note that suites have to be machine-independent to run here. The profile cases
 in `test-config.sh` originally asserted that an undeclared profile means
@@ -49,6 +50,30 @@ in `test-config.sh` originally asserted that an undeclared profile means
 `~/.dotfiles-profile`; it failed the first time it ran after a work install.
 They now build a throwaway `$HOME` per probe and test the precedence rule
 itself.
+
+### The weekly full install
+
+`.github/workflows/full-install.yml` is the one job that installs the packages
+for real: weekly on Monday, and on demand with a profile to pick. It is not a
+push gate, because 147 formulae and casks take longer than everything else in
+CI put together and a slow gate stops being used. A failure here is a report,
+not a block — upstream casks move and mirrors go down, so read a red run as
+"go and look", not "the repo is broken".
+
+It exists because the package step was broken for months without anyone
+noticing — a bare `brew bundle install` in a directory holding no Brewfile —
+and a step nothing ever runs is a step nobody can trust.
+
+It also installs `rclone` before running the suites, which no profile does and
+no profile should: the remote needs an interactive `rclone config` OAuth round
+trip, so `audio-backup` gates on it at runtime and
+[`../scripts/audio-backup.md`](../scripts/audio-backup.md) tells the user to
+install it by hand. Installing the full profile is not the same as satisfying
+the test harness — which is what its own first run discovered.
+
+That first run also showed why a per-step `timeout-minutes` is worth setting:
+it spent 81 of its 90 minutes wedged inside a single notification call, and
+all the job could report afterwards was `cancelled`.
 
 ## Documentation checks
 
