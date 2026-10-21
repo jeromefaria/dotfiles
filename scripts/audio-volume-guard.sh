@@ -57,6 +57,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/lib/io.sh"
 # shellcheck source=lib/launchd-svc.sh
 source "${SCRIPT_DIR}/lib/launchd-svc.sh"
+# shellcheck source=lib/notify.sh
+source "${SCRIPT_DIR}/lib/notify.sh"
 
 CONFIG="${AUDIO_VOLUME_CONFIG:-${SCRIPT_DIR}/audio-volume-guard.conf}"
 
@@ -83,7 +85,11 @@ unset tunable
 MOUNT_POINT="${AUDIO_VOLUME_MOUNT:-/Volumes/Audio}"
 VOLUME_LABEL="${AUDIO_VOLUME_LABEL:-Audio}"
 SENTINEL="${AUDIO_VOLUME_SENTINEL:-${MOUNT_POINT}/.audio-volume-guard}"
+# NOTIFY_ENABLED and NOTIFIER_GROUP are read by notify_post in lib/notify.sh,
+# which shellcheck cannot see across the source boundary.
+# shellcheck disable=SC2034
 NOTIFY_ENABLED="${AUDIO_VOLUME_NOTIFY_ENABLED:-1}"
+# shellcheck disable=SC2034
 NOTIFIER_GROUP="${AUDIO_VOLUME_NOTIFIER_GROUP:-audio-volume-guard}"
 COOLDOWN_HOURS="${AUDIO_VOLUME_NOTIFY_COOLDOWN_HOURS:-1}"
 LOG_DIR="${AUDIO_VOLUME_LOG_DIR:-${HOME}/Library/Logs/audio-volume-guard}"
@@ -93,12 +99,6 @@ LABEL="${AUDIO_VOLUME_LAUNCHD_LABEL:-com.jeromefaria.audiovolumeguard}"
 PLIST="${HOME}/Library/LaunchAgents/${LABEL}.plist"
 
 LOG_FILE="${LOG_DIR}/guard.log"
-
-# Notification delivery outcomes. Distinguishing "failed" from "deliberately
-# silenced" matters: only a real delivery may start the cooldown.
-readonly NOTIFY_DELIVERED=0
-readonly NOTIFY_FAILED=1
-readonly NOTIFY_DISABLED=2
 
 # Absolute paths that are symlinks onto the guarded volume. When a squatter
 # directory stands in for the real mount these resolve onto the boot disk, and
@@ -119,31 +119,6 @@ mkdir -p "$LOG_DIR" "$STATE_DIR" 2>/dev/null || true
 
 log() {
   printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$LOG_FILE" 2>/dev/null || true
-}
-
-# Post a macOS notification and report whether it actually went out. Prefers
-# terminal-notifier so the "Alerts" style toggle in System Settings targets
-# only these alerts; falls back to osascript when it's absent or fails.
-#
-# Returns $NOTIFY_DELIVERED / $NOTIFY_FAILED / $NOTIFY_DISABLED. The caller
-# must not treat a failure as delivery — a launchd agent with no GUI session,
-# or with notification permission denied, fails here every single time.
-notify() {
-  [ "$NOTIFY_ENABLED" = "1" ] || return "$NOTIFY_DISABLED"
-  local title="$1" message="$2"
-
-  if command -v terminal-notifier >/dev/null 2>&1 \
-     && terminal-notifier -title "$title" -message "$message" \
-          -group "$NOTIFIER_GROUP" >/dev/null 2>&1; then
-    return "$NOTIFY_DELIVERED"
-  fi
-
-  local escaped_title="${title//\"/\\\"}" escaped_message="${message//\"/\\\"}"
-  if osascript -e "display notification \"${escaped_message}\" with title \"${escaped_title}\"" >/dev/null 2>&1; then
-    return "$NOTIFY_DELIVERED"
-  fi
-
-  return "$NOTIFY_FAILED"
 }
 
 # Echo one of: mounted | unverified | squatter | absent
@@ -368,7 +343,7 @@ cmd_notify() {
   # Only a delivered notification starts the cooldown. Stamping the marker on a
   # failed delivery would swallow the next window of real alerts while the log
   # claimed the user had been warned.
-  notify "${VOLUME_LABEL} volume mount blocked" "$message"
+  notify_post "${VOLUME_LABEL} volume mount blocked" "$message"
   case "$?" in
     "$NOTIFY_DELIVERED")
       log "watch: notified — $message"

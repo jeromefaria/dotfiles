@@ -25,9 +25,16 @@ CONFIG="${TM_BACKUP_CONFIG:-${SCRIPT_DIR}/tm-backup.conf}"
 # shellcheck disable=SC1090
 [ -f "$CONFIG" ] && source "$CONFIG"
 
+# shellcheck source=lib/notify.sh
+source "${SCRIPT_DIR}/lib/notify.sh"
+
 STALE_HOURS="${TM_STALE_ALERT_HOURS:-48}"
 COOLDOWN_HOURS="${TM_STALE_NOTIFY_COOLDOWN_HOURS:-12}"
+# NOTIFY_ENABLED and NOTIFIER_GROUP are read by notify_post in lib/notify.sh,
+# which shellcheck cannot see across the source boundary.
+# shellcheck disable=SC2034
 NOTIFY_ENABLED="${TM_NOTIFY_ENABLED:-1}"
+# shellcheck disable=SC2034
 NOTIFIER_GROUP="${TM_NOTIFIER_GROUP:-tm-backup}"
 LOG_DIR="${TM_STALENESS_LOG_DIR:-${HOME}/Library/Logs/tm-backup}"
 STATE_DIR="${TM_STALENESS_STATE_DIR:-${HOME}/Library/Application Support/tm-backup}"
@@ -45,23 +52,6 @@ LOG_FILE="$LOG_DIR/staleness-check.log"
 
 log() {
   printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$LOG_FILE" 2>/dev/null || true
-}
-
-# Post a macOS notification. Silent no-op when NOTIFY_ENABLED=0. Prefers
-# terminal-notifier so the "Alerts" style toggle in System Settings targets
-# only these alerts; falls back to osascript when it's absent or fails.
-notify() {
-  [ "$NOTIFY_ENABLED" = "1" ] || return 0
-  local title="$1" message="$2"
-
-  if command -v terminal-notifier >/dev/null 2>&1 \
-     && terminal-notifier -title "$title" -message "$message" \
-          -group "$NOTIFIER_GROUP" >/dev/null 2>&1; then
-    return 0
-  fi
-
-  local t="${title//\"/\\\"}" m="${message//\"/\\\"}"
-  osascript -e "display notification \"${m}\" with title \"${t}\"" >/dev/null 2>&1 || true
 }
 
 # Extract the last-backup timestamp. `tmutil latestbackup` prints a path shaped
@@ -114,7 +104,7 @@ last_notify=0
 [[ "$last_notify" =~ ^[0-9]+$ ]] || last_notify=0
 
 if [ $(( now - last_notify )) -ge "$cooldown_seconds" ]; then
-  notify "Time Machine backup stale" "$message"
+  notify_post "Time Machine backup stale" "$message"
   log "Notified: $message"
   echo "$now" > "$notify_marker" 2>/dev/null || true
 else

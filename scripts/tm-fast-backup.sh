@@ -25,6 +25,10 @@ set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/io.sh
 source "${SCRIPT_DIR}/lib/io.sh"
+# run_bounded: tmutil can hang indefinitely right after a reconnect, so the
+# destination-info gate below is bounded rather than left to block silently.
+# shellcheck source=lib/bounded.sh
+source "${SCRIPT_DIR}/lib/bounded.sh"
 
 CONFIG="${SCRIPT_DIR}/tm-backup.conf"
 # shellcheck disable=SC1090
@@ -34,28 +38,6 @@ THROTTLE_KNOB="${LOWPRI_THROTTLE_SYSCTL:-debug.lowpri_throttle_enabled}"
 # subsystem wedged. tmutil can hang indefinitely right after a reconnect;
 # this bounds it so the script fails fast instead of blocking silently.
 GATE_TIMEOUT="${TM_GATE_TIMEOUT:-20}"
-
-# Run a command with a wall-clock limit. Uses timeout/gtimeout when present
-# (coreutils), otherwise a portable bash fallback. Exit 124 signals timeout,
-# matching GNU timeout's convention.
-run_bounded() {
-  local secs="$1"; shift
-  if command -v timeout >/dev/null 2>&1; then timeout "$secs" "$@"; return $?; fi
-  if command -v gtimeout >/dev/null 2>&1; then gtimeout "$secs" "$@"; return $?; fi
-
-  "$@" &
-  local pid=$!
-  ( sleep "$secs"; kill -TERM "$pid" 2>/dev/null ) &
-  local watcher=$!
-  wait "$pid" 2>/dev/null
-  local rc=$?
-  if kill -0 "$watcher" 2>/dev/null; then
-    kill -TERM "$watcher" 2>/dev/null
-    wait "$watcher" 2>/dev/null
-    return "$rc"
-  fi
-  return 124
-}
 
 DRY_RUN=0
 GENTLE=0

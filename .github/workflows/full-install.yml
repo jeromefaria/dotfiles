@@ -102,6 +102,7 @@ jobs:
           scripts/test-install-seed-templates.sh
           scripts/test-install-profile.sh
           scripts/test-macos-dry-run.sh
+          scripts/test-notify.sh
           scripts/test-audio-backup.sh
           scripts/test-audio-volume-guard.sh
           scripts/test-tm-backup-staleness.sh

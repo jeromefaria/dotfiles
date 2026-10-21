@@ -40,6 +40,8 @@ Sourced by `macos-setup.sh`; can also be run individually.
 ### Shared Library (`lib/`)
 
 - **`io.sh`** - TTY-aware colors + `print_header` / `print_success` / `print_error` / `print_warning` / `print_info` / `print_step` helpers, sourced by `install.sh`, `uninstall.sh`, `setup-portable-windows.sh`, `health-check.sh`, `config.sh`, `tm-fast-backup.sh`, `audio-backup-*.sh`, and `mail/scripts/manage-sync.sh`
+- **`bounded.sh`** - `run_bounded SECONDS cmd...` — a wall-clock bound that prefers coreutils' `timeout` (or `gtimeout`) and falls back to pure bash rather than to running unbounded, since a machine without coreutils is the one most likely to hang. Exit status and output pass straight through, so `$(run_bounded ...)` captures what `$(cmd)` would. Sourced by `audio-backup-sync.sh`, `tm-fast-backup.sh`, `lib/notify.sh` and `mail/scripts/sync-mail.sh`; it replaced three hand-rolled copies that had drifted to three different fallbacks, one of which was "run unbounded"
+- **`notify.sh`** - `notify_post TITLE MESSAGE` — a macOS notification under a bound, preferring terminal-notifier (its own app identity, so the "Alerts" toggle targets only these) and falling back to osascript. Returns `$NOTIFY_DELIVERED` / `$NOTIFY_FAILED` / `$NOTIFY_DISABLED`, because a caller that treats a failure as delivery will arm a cooldown against an alert nobody saw. Reads `NOTIFY_ENABLED`, `NOTIFIER_GROUP`, `NOTIFY_TIMEOUT_SECONDS`; sourced by `audio-backup-sync.sh`, `audio-volume-guard.sh` and `tm-backup-staleness-check.sh`
 - **`launchd-svc.sh`** - Thin `launchctl load|unload|list` wrappers so service scripts don't reinvent the load-and-verify dance; consumers keep their own dispatch and messages
 - **`sudo-keepalive.sh`** - `sudo_keepalive_start` / `sudo_keepalive_stop` primitives — refresh sudo up-front, then keep the timestamp warm via a background `sudo -n true` loop that self-terminates when the parent shell dies. Caller owns the trap composition (bash `trap` vs zsh `TRAP{EXIT,INT,TERM}`); sourced by `tm-fast-backup.sh` and `terminal/zsh/functions/dev.sh::update()`
 
@@ -53,6 +55,7 @@ Version-controlled exclusion set + fast-backup runner that keep Time Machine on 
 - **`tm-backup-staleness-check.sh`** - Reads `tmutil latestbackup`, notifies via terminal-notifier / osascript when no successful backup has landed within `TM_STALE_ALERT_HOURS` (or when the destination isn't mountable). Cooldown-guarded to avoid spam
 - **`tm-backup-manage.sh`** - Launchd lifecycle for the staleness check — `install`/`uninstall`/`status`/`check`/`verify`/`logs`. Usually invoked via the `tm-backup` shell alias
 - **`test-tm-backup-staleness.sh`** - Test suite for the staleness check (mocked `tmutil` + `terminal-notifier`)
+- **`test-notify.sh`** - Test suite for `lib/bounded.sh` + `lib/notify.sh` — transparency of `run_bounded`, both bounding paths, and that a wedged notifier is abandoned rather than awaited
 
 ### Home Mirror (design only — not built)
 

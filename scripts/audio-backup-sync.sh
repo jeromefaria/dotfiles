@@ -29,6 +29,12 @@ source "$CONFIG"
 
 # ─── Colors (TTY only) — provided by lib/io.sh ─────────────────────────
 source "${SCRIPT_DIR}/lib/io.sh"
+# ─── notify_post / run_bounded — provided by the shared libs ───────────
+# run_bounded wraps the pre-flight probe below: a volume on a wedged bus
+# answers `stat` but never returns from a traversal, and this job holds a lock
+# while it waits.
+source "${SCRIPT_DIR}/lib/bounded.sh"
+source "${SCRIPT_DIR}/lib/notify.sh"
 
 # ─── Args ──────────────────────────────────────────────────────────────
 DRY_RUN=0
@@ -80,24 +86,10 @@ log_ok() {
 }
 
 # ─── Alerting ──────────────────────────────────────────────────────────
-# Post a macOS notification. Best-effort: never fails the run, and is a no-op
-# when NOTIFY_ENABLED=0. Prefers terminal-notifier (its own app identity, so
-# the "Alerts" style toggle targets only these alerts and a shared -group id
-# means a new alert replaces the prior one); falls back to osascript, which
-# posts under "Script Editor". Both work from the launchd (gui) context.
-notify() {
-  [ "${NOTIFY_ENABLED:-1}" = "1" ] || return 0
-  local title="$1" message="$2"
-  # Try terminal-notifier; fall back to osascript if it's absent OR fails
-  # (e.g. its notifications are disabled), so an alert is never lost silently.
-  if command -v terminal-notifier >/dev/null 2>&1 \
-     && terminal-notifier -title "$title" -message "$message" \
-          -group "${NOTIFIER_GROUP:-audio-backup}" >/dev/null 2>&1; then
-    return 0
-  fi
-  local t="${title//\"/\\\"}" m="${message//\"/\\\"}"
-  osascript -e "display notification \"${m}\" with title \"${t}\"" >/dev/null 2>&1 || true
-}
+# notify_post comes from lib/notify.sh. Alerting is best-effort here: the
+# delivery status is deliberately ignored, so a notification that cannot be
+# posted never fails the backup it was reporting on.
+NOTIFIER_GROUP="${NOTIFIER_GROUP:-audio-backup}"
 
 # Fire a staleness alert if the last SUCCESSFUL backup is older than the
 # threshold (or none is on record). Called on every unattended run — before
@@ -136,7 +128,7 @@ check_staleness() {
   [ -f "$notify_marker" ] && last_notify="$(cat "$notify_marker" 2>/dev/null)"
   [[ "$last_notify" =~ ^[0-9]+$ ]] || last_notify=0
   if [ $(( now - last_notify )) -ge "$cooldown" ]; then
-    notify "Audio backup stale" "$message"
+    notify_post "Audio backup stale" "$message"
     log_warn "Staleness alert: $message"
     echo "$now" > "$notify_marker" 2>/dev/null || true
   fi
@@ -358,30 +350,13 @@ abort_unreadable_source() {
     log_err "Pre-flight read probe failed — macOS denied access to ${SOURCE}."
     log_err "Grant Full Disk Access to $(command -v rclone) under System Settings → Privacy & Security."
     log_err "Homebrew installs each rclone version to its own path, so upgrading rclone revokes the grant."
-    notify "Audio backup blocked" "macOS denied rclone access to the Audio volume — re-grant Full Disk Access."
+    notify_post "Audio backup blocked" "macOS denied rclone access to the Audio volume — re-grant Full Disk Access."
   else
     log_err "Pre-flight read probe failed — the source is mounted but unreadable (bus or drive fault)."
-    notify "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
+    notify_post "Audio backup aborted" "Source unreadable before transfer. Check the drive's connection."
   fi
 
   exit 1
-}
-
-# Bound a step that can hang rather than fail. A volume on a wedged bus answers
-# `stat` but never returns from a traversal, so the pre-flight probe would sit
-# there all night holding the lock instead of reporting the fault. Degrades to
-# running unbounded if coreutils is not installed, since a bounded step is an
-# improvement on hanging but not worth a hard dependency.
-run_bounded() {
-  local limit_seconds="$1"
-  shift
-
-  if command -v timeout >/dev/null 2>&1; then
-    timeout "$limit_seconds" "$@"
-    return $?
-  fi
-
-  "$@"
 }
 
 if ! source_survives_probe; then
@@ -445,6 +420,6 @@ if run_rclone_with_retries; then
 else
   rc=$?
   log_err "rclone exited $rc"
-  notify "Audio backup FAILED" "rclone exited $rc. Check $LOG_FILE"
+  notify_post "Audio backup FAILED" "rclone exited $rc. Check $LOG_FILE"
   exit "$rc"
 fi

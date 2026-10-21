@@ -11,6 +11,7 @@ This repo ships test suites for the scripts that mutate external state — file 
 | `scripts/test-audio-plugin-cleanup.py` | 22 unittest cases | `scripts/audio-plugin-cleanup.py` suffix stripping, dupe detection, no-twin invariant, scan/candidate filtering |
 | `scripts/test-install-symlink.sh` | 7 tests / 14 assertions | `scripts/install.sh::create_symlink` — first-time creation, idempotency, file backup, `--dry-run`, source-is-symlink guard, and a known data-loss gap (TEST 7) |
 | `scripts/test-macos-dry-run.sh` | 14 tests | `scripts/macos/helpers.sh` + `macos-setup.sh --dry-run` — that no mutating command reaches its binary during a dry run, that a real run is unaffected, that reads (`defaults read`, `scutil --get`, `systemsetup -get*`) still pass through, that `sudo` itself is shadowed so `sudo defaults write` cannot slip past, that mutations in a child process are still counted, that the flag is exported and skips the sudo prompt and pre-apply backup, and that no mutating command is left without a shadow |
+| `scripts/test-notify.sh` | 14 tests / 29 assertions | `scripts/lib/bounded.sh` + `scripts/lib/notify.sh` — that `run_bounded` is transparent (exit status and captured stdout/stderr pass through, which the pre-flight probe depends on), that it kills what outlives its bound and reports 124, that the `gtimeout` and pure-bash paths bound too (a machine without coreutils is the one most likely to hang), that a killed child leaks no "Terminated" into a caller's capture, and that `notify_post` prefers terminal-notifier, falls through to osascript when it fails *or wedges*, reports delivered/failed/disabled honestly, and honours the kill switch without invoking anything |
 | `scripts/test-install-profile.sh` | 21 tests | `scripts/install.sh` profile gating — default profile, `~/.dotfiles-profile` persistence (and not under `DRY_RUN`), which configs each profile links, neomutt skipped on `work`, the placeholder git identity (`.invalid` TLD, no personal address, existing file untouched), package-profile selection via a stubbed `install-packages.sh`, a regression guard that no bare `brew bundle` is attempted, and `--profile` validation |
 | `scripts/test-install-seed-templates.sh` | 6 tests / 13 assertions | `scripts/install.sh::seed_templates` — new-destination copy + content fidelity, destination-exists skip, `DRY_RUN` no-write, mixed-state counts + summary, filenames-with-spaces round-trip, cp-failure isolation (one failure doesn't abort the loop) |
 | `scripts/test-tm-backup-staleness.sh` | 8 tests / 14 assertions | `scripts/tm-backup-staleness-check.sh` — fresh-within-threshold no-op, stale-beyond-threshold notify (title + body), destination-unreachable path, cooldown suppression within window, cooldown-expired re-notify + marker-lives-in-STATE_DIR assertion, `--check` mode exit code by freshness + no notify, one-time LOG_DIR → STATE_DIR marker migration (old marker removed, new marker keeps original timestamp, cooldown honoured post-migration), `TM_NOTIFY_ENABLED=0` silences everything, with `tmutil` and `terminal-notifier` mocked |
@@ -27,7 +28,7 @@ three jobs on `macos-latest`:
 | Job | What it does |
 |---|---|
 | `lint` | shellcheck at warning level, `bash -n` / `zsh -n`, `py_compile`, and `scripts/check-docs.py` |
-| `test` | the ten hermetic suites below |
+| `test` | the twelve hermetic suites below |
 | `fresh-install` | a real `install.sh --yes --profile work` on the runner's own `$HOME`, then asserts what was linked, what was not, that the shell starts without plugin warnings, that profile gating holds, and that the package profile resolves |
 
 `fresh-install` is the job that justifies the rest. Every defect worth fixing
@@ -75,6 +76,7 @@ scripts/test-audio-volume-guard.sh
 scripts/test-install-symlink.sh
 scripts/test-install-seed-templates.sh
 scripts/test-install-profile.sh
+scripts/test-notify.sh
 scripts/test-tm-backup-staleness.sh
 python3 scripts/test-audio-plugin-cleanup.py
 mail/scripts/test-manage-sync.sh
@@ -102,6 +104,7 @@ Exit code is `0` on success, non-zero on any failure. The shell suites print per
 - rclone/rsync push/pull with junk excludes (Live regeneratables, `.DS_Store`, `Analysis Files/`, `Autosaves/`)
 - Sync gates: missing mount sentinel, untrusted router, missing filters file, missing rclone remote
 - Forced-run bandwidth logic: hotspot cap, untrusted-router cap, explicit `--bwlimit` override
+- Notification delivery under a wall-clock bound — terminal-notifier preferred, osascript as the fallback, and neither allowed to block the launchd job it is reporting on
 - Plist generation (`plutil -lint` on the emitted file)
 - launchd lifecycle for both `audio-backup` and `mail` sync via mocked `launchctl`
 - Symlink creation, idempotent re-link, file backup, dry-run, source-is-symlink rejection
@@ -123,7 +126,7 @@ Exit code is `0` on success, non-zero on any failure. The shell suites print per
 The shape is deliberate: every script that mutates external state has a test; the ones that wrap `defaults write` or one-shot install commands don't.
 
 **Known gaps (worth a suite, not yet written):**
-- `scripts/tm-fast-backup.sh` — real branching around the destination-info gate (`timeout` vs the portable-bash fallback in `run_with_timeout`), the `--gentle`/`--fast` path split, and the pre-run throttle knob capture/restore. A hermetic suite would mock `tmutil`, `sysctl`, `timeout`, and `sudo` in a `TESTROOT_BIN` directory the same way the audio-backup suite does, then drive the entry point through the happy path, the gate-wedge fallback, and each early-exit.
+- `scripts/tm-fast-backup.sh` — the `--gentle`/`--fast` path split and the pre-run throttle knob capture/restore. A hermetic suite would mock `tmutil`, `sysctl`, `timeout`, and `sudo` in a `TESTROOT_BIN` directory the same way the audio-backup suite does, then drive the entry point through the happy path, the gate-wedge fallback, and each early-exit. The bounding of its destination-info gate is no longer part of this gap: the three hand-rolled copies of that helper are now one `scripts/lib/bounded.sh`, covered by `test-notify.sh`.
 
 ## Adding a suite
 
