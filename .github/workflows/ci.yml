@@ -62,8 +62,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install rclone
-        run: brew install rclone
+      - name: Install rclone and rsync
+        # Both are driven for real by test-audio-backup.sh. rsync matters
+        # because a stock macOS ships openrsync ("rsync 2.6.9 compatible"),
+        # and the push path wants rsync 3.x behaviour — the same reason rsync
+        # is in Brewfile.base.
+        run: brew install rclone rsync
 
       - name: Hermetic suites
         run: |
@@ -154,8 +158,16 @@ jobs:
           set -e
           test "$(zsh -i -c 'echo $DOTFILES_PROFILE' 2>/dev/null)" = work
           test -z "$(zsh -i -c 'echo $AUDIO' 2>/dev/null)"
-          test "$(zsh -i -c 'type -w plex 2>/dev/null' || true)" = ""
-          echo "work gating correct: no volumes, no plex"
+
+          # `type -w` prints "plex: none" when undefined, not nothing, so the
+          # property to assert is that it is not a function. Comparing against
+          # an empty string failed here while the gating itself was correct.
+          plex_kind=$(zsh -i -c 'type -w plex 2>/dev/null | cut -d: -f2' 2>/dev/null || true)
+          if [ "$plex_kind" = " function" ]; then
+            echo "::error::plex is defined on a work machine"
+            exit 1
+          fi
+          echo "work gating correct: no volumes, plex is '${plex_kind:-unset}'"
 
       - name: Shell config suite, against the real install
         run: terminal/zsh/test-config.sh

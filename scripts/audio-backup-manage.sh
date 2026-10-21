@@ -498,7 +498,18 @@ cmd_push() {
   fi
 
   mkdir -p "$(dirname "$target")"
-  if rsync -a --info=stats2 "${rsync_excludes[@]}" "$rsync_src" "$rsync_dst"; then
+  # --info=stats2 is rsync 3.1+. A stock macOS now ships openrsync, which
+  # reports "protocol version 29 / rsync 2.6.9 compatible" and rejects the
+  # flag outright, so push failed on any machine where Homebrew's rsync (in
+  # Brewfile.base) had not been installed yet. Plain --stats is understood by
+  # both, so degrade rather than refuse: slightly terser output beats a
+  # command that does not run.
+  local rsync_stats_flag="--stats"
+  if rsync --help 2>&1 | grep -q -- "--info="; then
+    rsync_stats_flag="--info=stats2"
+  fi
+
+  if rsync -a "$rsync_stats_flag" "${rsync_excludes[@]}" "$rsync_src" "$rsync_dst"; then
     echo -e "${GREEN}✓ Push complete${NC} → $target"
   else
     echo -e "${RED}✗ Push failed${NC}" >&2
