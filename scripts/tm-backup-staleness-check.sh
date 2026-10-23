@@ -2,11 +2,10 @@
 # ============================================================================
 # scripts/tm-backup-staleness-check.sh
 # ============================================================================
-# Runs daily via launchd. Reads `tmutil latestbackup`, compares the timestamp
-# against $TM_STALE_ALERT_HOURS, and notifies via terminal-notifier (falls
-# back to osascript) if the last completed backup is too old — or if
-# `tmutil latestbackup` itself errors, which means the destination isn't
-# currently mountable.
+# Runs daily via launchd. Reads the last completed-backup timestamp, compares
+# it against $TM_STALE_ALERT_HOURS, and notifies via terminal-notifier (falls
+# back to osascript) if that backup is too old — or if the timestamp cannot be
+# read at all, which means the destination isn't currently reachable.
 #
 # Cooldown-guarded via a .last-stale-notify marker so a stuck dock doesn't
 # spam the user every check. Mirrors the audio-backup staleness pattern
@@ -54,11 +53,28 @@ log() {
   printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >> "$LOG_FILE" 2>/dev/null || true
 }
 
-# Extract the last-backup timestamp. `tmutil latestbackup` prints a path shaped
-# like /Volumes/.timemachine/<uuid>/YYYY-MM-DD-HHMMSS.backup/... — parse the
-# leaf date. Returns non-zero if tmutil errored (destination unmountable, no
-# backups yet on this destination, TM disabled).
-latest_backup_epoch() {
+# The last-backup timestamp has two sources, because the obvious one does not
+# work where this script actually runs.
+#
+# `tmutil latestbackup` is authoritative, but it requires Full Disk Access. A
+# launchd agent does not have it, so under launchd the call exits 80 with a
+# message pointing at the Privacy pane. That made every scheduled run take the
+# "destination unreachable" branch and alert on a perfectly healthy backup —
+# and, because it never obtained a date, a genuinely stale backup would not
+# have been detected either. The monitor was blind in both directions.
+#
+# Time Machine's own preferences carry the same information and are readable
+# without Full Disk Access, because `defaults` goes through cfprefsd instead of
+# opening the protected file — which is why `defaults read` succeeds on this
+# path where `plutil` against the same path fails. SnapshotDates lists
+# completed backups only: interrupted and in-progress containers never appear
+# in it, which is exactly the semantics a staleness check needs.
+TM_PREFS="${TM_PREFS_PATH:-/Library/Preferences/com.apple.TimeMachine.plist}"
+
+# `tmutil latestbackup` prints a path shaped like
+# /Volumes/.timemachine/<uuid>/YYYY-MM-DD-HHMMSS.backup/... — parse the leaf
+# date. Returns non-zero when tmutil errored, including the no-FDA case.
+tmutil_backup_epoch() {
   local path date_str
   path="$(tmutil latestbackup 2>/dev/null)" || return 1
   [ -n "$path" ] || return 1
@@ -69,6 +85,66 @@ latest_backup_epoch() {
 
   # macOS `date` expects a specific format string for parsing.
   date -j -f "%Y-%m-%d-%H%M%S" "$date_str" "+%s" 2>/dev/null
+}
+
+# Newest completed backup across every configured destination, read from
+# preferences. Exporting to XML and indexing with plutil avoids parsing the
+# NeXTSTEP format `defaults read` prints — and avoids confusing SnapshotDates
+# with the sibling AttemptDates array, which records tries rather than
+# successes. Taking the newest across destinations means a machine that
+# rotates between docks reports its most recent success, not whichever
+# destination happens to be listed first.
+prefs_backup_epoch() {
+  local exported destinations index count iso epoch newest=""
+
+  exported="$(defaults export "$TM_PREFS" - 2>/dev/null)" || return 1
+  [ -n "$exported" ] || return 1
+
+  destinations="$(printf '%s' "$exported" \
+    | plutil -extract Destinations raw -o - - 2>/dev/null)"
+  [[ "$destinations" =~ ^[0-9]+$ ]] || return 1
+
+  for (( index = 0; index < destinations; index++ )); do
+    count="$(printf '%s' "$exported" \
+      | plutil -extract "Destinations.${index}.SnapshotDates" raw -o - - 2>/dev/null)"
+    [[ "$count" =~ ^[0-9]+$ ]] && [ "$count" -gt 0 ] || continue
+
+    iso="$(printf '%s' "$exported" \
+      | plutil -extract "Destinations.${index}.SnapshotDates.$(( count - 1 ))" raw -o - - 2>/dev/null)"
+    [ -n "$iso" ] || continue
+
+    epoch="$(date -j -u -f "%Y-%m-%dT%H:%M:%SZ" "$iso" "+%s" 2>/dev/null)" || continue
+    [ -n "$epoch" ] || continue
+
+    if [ -z "$newest" ] || [ "$epoch" -gt "$newest" ]; then
+      newest="$epoch"
+    fi
+  done
+
+  [ -n "$newest" ] || return 1
+  printf '%s\n' "$newest"
+}
+
+# Prefer the authoritative source when it is permitted, fall back to the one
+# that always is. Which source answered is logged, because "stale" means
+# something different depending on it. Both failing is the real
+# destination-unreachable signal.
+latest_backup_epoch() {
+  local epoch
+
+  if epoch="$(tmutil_backup_epoch)"; then
+    log "Source: tmutil latestbackup"
+    printf '%s\n' "$epoch"
+    return 0
+  fi
+
+  if epoch="$(prefs_backup_epoch)"; then
+    log "Source: Time Machine preferences (tmutil needs Full Disk Access)"
+    printf '%s\n' "$epoch"
+    return 0
+  fi
+
+  return 1
 }
 
 now="$(date +%s)"
@@ -86,7 +162,7 @@ if last="$(latest_backup_epoch)"; then
 
   message="No successful backup in ${age_hours}h (last: ${last_human}). Threshold ${STALE_HOURS}h."
 else
-  log "tmutil latestbackup unavailable — destination probably not mounted"
+  log "No last-backup date from tmutil or preferences — destination unreachable"
   message="Backup destination is not reachable — no recent backup can be confirmed."
 fi
 

@@ -35,6 +35,13 @@ HOUR="${TM_STALENESS_SCHEDULE_HOUR:-9}"
 MINUTE="${TM_STALENESS_SCHEDULE_MINUTE:-0}"
 
 emit_plist() {
+  # LOG_DIR is created here, but launchd opens StandardOutPath/StandardErrorPath
+  # before exec and will not create a missing parent — so if a disk cleaner
+  # wipes ~/Library/Logs/tm-backup (CleanMyMac does), that run's launchd stdio
+  # goes nowhere. The job itself still runs, and the check recreates the
+  # directory with its own `mkdir -p`, so staleness-check.log self-heals from
+  # the next run on. Treat the launchd logs as best-effort early-crash capture
+  # and staleness-check.log as the authoritative record.
   mkdir -p "$(dirname "$PLIST")" "$LOG_DIR"
   cat > "$PLIST" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>

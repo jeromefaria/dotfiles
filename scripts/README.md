@@ -52,9 +52,9 @@ Version-controlled exclusion set + fast-backup runner that keep Time Machine on 
 - **`tm-backup.conf`** - Single source of truth: the exclusion list, fast-backup tunables (throttle knob, gate timeout), and the staleness-check thresholds
 - **`tm-exclusions.sh`** - Applies the exclusion set via `tmutil addexclusion`; usually invoked as `tm-exclusions apply`. Beyond keeping the footprint down, one entry is a correctness fix: `~/Library/CloudStorage` holds Google Drive mount points published as `uchg` (immutable) symlinks, and a backup containing one can never be thinned
 - **`tm-fast-backup.sh`** - Blocking backup runner that lifts the low-priority I/O throttle for the run (fast mode) or leaves it in place (`--gentle`)
-- **`tm-backup-staleness-check.sh`** - Reads `tmutil latestbackup`, notifies via terminal-notifier / osascript when no successful backup has landed within `TM_STALE_ALERT_HOURS` (or when the destination isn't mountable). Cooldown-guarded to avoid spam
+- **`tm-backup-staleness-check.sh`** - Reads the last completed-backup timestamp and notifies via terminal-notifier / osascript when none has landed within `TM_STALE_ALERT_HOURS` (or when the timestamp can't be read at all). Prefers `tmutil latestbackup`, falling back to Time Machine's preferences via `defaults export` + `plutil` — `tmutil latestbackup` requires Full Disk Access, which a launchd agent does not have, so the fallback is the path the scheduled run actually takes. Cooldown-guarded to avoid spam
 - **`tm-backup-manage.sh`** - Launchd lifecycle for the staleness check — `install`/`uninstall`/`status`/`check`/`verify`/`logs`. Usually invoked via the `tm-backup` shell alias
-- **`test-tm-backup-staleness.sh`** - Test suite for the staleness check (mocked `tmutil` + `terminal-notifier`)
+- **`test-tm-backup-staleness.sh`** - Test suite for the staleness check (mocked `tmutil` + `terminal-notifier`; preferences source pointed at a fixture plist via `TM_PREFS_PATH`)
 - **`test-notify.sh`** - Test suite for `lib/bounded.sh` + `lib/notify.sh` — transparency of `run_bounded`, both bounding paths, and that a wedged notifier is abandoned rather than awaited
 
 ### Home Mirror (design only — not built)
