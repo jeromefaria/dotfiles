@@ -575,6 +575,54 @@ A repeated **full** copy rather than an incremental means the chain is broken;
 compare `_raw_totalBytes` from `tmutil status` against the Data volume's used
 space to tell which is happening.
 
+### Symptom: Backups interrupt in a loop and free space never recovers
+
+Distinct from the above: attempts are not merely slow, Time Machine is unable
+to **delete** anything. Look for thinning failures rather than backup failures:
+
+```bash
+log show --start "$(date '+%Y-%m-%d') 00:00:00" \
+  --predicate 'subsystem == "com.apple.TimeMachine"' --style compact \
+  | grep -E 'Failed to thin|Failed to unlink'
+```
+
+`afpAccessDenied` / `-5000` on every candidate, with the blocked path named by
+the preceding `Failed to unlink item`, means some file inside those backups
+cannot be removed. The usual culprit is an **immutable** flag: `unlink()` on a
+file carrying `uchg` returns `EPERM` even for root, so deletion aborts and that
+backup is stranded for good. Google Drive publishes its mount points that way —
+`~/Library/CloudStorage/GoogleDrive-*/My Drive` and the `.mirror-symlink/*`
+entries are `uchg` symlinks.
+
+Confirm, then clear the flags on the backup copies (owner suffices, no `sudo`):
+
+```bash
+ls -lO "/Volumes/Backup/<date>.previous/Macintosh HD - Data/Users/$USER/Library/CloudStorage/GoogleDrive-"*/
+cd /Volumes/Backup
+for container in *.previous *.interrupted *.inprogress; do
+  [ -d "$container" ] || continue
+  cloud=$(find "$container" -maxdepth 6 -type d -name CloudStorage \
+    -path "*/Users/$USER/Library/CloudStorage" 2>/dev/null | head -1)
+  [ -n "$cloud" ] || continue
+  find "$cloud" -flags +uchg -print0 2>/dev/null \
+    | xargs -0 -I{} chflags -h nouchg {}
+done
+```
+
+Then stop it recurring — `~/Library/CloudStorage` is in `TM_EXCLUSIONS`, so:
+
+```bash
+tm-exclusions status            # confirm it reads "excluded"
+tm-exclusions apply             # sticky form, needs sudo
+```
+
+Nothing is lost by excluding it: the Drive mount points resolve to a separate
+volume Time Machine does not back up, and cloud files are re-downloadable.
+
+Note that the daily staleness check will **not** warn about this, by design —
+it reports when a backup last *completed*, and completed backups continue to
+land while thinning fails. Free space is the signal to watch here.
+
 ### Symptom: Drives drop off the bus under load
 
 USB contention, typically a capture device or DisplayLink dock sharing a hub
