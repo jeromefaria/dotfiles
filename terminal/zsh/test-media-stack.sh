@@ -64,6 +64,14 @@ out=$(plex help)
 [[ "$out" == *"plex boot"* && "$out" == *"plex fix"* && "$out" == *"plex web"* ]] && test_pass "help lists key subcommands" || test_fail "help missing subcommands"
 [[ "$(plex)" == *"media automation stack"* ]] && test_pass "bare 'plex' shows help" || test_fail "bare plex should show help"
 [[ "$(plex bogus 2>&1)" == *"unknown command 'bogus'"* ]] && test_pass "unknown command is reported" || test_fail "unknown command not handled"
+# --help/-h are the reflex spellings; before they were accepted they fell into
+# the catch-all and printed "unknown command '--help'" above the help text.
+[[ "$(plex --help)" == *"plex — media automation stack"* ]] && test_pass "plex --help prints the header" || test_fail "--help not accepted"
+[[ "$(plex -h)" == *"plex — media automation stack"* ]] && test_pass "plex -h prints the header" || test_fail "-h not accepted"
+# Diagnostics belong on stderr so `plex <subcommand> | …` carries only payload.
+[[ -z "$(plex bogus 2>/dev/null)" ]] && test_pass "unknown command keeps stdout clean" || test_fail "unknown command pollutes stdout"
+plex bogus >/dev/null 2>&1
+[ $? -eq 2 ] && test_pass "unknown command exits 2" || test_fail "unknown command should exit non-zero"
 
 echo; echo "2. web routing"; echo "--------------"
 reset_calls; plex web radarr;    grep -qF "open http://localhost:7878" "$CALL_LOG" && test_pass "web radarr → :7878" || test_fail "web radarr routing"

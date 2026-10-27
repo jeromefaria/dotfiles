@@ -177,8 +177,10 @@ plex() {
                 *) echo "usage: plex fix qb|vpn|indexers|sonarr|overseerr|ts-dns" ;;
               esac ;;
     web)      _plex_web "$1" ;;
-    help|"")  _plex_help ;;
-    *)        echo "plex: unknown command '$cmd'"; _plex_help ;;
+    help|-h|--help|"") _plex_help ;;
+    # Usage on the error path goes to stderr so `plex ... | …` pipes stay clean,
+    # and a typo returns non-zero so callers can actually detect it.
+    *)        echo "plex: unknown command '$cmd'" >&2; _plex_help >&2; return 2 ;;
   esac
 }
 
