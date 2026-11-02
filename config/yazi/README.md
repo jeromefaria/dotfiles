@@ -16,7 +16,9 @@ Modern terminal-based file manager with Vim-style keybindings, file preview, and
 
 **Configuration Files:**
 - `yazi.toml` - Main configuration, layout, openers, MIME rules
-- `keymap.toml` - All keybindings for different modes
+- `keymap.toml` - Keybindings that differ from yazi's defaults. Every
+  section `prepend_keymap`s, so anything not listed here comes from the
+  binary's own keymap and follows it across upgrades
 - `theme.toml` - OceanicNext theme with 350+ file type icons
 
 ---
@@ -139,15 +141,41 @@ title_format = "Yazi: {cwd}"          # Window title
 | `g h` | Home | Go to `~/` |
 | `g c` | Config | Go to `~/.config` |
 | `g d` | Downloads | Go to `~/Downloads` |
-| `g D` | Desktop | Go to `~/Desktop` |
-| `g o` | Documents | Go to `~/Documents` |
-| `g p` | Pictures | Go to `~/Pictures` |
-| `g m` | Music | Go to `~/Music` |
-| `g v` | Movies | Go to `~/Movies` |
-| `g .` | Dotfiles | Go to `~/dotfiles` |
+| `g .` | Dotfiles | Go to `$DOTFILES` |
+| `g w` | Work | Go to `$WORK` |
+| `g i` | iCloud | Go to `$MOBILE` (Mobile Documents) |
 | `g t` | Temp | Go to `/tmp` |
 | `g /` | Root | Go to `/` |
 | `g <Space>` | Interactive | Choose directory |
+
+Desktop, Documents, Pictures, `~/Music` and `~/Movies` had a key each and no
+longer do: `g <Space>` is interactive and `z` is zoxide, so a dedicated key
+for a folder you reach by name earns very little. Each is one line in
+`keymap.toml` to put back.
+
+### Volume Shortcuts
+
+Paths come from the variables `terminal/zsh/zshrc` exports, not from literals,
+so a drive that moves is one edit there and both these keys and the shell's
+`folders.sh` aliases follow. yazi expands `$VAR` and `${VAR}` in `cd`.
+
+| Key | Action | Variable |
+|-----|--------|----------|
+| `g a` | Archive volume | `$ARCHIVE` |
+| `g A` | Audio volume | `$AUDIO` |
+| `g M` | Media volume | `$MEDIA` |
+| `g V` | Video volume | `$VIDEO` |
+| `g C` | Film library | `$CINEMA` |
+| `g T` | Television library | `$TELEVISION` |
+| `g f` | FLAC library | `$MUSIC` |
+| `g P` | Audio projects | `$PROJECTS` |
+| `g r` | Drive directory | `$DRIVE` |
+| `g s` | Shared directory | `$SHARED` |
+
+zshrc gates these behind the personal profile, and yazi inherits the
+environment of whatever launched it. Unset, the variable is left unexpanded
+and the key lands in a directory literally named `$ARCHIVE`, which does not
+exist — visibly wrong rather than wrong-but-plausible.
 
 ### File Operations
 
@@ -206,7 +234,6 @@ title_format = "Yazi: {cwd}"          # Window title
 | Key | Action | Description |
 |-----|--------|-------------|
 | `!` | Shell | Open shell in current directory |
-| `@` | Shell confirm | Open shell (confirm on close) |
 | `;` | Command | Run shell command (non-blocking) |
 | `:` | Command block | Run shell command (blocking) |
 
@@ -268,8 +295,8 @@ title_format = "Yazi: {cwd}"          # Window title
 
 | Key | Action | Description |
 |-----|--------|-------------|
-| `<A-j>` | Peek down | Scroll preview down |
-| `<A-k>` | Peek up | Scroll preview up |
+| `<A-j>` | Seek down | Scroll preview down 5 lines |
+| `<A-k>` | Seek up | Scroll preview up 5 lines |
 
 ### Tasks & Help
 

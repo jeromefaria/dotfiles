@@ -6,13 +6,13 @@ alias h="cd $HOME"
 alias home="cd $HOME"
 alias desk="cd $HOME/Desktop"
 alias docs="cd $HOME/Documents"
-alias down="cd $HOME/Downloads"
+alias down="cd $DOWNLOADS"
 alias movies="cd $HOME/Movies"
 alias music="cd $HOME/Music"
 alias pics="cd $HOME/Pictures"
 
 # Work directories
-alias work="cd $HOME/Work"
+alias work="cd $WORK"
 alias blog="cd $WORK/jeromefaria.github.io"
 # $PROJECTS lives on the audio volume, so it is personal-only like the block
 # further down; on a work machine use the repo you are actually working in.
@@ -34,7 +34,7 @@ if [[ "$DOTFILES_PROFILE" == "personal" ]]; then
   alias video="cd $VIDEO"
 
   alias drive="cd $DRIVE"
-  alias shared="cd $DRIVE/Shared"
+  alias shared="cd $SHARED"
   alias mobile="cd $MOBILE"
   alias icloud="cd $MOBILE/com~apple~CloudDocs"
 fi
