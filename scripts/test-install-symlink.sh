@@ -156,20 +156,46 @@ else
 fi
 assert "no symlink created"               "[ ! -e \"$FAKE_HOME/.nope\" ]"
 
-heading "TEST 7: existing symlink to a different source is replaced (KNOWN: not backed up)"
-# Documents the audit's flagged risk: a pre-existing symlink (e.g. from a
-# previous dotfiles install pointing elsewhere) is rm -rf'd without backup.
-# backup_file() skips symlinks (it would `cp -r` and dereference, copying
-# the target rather than the link). The test asserts current behaviour so
-# any future change forces a deliberate update.
+heading "TEST 7: a symlink from another dotfiles manager is replaced and recorded"
+# This was documented as a known data-loss gap. It is not one: `rm -rf` on a
+# symlink takes the link and not what it points at, so the file at the far end
+# was never at risk. Two real defects were hiding behind that description.
+#
+# backup_file returns 1 for anything it declines to copy, a symlink included,
+# and the bare call under set -e aborted the entire install at the first target
+# some other dotfiles manager already owned — stopping partway through linking
+# rather than failing to take a backup. And nothing recorded where the link had
+# pointed, which is the one thing actually lost.
+#
+# Content safety is asserted here too, because that is the property the old
+# description got wrong and the reason a cp -P "fix" would have been worse than
+# the manifest: restore.sh walks a backup with `find -type f` and would never
+# have restored a copied link anyway.
 rm -f "$FAKE_HOME/.zshrc-alt"
 mkdir -p "$TESTROOT/other-dotfiles"
 echo "OTHER repo zshrc" > "$TESTROOT/other-dotfiles/zshrc"
 ln -s "$TESTROOT/other-dotfiles/zshrc" "$FAKE_HOME/.zshrc-alt"
-rm -f "$FAKE_BACKUP/.zshrc-alt"
-do_link "$FAKE_DOTFILES/zshrc" "$FAKE_HOME/.zshrc-alt"
-assert "new symlink points at our source" "[ \"\$(readlink \"$FAKE_HOME/.zshrc-alt\")\" = \"$FAKE_DOTFILES/zshrc\" ]"
-assert "the original symlink target was NOT backed up (known gap)" "[ ! -e \"$FAKE_BACKUP/.zshrc-alt\" ]"
+rm -f "$FAKE_BACKUP/replaced-symlinks.txt"
+# The abort is not observable through do_link: this suite runs with set +e and
+# the ERR trap removed, which is the same blind spot that let it survive. So the
+# no-abort property is checked through a probe that keeps install.sh's own
+# flags, while the rest of the assertions run normally.
+cat > "$TESTROOT/probe-symlink.sh" <<PROBE
+DOTFILES_DIR="$FAKE_DOTFILES"
+HOME="$FAKE_HOME"
+source "$INSTALL_SCRIPT"
+BACKUP_DIR="$FAKE_BACKUP"
+DRY_RUN=false
+CURRENT_STEP="Linking dotfiles"
+link_one() { create_symlink "\$1" "\$2"; }
+link_one "$FAKE_DOTFILES/zshrc" "$FAKE_HOME/.zshrc-alt"
+echo "PROBE REACHED THE END"
+PROBE
+probe_symlink_output=$(bash "$TESTROOT/probe-symlink.sh" 2>&1) || true
+assert "the install does not abort"        "echo \"$probe_symlink_output\" | grep -q 'PROBE REACHED THE END'"
+assert "new symlink points at our source"  "[ \"\$(readlink \"$FAKE_HOME/.zshrc-alt\")\" = \"$FAKE_DOTFILES/zshrc\" ]"
+assert "the other repo's file is intact"   "grep -q 'OTHER repo zshrc' \"$TESTROOT/other-dotfiles/zshrc\""
+assert "the replaced mapping is recorded"  "grep -q 'other-dotfiles/zshrc' \"$FAKE_BACKUP/replaced-symlinks.txt\""
 
 heading "TEST 8: a target reached through a symlinked parent is left alone"
 # Regression test for a destructive case. With $HOME/.config symlinked to the
@@ -220,6 +246,34 @@ assert "the foreign data was backed up"   "grep -q 'not ours' \"$FAKE_BACKUP/.co
 assert "~/.config is now the repo link"   "[ \"\$(readlink \"$FAKE_HOME/.config\")\" = \"$FAKE_DOTFILES/config\" ]"
 assert "the repo configs are reachable"   "grep -q 'real nvim config' \"$FAKE_HOME/.config/nvim/init.lua\""
 assert "the source was left alone"        "[ -d \"$FAKE_DOTFILES/config/nvim\" ] && [ ! -L \"$FAKE_DOTFILES/config/nvim\" ]"
+
+heading "TEST 11: a failure inside a function is reported, not swallowed"
+# Run with install.sh's own flags and its own ERR trap, both left exactly as
+# the script sets them. This suite disables them immediately after sourcing,
+# which is precisely why nobody noticed that on_error could never run: without
+# -E a shell function does not inherit the ERR trap, so every phase failure in
+# the script exited 1 with no diagnostic — no line number, no step name, and no
+# mention of the backup directory or restore.sh.
+cat > "$TESTROOT/probe.sh" <<PROBE
+DOTFILES_DIR="$FAKE_DOTFILES"
+HOME="$FAKE_HOME"
+source "$INSTALL_SCRIPT"
+BACKUP_DIR="$FAKE_BACKUP"
+DRY_RUN=false
+CURRENT_STEP="Linking dotfiles"
+# The failure has to happen inside a function, which is the whole point: a
+# top-level failure runs the ERR trap with or without -E, so a probe that calls
+# create_symlink directly proves nothing about errtrace.
+a_phase() { create_symlink "\$DOTFILES_DIR/does-not-exist" "\$HOME/.never-created"; }
+a_phase
+PROBE
+probe_output=$(bash "$TESTROOT/probe.sh" 2>&1) || true
+errtrace_state=$(bash -c "source '$INSTALL_SCRIPT' >/dev/null 2>&1; set -o" | grep '^errtrace')
+
+assert "install.sh turns errtrace on"      "echo \"$errtrace_state\" | grep -q 'on\$'"
+assert "the handler reported the failure"  "echo \"$probe_output\" | grep -q 'Installation failed at line'"
+assert "and it named the phase"            "echo \"$probe_output\" | grep -q 'Linking dotfiles'"
+assert "the target was never created"      "[ ! -e \"$FAKE_HOME/.never-created\" ]"
 
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""

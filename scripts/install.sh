@@ -14,7 +14,12 @@
 # - Integration with health-check.sh
 ################################################################################
 
-set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
+# -E (errtrace) is load-bearing, not decoration: without it a shell function
+# does not inherit the ERR trap, so every failure inside every phase of this
+# script exited 1 in silence and on_error never ran. Ten functions maintain
+# CURRENT_STEP to feed a message that only a Ctrl-C could produce, because
+# INT and TERM fire inside functions and ERR does not.
+set -Eeuo pipefail  # exit on error, undefined vars, pipe failures; ERR reaches functions
 
 # Shared color + print helpers
 source "$(dirname "${BASH_SOURCE[0]}")/lib/io.sh"
@@ -170,6 +175,8 @@ check_required_commands() {
 
 # Check if running on macOS
 check_os() {
+  CURRENT_STEP="Checking the operating system"
+
   if [[ "$OSTYPE" != "darwin"* ]]; then
     print_error "This script is designed for macOS only."
     exit 1
@@ -179,6 +186,7 @@ check_os() {
 
 # Check if Homebrew is installed
 check_homebrew() {
+  CURRENT_STEP="Checking dependencies"
   print_header "Checking Dependencies"
 
   if ! command -v brew &> /dev/null; then
@@ -221,6 +229,28 @@ backup_file() {
   return 1
 }
 
+# A pre-existing symlink is replaced rather than backed up, and backup_file is
+# right to refuse it: `cp -r` would dereference and copy the target's contents
+# instead of the link. Nothing is destroyed either way — `rm -rf` on a symlink
+# takes the link, not what it points at — so the file at the far end survives in
+# whatever repo owns it. What does not survive is the mapping: which repo this
+# path used to come from. That is one line of text, so keep it as one.
+#
+# Deliberately not `cp -P` into BACKUP_DIR. restore.sh walks a backup with
+# `find -type f`, which does not match a symlink, so a copied link would sit in
+# the backup looking restorable and never be restored. A manifest is honest
+# about needing a person.
+record_replaced_symlink() {
+  local link=$1
+
+  [ -L "$link" ] || return 0
+
+  local manifest="$BACKUP_DIR/replaced-symlinks.txt"
+  mkdir -p "$BACKUP_DIR"
+  printf '%s -> %s\n' "$link" "$(readlink "$link")" >> "$manifest"
+  print_info "Recorded the replaced symlink: $(basename "$link") → $(readlink "$link")"
+}
+
 # Create symlink (idempotent)
 # True when installing this user's own machine. Reads better at the call sites
 # than repeating the comparison, and mirrors the same helper in the zshrc.
@@ -232,6 +262,8 @@ is_personal_profile() {
 # every start, so without it a work machine would install trimmed and then come
 # up with the full personal surface anyway.
 persist_profile() {
+  CURRENT_STEP="Recording the profile"
+
   local marker="$HOME/.dotfiles-profile"
 
   if [ "$DRY_RUN" = true ]; then
@@ -316,9 +348,17 @@ create_symlink() {
     return 0
   fi
 
-  # Backup and remove existing file/symlink
+  # Backup and remove existing file/symlink.
+  #
+  # `|| true` because backup_file returns 1 for anything it declines to copy,
+  # a symlink included, and a bare non-zero call under set -e aborted the whole
+  # install at the first target some other dotfiles manager already owned. The
+  # return value is a "nothing was copied" signal, not a failure, so the two
+  # cases are handled separately: content goes to BACKUP_DIR, a link's mapping
+  # goes to the manifest.
   if [ -e "$target" ] || [ -L "$target" ]; then
-    backup_file "$target"
+    backup_file "$target" || true
+    record_replaced_symlink "$target"
     rm -rf "$target"
   fi
 
@@ -639,6 +679,7 @@ run_health_check() {
 # Every seeded destination is gitignored (verified) so no local credential
 # ever drifts back into tracking.
 seed_templates() {
+  CURRENT_STEP="Seeding config templates"
   print_header "Seeding config templates"
 
   local template dest
