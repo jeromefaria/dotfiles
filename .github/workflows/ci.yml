@@ -47,6 +47,18 @@ jobs:
             | grep -v '^terminal/zsh/' \
             | xargs shellcheck -S warning
 
+      - name: Workflow syntax
+        run: |
+          # The workflows were the one kind of shell in this repo nothing
+          # checked. actionlint validates the schema and the expression
+          # syntax, and runs shellcheck over every `run:` block — which
+          # is where the gap was: a `for c in $(ls ...)` in full-install.yml
+          # was SC2045, an error-level finding, and no gate here would have
+          # seen it. Same -S warning as the Shellcheck step above, so the
+          # severity line is the repo's one choice rather than two.
+          brew install actionlint
+          actionlint -shellcheck="shellcheck -S warning" .github/workflows/*.yml
+
       - name: Python syntax
         run: |
           while IFS= read -r f; do
@@ -220,3 +232,10 @@ jobs:
           # reaches for a bare `brew bundle`, which is what was broken.
           ./packages/install-packages.sh --list
           ./packages/install-packages.sh --profile work --dry-run
+
+          # `full` is what install.sh resolves the personal profile to — there
+          # is no profiles/personal.txt, and reaching for one is the first
+          # wrong turn anybody takes here. Dry-run it too, or the 326-package
+          # set that a personal machine installs is only ever resolved by the
+          # weekly job.
+          ./packages/install-packages.sh --profile full --dry-run

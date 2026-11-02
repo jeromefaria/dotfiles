@@ -16,9 +16,20 @@ name: Full install
 
 on:
   schedule:
-    # Mondays, 05:00 UTC. Nothing depends on the time; it just wants to be
-    # off the hour everything else in the world runs on.
+    # Two entries, one profile each: Mondays work, Thursdays personal. One
+    # entry cannot cover both, and picking either as *the* weekly profile
+    # leaves the other uninstalled — which is how the personal layout came to
+    # be the shape this repo runs on and the one shape nothing ever installed.
+    #
+    # They are separate runs rather than one longer one because the two
+    # installs are genuinely different sizes: work resolves to 144 packages,
+    # personal to 326 (it maps to the `full` package profile, not a `personal`
+    # one — see install_packages in scripts/install.sh). Doubling up would put
+    # 470 packages behind a single timeout.
+    #
+    # 05:17 for no reason beyond staying off the hour everything else runs on.
     - cron: '17 5 * * 1'
+    - cron: '17 5 * * 4'
   workflow_dispatch:
     inputs:
       profile:
@@ -30,9 +41,16 @@ on:
 
 jobs:
   install:
-    name: Install the ${{ github.event.inputs.profile || 'work' }} profile
+    name: Install the ${{ github.event.inputs.profile || (github.event.schedule == '17 5 * * 4' && 'personal' || 'work') }} profile
     runs-on: macos-latest
-    timeout-minutes: 90
+    # 120 rather than 90: the personal profile installs 326 packages against
+    # work's 144, and the bound has to fit the larger of the two runs.
+    timeout-minutes: 120
+    # A manual dispatch says which profile it wants; a scheduled run is
+    # identified by which cron expression fired. Resolved once here so the
+    # install step and the layout assertion cannot disagree about it.
+    env:
+      PROFILE: ${{ github.event.inputs.profile || (github.event.schedule == '17 5 * * 4' && 'personal' || 'work') }}
     steps:
       - uses: actions/checkout@v7
 
@@ -51,8 +69,63 @@ jobs:
           # --skip-macos stays: the 192 `defaults write` calls are covered by
           # test-macos-dry-run.sh, and applying them to a VM about to be
           # destroyed proves nothing. Everything else runs.
-          ./scripts/install.sh --yes --profile "${{ github.event.inputs.profile || 'work' }}" --skip-macos \
+          ./scripts/install.sh --yes --profile "$PROFILE" --skip-macos \
             2>&1 | tee "$RUNNER_TEMP/install.log"
+
+      - name: The link layout matches the profile
+        run: |
+          set -e
+          # The reason this job now runs both profiles. Every other check here
+          # is profile-agnostic, so until this step existed a personal run and
+          # a work run asserted exactly the same things — and the personal
+          # layout, which is the one this repo is actually used on, had never
+          # been installed anywhere outside a mktemp sandbox.
+          #
+          # The hermetic cover is test-install-symlink.sh TESTs 8-10 and
+          # test-install-profile.sh TEST 4. What they cannot reach is a real
+          # $HOME on a machine that has never seen these dotfiles: a runner
+          # arrives with a real ~/.config already created by Homebrew and gh,
+          # so the personal path has to displace it for real, back it up for
+          # real, and leave every tracked config reachable through one link.
+          if [ "$PROFILE" = personal ]; then
+            test -L "$HOME/.config" \
+              || { echo "::error::~/.config is not a symlink after a personal install"; exit 1; }
+
+            target=$(readlink "$HOME/.config")
+            test "$target" = "$GITHUB_WORKSPACE/config" \
+              || { echo "::error::~/.config points at $target, not the repo's config/"; exit 1; }
+
+            # The full tracked set, not a sample: the whole point of one link
+            # is that no hand-maintained list can fall behind the tree. neomutt
+            # and tmuxinator are in-repo relative symlinks pointing back out of
+            # config/, which is why they resolve through this link too.
+            # A glob rather than `ls`, so a name with a space cannot split
+            # into two entries that both look absent. config/ holds no
+            # dot-entries, tracked or otherwise, so * is the whole set.
+            missing=""
+            reachable=0
+            for path in "$GITHUB_WORKSPACE"/config/*; do
+              c=${path##*/}
+              if [ -e "$HOME/.config/$c" ] || [ -L "$HOME/.config/$c" ]; then
+                reachable=$((reachable + 1))
+              else
+                missing="$missing $c"
+              fi
+            done
+            if [ -n "$missing" ]; then
+              echo "::error::unreachable through the link:$missing"
+              exit 1
+            fi
+            echo "whole-directory link live; $reachable of the repo's configs reachable"
+          else
+            test ! -L "$HOME/.config" \
+              || { echo "::error::~/.config is a symlink; work must link per item"; exit 1; }
+            for c in nvim bat gh starship.toml; do
+              test -L "$HOME/.config/$c" \
+                || { echo "::error::$c is not an individual symlink"; exit 1; }
+            done
+            echo "per-item links live"
+          fi
 
       - name: Did the packages actually land?
         run: |

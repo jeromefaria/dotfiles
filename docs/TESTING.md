@@ -27,7 +27,7 @@ three jobs on `macos-latest`:
 
 | Job | What it does |
 |---|---|
-| `lint` | shellcheck at warning level, `bash -n` / `zsh -n`, `py_compile`, and `scripts/check-docs.py` |
+| `lint` | shellcheck at warning level, `bash -n` / `zsh -n`, `py_compile`, `actionlint` over the workflows (schema, expressions, and shellcheck inside every `run:` block, at the same warning level), and `scripts/check-docs.py` |
 | `test` | the twelve hermetic suites below |
 | `fresh-install` | a real `install.sh --yes --profile work` on the runner's own `$HOME`, then asserts what was linked, what was not, that the shell starts without plugin warnings, that profile gating holds, and that the package profile resolves |
 
@@ -54,9 +54,20 @@ itself.
 ### The weekly full install
 
 `.github/workflows/full-install.yml` is the one job that installs the packages
-for real: weekly on Monday, and on demand with a profile to pick. It is not a
-push gate, because 147 formulae and casks take longer than everything else in
-CI put together and a slow gate stops being used. A failure here is a report,
+for real: Mondays for the `work` profile, Thursdays for `personal`, and on
+demand with a profile to pick. It is not a push gate, because 144 formulae and
+casks take longer than everything else in CI put together and a slow gate
+stops being used.
+
+Two scheduled runs rather than one, because the two profiles are different
+installs and picking either as *the* weekly profile leaves the other
+uninstalled: `work` resolves to 144 packages, `personal` to 326 — it maps to
+the `full` package profile, since there is no `profiles/personal.txt`. Which
+profile a scheduled run wants is read back off `github.event.schedule`. The
+run then asserts the link layout its profile implies, which is the only place
+the personal whole-directory `~/.config` is installed against a real `$HOME`
+rather than a `mktemp -d` sandbox; `fresh-install` covers the `work` layout on
+every push. A failure here is a report,
 not a block — upstream casks move and mirrors go down, so read a red run as
 "go and look", not "the repo is broken".
 
