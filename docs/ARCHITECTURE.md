@@ -89,14 +89,31 @@ The installation script creates symlinks from your home directory to the version
 
 ### XDG Config Directory Symlinks
 
+On a personal machine there is exactly one of these, because `~/.config` *is*
+the repo's `config/`:
+
 ```bash
-~/.config/nvim/       → ~/dotfiles/editors/neovim/
-~/.config/neomutt/    → ~/dotfiles/mail/mutt/
-~/.config/skhd/       → ~/dotfiles/config/skhd/
-~/.config/yabai/      → ~/dotfiles/config/yabai/
-~/.config/starship.toml → ~/dotfiles/config/starship.toml
-# ... and more
+~/.config/ → ~/dotfiles/config/
 ```
+
+A work machine cannot take the directory wholesale — one link cannot filter —
+so it gets named items instead, and the list lives in `link_dotfiles`:
+
+```bash
+~/.config/nvim/         → ~/dotfiles/config/nvim/
+~/.config/starship.toml → ~/dotfiles/config/starship.toml
+~/.config/atuin/        → ~/dotfiles/config/atuin/
+~/.config/bat/          → ~/dotfiles/config/bat/
+~/.config/gh/           → ~/dotfiles/config/gh/
+~/.config/git/          → ~/dotfiles/config/git/
+~/.config/vifm/         → ~/dotfiles/config/vifm/
+~/.config/tmuxinator/   → ~/dotfiles/terminal/tmux/tmuxinator/
+```
+
+Everything else the repo tracks is deliberately left off a work machine —
+beets, mpv, musikcube, aria2, skhd, yabai, yazi and neomutt. `health-check.sh`
+check 3.6 reports any config whose app is installed and whose link is missing,
+so an omission in that list is visible rather than silent.
 
 ### Why Symlinks?
 

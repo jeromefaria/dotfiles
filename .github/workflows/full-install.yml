@@ -120,7 +120,7 @@ jobs:
           else
             test ! -L "$HOME/.config" \
               || { echo "::error::~/.config is a symlink; work must link per item"; exit 1; }
-            for c in nvim bat gh starship.toml; do
+            for c in nvim bat gh starship.toml atuin git vifm; do
               test -L "$HOME/.config/$c" \
                 || { echo "::error::$c is not an individual symlink"; exit 1; }
             done

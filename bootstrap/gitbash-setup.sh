@@ -131,6 +131,16 @@ if command -v git &>/dev/null; then
   else
     echo "  ✗ Failed to link ~/.gitconfig"
   fi
+
+  # The global ignore file, which both gitconfigs now name by its XDG path.
+  # Nothing else here links anything into ~/.config, so it is created by hand
+  # rather than relying on a directory link this setup does not make.
+  mkdir -p "$HOME/.config/git"
+  if ln -sf "$DOTFILES_DIR/config/git/ignore" "$HOME/.config/git/ignore"; then
+    echo "  ✓ ~/.config/git/ignore → config/git/ignore"
+  else
+    echo "  ✗ Failed to link ~/.config/git/ignore"
+  fi
 fi
 echo ""
 

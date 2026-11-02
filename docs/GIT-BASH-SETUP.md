@@ -235,6 +235,12 @@ ln -sf ~/dotfiles/editors/vim/vimrc.portable ~/.vimrc
 ln -sf ~/dotfiles/git/gitconfig.portable ~/.gitconfig
 # OR for full version (if external tools available):
 # ln -sf ~/dotfiles/git/gitconfig ~/.gitconfig
+
+# Global ignore file, which both gitconfigs name by its XDG path. On macOS this
+# arrives with the rest of ~/.config; here it is linked on its own, because
+# nothing else in this setup links anything into ~/.config.
+mkdir -p ~/.config/git
+ln -sf ~/dotfiles/config/git/ignore ~/.config/git/ignore
 ```
 
 ### 4. Install vim-plug (optional)

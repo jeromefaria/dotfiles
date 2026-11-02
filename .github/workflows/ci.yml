@@ -139,9 +139,20 @@ jobs:
       - name: The work profile installed what it should
         run: |
           set -e
-          for c in nvim bat gh starship.toml tmuxinator; do
+          for c in nvim bat gh starship.toml tmuxinator atuin git vifm; do
             test -e "$HOME/.config/$c" || { echo "::error::$c was not linked"; exit 1; }
           done
+
+          # git's own default for the global ignore is $XDG_CONFIG_HOME/git/ignore,
+          # which is why the link above is what makes it exist. Both gitconfigs
+          # used to override it with ~/.gitignore_global, a path nothing created.
+          test -e "$HOME/.config/git/ignore" \
+            || { echo "::error::the global gitignore is not reachable"; exit 1; }
+          # `*~` and not `.DS_Store`: the repo's own .gitignore covers that one,
+          # so it would pass with the global file missing entirely. And the path
+          # has to be inside the repository or check-ignore refuses to answer.
+          git -C "$GITHUB_WORKSPACE" check-ignore -q --no-index 'scratch~' \
+            || { echo "::error::git does not honour the global ignore"; exit 1; }
 
           # The work profile must take the per-item path, which means $HOME/.config
           # stays a real directory and each config is its own symlink. The personal
@@ -152,7 +163,7 @@ jobs:
             echo "::error::~/.config is a symlink; the work profile must link per item"
             exit 1
           fi
-          for c in nvim bat gh starship.toml; do
+          for c in nvim bat gh starship.toml atuin git vifm; do
             test -L "$HOME/.config/$c" \
               || { echo "::error::$c is not an individual symlink"; exit 1; }
           done
@@ -166,7 +177,9 @@ jobs:
       - name: The work profile left out what it should
         run: |
           set -e
-          for c in beets mpv musikcube aria2 skhd yabai neomutt; do
+          # yazi is here because ten of its keybindings cd into /Volumes/Archive,
+          # /Volumes/Audio and /Volumes/Media and its media opener is mpv.
+          for c in beets mpv musikcube aria2 skhd yabai neomutt yazi; do
             if [ -e "$HOME/.config/$c" ] || [ -L "$HOME/.config/$c" ]; then
               echo "::error::$c leaked onto a work machine"
               exit 1

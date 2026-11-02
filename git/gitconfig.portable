@@ -35,7 +35,8 @@
   default = simple
 
 [core]
-  excludesfile = ~/.gitignore_global
+  # Git Bash has no ~/.config link, so gitbash-setup.sh creates this one.
+  excludesfile = ~/.config/git/ignore
   # Use native less instead of diff-so-fancy
   pager = less --tabs=4 -RFX
 

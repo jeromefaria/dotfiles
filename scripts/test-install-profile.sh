@@ -62,7 +62,7 @@ mkdir -p "$FAKE_HOME" "$FAKE_BACKUP" "$STUB_BIN" \
 
 # A DOTFILES_DIR shaped like the real one, so link_dotfiles has sources to
 # point at. Contents are irrelevant; only presence is checked.
-for d in nvim bat gh aria2 beets mpv musikcube skhd yabai; do
+for d in nvim bat gh atuin git vifm aria2 beets mpv musikcube skhd yabai yazi; do
   mkdir -p "$FAKE_DOTFILES/config/$d"
 done
 : > "$FAKE_DOTFILES/config/starship.toml"
@@ -165,18 +165,23 @@ link_dotfiles > "$TESTROOT/work-link.log" 2>&1
 
 work_has() { [ -e "$FAKE_HOME/.config/$1" ] || [ -L "$FAKE_HOME/.config/$1" ]; }
 
+# yazi joined this list rather than the one below: ten of its keybindings cd
+# into /Volumes/Archive, /Volumes/Audio and /Volumes/Media, and its media
+# opener is mpv, which the work package set does not install.
 missing=""
-for item in beets mpv musikcube aria2 skhd yabai; do
+for item in beets mpv musikcube aria2 skhd yabai yazi; do
   work_has "$item" && missing="$missing $item"
 done
 if [ -z "$missing" ]; then
-  pass "none of beets/mpv/musikcube/aria2/skhd/yabai linked"
+  pass "none of beets/mpv/musikcube/aria2/skhd/yabai/yazi linked"
 else
-  fail "none of beets/mpv/musikcube/aria2/skhd/yabai linked" "linked anyway:$missing"
+  fail "none of beets/mpv/musikcube/aria2/skhd/yabai/yazi linked" "linked anyway:$missing"
 fi
 
+# atuin, git and vifm are all installed by the work package set, so a machine
+# with the binary and no configuration was an omission rather than a decision.
 present=""
-for item in nvim bat gh starship.toml; do
+for item in nvim bat gh starship.toml atuin git vifm; do
   work_has "$item" || present="$present $item"
 done
 if [ -z "$present" ]; then
@@ -212,13 +217,13 @@ else
 fi
 
 absent=""
-for item in nvim bat gh starship.toml beets mpv musikcube aria2 skhd yabai neomutt tmuxinator; do
+for item in nvim bat gh starship.toml beets mpv musikcube aria2 skhd yabai neomutt tmuxinator yazi; do
   work_has "$item" || absent="$absent $item"
 done
 if [ -z "$absent" ]; then
-  pass "all twelve configs reachable through it"
+  pass "all thirteen configs reachable through it"
 else
-  fail "all twelve configs reachable through it" "absent:$absent"
+  fail "all thirteen configs reachable through it" "absent:$absent"
 fi
 
 # The property the per-item list did not hold: it had fallen 18 configs behind

@@ -497,16 +497,28 @@ link_dotfiles() {
     # A work machine gets named items instead, because one link cannot filter.
     # beets/mpv/musikcube/aria2 serve the music and media work; skhd/yabai are
     # window and input management, which on managed hardware usually cannot get
-    # the accessibility permissions they need anyway; and the neomutt setup is a
-    # personal Gmail account. None of them belong on hardware that is not this
-    # user's own.
+    # the accessibility permissions they need anyway; yazi binds ten keys to
+    # /Volumes/Archive, /Volumes/Audio and /Volumes/Media and opens media with
+    # mpv, so on other hardware the keys are dead and the config describes a
+    # personal media library; and the neomutt setup is a personal Gmail
+    # account. None of them belong on hardware that is not this user's own.
     print_info "Profile '$PROFILE': skipping media, window-manager and mail configs"
 
+    # atuin, vifm and git were missing from this list rather than excluded from
+    # it. All three tools are installed by the work package set — atuin from
+    # base, vifm from dev, git from base — so a work machine had the binary and
+    # none of the configuration, which nothing reported until health-check
+    # grew a check for exactly that. git is here because both gitconfigs name
+    # the global ignore by its XDG path, so on this profile the link is what
+    # makes ~/.config/git/ignore exist at all.
     local config_items=(
       "nvim"
       "starship.toml"
+      "atuin"
       "bat"
       "gh"
+      "git"
+      "vifm"
     )
 
     for item in "${config_items[@]}"; do

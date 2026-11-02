@@ -153,8 +153,11 @@ else
     required_items=(
         "nvim:config/nvim:Neovim"
         "starship.toml:config/starship.toml:Starship prompt"
+        "atuin:config/atuin:atuin"
         "bat:config/bat:bat"
         "gh:config/gh:GitHub CLI"
+        "git:config/git:git (global ignore and gitk)"
+        "vifm:config/vifm:vifm"
         "tmuxinator:terminal/tmux/tmuxinator:tmuxinator"
     )
 

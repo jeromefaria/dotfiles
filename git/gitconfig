@@ -19,7 +19,14 @@
 [push]
   default = simple
 [core]
-  excludesfile = ~/.gitignore_global
+  # No excludesfile here on purpose. Setting it overrides git's own default,
+  # $XDG_CONFIG_HOME/git/ignore, which in this repo is config/git/ignore — so
+  # pointing it at ~/.gitignore_global meant the 31-line file was never read on
+  # any machine, while the 2-line file it did point at was never linked by
+  # anything: install.sh has no step for it, and the symlink on the machine
+  # this was written on was made by hand. Both profiles therefore shipped with
+  # no global ignore at all. Letting git find the file itself removes the
+  # second copy and the step that was missing.
   pager = diff-so-fancy | less --tabs=4 -RFX
 [filter "lfs"]
   clean = git-lfs clean -- %f
