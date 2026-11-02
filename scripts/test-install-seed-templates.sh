@@ -176,6 +176,37 @@ echo "$output" | grep -q "Failed to seed: config/foo/settings" \
   || fail "one failure aborted the loop"
 chmod u+w "$FAKE_DOTFILES/config/foo"
 
+# ─── TEST 7: every real template destination is gitignored ────────────
+# Not hermetic, and deliberately so. seed_templates copies `foo.template` to
+# `foo` *inside the repo*, because on a personal machine ~/.config IS
+# DOTFILES_DIR/config — so a seeded file is at once the live config and a file
+# in the working tree. Every destination therefore has to be gitignored, or the
+# next `git add -A` commits a credential. install.sh's comment on seed_templates
+# claims this was verified; this is what keeps it verified when the seventh
+# template lands. HOME is the fake one here, so a global core.excludesFile
+# cannot satisfy the check — the repo's own .gitignore has to, which is all a
+# fresh clone gets.
+heading "TEST 7: every template destination in this repo is gitignored"
+REAL_REPO="$(cd "$SCRIPT_DIR/.." && pwd)"
+unignored=""
+real_templates=0
+
+while IFS= read -r real_template; do
+  real_templates=$((real_templates + 1))
+  real_dest="${real_template%.template}"
+
+  git -C "$REAL_REPO" check-ignore -q "$real_dest" \
+    || unignored="$unignored ${real_dest#"$REAL_REPO"/}"
+done < <(find "$REAL_REPO/config" -name "*.template" -type f 2>/dev/null)
+
+[ "$real_templates" -gt 0 ] \
+  && pass "found $real_templates templates to check" \
+  || fail "no templates found — the check would pass vacuously"
+
+[ -z "$unignored" ] \
+  && pass "all $real_templates destinations are gitignored" \
+  || fail "a seeded destination is committable" "add to .gitignore:$unignored"
+
 # ─── Summary ─────────────────────────────────────────────────────────
 echo
 echo -e "${BLUE}━━━ Summary ━━━${NC}"

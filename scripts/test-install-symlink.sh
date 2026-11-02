@@ -203,6 +203,24 @@ config_mtime_after=$(stat -f %m "$FAKE_HOME/.config" 2>/dev/null || stat -c %Y "
 assert "re-link is a no-op"               "[ \"$config_mtime_before\" = \"$config_mtime_after\" ]"
 assert "source intact after the re-run"   "grep -q 'real nvim config' \"$FAKE_DOTFILES/config/nvim/init.lua\""
 
+heading "TEST 10: a pre-existing real ~/.config is backed up, not lost"
+# The new-machine case for the whole-directory link. A fresh macOS install
+# usually arrives with a real ~/.config already — Homebrew, gh and others
+# create it — so the link has to displace a real directory holding data this
+# repo does not own. backup_file skips symlinks but not directories, so that
+# content has to reach BACKUP_DIR before the rm -rf. Verified by hand while the
+# whole-directory link was being written; asserted here so it stays verified.
+rm -rf "$FAKE_HOME/.config"
+mkdir -p "$FAKE_HOME/.config/some-other-tool"
+echo "not ours" > "$FAKE_HOME/.config/some-other-tool/state.json"
+rm -rf "$FAKE_BACKUP/.config"
+do_link "$FAKE_DOTFILES/config" "$FAKE_HOME/.config"
+assert "the foreign data was backed up"   "grep -q 'not ours' \"$FAKE_BACKUP/.config/some-other-tool/state.json\""
+# shellcheck disable=SC2088  # the tilde is prose in the test name, not a path
+assert "~/.config is now the repo link"   "[ \"\$(readlink \"$FAKE_HOME/.config\")\" = \"$FAKE_DOTFILES/config\" ]"
+assert "the repo configs are reachable"   "grep -q 'real nvim config' \"$FAKE_HOME/.config/nvim/init.lua\""
+assert "the source was left alone"        "[ -d \"$FAKE_DOTFILES/config/nvim\" ] && [ ! -L \"$FAKE_DOTFILES/config/nvim\" ]"
+
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}━━━ Summary ━━━${NC}"
