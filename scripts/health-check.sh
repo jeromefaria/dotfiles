@@ -4,7 +4,14 @@
 # Verifies that all symlinks and dependencies are properly configured
 #
 
-set -euo pipefail  # Strict error handling: exit on error, undefined vars, pipe failures
+# No -e, deliberately. check_symlink and check_command both return 1 for
+# anything they report, and a bare call under -e took the whole script down at
+# the first finding — so the one run that had something to say stopped after
+# saying one thing, with no summary, no exit code of its own and no hint that
+# more had gone unchecked. A missing optional tool was enough to do it. This
+# script's error handling is to tally into ISSUES_FOUND/WARNINGS_FOUND and
+# decide the exit code at the end, which -e cannot coexist with.
+set -uo pipefail  # undefined vars and pipe failures still fail loudly
 
 # Shared color palette + print_header. Local print_success/error/warning/info
 # are overridden below — they use 2-space indents under headers and the
@@ -131,27 +138,27 @@ if [ -L "$HOME/.config" ]; then
         print_error "~/.config is a symlink but points to: $config_target (expected: $DOTFILES_DIR/config)"
     fi
 else
-    # Individual symlink strategy
-    config_items=(
+    # Individual symlink strategy.
+    #
+    # Only what every profile links is named here — the set link_dotfiles uses
+    # for the work profile, configs with nothing personal in them. A missing one
+    # is a real fault. Everything else the repo tracks is swept by check 3.6
+    # below rather than listed again here, which is the part that had gone
+    # wrong: the old list named ncmpcpp, neofetch, ranger and yarn, none of
+    # which this repo has tracked for a long time, and warned about the seven
+    # configs the work profile leaves out on purpose. So a correct work install
+    # reported seven warnings it should not have while twenty-odd tracked
+    # configs went unmentioned. Nobody saw it because the branch above returns
+    # early on a personal machine, and that is the only kind this runs on.
+    required_items=(
         "nvim:config/nvim:Neovim"
         "starship.toml:config/starship.toml:Starship prompt"
-        "aria2:config/aria2:aria2"
         "bat:config/bat:bat"
-        "beets:config/beets:beets"
         "gh:config/gh:GitHub CLI"
-        "mpv:config/mpv:mpv"
-        "neomutt:mail/mutt:neomutt"
-        "musikcube:config/musikcube:musikcube"
-        "ncmpcpp:config/ncmpcpp:ncmpcpp"
-        "neofetch:config/neofetch:neofetch"
-        "ranger:config/ranger:ranger"
-        "skhd:config/skhd:skhd"
         "tmuxinator:terminal/tmux/tmuxinator:tmuxinator"
-        "yabai:config/yabai:yabai"
-        "yarn:config/yarn:yarn"
     )
 
-    for item in "${config_items[@]}"; do
+    for item in "${required_items[@]}"; do
         IFS=':' read -r target source description <<< "$item"
         if [ -e "$DOTFILES_DIR/$source" ]; then
             check_symlink "$HOME/.config/$target" "$DOTFILES_DIR/$source" "$description"
@@ -179,6 +186,60 @@ done
 
 if [ "$circular_found" = false ]; then
     print_success "No circular symlinks found in config/"
+fi
+
+# Check 3.6: a config this repo tracks, its app installed, and no link
+print_header "3.6. Installed Apps Whose Config Is Not Linked"
+
+if [ -L "$HOME/.config" ]; then
+    print_info "Whole-directory link in use, so every tracked config is already live"
+else
+    # Reports; does not link. Which configs a profile installs stays with
+    # link_dotfiles, where the reason is written down: the media, window-manager
+    # and mail configs are kept off hardware that is not this user's own, and
+    # that is a decision about propriety which the presence of an app cannot
+    # express. What presence *can* do is make the other case audible — an app
+    # installed by hand after the fact, whose config has been sitting in this
+    # repo unlinked ever since, with nothing anywhere saying so.
+    #
+    # `command -v` and no table of binary names, on purpose. A probe that cannot
+    # see an app costs one hint not printed: aria2's binary is aria2c, beets' is
+    # beet, and a GUI cask like Karabiner-Elements has no binary at all, so none
+    # of those three will ever be reported here. Guessing wrong the other way —
+    # putting a personal config on a work machine — is the failure this whole
+    # split exists to prevent, which is why the probe only ever prints.
+    unlinked_count=0
+
+    for source in "$DOTFILES_DIR/config"/*; do
+        config_name=$(basename "$source")
+
+        [ "$config_name" = "README.md" ] && continue
+
+        # A directory holding nothing but documentation has nothing to link.
+        # config/starship and config/gtk-4.0 are both prose only, and the first
+        # of them would otherwise be reported on every machine with a prompt.
+        if [ -d "$source" ] \
+            && [ "$(find "$source" -mindepth 1 ! -name "*.md" | wc -l | tr -d " ")" = "0" ]; then
+            continue
+        fi
+
+        if [ -e "$HOME/.config/$config_name" ] || [ -L "$HOME/.config/$config_name" ]; then
+            continue
+        fi
+
+        if ! command -v "$config_name" &> /dev/null; then
+            continue
+        fi
+
+        print_warning "$config_name is installed but config/$config_name is not linked"
+        unlinked_count=$((unlinked_count + 1))
+    done
+
+    if [ "$unlinked_count" -eq 0 ]; then
+        print_success "Every installed app with a config in this repo has it linked"
+    else
+        print_info "Each is a decision, not a fault: link one by hand, or add it to link_dotfiles if every machine should have it"
+    fi
 fi
 
 # Check 4: Essential tools

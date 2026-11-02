@@ -189,6 +189,7 @@ jobs:
           scripts/test-install-symlink.sh
           scripts/test-install-seed-templates.sh
           scripts/test-install-profile.sh
+          scripts/test-health-check.sh
           scripts/test-macos-dry-run.sh
           scripts/test-notify.sh
           scripts/test-audio-backup.sh
