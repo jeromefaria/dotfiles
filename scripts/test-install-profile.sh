@@ -67,6 +67,11 @@ for d in nvim bat gh aria2 beets mpv musikcube skhd yabai; do
 done
 : > "$FAKE_DOTFILES/config/starship.toml"
 mkdir -p "$FAKE_DOTFILES/mail/mutt" "$FAKE_DOTFILES/terminal/tmux/tmuxinator"
+# neomutt and tmuxinator live outside config/, and inside the repo they are
+# relative symlinks pointing back out — mirrored here so the whole-directory
+# link behaves as it does on a real tree.
+ln -s ../mail/mutt "$FAKE_DOTFILES/config/neomutt"
+ln -s ../terminal/tmux/tmuxinator "$FAKE_DOTFILES/config/tmuxinator"
 mkdir -p "$FAKE_DOTFILES/editors/vim" "$FAKE_DOTFILES/terminal/zsh"
 : > "$FAKE_DOTFILES/terminal/zsh/zshrc"
 : > "$FAKE_DOTFILES/editors/vim/vimrc"
@@ -192,21 +197,40 @@ else
   fail "tmuxinator is still linked (dev tooling)"
 fi
 
-# ─── TEST 4: personal links everything ─────────────────────────────────
-echo "── TEST 4: personal links the full set ──"
+# ─── TEST 4: personal takes config/ whole ──────────────────────────────
+echo "── TEST 4: personal links config/ as a single directory ──"
 reset_home
 PROFILE="personal"
 link_dotfiles > "$TESTROOT/personal-link.log" 2>&1
+
+if [ -L "$FAKE_HOME/.config" ] && [ "$(readlink "$FAKE_HOME/.config")" = "$FAKE_DOTFILES/config" ]; then
+  # shellcheck disable=SC2088  # tildes here are prose in the test name, not paths
+  pass "~/.config is one symlink to the repo's config/"
+else
+  # shellcheck disable=SC2088
+  fail "~/.config is one symlink to the repo's config/" "got '$(readlink "$FAKE_HOME/.config" 2>/dev/null)'"
+fi
 
 absent=""
 for item in nvim bat gh starship.toml beets mpv musikcube aria2 skhd yabai neomutt tmuxinator; do
   work_has "$item" || absent="$absent $item"
 done
 if [ -z "$absent" ]; then
-  pass "all twelve configs linked"
+  pass "all twelve configs reachable through it"
 else
-  fail "all twelve configs linked" "absent:$absent"
+  fail "all twelve configs reachable through it" "absent:$absent"
 fi
+
+# The property the per-item list did not hold: it had fallen 18 configs behind
+# what the repo tracked, and nothing failed because the machine it was written
+# on already had this link.
+mkdir -p "$FAKE_DOTFILES/config/newly-added-tool"
+if work_has newly-added-tool; then
+  pass "a config added later is live with no install.sh change"
+else
+  fail "a config added later is live with no install.sh change"
+fi
+rmdir "$FAKE_DOTFILES/config/newly-added-tool"
 
 # ─── TEST 5: the work git identity ─────────────────────────────────────
 echo "── TEST 5: work seeds a placeholder git identity ──"

@@ -7,24 +7,46 @@ This directory contains XDG-compliant application configurations. These files ar
 **Source of truth**: `~/dotfiles/config/*` (this directory)
 - Contains the **actual configuration files and directories**
 - Tracked in git for version control
-- Should contain **real files and directories, NOT symlinks**
+- Should contain **real files and directories, NOT symlinks** — with two
+  deliberate exceptions, below
 
-**Application configs**: `~/.config/*` (XDG standard location)
-- Contains **symlinks** pointing to `~/dotfiles/config/*`
-- Applications read from their expected XDG locations
-- Changes in either location reflect immediately
+How it reaches `~/.config` depends on the install profile.
 
-### Example Structure
+### Personal profile — the whole directory
 
 ```
-~/dotfiles/config/nvim/          # Real directory (source of truth)
-├── init.lua
-└── lua/
-
-~/.config/nvim → ~/dotfiles/config/nvim    # Symlink pointing to source
+~/.config → ~/dotfiles/config
 ```
 
-When Neovim runs, it reads `~/.config/nvim/` which is a symlink to `~/dotfiles/config/nvim/`.
+One symlink. Everything in this directory is live the moment it lands, so
+adding a config here needs no `install.sh` change. That matters: the per-item
+list described below had quietly fallen eighteen configs behind what the repo
+tracked, and nothing failed, because the machine it was written on already had
+this link.
+
+The trade is that `~/.config` becomes a git working tree. Any application that
+writes there writes into the repo, which is why `.gitignore` carries an entry
+per piece of state or credential (see **Note on Sensitive Files**). A new app
+appearing in `git status` is the signal that it needs triaging into "config,
+version it" or "state, ignore it".
+
+`neomutt` and `tmuxinator` are the two exceptions to the no-symlinks rule: their
+real homes are `mail/mutt` and `terminal/tmux/tmuxinator`, and inside this
+directory they are **relative** symlinks pointing back out, precisely so the
+whole-directory link picks them up.
+
+### Work profile — named items only
+
+```
+~/.config/            # a real directory
+~/.config/nvim   → ~/dotfiles/config/nvim
+~/.config/bat    → ~/dotfiles/config/bat
+```
+
+A single link cannot filter, and a work machine has no business with the
+neomutt Gmail account, the Soulseek client or the music-library tooling. So the
+work profile links an explicit list instead; `scripts/install.sh::link_dotfiles`
+holds it.
 
 ## ⚠️ Important: Avoiding Circular Symlinks
 
@@ -40,22 +62,36 @@ When Neovim runs, it reads `~/.config/nvim/` which is a symlink to `~/dotfiles/c
 ~/dotfiles/config/nvim/  # Real directory containing files
 ```
 
-The `install.sh` script now includes safety checks to prevent circular symlinks from being created.
+`scripts/install.sh::create_symlink` carries two guards for this. The first
+refuses a **source** that is itself a symlink. The second, `same_path`, refuses a
+**target that already resolves to the source** — which is the sneakier case,
+because under the personal layout `~/.config/nvim` *is* `config/nvim`, reached
+through the symlinked parent. Neither the source nor the target is a symlink
+there, so only a physical-path comparison catches it; without it, the `rm -rf`
+that clears the way for a new link deletes the config it was about to link and
+leaves a dangling symlink behind. `scripts/test-install-symlink.sh` TEST 8 is
+the regression test.
 
 ## Structure
 
-Each subdirectory represents a different application or tool:
+Each subdirectory is one application's configuration. `ls` here is the
+authoritative list — an enumeration in this file is exactly the kind of thing
+that goes stale, which is the lesson the per-item install list already taught.
+What is worth knowing is the three kinds of thing you will find:
 
-- **aria2/** - Aria2 download manager configuration
-- **bat/** - Bat (cat replacement) syntax highlighting theme
-- **beets/** - Beets music library manager configuration
-- **gh/** - GitHub CLI configuration
-- **musikcube/** - Musikcube terminal music player settings
-- **nvim/** - Neovim editor configuration (symlinks to ../neovim/)
-- **skhd/** - Simple Hotkey Daemon for macOS window management
-- **starship.toml** - Starship cross-shell prompt configuration
-- **tmuxinator/** - Tmuxinator session management templates
-- **yabai/** - Yabai tiling window manager for macOS
+**Versioned configuration.** The majority: editor, shell, prompt, file-manager,
+music and window-management configs, committed in full and restored verbatim on
+a new machine. This is the point of the directory.
+
+**Relative symlinks out of the tree.** Only `neomutt` and `tmuxinator`, covered
+above.
+
+**Gitignored state and credentials.** Not configuration, and deliberately not
+committed — libraries and databases (`beets/library.db`), session and log files
+(`musikcube/session.json`), caches (`__pycache__`), machine-local tokens
+(`gh/hosts.yml`, `op/config`, `beets/discogs_token.json`). Where a tool needs a
+credential to work at all, a `.template` sits beside the ignored real file so a
+fresh machine knows what to fill in.
 
 ## Installation
 

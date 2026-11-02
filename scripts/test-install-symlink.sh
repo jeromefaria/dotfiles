@@ -171,6 +171,38 @@ do_link "$FAKE_DOTFILES/zshrc" "$FAKE_HOME/.zshrc-alt"
 assert "new symlink points at our source" "[ \"\$(readlink \"$FAKE_HOME/.zshrc-alt\")\" = \"$FAKE_DOTFILES/zshrc\" ]"
 assert "the original symlink target was NOT backed up (known gap)" "[ ! -e \"$FAKE_BACKUP/.zshrc-alt\" ]"
 
+heading "TEST 8: a target reached through a symlinked parent is left alone"
+# Regression test for a destructive case. With $HOME/.config symlinked to the
+# repo's config/, $HOME/.config/nvim resolves to the very same directory as
+# config/nvim. Neither existing guard catches that — the circular-symlink check
+# needs the *source* to be a symlink, and the readlink check needs the *target*
+# to be one — so create_symlink used to rm -rf its own source and leave a
+# broken link pointing at where it had just been.
+mkdir -p "$FAKE_DOTFILES/config/nvim"
+echo "real nvim config" > "$FAKE_DOTFILES/config/nvim/init.lua"
+echo "untracked state" > "$FAKE_DOTFILES/config/nvim/state.db"
+ln -sfn "$FAKE_DOTFILES/config" "$FAKE_HOME/.config"
+do_link "$FAKE_DOTFILES/config/nvim" "$FAKE_HOME/.config/nvim"
+assert "source directory survived"        "[ -d \"$FAKE_DOTFILES/config/nvim\" ] && [ ! -L \"$FAKE_DOTFILES/config/nvim\" ]"
+assert "tracked file survived"            "grep -q 'real nvim config' \"$FAKE_DOTFILES/config/nvim/init.lua\""
+assert "gitignored state survived"        "grep -q 'untracked state' \"$FAKE_DOTFILES/config/nvim/state.db\""
+
+heading "TEST 9: the whole-directory link is created and re-runs cleanly"
+# What a personal-profile install does: one link for all of config/, so no
+# per-item list can fall behind what the repo tracks.
+rm -f "$FAKE_HOME/.config"
+do_link "$FAKE_DOTFILES/config" "$FAKE_HOME/.config"
+# shellcheck disable=SC2088  # the tilde is prose in the test name, not a path
+assert "~/.config is a symlink"           "[ -L \"$FAKE_HOME/.config\" ]"
+assert "it points at the repo config/"    "[ \"\$(readlink \"$FAKE_HOME/.config\")\" = \"$FAKE_DOTFILES/config\" ]"
+assert "configs reachable through it"     "grep -q 'real nvim config' \"$FAKE_HOME/.config/nvim/init.lua\""
+config_mtime_before=$(stat -f %m "$FAKE_HOME/.config" 2>/dev/null || stat -c %Y "$FAKE_HOME/.config")
+sleep 1
+do_link "$FAKE_DOTFILES/config" "$FAKE_HOME/.config"
+config_mtime_after=$(stat -f %m "$FAKE_HOME/.config" 2>/dev/null || stat -c %Y "$FAKE_HOME/.config")
+assert "re-link is a no-op"               "[ \"$config_mtime_before\" = \"$config_mtime_after\" ]"
+assert "source intact after the re-run"   "grep -q 'real nvim config' \"$FAKE_DOTFILES/config/nvim/init.lua\""
+
 # ─── Summary ───────────────────────────────────────────────────────────
 echo ""
 echo -e "${BLUE}━━━ Summary ━━━${NC}"

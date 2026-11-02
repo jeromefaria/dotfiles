@@ -129,6 +129,20 @@ jobs:
           for c in nvim bat gh starship.toml tmuxinator; do
             test -e "$HOME/.config/$c" || { echo "::error::$c was not linked"; exit 1; }
           done
+
+          # The work profile must take the per-item path, which means $HOME/.config
+          # stays a real directory and each config is its own symlink. The personal
+          # profile instead links config/ wholesale, so $HOME/.config *is* the repo
+          # directory — that shape is covered by test-install-profile.sh TEST 4,
+          # which exercises link_dotfiles directly and needs no full install.
+          if [ -L "$HOME/.config" ]; then
+            echo "::error::~/.config is a symlink; the work profile must link per item"
+            exit 1
+          fi
+          for c in nvim bat gh starship.toml; do
+            test -L "$HOME/.config/$c" \
+              || { echo "::error::$c is not an individual symlink"; exit 1; }
+          done
           for f in .zshrc .vimrc .tmux.conf .gitconfig; do
             test -L "$HOME/$f" || { echo "::error::$f is not a symlink"; exit 1; }
           done

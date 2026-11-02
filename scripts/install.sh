@@ -259,6 +259,20 @@ ensure_dir() {
   mkdir -p "$dir"
 }
 
+# Do two paths name the same entry? dirname is resolved with `pwd -P` so a
+# symlinked parent collapses to its real location, while the basename is left
+# alone — a final symlink is compared as itself, not as what it points at.
+same_path() {
+  local first=$1
+  local second=$2
+  local first_dir second_dir
+
+  first_dir=$(cd "$(dirname "$first")" 2>/dev/null && pwd -P) || return 1
+  second_dir=$(cd "$(dirname "$second")" 2>/dev/null && pwd -P) || return 1
+
+  [ "$first_dir/$(basename "$first")" = "$second_dir/$(basename "$second")" ]
+}
+
 create_symlink() {
   local source=$1
   local target=$2
@@ -282,6 +296,17 @@ create_symlink() {
   # Check if symlink already points to correct location (idempotent)
   if [ -L "$target" ] && [ "$(readlink "$target")" = "$source" ]; then
     print_success "Already linked: $target_name"
+    return 0
+  fi
+
+  # SAFETY: the target may already *be* the source, reached through a symlinked
+  # parent — with $HOME/.config → config/, $HOME/.config/nvim is the very same
+  # directory as config/nvim. The check above misses that, because the target is
+  # not itself a symlink; the circular-symlink check misses it too, because the
+  # source is a real directory. Without this one the rm -rf below deletes the
+  # source and leaves a broken link pointing at where it used to be.
+  if [ -e "$target" ] && same_path "$source" "$target"; then
+    print_success "Already in place: $target_name"
     return 0
   fi
 
@@ -413,62 +438,52 @@ link_dotfiles() {
   ensure_dir "$HOME/.vim"
   create_symlink "$DOTFILES_DIR/editors/vim" "$HOME/.vim/config"
 
-  # Create .config directory if it doesn't exist
-  ensure_dir "$HOME/.config"
-
-  # XDG-compliant configs - symlink individual directories from config/
+  # XDG-compliant configs.
   print_info "Linking XDG-compliant configurations..."
 
-  # Symlink each config directory/file individually
-  # Configs every machine gets.
-  local config_items=(
-    "nvim"
-    "starship.toml"
-    "bat"
-    "gh"
-  )
-
-  # Personal-only configs. beets/mpv/musikcube/aria2 serve the music and media
-  # work; skhd/yabai are window and input management, which on managed hardware
-  # usually cannot get the accessibility permissions they need anyway.
+  # A personal machine takes config/ whole, so $HOME/.config *is* the repo's
+  # config directory: every tracked config is live the moment it lands, and no
+  # per-item list can drift behind the tree. That drift is why this exists — the
+  # per-item list had fallen 18 configs behind what the repo tracks, and the
+  # only reason nobody noticed is that the machine it was written on already had
+  # the whole-directory link. config/neomutt and config/tmuxinator are relative
+  # symlinks inside the repo precisely so this picks them up, which is why
+  # neither is linked separately here.
   if is_personal_profile; then
-    config_items+=(
-      "aria2"
-      "beets"
-      "mpv"
-      "musikcube"
-      "skhd"
-      "yabai"
-    )
+    create_symlink "$DOTFILES_DIR/config" "$HOME/.config"
   else
-    print_info "Profile '$PROFILE': skipping media and window-manager configs"
-  fi
+    ensure_dir "$HOME/.config"
 
-  for item in "${config_items[@]}"; do
-    local source="$DOTFILES_DIR/config/$item"
-    local target="$HOME/.config/$item"
+    # A work machine gets named items instead, because one link cannot filter.
+    # beets/mpv/musikcube/aria2 serve the music and media work; skhd/yabai are
+    # window and input management, which on managed hardware usually cannot get
+    # the accessibility permissions they need anyway; and the neomutt setup is a
+    # personal Gmail account. None of them belong on hardware that is not this
+    # user's own.
+    print_info "Profile '$PROFILE': skipping media, window-manager and mail configs"
 
-    # Only create symlink if source exists
-    if [ -e "$source" ] || [ -L "$source" ]; then
-      create_symlink "$source" "$target"
+    local config_items=(
+      "nvim"
+      "starship.toml"
+      "bat"
+      "gh"
+    )
+
+    for item in "${config_items[@]}"; do
+      local source="$DOTFILES_DIR/config/$item"
+      local target="$HOME/.config/$item"
+
+      # Only create symlink if source exists
+      if [ -e "$source" ] || [ -L "$source" ]; then
+        create_symlink "$source" "$target"
+      fi
+    done
+
+    # tmuxinator's real home is outside config/; inside the repo it is a
+    # relative symlink, and create_symlink refuses a symlink as its source.
+    if [ -e "$DOTFILES_DIR/terminal/tmux/tmuxinator" ]; then
+      create_symlink "$DOTFILES_DIR/terminal/tmux/tmuxinator" "$HOME/.config/tmuxinator"
     fi
-  done
-
-  # Configs whose real home is outside config/. Inside the repo these are
-  # relative symlinks (config/neomutt, config/tmuxinator) so that the
-  # whole-directory strategy — ~/.config symlinked to config/ — picks them up.
-  # Here we link the real directories instead: create_symlink refuses a symlink
-  # as its source, and pointing a symlink at a symlink gains nothing anyway.
-  # The neomutt configuration is a personal Gmail account setup; it has no use
-  # on a machine that is not this user's own.
-  if [ -e "$DOTFILES_DIR/mail/mutt" ] && is_personal_profile; then
-    create_symlink "$DOTFILES_DIR/mail/mutt" "$HOME/.config/neomutt"
-  elif [ -e "$DOTFILES_DIR/mail/mutt" ]; then
-    print_info "Profile '$PROFILE': skipping the neomutt mail configuration"
-  fi
-
-  if [ -e "$DOTFILES_DIR/terminal/tmux/tmuxinator" ]; then
-    create_symlink "$DOTFILES_DIR/terminal/tmux/tmuxinator" "$HOME/.config/tmuxinator"
   fi
 
   print_success "All dotfiles linked successfully"
